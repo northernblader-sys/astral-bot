@@ -1,0 +1,420 @@
+{
+  "num": 7,
+  "id": "what-the-chair-doesnt-stop",
+  "title": "What the Chair Doesn't Stop",
+  "requires": "the-toll-man",
+  "beats": [
+    { "type": "line", "text": "The day after the Toll Man goes, Oliver tries to improve your chair." },
+    { "type": "line", "text": "You find him underneath it with a screwdriver, one knee on the floor and his cheek against the axle." },
+    {
+      "type": "choice",
+      "key": "c07-axle",
+      "text": "He hasn't asked. He's under there like a man who's decided a thing is a machine and therefore his.",
+      "options": [
+        {
+          "id": "out",
+          "label": "\"Get out.\"",
+          "beats": [
+            { "type": "line", "text": "\"I'm inspecting.\"" },
+            { "type": "line", "text": "\"You're trespassing.\"" },
+            { "type": "line", "text": "\"The wheel's making a sound.\"" },
+            { "type": "line", "text": "\"It's always made that sound.\"" },
+            { "type": "line", "text": "\"The sound's changed.\"" },
+            { "type": "line", "text": "\"You've known it a day.\"" },
+            { "type": "line", "text": "\"That's long enough to notice a change.\"" },
+            { "type": "line", "text": "You grip the armrests and push back. The chair rolls off him. He sits up and hits his head on the table." },
+            { "type": "line", "text": "\"You did that on purpose.\"" },
+            { "type": "line", "text": "\"I did it with purpose.\"" }
+          ]
+        },
+        {
+          "id": "allow",
+          "label": "\"Left bearing. Not the axle.\"",
+          "beats": [
+            { "type": "line", "text": "There's a pause under the chair." },
+            { "type": "line", "text": "\"You knew.\"" },
+            { "type": "line", "text": "\"I've sat on it for eleven months. I know it better than you know your own frame.\"" },
+            { "type": "line", "text": "\"Then why not say?\"" },
+            { "type": "line", "text": "\"Because the last man who took it apart kept it for nine days,\" you say, \"and I stayed in a bed.\"" },
+            { "type": "line", "text": "He comes out from under the chair. \"Nine days.\"" },
+            { "type": "line", "text": "\"Nine.\"" },
+            { "type": "line", "text": "\"I'll do it in front of you,\" he says. \"You can hold the screws.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"The left bearing's worn,\" he says, rubbing his forehead." },
+    { "type": "line", "text": "\"So am I. You're not taking me apart to find out where.\"" },
+    { "type": "line", "text": "\"I wasn't going to.\"" },
+    { "type": "line", "text": "\"You were holding a wrench.\"" },
+    { "type": "line", "text": "\"For the wheel.\"" },
+    { "type": "line", "text": "\"That's what you say about everything.\"" },
+    { "type": "line", "text": "You take the chair out along the wall behind the bakery. Oliver follows with the repaired frame balanced on his shoulder." },
+    { "type": "line", "text": "The frame catches every breeze. The canvas lifts and drops and lifts. People turn to watch." },
+    { "type": "line", "text": "A woman with a basket laughs under her breath. A boy throws a pebble that lands near Oliver's boot." },
+    {
+      "type": "choice",
+      "key": "c07-cover",
+      "text": "There are three streets of this to go.",
+      "options": [
+        {
+          "id": "hide",
+          "label": "\"You should cover it.\"",
+          "beats": [
+            { "type": "line", "text": "\"It needs air.\"" },
+            { "type": "line", "text": "\"It needs fewer witnesses.\"" },
+            { "type": "line", "text": "He angles the frame so it stands between you and the road. The wind presses the canvas flat against his face." },
+            { "type": "line", "text": "\"That's not better,\" you say." },
+            { "type": "line", "text": "\"I've become a sail.\"" },
+            { "type": "line", "text": "\"A badly made one.\"" }
+          ]
+        },
+        {
+          "id": "show",
+          "label": "\"Hold it higher.\"",
+          "beats": [
+            { "type": "line", "text": "He looks at you sideways. \"They're laughing.\"" },
+            { "type": "line", "text": "\"They're looking. Give them something worth it.\"" },
+            { "type": "line", "text": "So he lifts it over his head and walks the length of the bakery wall with twelve feet of canvas up in the wind, a boy in a torn coat with a wing on." },
+            { "type": "line", "text": "The woman with the basket stops laughing. She stands there holding it and watches him all the way to the corner." },
+            { "type": "line", "text": "That's the first one. There'll be others. You've just seen how it starts." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He pivots. The frame catches a drainpipe and brings down a shower of rust over his back." },
+    { "type": "line", "text": "You laugh." },
+    { "type": "line", "text": "\"I'm pleased,\" he says. \"My suffering has improved your morning.\"" },
+    { "type": "line", "text": "The route ends at a shallow set of steps. There are five of them. You stop at the bottom." },
+    { "type": "line", "text": "Oliver sets the frame down." },
+    { "type": "line", "text": "\"We can go around,\" he says." },
+    { "type": "line", "text": "\"The road's blocked by the coal cart.\"" },
+    {
+      "type": "choice",
+      "key": "c07-cart",
+      "text": "\"Then we move the coal cart,\" he says.",
+      "options": [
+        {
+          "id": "you",
+          "label": "\"You move it.\"",
+          "beats": [
+            { "type": "line", "text": "The coal cart does not move." },
+            { "type": "line", "text": "He strains against the wheel until the muscles stand out in his neck. The horse turns its head and regards him with open contempt." },
+            { "type": "line", "text": "\"The horse dislikes you.\"" },
+            { "type": "line", "text": "\"The horse has no imagination.\"" },
+            { "type": "line", "text": "\"It has excellent judgement.\"" }
+          ]
+        },
+        {
+          "id": "both",
+          "label": "\"Bring it to me. I'll take the brake.\"",
+          "beats": [
+            { "type": "line", "text": "You get a hand on the brake lever while he heaves at the wheel." },
+            { "type": "line", "text": "It moves four inches. Both of you are astonished." },
+            { "type": "line", "text": "Then it stops again, because a coal cart weighs more than two children and an idea." },
+            { "type": "line", "text": "\"Four inches,\" he says, breathing hard." },
+            { "type": "line", "text": "\"Write it down. You write everything else down.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "A porter shouts from the warehouse door. \"Leave it alone, boy.\"" },
+    { "type": "line", "text": "Oliver steps away from the cart." },
+    { "type": "line", "text": "You look at the five steps. The nearest ramp is two streets over. The rain has left a slick black line down each stone." },
+    { "type": "line", "text": "\"I can carry the frame up,\" Oliver says." },
+    { "type": "line", "text": "\"And me?\"" },
+    { "type": "line", "text": "He looks at the steps. \"I can carry you.\"" },
+    {
+      "type": "choice",
+      "key": "c07-carry",
+      "text": "He's fourteen and he weighs less than the frame does.",
+      "options": [
+        {
+          "id": "no",
+          "label": "\"No.\"",
+          "beats": [
+            { "type": "line", "text": "\"I was going to say I can find another route.\"" },
+            { "type": "line", "text": "\"You weren't.\"" },
+            { "type": "line", "text": "\"I thought about it.\"" },
+            { "type": "line", "text": "\"Thinking isn't asking.\"" },
+            { "type": "line", "text": "He sits down on the bottom step, defeated by the cart, the frame, and your temper." }
+          ]
+        },
+        {
+          "id": "why",
+          "label": "\"Do you know what happens if you drop me?\"",
+          "beats": [
+            { "type": "line", "text": "\"I wouldn't drop you.\"" },
+            { "type": "line", "text": "\"Do you know what happens.\"" },
+            { "type": "line", "text": "He doesn't answer." },
+            { "type": "line", "text": "\"They put it back in a bed for six weeks and it heals crooked,\" you say. \"That's what happened the second time. There isn't going to be a third.\"" },
+            { "type": "line", "text": "He sits down on the bottom step and puts his hands over his face for a second, and then takes them away again." },
+            { "type": "line", "text": "\"Right,\" he says. \"Another route, then.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "There's a side gate standing open beside the warehouse wall. Narrow. The wheels would fit." },
+    {
+      "type": "choice",
+      "key": "c07-gate",
+      "text": "He hasn't seen it. He's looking at the steps like a problem he can solve by being sorry at it.",
+      "options": [
+        {
+          "id": "tell",
+          "label": "Turn the chair toward it. \"There.\"",
+          "beats": [
+            { "type": "line", "text": "Oliver picks up the frame. \"You saw that?\"" },
+            { "type": "line", "text": "\"I have eyes.\"" },
+            { "type": "line", "text": "\"So do I.\"" },
+            { "type": "line", "text": "\"You have eyes at five foot four,\" you say. \"Mine are lower and they've had practice.\"" }
+          ]
+        },
+        {
+          "id": "wait",
+          "label": "Let him look a moment longer.",
+          "beats": [
+            { "type": "line", "text": "He looks at the steps. He looks at the cart. He looks up at the warehouse roof, which tells you a great deal about how his mind works." },
+            { "type": "line", "text": "Then he finds the gate himself, and the relief on his face is so complete that you're glad you waited." },
+            { "type": "line", "text": "\"There,\" he says." },
+            { "type": "line", "text": "\"Well spotted.\"" },
+            { "type": "line", "text": "\"You'd seen it.\"" },
+            { "type": "line", "text": "\"Some time ago,\" you admit." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The gate opens on a paved yard behind the warehouse. No steps. No cart. A narrow lane on the far side." },
+    { "type": "line", "text": "Oliver looks back at the stairs." },
+    { "type": "line", "text": "\"Most people would've tried those,\" he says." },
+    { "type": "line", "text": "\"Most people can.\"" },
+    { "type": "line", "text": "He starts to answer, and stops." },
+    { "type": "line", "text": "The stones in the yard are uneven. The repaired wheel complains at every seam. You can't push fast enough to keep pace with him." },
+    { "type": "line", "text": "So he walks backward, carrying the frame and watching your wheels." },
+    {
+      "type": "choice",
+      "key": "c07-turnaround",
+      "text": "He's going to walk into something.",
+      "options": [
+        {
+          "id": "turn",
+          "label": "\"Turn around.\"",
+          "beats": [
+            { "type": "line", "text": "\"You might fall.\"" },
+            { "type": "line", "text": "\"If I fall, I'll tell you.\"" },
+            { "type": "line", "text": "\"You might not have time.\"" },
+            { "type": "line", "text": "\"I have time to shout.\"" },
+            { "type": "line", "text": "He turns. The frame goes up over his head like a pale unfinished wing." }
+          ]
+        },
+        {
+          "id": "let",
+          "label": "Let him walk backward.",
+          "beats": [
+            { "type": "line", "text": "He gets nine paces before he backs into a stack of empty crates and brings four of them down." },
+            { "type": "line", "text": "The frame survives. Nothing else in the yard does." },
+            { "type": "line", "text": "\"You could have said,\" he says, from the floor." },
+            { "type": "line", "text": "\"I could have.\"" },
+            { "type": "line", "text": "He turns round after that. You don't have to ask twice, or ever again." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "At the mouth of the lane he lowers the frame. \"I'm sorry.\"" },
+    { "type": "line", "text": "\"For what?\"" },
+    { "type": "line", "text": "\"The steps.\"" },
+    {
+      "type": "choice",
+      "key": "c07-apologise",
+      "text": "He's apologised for the steps, a coal cart, a horse, and the weather, and it isn't nine o'clock.",
+      "options": [
+        {
+          "id": "stop",
+          "label": "\"Stop apologising for every object that fails to fit me.\"",
+          "beats": [
+            { "type": "line", "text": "\"You didn't build them,\" you add." },
+            { "type": "line", "text": "\"No.\"" },
+            { "type": "line", "text": "He looks down at the frame for a while." },
+            { "type": "line", "text": "\"I can build a ramp,\" he says." },
+            { "type": "line", "text": "\"For the city?\"" },
+            { "type": "line", "text": "\"For the places we need.\"" }
+          ]
+        },
+        {
+          "id": "accept",
+          "label": "\"All right. Apology received. Now do something about it.\"",
+          "beats": [
+            { "type": "line", "text": "He blinks." },
+            { "type": "line", "text": "\"You want me to move the steps.\"" },
+            { "type": "line", "text": "\"I want you to stop being sorry at things and start measuring them. It's what you're for.\"" },
+            { "type": "line", "text": "He gets the notebook out right there in the lane and writes down the height of a step in a city he doesn't own an inch of." },
+            { "type": "line", "text": "\"A ramp,\" he says. \"Not for the city. For the places we need.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The phrase stays with you all afternoon. The places we need." },
+    { "type": "line", "text": "Your room is full of places other people chose." },
+    { "type": "line", "text": "The bed's against the wall because it leaves room for the landlady to carry coal. The table is low because it belonged to a child." },
+    { "type": "line", "text": "The window is high because the room was built for somebody who stood." },
+    { "type": "line", "text": "At the washhouse he lays two boards over the threshold." },
+    { "type": "line", "text": "\"A ramp,\" he announces." },
+    { "type": "line", "text": "The boards bow under the chair. One nail stands up out of the wood like a tooth." },
+    {
+      "type": "choice",
+      "key": "c07-ramp",
+      "text": "He's very pleased with it.",
+      "options": [
+        {
+          "id": "trap",
+          "label": "\"This is a trap.\"",
+          "beats": [
+            { "type": "line", "text": "\"It's a first version.\"" },
+            { "type": "line", "text": "\"The first version is a trap.\"" },
+            { "type": "line", "text": "\"You're difficult to please.\"" },
+            { "type": "line", "text": "\"I'm difficult to kill.\"" }
+          ]
+        },
+        {
+          "id": "nail",
+          "label": "\"Nail.\"",
+          "beats": [
+            { "type": "line", "text": "He looks. He goes the colour of the plaster." },
+            { "type": "line", "text": "\"That would have gone through the tyre,\" he says." },
+            { "type": "line", "text": "\"It would have gone through the tyre and put me on the floor of a washhouse for an hour while you ran for help nobody's going to give.\"" },
+            { "type": "line", "text": "He takes the nail out with his fingers. It takes him three tries and it bleeds." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He adds a crosspiece. You test it with one wheel. The board shifts." },
+    { "type": "line", "text": "Oliver catches the frame of the chair behind you." },
+    { "type": "line", "text": "You freeze." },
+    { "type": "line", "text": "\"I have you,\" he says." },
+    { "type": "line", "text": "\"You have the chair.\"" },
+    { "type": "line", "text": "\"I know.\"" },
+    { "type": "line", "text": "You reverse onto solid ground. The nail head scrapes the tyre. He takes the boards up again without arguing." },
+    { "type": "line", "text": "\"What do you do when something goes wrong?\" he asks." },
+    { "type": "line", "text": "\"I complain.\"" },
+    { "type": "line", "text": "\"After that?\"" },
+    { "type": "line", "text": "\"I find the part of it that can be changed.\"" },
+    { "type": "line", "text": "\"And if nothing can?\"" },
+    { "type": "line", "text": "\"I change the plan.\"" },
+    { "type": "line", "text": "He looks at your hands. \"That's why you help me.\"" },
+    {
+      "type": "choice",
+      "key": "c07-why",
+      "text": "He's asked it before, sideways. This is the first time straight on.",
+      "options": [
+        {
+          "id": "tea",
+          "label": "\"I help you because you turn up at my window with stolen tea.\"",
+          "beats": [
+            { "type": "line", "text": "\"That's one reason.\"" },
+            { "type": "line", "text": "\"You're trying to make me answer.\"" },
+            { "type": "line", "text": "\"You're trying not to.\"" }
+          ]
+        },
+        {
+          "id": "later",
+          "label": "\"Ask me again when it flies.\"",
+          "beats": [
+            { "type": "line", "text": "\"That could be years.\"" },
+            { "type": "line", "text": "\"Then I've years to think of something that doesn't embarrass me.\"" },
+            { "type": "line", "text": "He lets it go. He'll ask again, and by then you'll have the answer, and it will cost you everything to say it." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "You look at the glider. The wing rests against the wall. The canvas has dried stiff in the morning wind." },
+    { "type": "line", "text": "\"You can reach things I can't,\" you say. \"You can climb walls. You can run when the constables come.\"" },
+    { "type": "line", "text": "\"You can take a piece of the world and carry it back.\"" },
+    { "type": "line", "text": "Oliver's face changes." },
+    { "type": "line", "text": "\"That isn't all I do,\" he says." },
+    { "type": "line", "text": "\"It's enough.\"" },
+    { "type": "line", "text": "\"Is it?\"" },
+    { "type": "line", "text": "You turn the chair toward the window. \"Make the wing work.\"" },
+    { "type": "line", "text": "He does. The next hours go in small repairs. The nail comes out and a bolt goes in. He sands the splintered board. He changes the angle until your wheels cross without slipping." },
+    { "type": "line", "text": "You test it six times." },
+    { "type": "line", "text": "On the seventh you stop halfway across and look down at him." },
+    { "type": "line", "text": "\"Don't say anything.\"" },
+    { "type": "line", "text": "\"I was going to say it works.\"" },
+    { "type": "line", "text": "\"That's saying something.\"" },
+    { "type": "line", "text": "\"It works.\"" },
+    { "type": "line", "text": "You cross the threshold. The chair rolls cleanly into the washhouse for the first time since you met him." },
+    { "type": "line", "text": "Oliver raises both hands as if you've landed from a great height." },
+    { "type": "line", "text": "\"No applause,\" you say." },
+    { "type": "line", "text": "\"It was an important journey.\"" },
+    { "type": "line", "text": "\"It was four feet.\"" },
+    { "type": "line", "text": "\"All journeys are measured by difficulty.\"" },
+    { "type": "line", "text": "\"Who taught you that?\"" },
+    { "type": "line", "text": "\"A horse.\"" },
+    { "type": "line", "text": "You look at him. \"The horse was very wise,\" he says." },
+    { "type": "line", "text": "That evening you sit outside the washhouse while he works. Your crutch lies across the chair arms, ready for the short stand you use when the seat's become unbearable." },
+    { "type": "line", "text": "You stand once. The muscles above your knee shake. The crutch slips on the stone." },
+    { "type": "line", "text": "Oliver looks over." },
+    {
+      "type": "choice",
+      "key": "c07-stand",
+      "text": "He's halfway off the floor already.",
+      "options": [
+        {
+          "id": "dont",
+          "label": "\"Don't.\"",
+          "beats": [
+            { "type": "line", "text": "He turns back to the frame." },
+            { "type": "line", "text": "He doesn't look over again, and it costs him something not to, and you can hear it in how carefully he's sewing." },
+            { "type": "line", "text": "You lower yourself into the chair. Going down takes longer than standing did." },
+            { "type": "line", "text": "When you're seated the bandage has come loose. You retie it yourself." }
+          ]
+        },
+        {
+          "id": "watch",
+          "label": "\"Watch, then. If it goes wrong I'd rather you'd seen it.\"",
+          "beats": [
+            { "type": "line", "text": "He sits back down on his heels and watches, and doesn't move a muscle, and it is the hardest thing you have ever asked anyone to do for you." },
+            { "type": "line", "text": "You get eleven seconds. Then you go down into the chair, badly, and the crutch clatters." },
+            { "type": "line", "text": "\"Eleven,\" he says." },
+            { "type": "line", "text": "\"Was it?\"" },
+            { "type": "line", "text": "\"I counted. It was nine on Tuesday.\"" },
+            { "type": "line", "text": "You hadn't known he'd counted Tuesday. You look away toward the chimneys for a moment." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The wing creaks under his hands." },
+    { "type": "line", "text": "\"What if it doesn't stop anything?\" he asks." },
+    { "type": "line", "text": "\"What?\"" },
+    { "type": "line", "text": "\"The chair. The ramp. The work.\"" },
+    {
+      "type": "choice",
+      "key": "c07-close",
+      "text": "A cloud goes behind the chimneys. It's the last question of the day and he's asked it with a needle in his hand so he doesn't have to look up.",
+      "options": [
+        {
+          "id": "learn",
+          "label": "\"Then we learn what it does stop.\"",
+          "beats": [
+            { "type": "line", "text": "The needle goes through the canvas. The point comes out bright and then disappears again." },
+            { "type": "line", "text": "\"That's a good answer,\" he says." },
+            { "type": "line", "text": "\"It's the only one.\"" }
+          ]
+        },
+        {
+          "id": "already",
+          "label": "\"It stopped you being alone in a washhouse.\"",
+          "beats": [
+            { "type": "line", "text": "He doesn't answer that. He sews eleven stitches without a word." },
+            { "type": "line", "text": "Then, without looking up: \"Say that again some other time. Not tonight.\"" },
+            { "type": "line", "text": "\"Why not tonight?\"" },
+            { "type": "line", "text": "\"Because I've the needle,\" he says, \"and I'd rather not have to explain my hands.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "You can't reach him if he falls off a roof." },
+    { "type": "line", "text": "You can't chase him through the machine yard. You can't fight the men who decide where poor children are allowed to stand." },
+    { "type": "line", "text": "You can make them answer you." },
+    { "type": "line", "text": "For tonight, that's enough." }
+  ]
+}

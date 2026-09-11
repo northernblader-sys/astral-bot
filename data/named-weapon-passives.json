@@ -1,0 +1,162 @@
+[
+  {
+    "id": "bonus_attack_per_turn",
+    "item": "Wado Ichimonji",
+    "description": "Grants a second physical strike every turn dealing 50% of base ATK damage. The bonus strike cannot crit and is not affected by skills."
+  },
+  {
+    "id": "bankai_power_surge",
+    "item": "Tensa Zangetsu",
+    "description": "The first hit dealt in each turn is empowered, dealing 150% of normal damage. Considered the 'Bankai burst' — subsequent hits in the same turn deal normal damage."
+  },
+  {
+    "id": "lifesteal_on_hit",
+    "item": "Kubikiribocho",
+    "description": "Heals the wielder for 15% of the physical damage dealt by each hit. Lifesteal cannot overheal beyond max HP."
+  },
+  {
+    "id": "flame_element_bonus",
+    "item": "Nichirin Blade",
+    "description": "All attacks deal an additional 20% bonus fire-element damage. Fire damage is not reduced by DEF but may be resisted by fire-immune enemies."
+  },
+  {
+    "id": "full_counter_on_crit",
+    "item": "Lostvayne",
+    "description": "On landing a critical hit, reflects 50% of the enemy's last dealt damage back at them as true damage. Triggers once per crit, not per multi-hit."
+  },
+  {
+    "id": "concept_destruction",
+    "item": "Venuzdonoa",
+    "description": "All attacks bypass the enemy's DEF stat entirely, always dealing true damage. Does not stack with other true-damage effects — the bypass itself IS the effect."
+  },
+  {
+    "id": "shadow_monarch_strike",
+    "item": "Sovereign's Blade",
+    "description": "Each attack has a 20% chance to summon a shadow soldier that makes one additional strike for 40% of the player's ATK as true damage. Max one shadow soldier proc per player action."
+  },
+  {
+    "id": "quake_shockwave",
+    "item": "Bisento of Storms",
+    "description": "Every 3 turns, the weapon releases a ground-splitting shockwave dealing 30% of the enemy's current HP as true damage to the enemy. Shockwave cannot kill — it reduces HP to 1 minimum."
+  },
+  {
+    "id": "complete_hypnosis",
+    "item": "Kyoka Suigetsu",
+    "description": "At combat start, applies a hypnosis debuff that reduces enemy ATK by 25% for 3 turns. If the enemy is immune to status effects, the ATK reduction does not apply."
+  },
+  {
+    "id": "mp_drain_on_hit",
+    "item": "Death Scythe",
+    "description": "Each attack drains 10 MP from the enemy. Drained MP is added to the player's current MP pool (cannot exceed max MP). Enemies with 0 MP take bonus damage equal to the drain amount that would have occurred."
+  },
+  {
+    "id": "one_for_all_stack",
+    "item": "One For All Gauntlets",
+    "description": "Player ATK grows by 5% at the end of each player turn, stacking up to 5 times (max +25% ATK). Stacks reset when the fight ends."
+  },
+  {
+    "id": "divine_protection_block",
+    "item": "Divine Protection Aegis",
+    "description": "At the start of each enemy attack resolution, there is a 20% chance to completely nullify the incoming hit (dealing 0 damage). The roll happens per-attack in multi-hit enemy patterns."
+  },
+  {
+    "id": "infinity_nullify_on_defend",
+    "item": "Six Eyes Blindfold",
+    "description": "When the player chooses the Defend action, there is a 35% chance to nullify the enemy's counter-attack entirely. The base defend damage reduction still applies on non-nullified hits."
+  },
+  {
+    "id": "life_expenditure_counter",
+    "item": "Baryon Mode Headband",
+    "description": "At the end of each turn, reduces the enemy's max HP by 5% (rounded down). The reduction is permanent for the duration of the fight. The enemy's current HP is also reduced if it exceeds the new max."
+  },
+  {
+    "id": "full_counter_armor",
+    "item": "Dragon Sin Cuirass",
+    "description": "When the player takes a single hit that exceeds 30% of their max HP, 100% of that hit's damage is reflected back at the enemy as true damage. Only triggers once per hit, not per turn."
+  },
+  {
+    "id": "ultra_ego_resolve",
+    "item": "Ultra Ego Plate",
+    "description": "For every 10% of max HP the player is missing, incoming damage is reduced by 5% (e.g. at 50% HP missing = -25% incoming damage). Bonus caps at 50% damage reduction (reached at 100% HP missing)."
+  },
+  {
+    "id": "flash_step_dodge",
+    "item": "Shunpo Greaves",
+    "description": "Every incoming attack — melee, ranged, or magic — has a 15% chance to be completely dodged (0 damage taken). The dodge roll is per-hit. Does not apply to true-damage or percentage-based HP effects."
+  },
+  {
+    "id": "gate_of_babylon_summon",
+    "item": "Gate of Babylon Core",
+    "description": "At the start of each player turn (before the player's action), the Gate fires 1-3 random Noble Phantasm projectiles at the enemy. Each projectile deals 10% of the player's ATK as true damage. The count is chosen randomly each turn."
+  },
+  {
+    "id": "existence_ward",
+    "item": "Armor of Existence",
+    "description": "Reduces all incoming damage to 25 percent of its original value, after every other guard and mitigation has resolved. Applies everywhere damage lands: normal attacks, skills, boss nukes, dungeons and PvP. Never wears out."
+  },
+  {
+    "id": "glory_amplify",
+    "item": "Fists of Glory",
+    "description": "Increases all outgoing damage you deal by 15 percent of your actual attack damage, applied on top of skill multipliers and crits."
+  },
+  {
+    "id": "dragon_robe_negation",
+    "item": "Robe of the Dragons",
+    "description": "Caps any single incoming hit at 35 percent of your max HP, which neutralises one tap finishers such as Cinder Verdict and Wishing Star. Never wears out."
+  },
+  {
+    "id": "dragon_blade_wrath",
+    "item": "Blade of the Dragons",
+    "description": "Increases all outgoing damage you deal by 30 percent, applied on top of skill multipliers and crits."
+  },
+  {
+    "id": "second_wind_once",
+    "item": "Thresher's Coif",
+    "description": "The first turn that ends with you below 30 percent HP, you catch your breath and heal 25 percent of your max HP. Once per fight."
+  },
+  {
+    "id": "snare_on_hit",
+    "item": "Fisher's Netted Cowl",
+    "description": "Every incoming hit has a 20 percent chance to tangle the attacker, cutting its ATK by 20 percent for 2 turns."
+  },
+  {
+    "id": "hide_thickening",
+    "item": "Tanner's Layered Jerkin",
+    "description": "The leather learns from every blow: incoming damage drops 3 percent per hit you have already taken this fight, up to 30 percent. The first hit lands in full."
+  },
+  {
+    "id": "oreblood_conversion",
+    "item": "Miner's Ironback Plate",
+    "description": "10 percent of every hit that lands on you is soaked out of the damage and into your MP pool instead, up to your max MP."
+  },
+  {
+    "id": "steady_bloom",
+    "item": "Herbalist's Greenstep Boots",
+    "description": "At the end of every turn the greenweave gives back 3 percent of your max HP. No condition, no limit on how often."
+  },
+  {
+    "id": "untouched_momentum",
+    "item": "Courier's Longstride Boots",
+    "description": "If nothing damaged you during the previous turn, your hit this turn lands 25 percent harder. A turn where every blow was dodged or nullified counts as clean."
+  },
+  {
+    "id": "keystone_stance",
+    "item": "Mason's Keystone Boots",
+    "description": "Every Defend settles your footing for the rest of the fight: incoming damage drops another 8 percent per Defend taken, up to 40 percent."
+  },
+  {
+    "id": "first_guard_shatter",
+    "item": "Glassblower's Lantern Shield",
+    "description": "The first incoming hit of every fight goes into the glass and deals nothing at all. Guaranteed, and only once per fight."
+  },
+  {
+    "id": "underdog_rally",
+    "item": "Watchman's Bell Buckler",
+    "description": "While the enemy has more HP left than you do, every hit you land deals 12 percent more. Checked fresh on each swing."
+  },
+  {
+    "id": "waxlight_flare",
+    "item": "Chandler's Waxlight Buckler",
+    "description": "As the fight opens, the wick flares and burns the enemy for 5 percent of its max HP."
+  }
+]

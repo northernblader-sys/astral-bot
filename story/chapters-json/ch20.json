@@ -1,0 +1,337 @@
+{
+  "num": 20,
+  "id": "beyond-the-astral",
+  "title": "Beyond the Astral",
+  "requires": "the-night-before",
+  "onComplete": {
+    "grantsCharacter": "monica",
+    "items": [
+      "oliver-goggles"
+    ],
+    "gems": 0,
+    "flags": [
+      "free-travel-all-locations",
+      "hidden-map-access"
+    ]
+  },
+  "beats": [
+    { "type": "line", "text": "The second gust becomes a third." },
+    { "type": "line", "text": "The glider moves over the ridge grass. The skids rattle against the stones." },
+    { "type": "line", "text": "Oliver leans forward in the cradle with the shoulder brace tight across his chest." },
+    { "type": "line", "text": "The woman in the dark coat shouts for the constables to take the rope." },
+    {
+      "type": "choice",
+      "key": "c20-axle",
+      "text": "Your palms are already going. The rope is going to come out of your hands in about four seconds.",
+      "options": [
+        {
+          "id": "axle",
+          "label": "Wrap it round the axle.",
+          "beats": [
+            { "type": "line", "text": "The chair jolts. Both wheels slide toward the drop." },
+            { "type": "line", "text": "You brace your feet on the stone and pull the crutch out from beside your knee." },
+            { "type": "line", "text": "Nine years of this chair being the thing that held you down, and here it is, finally, holding something else." }
+          ]
+        },
+        {
+          "id": "hands",
+          "label": "Keep it in your hands. You want to feel the moment it goes.",
+          "beats": [
+            { "type": "line", "text": "The rope bites. Your palms open and the hemp goes through them and takes the skin with it." },
+            { "type": "line", "text": "You don't let it out. You wrap it twice round your right fist and put your back into the chair and take the whole weight of a flying machine through two hands and a bad leg." },
+            { "type": "line", "text": "It's the single most useful thing your body has ever been asked to do, and it is going to cost you both palms, and you would do it again tomorrow." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"Monica,\" Oliver calls." },
+    { "type": "line", "text": "\"Fly.\"" },
+    { "type": "line", "text": "The left skid strikes a ridge stone. The frame lurches sideways." },
+    { "type": "line", "text": "One constable reaches the rope and gets a hand on it." },
+    {
+      "type": "choice",
+      "key": "c20-letgo",
+      "text": "He is nineteen at the most. His knuckles are white on the line.",
+      "options": [
+        {
+          "id": "order",
+          "label": "\"Let go!\"",
+          "beats": [
+            { "type": "line", "text": "He looks at you." },
+            { "type": "line", "text": "\"That isn't a suggestion.\"" },
+            { "type": "line", "text": "He releases the line." },
+            { "type": "line", "text": "The second constable catches it instead." }
+          ]
+        },
+        {
+          "id": "name",
+          "label": "\"What's your name?\"",
+          "beats": [
+            { "type": "line", "text": "It stops his hands. It always stops their hands." },
+            { "type": "line", "text": "\"Bell,\" he says, before he can help it." },
+            { "type": "line", "text": "\"Bell. Two years ago a man called Bell told a boy the sky was private property. Was that you?\"" },
+            { "type": "line", "text": "\"That's my uncle.\"" },
+            { "type": "line", "text": "\"Then let go of the rope, Bell, and be the better one.\"" },
+            { "type": "line", "text": "He releases the line." },
+            { "type": "line", "text": "The second constable catches it instead." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The glider pulls hard enough to drag your chair forward." },
+    { "type": "line", "text": "Oliver reaches for the wing hinge." },
+    {
+      "type": "plea",
+      "text": "The rope burns through your hands. The front wheel leaves the ground. Beyond the stone wall, the ridge falls away.\n\nThe woman grabs the second constable's shoulder. \"Cut the line.\"\n\nHe draws a knife.\n\nYou speak before the blade reaches the rope.\n\n\"If you cut it, the glider turns.\"\n\nThe constable hesitates.\n\n\"The wind's crosswise,\" you say. \"The frame will roll toward the crowd.\"\n\nThe woman looks down the slope. The authorities have gathered too close. A dozen people stand between the ridge and the plain.\n\n\"You are bluffing.\"\n\n\"I'm reading the wind.\"\n\nOliver shouts from the cradle, \"She's right.\"\n\nYou keep your eyes on the woman. \"Let the rope go together. Clear the slope. Or cut it, and explain why the first human flight became a falling machine aimed at your own men.\"",
+      "stakes": {
+        "chance": 0.55,
+        "onSuccess": "The woman raises her hand. \"Release the rope,\" she orders. The constables obey, and the line falls clean across the grass.",
+        "onFail": "The constable's knife finds the rope before the woman decides. It parts in a single stroke, and the chair's front wheel leaves the ground half a breath early. The glider lurches off the wall at a bad angle, canvas snapping taut too soon, Oliver thrown forward in the cradle before he is ready. It is still a flight. It was never going to be a clean one."
+      }
+    },
+    { "type": "line", "text": "Either way, the rope's off the axle and the glider's at the edge." },
+    { "type": "line", "text": "That's the only fact left on this ridge that matters." },
+    { "type": "line", "text": "The burn across your palms is bright and clean." },
+    { "type": "line", "text": "Oliver looks back at you. \"Are you hurt?\"" },
+    {
+      "type": "choice",
+      "key": "c20-hurt",
+      "text": "He is nine feet from the drop and he has turned round to ask about your hands.",
+      "options": [
+        {
+          "id": "deflect",
+          "label": "\"You're about to leave the ground.\"",
+          "beats": [
+            { "type": "line", "text": "\"That isn't an answer.\"" },
+            { "type": "line", "text": "\"It's the one I've got.\"" }
+          ]
+        },
+        {
+          "id": "yes",
+          "label": "\"Yes. Go anyway.\"",
+          "beats": [
+            { "type": "line", "text": "It's the first time you have ever answered that question straight, in three years, in either direction." },
+            { "type": "line", "text": "He goes very still in the cradle." },
+            { "type": "line", "text": "\"Go anyway, Oliver.\"" },
+            { "type": "line", "text": "\"I'll come back and see to them,\" he says, which is the most ridiculous sentence anybody has ever said on the edge of a ridge, and you will keep it for the rest of your life." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The wind changes." },
+    { "type": "line", "text": "The canvas fills from the leading edge to the tail. The ribs bend in sequence — not like a bird flapping." },
+    { "type": "line", "text": "Like a door opening into a room bigger than itself." },
+    { "type": "line", "text": "Oliver puts his head down." },
+    { "type": "line", "text": "The skids race." },
+    { "type": "line", "text": "You push the chair backward. The front wheel lands. The rear wheel strikes the wall. The jolt goes through your body hard enough to loosen the goggles." },
+    { "type": "line", "text": "The glider reaches the edge." },
+    { "type": "line", "text": "For one breath, Oliver is still on the ground." },
+    { "type": "line", "text": "Then the skids stop touching it." },
+    {
+      "type": "battle",
+      "text": "The machine drops.\n\nOliver pulls the wing hinge. The central spar folds by one tooth. The glider noses down toward the plain.\n\nThe crowd screams below.\n\nYou cannot reach him. You cannot call him back by strength. You can only see, through the scratched lenses, a dark line where the right wing has begun to collapse.\n\n\"Oliver!\" you shout. \"Left brace!\"\n\nHe turns his head.\n\n\"The shoulder brace. Pull the red strap.\"\n\nHe hauls the strap. The brace releases. His body shifts left. The damaged wing rises just enough for the wind to get under it.\n\nThe glider drops another twenty feet.\n\nThe canvas tears along the seam.\n\nOliver reaches for the hand lever by his knee — the one that opens the second hinge. His fingers miss it.\n\n\"Use your elbow!\"\n\nHe strikes the lever. The wing opens.\n\nThe frame turns. The plain rushes sideways. The bridge flashes beneath him.",
+      "encounter": {
+        "enemyName": "The Last Fall",
+        "enemyHp": 50,
+        "enemyAtk": 15,
+        "fixedStats": true,
+        "playerStatsIgnored": true,
+        "onWin": "The wing catches. The frame turns, and turns true. Oliver rides it out over the bridge and does not fall.",
+        "onLose": null
+      }
+    },
+    { "type": "line", "text": "The glider rises ten feet, then twenty." },
+    { "type": "line", "text": "Oliver disappears behind the central spar. The cap tied to it snaps in the wind." },
+    { "type": "line", "text": "You grip the stone wall." },
+    { "type": "line", "text": "Below, the authorities run along the ridge. The woman's forgotten her umbrella. It lies open and empty near the launch point." },
+    { "type": "line", "text": "The glider doesn't climb like a bird." },
+    { "type": "line", "text": "It climbs like a thought somebody has refused to give up. Each gust hands it another piece of height." },
+    { "type": "line", "text": "Oliver turns the frame toward the western hills." },
+    { "type": "line", "text": "He passes over the bridge." },
+    { "type": "line", "text": "The plain gets smaller." },
+    { "type": "line", "text": "A shelf of cloud waits ahead of him, grey and bruised underneath. His glider is a dark mark against it." },
+    {
+      "type": "choice",
+      "key": "c20-lensesoff",
+      "text": "Through the scratched glass there are two of him. Without it there is one, very small, very far.",
+      "options": [
+        {
+          "id": "both",
+          "label": "Take them off. Then put them back on.",
+          "beats": [
+            { "type": "line", "text": "Without them the distance loses its doubled edges and the machine becomes smaller." },
+            { "type": "line", "text": "You put them back on." },
+            { "type": "line", "text": "The lenses show two Olivers — one made of brass light and one of shadow." },
+            { "type": "line", "text": "Both rise." }
+          ]
+        },
+        {
+          "id": "keep",
+          "label": "Keep them on. See it the way he built it to be seen.",
+          "beats": [
+            { "type": "line", "text": "The scratches take the light and split it. There are two Olivers up there — one made of brass light and one of shadow — and a doubled cap on a doubled spar." },
+            { "type": "line", "text": "It's a poor instrument. It was filed by a boy in a washhouse out of a plate that was meant for something else." },
+            { "type": "line", "text": "You wouldn't trade it for the observatory's telescope." },
+            { "type": "line", "text": "Both Olivers rise." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The glider enters the cloud." },
+    { "type": "line", "text": "The crowd goes silent." },
+    { "type": "line", "text": "Oliver vanishes." },
+    {
+      "type": "choice",
+      "key": "c20-count",
+      "text": "There is nothing left that you can do with your hands.",
+      "options": [
+        {
+          "id": "count",
+          "label": "Count.",
+          "beats": [
+            { "type": "line", "text": "One. Two. Three." },
+            { "type": "line", "text": "The cloud swallows the wing." },
+            { "type": "line", "text": "Four. Five." },
+            { "type": "line", "text": "You count out loud, on a ridge, in front of the district authorities, because a girl with a stolen surveyor's rule once told you she counted until she was safe." }
+          ]
+        },
+        {
+          "id": "hername",
+          "label": "Count. Say her name at every fifth.",
+          "beats": [
+            { "type": "line", "text": "One. Two. Three." },
+            { "type": "line", "text": "The cloud swallows the wing." },
+            { "type": "line", "text": "Four. Five. Ada." },
+            { "type": "line", "text": "Six. Seven. Eight. Nine. Ten. Ada." },
+            { "type": "line", "text": "The constables hear you doing it. One of them takes his hat off, which is nothing, which changes nothing, and you notice it anyway." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The woman comes and stands beside you. Her coat's wet through." },
+    { "type": "line", "text": "\"He'll fall,\" she says." },
+    { "type": "line", "text": "You keep counting." },
+    { "type": "line", "text": "\"The cloud's too thick.\"" },
+    {
+      "type": "choice",
+      "key": "c20-woman",
+      "text": "She is standing close enough that you could take hold of her sleeve.",
+      "options": [
+        {
+          "id": "opinion",
+          "label": "\"You've never been inside one.\"",
+          "beats": [
+            { "type": "line", "text": "\"Neither have you.\"" },
+            { "type": "line", "text": "\"That's why I'm not giving an opinion.\"" },
+            { "type": "line", "text": "She hasn't got an answer. Nobody in the history of the district has got an answer, which is the entire point of the morning." }
+          ]
+        },
+        {
+          "id": "watchit",
+          "label": "\"Then watch him do it, and put that in the folder.\"",
+          "beats": [
+            { "type": "line", "text": "\"I write what occurs.\"" },
+            { "type": "line", "text": "\"Then write that it was a boy from the parish orphanage,\" you say, \"and that he built it in a washhouse out of a school desk, and that a girl called Ada Pike found the route, and spell her name with an I.\"" },
+            { "type": "line", "text": "The woman looks up at the cloud shelf." },
+            { "type": "line", "text": "\"You have never once asked me for anything else,\" she says." },
+            { "type": "line", "text": "\"No,\" you say. \"That's the whole list.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "At twenty, a shadow appears above the cloud shelf." },
+    { "type": "line", "text": "It isn't the glider." },
+    { "type": "line", "text": "The shadow grows wings." },
+    { "type": "line", "text": "Oliver rises through the top of the cloud." },
+    { "type": "line", "text": "The first human being to see above the clouds turns the machine in a wide, shaking circle." },
+    { "type": "line", "text": "Sunlight strikes the canvas. The dark seams go gold." },
+    { "type": "line", "text": "He's so high that the authorities have become small figures on a ridge." },
+    { "type": "line", "text": "You can see him." },
+    { "type": "line", "text": "He can see everything." },
+    { "type": "line", "text": "Oliver doesn't land until the sun has crossed the sky." },
+    { "type": "line", "text": "The glider comes down in the western plain, past the bridge, where the shepherd with the one-eared dog once told you the ground floods in winter." },
+    { "type": "line", "text": "The canvas is torn. One skid's missing. The cradle has held." },
+    { "type": "line", "text": "By the time he gets back up to the ridge he's walking badly and laughing at the same time." },
+    { "type": "line", "text": "There's something shut in one hand." },
+    { "type": "line", "text": "\"What?\" you ask." },
+    { "type": "line", "text": "He kneels beside your chair." },
+    { "type": "line", "text": "\"There's another sky.\"" },
+    { "type": "line", "text": "\"I suspected.\"" },
+    { "type": "line", "text": "\"The clouds have an upper side.\"" },
+    { "type": "line", "text": "\"Did they?\"" },
+    { "type": "line", "text": "\"They do.\"" },
+    { "type": "line", "text": "He opens his hand. A small white feather lies on his palm." },
+    { "type": "line", "text": "It isn't from a bird. It's come loose from the glider's patched canvas, and the fibres are lit through with sunlight." },
+    {
+      "type": "choice",
+      "key": "c20-feather",
+      "text": "He is holding it out flat, the way he held out the first one, through a fence, when he was nine.",
+      "options": [
+        {
+          "id": "sawit",
+          "label": "\"You saw it.\"",
+          "beats": [
+            { "type": "line", "text": "\"I saw the edge.\"" },
+            { "type": "line", "text": "He looks at the goggles. \"Can you see through them?\"" },
+            { "type": "line", "text": "\"Farther than before.\"" }
+          ]
+        },
+        {
+          "id": "first",
+          "label": "\"That's the second feather you've given me.\"",
+          "beats": [
+            { "type": "line", "text": "He stops." },
+            { "type": "line", "text": "\"The first was a gull's,\" he says. \"Off the coal store roof. You said it was a poor specimen.\"" },
+            { "type": "line", "text": "\"It was.\"" },
+            { "type": "line", "text": "\"This one's off my own wing.\"" },
+            { "type": "line", "text": "\"Then it's a better specimen,\" you say, and close your fist round it, and can't for a moment say anything else at all." },
+            { "type": "line", "text": "He looks at the goggles. \"Can you see through them?\"" },
+            { "type": "line", "text": "\"Farther than before.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The brass headpiece is finished before nightfall." },
+    { "type": "line", "text": "Oliver replaces the cloudy lenses with clear glass out of the observatory telescope." },
+    { "type": "line", "text": "He files the hinges smooth, adds a small wheel above the right temple, and fastens the leather without a single sharp edge on it anywhere." },
+    { "type": "line", "text": "When you turn the wheel, the lenses shift." },
+    { "type": "line", "text": "The bridge comes clear." },
+    { "type": "line", "text": "The western hills draw nearer. A narrow road behind the observatory appears where the old maps left nothing but blank cloth." },
+    { "type": "line", "text": "Past it, roads you have never travelled begin to separate out across the land." },
+    { "type": "line", "text": "The gamekeeper's daughter brings word up from the town." },
+    { "type": "line", "text": "Every gate will open to you now. No road will charge you. No known place will be closed to you." },
+    { "type": "line", "text": "The places hidden behind distance, and fog, and old maps are yours to reach." },
+    { "type": "line", "text": "You do not receive wings." },
+    { "type": "line", "text": "You receive the horizon." },
+    { "type": "line", "text": "Oliver sits under the window with the white feather between his fingers. Above him, birds cross the evening sky." },
+    { "type": "line", "text": "\"Beyond that eye,\" he says, \"what can you actually see?\"" },
+    {
+      "type": "choice",
+      "key": "c20-close",
+      "text": "You turn the brass wheel. The farthest road comes into focus.",
+      "options": [
+        {
+          "id": "enough",
+          "label": "\"Enough to start.\"",
+          "beats": [
+            { "type": "line", "text": "He doesn't ask what you mean by start." },
+            { "type": "line", "text": "He's already looking at the road with you." }
+          ]
+        },
+        {
+          "id": "her",
+          "label": "\"Eight hundred place names. And a bridge behind an observatory.\"",
+          "beats": [
+            { "type": "line", "text": "He goes quiet under the window." },
+            { "type": "line", "text": "\"She'd have wanted the numbers checked,\" he says." },
+            { "type": "line", "text": "\"Then we'll go and check them,\" you say. \"All of them. Every road she ever marked, and the ones she never got to.\"" },
+            { "type": "line", "text": "\"That would take years.\"" },
+            { "type": "line", "text": "\"I've got years,\" you say. \"For the first time in my life I've got years and somewhere to spend them.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The city below stays crowded, and poor, and full of men who believe the world ends at the edge of their ledgers." },
+    { "type": "line", "text": "The sky has proved otherwise." }
+  ]
+}

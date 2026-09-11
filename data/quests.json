@@ -1,0 +1,36 @@
+{
+  "_doc": "Quest catalog. Two tracks. `daily` is a rotating pool: quest-engine.js picks a fixed number of them per day (seeded by the date, so everyone bot-wide sees the same set and it changes at midnight). `milestone` is a one-time ordered track: each entry is claimable once ever, gated on a lifetime counter, and they surface roughly in order. Every quest has a `metric` (what event advances it) and a `goal` (how many). Rewards: type is one of solars|xp|gems|stamina|seasonPoints (a plain amount paid straight into the wallet) or item|character (granted through addOwnedSeasonContent, itemId required). Copy is player-facing: no dashes, commas and colons only.",
+
+  "metrics": {
+    "kill": "a monster killed in a dungeon (any dungeon, swarm or 1v1)",
+    "floor": "a dungeon floor cleared",
+    "catch": "a wild Pokemon caught",
+    "pvp_win": "a player-vs-player duel won",
+    "poke_win": "a Pokemon battle won",
+    "level": "a character level gained"
+  },
+
+  "daily": [
+    { "id": "d_kill_15",   "metric": "kill",     "goal": 15, "name": "Cull the Depths",     "desc": "Kill 15 monsters in any dungeon.",        "reward": { "type": "solars", "amount": 400 } },
+    { "id": "d_kill_30",   "metric": "kill",     "goal": 30, "name": "No Survivors",         "desc": "Kill 30 monsters in any dungeon.",        "reward": { "type": "solars", "amount": 750 } },
+    { "id": "d_floor_10",  "metric": "floor",    "goal": 10, "name": "Keep Climbing",        "desc": "Clear 10 dungeon floors.",                "reward": { "type": "xp",     "amount": 500 } },
+    { "id": "d_floor_20",  "metric": "floor",    "goal": 20, "name": "The Long Ascent",      "desc": "Clear 20 dungeon floors.",                "reward": { "type": "gems",   "amount": 1 } },
+    { "id": "d_catch_3",   "metric": "catch",    "goal": 3,  "name": "Gotta Catch A Few",    "desc": "Catch 3 wild Pokemon.",                   "reward": { "type": "solars", "amount": 350 } },
+    { "id": "d_catch_5",   "metric": "catch",    "goal": 5,  "name": "Full Pokedex Energy",  "desc": "Catch 5 wild Pokemon.",                   "reward": { "type": "gems",   "amount": 1 } },
+    { "id": "d_poke_3",    "metric": "poke_win", "goal": 3,  "name": "Type Advantage",       "desc": "Win 3 Pokemon battles.",                  "reward": { "type": "solars", "amount": 500 } },
+    { "id": "d_pvp_2",     "metric": "pvp_win",  "goal": 2,  "name": "Prove It",             "desc": "Win 2 duels against other players.",      "reward": { "type": "gems",   "amount": 1 } },
+    { "id": "d_level_1",   "metric": "level",    "goal": 1,  "name": "Grow Stronger",        "desc": "Gain a character level.",                 "reward": { "type": "xp",     "amount": 300 } }
+  ],
+
+  "milestone": [
+    { "id": "m_first_kill",   "metric": "kill",  "goal": 1,   "name": "First Blood",        "desc": "Kill your first monster.",                "reward": { "type": "solars", "amount": 200 } },
+    { "id": "m_kill_100",     "metric": "kill",  "goal": 100, "name": "Hundred Down",       "desc": "Kill 100 monsters in total.",             "reward": { "type": "solars", "amount": 1500 } },
+    { "id": "m_kill_1000",    "metric": "kill",  "goal": 1000,"name": "Ten Hundred",        "desc": "Kill 1000 monsters in total.",            "reward": { "type": "gems",   "amount": 3 } },
+    { "id": "m_first_floor",  "metric": "floor", "goal": 1,   "name": "One Step In",        "desc": "Clear your first dungeon floor.",         "reward": { "type": "xp",     "amount": 150 } },
+    { "id": "m_floor_100",    "metric": "floor", "goal": 100, "name": "Centurion",          "desc": "Clear 100 dungeon floors in total.",      "reward": { "type": "gems",   "amount": 2 } },
+    { "id": "m_first_catch",  "metric": "catch", "goal": 1,   "name": "First Partner",      "desc": "Catch your first wild Pokemon.",          "reward": { "type": "solars", "amount": 250 } },
+    { "id": "m_catch_25",     "metric": "catch", "goal": 25,  "name": "Trainer Certified",  "desc": "Catch 25 wild Pokemon in total.",         "reward": { "type": "gems",   "amount": 2 } },
+    { "id": "m_first_poke",   "metric": "poke_win","goal": 1, "name": "First Victory",      "desc": "Win your first Pokemon battle.",          "reward": { "type": "solars", "amount": 300 } },
+    { "id": "m_first_pvp",    "metric": "pvp_win","goal": 1,  "name": "First Duel",         "desc": "Win your first duel.",                    "reward": { "type": "gems",   "amount": 1 } }
+  ]
+}

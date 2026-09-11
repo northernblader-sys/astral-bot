@@ -1,0 +1,32 @@
+[
+  {
+    "locationId": "entry_tower",
+    "floor": 100,
+    "bossId": "syclila"
+  },
+  {
+    "locationId": "gambits_dungeon",
+    "floor": 100,
+    "bossId": "kikaru"
+  },
+  {
+    "locationId": "centurions_dungeon",
+    "floor": 100,
+    "bossId": "celestia"
+  },
+  {
+    "locationId": "astral_tower",
+    "floor": 100,
+    "bossId": "bam"
+  },
+  {
+    "locationId": "eternal_dungeon",
+    "floor": 100,
+    "bossId": "esteria"
+  },
+  {
+    "locationId": "season_01_ruins",
+    "floor": 100,
+    "bossId": "the_last_prayer"
+  }
+]

@@ -1,0 +1,373 @@
+{
+  "num": 19,
+  "id": "the-night-before",
+  "title": "The Night Before",
+  "requires": "the-net-closes",
+  "beats": [
+    { "type": "line", "text": "The launch waits, because the wind changes its mind." },
+    { "type": "line", "text": "By dusk the ridge is under fog." },
+    { "type": "line", "text": "The authorities stay below the observatory with their carts. They can't see the glider clearly, and they don't go." },
+    { "type": "line", "text": "Oliver takes you back to the old keeper's room under the dome." },
+    { "type": "line", "text": "A broken telescope lies across the floor with its glass taken out. The stone walls hold the whole of the day's cold." },
+    { "type": "line", "text": "You sit by the window with the unfinished goggles still round your head." },
+    { "type": "line", "text": "\"They pinch,\" you say." },
+    { "type": "line", "text": "Oliver kneels beside you and slackens the leather." },
+    { "type": "line", "text": "\"Better?\"" },
+    { "type": "line", "text": "\"Now they slip.\"" },
+    { "type": "line", "text": "He puts a strip of cloth under the band." },
+    {
+      "type": "choice",
+      "key": "c19-goggles",
+      "text": "He has been at this for twenty minutes. He is going to be at it all night if nobody stops him.",
+      "options": [
+        {
+          "id": "insect",
+          "label": "\"You're making me look like a badly assembled insect.\"",
+          "beats": [
+            { "type": "line", "text": "\"You asked for sight.\"" },
+            { "type": "line", "text": "\"I asked for comfort.\"" },
+            { "type": "line", "text": "\"You asked for both.\"" },
+            { "type": "line", "text": "He works the left hinge. The lens catches the lantern and throws a pale ring on the wall." }
+          ]
+        },
+        {
+          "id": "leaveit",
+          "label": "\"Leave it. It's good enough and you've a wing to check.\"",
+          "beats": [
+            { "type": "line", "text": "\"It isn't good enough.\"" },
+            { "type": "line", "text": "\"Oliver.\"" },
+            { "type": "line", "text": "\"It's the one thing tonight I can get right,\" he says, and goes on with the band." },
+            { "type": "line", "text": "So you let him. You sit still for another twenty minutes with your head under a boy's hands, in a cold stone room, and neither of you says a word." },
+            { "type": "line", "text": "The lens catches the lantern and throws a pale ring on the wall." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Somewhere below the ridge, somebody coughs." },
+    { "type": "line", "text": "\"They're waiting,\" you say." },
+    { "type": "line", "text": "\"So are we.\"" },
+    { "type": "line", "text": "Oliver's brought one loaf. He cuts it with the bone-handled knife Ada gave him." },
+    { "type": "line", "text": "The slices come out uneven." },
+    { "type": "line", "text": "\"You're cutting it wrong,\" you say." },
+    { "type": "line", "text": "\"There's a correct way?\"" },
+    { "type": "line", "text": "\"Ada would say there is.\"" },
+    { "type": "line", "text": "He holds the knife over the loaf. \"What would she say?\"" },
+    {
+      "type": "choice",
+      "key": "c19-bread",
+      "text": "He is asking you to do her voice. He has never asked before.",
+      "options": [
+        {
+          "id": "map",
+          "label": "\"That you've confused a meal with a map.\"",
+          "beats": [
+            { "type": "line", "text": "\"She said that about everything.\"" },
+            { "type": "line", "text": "\"She'd have found a new line for you.\"" },
+            { "type": "line", "text": "He cuts the bread. The crust breaks under the blade." }
+          ]
+        },
+        {
+          "id": "wont",
+          "label": "\"I'll not do her for you.\"",
+          "beats": [
+            { "type": "line", "text": "He puts the knife down." },
+            { "type": "line", "text": "\"Why not?\"" },
+            { "type": "line", "text": "\"Because I'd be good at it,\" you say, \"and then you'd ask me again, and in five years you'd have a version of her in your head that's mostly me, and she'd be gone twice.\"" },
+            { "type": "line", "text": "He sits with that for a while." },
+            { "type": "line", "text": "\"She'd have said something about the bread,\" he says. \"I can't get it.\"" },
+            { "type": "line", "text": "\"No. That's the whole of it. That's what it is.\"" },
+            { "type": "line", "text": "He cuts the bread. The crust breaks under the blade." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"She wanted to see the bridge,\" he says." },
+    { "type": "line", "text": "\"She saw it.\"" },
+    { "type": "line", "text": "\"From the tunnel.\"" },
+    { "type": "line", "text": "\"That still counts.\"" },
+    { "type": "line", "text": "\"No.\"" },
+    { "type": "line", "text": "You take the slice out of his hand." },
+    { "type": "line", "text": "\"You don't get to decide what counted for her.\"" },
+    { "type": "line", "text": "He leans back against the stone." },
+    { "type": "line", "text": "\"You always do that,\" he says." },
+    { "type": "line", "text": "\"What?\"" },
+    { "type": "line", "text": "\"Make the answer harder.\"" },
+    { "type": "line", "text": "\"Easy answers have done enough damage.\"" },
+    { "type": "line", "text": "Night comes over the ridge. The fog thins. Below, the lanterns mark the line of the authorities." },
+    { "type": "line", "text": "Oliver checks the glider every hour. Belts, hinge, canvas, skids." },
+    { "type": "line", "text": "You read the measurements off the slate." },
+    { "type": "line", "text": "\"The shoulder strap's secure.\"" },
+    { "type": "line", "text": "\"The left spar's straight.\"" },
+    { "type": "line", "text": "\"The hinge has one loose tooth.\"" },
+    { "type": "line", "text": "Oliver's head comes up." },
+    {
+      "type": "choice",
+      "key": "c19-joke",
+      "text": "His face has gone the colour of the fog.",
+      "options": [
+        {
+          "id": "joking",
+          "label": "\"I'm joking.\"",
+          "beats": [
+            { "type": "line", "text": "\"Don't joke about hinges.\"" },
+            { "type": "line", "text": "\"You're becoming Ada.\"" },
+            { "type": "line", "text": "He turns back to the machine." },
+            { "type": "line", "text": "\"That wasn't an insult,\" you say." },
+            { "type": "line", "text": "\"I know.\"" }
+          ]
+        },
+        {
+          "id": "checkit",
+          "label": "\"Go and look anyway.\"",
+          "beats": [
+            { "type": "line", "text": "\"You said one loose—\"" },
+            { "type": "line", "text": "\"I was joking. Go and look anyway.\"" },
+            { "type": "line", "text": "He goes and looks. It takes him six minutes. The tooth is sound." },
+            { "type": "line", "text": "\"That was cruel,\" he says when he comes back." },
+            { "type": "line", "text": "\"That was six minutes of you doing something instead of sitting in the dark thinking about a beam,\" you say." },
+            { "type": "line", "text": "He looks at you." },
+            { "type": "line", "text": "\"You're becoming Ada.\"" },
+            { "type": "line", "text": "\"That wasn't an insult.\"" },
+            { "type": "line", "text": "\"I know.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "On the wall the old telescope mount points up at the ceiling. Dust has settled in its gears." },
+    { "type": "line", "text": "A small gap in the dome shows the stars." },
+    { "type": "line", "text": "Oliver follows where you're looking." },
+    { "type": "line", "text": "\"When I'm up there, I mightn't see anything,\" he says." },
+    { "type": "line", "text": "\"You'll see cloud.\"" },
+    { "type": "line", "text": "\"What if it covers everything?\"" },
+    {
+      "type": "choice",
+      "key": "c19-edge",
+      "text": "This is the last question he will ask you from the ground.",
+      "options": [
+        {
+          "id": "edge",
+          "label": "\"Then find their edge.\"",
+          "beats": [
+            { "type": "line", "text": "\"What if there's no edge?\"" },
+            { "type": "line", "text": "\"Then you've found something.\"" },
+            { "type": "line", "text": "He nods, as though you'd given him an instruction for the machine." }
+          ]
+        },
+        {
+          "id": "tellme",
+          "label": "\"Then come back and tell me exactly what nothing looks like.\"",
+          "beats": [
+            { "type": "line", "text": "\"That's not much of a report.\"" },
+            { "type": "line", "text": "\"It's more than anybody in this district has got,\" you say. \"Nobody's ever been up. Nobody knows what the inside of a cloud does to the light. You'll be the only person I've ever met who knows a thing I can't get at, and I want it in detail, and I want it wrong the first time so we can argue.\"" },
+            { "type": "line", "text": "He nods, as though you'd given him an instruction for the machine." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Near midnight, Oliver sits down beside your chair." },
+    { "type": "line", "text": "He hasn't asked you to sleep. He hasn't admitted that he's frightened." },
+    {
+      "type": "choice",
+      "key": "c19-morning",
+      "text": "He says, \"What should I hear from you before morning?\"",
+      "options": [
+        {
+          "id": "come-back",
+          "label": "\"Come back with an answer worth arguing about.\"",
+          "beats": [
+            { "type": "line", "text": "\"That's all?\"" },
+            { "type": "line", "text": "\"That's the entire commission. One answer. Wrong for preference.\"" },
+            { "type": "line", "text": "\"And if I've nothing?\"" },
+            { "type": "line", "text": "\"Then invent something and I'll catch you at it,\" you say, \"and we'll have the argument regardless, which was always the point of the arrangement.\"" },
+            { "type": "line", "text": "He almost laughs." }
+          ]
+        },
+        {
+          "id": "still-here",
+          "label": "\"If you fall, I'll still be here to insult you.\"",
+          "beats": [
+            { "type": "line", "text": "He doesn't answer straight off." },
+            { "type": "line", "text": "\"That's the only promise I can actually keep,\" you say. \"I can't catch you. I can't run down the ridge. I can be at the bottom being unpleasant about your technique.\"" },
+            { "type": "line", "text": "\"That's worth more than it sounds.\"" },
+            { "type": "line", "text": "\"I know exactly what it's worth,\" you say. \"I've been on the receiving end of nobody being there.\"" }
+          ]
+        },
+          {
+          "id": "take-ada",
+          "label": "\"Take Ada with you. Not the cap. Her whole impossible map.\"",
+          "beats": [
+            { "type": "line", "text": "\"I've the cap tied to the spar.\"" },
+            { "type": "line", "text": "\"That's cloth. I mean the rest of it. Eight hundred place names and a bridge behind an observatory and a girl who thought a river was drawn wrong and said so to a stranger.\"" },
+            { "type": "line", "text": "He looks at the lantern." },
+            { "type": "line", "text": "\"She'd have wanted the numbers taken up,\" he says." },
+            { "type": "line", "text": "\"Then take them up. Every route she ever marked. Fly over the whole lot of them and come down knowing which ones were right.\"" },
+            { "type": "line", "text": "\"That's a great deal to carry.\"" },
+            { "type": "line", "text": "\"You're carrying it either way,\" you say. \"You may as well get it airborne.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Oliver reaches for the brass box. He opens it and takes out the goggles' spare hinge." },
+    { "type": "line", "text": "\"I didn't finish them for you,\" he says." },
+    { "type": "line", "text": "\"I noticed.\"" },
+    { "type": "line", "text": "\"I thought you'd see what I saw.\"" },
+    { "type": "line", "text": "\"That's a dangerous wish.\"" },
+    { "type": "line", "text": "\"I know.\"" },
+    { "type": "line", "text": "He turns the hinge in the lantern light. \"I thought if you could see the distance, it'd be easier.\"" },
+    { "type": "line", "text": "\"Easier to do what?\"" },
+    { "type": "line", "text": "\"Stay.\"" },
+    { "type": "line", "text": "You touch the brass plate above your brow. The scratches in the lenses pull the room apart. The lantern doubles. Oliver's face turns up at the edge of both images." },
+    { "type": "line", "text": "\"I have stayed,\" you say." },
+    { "type": "line", "text": "\"Not because you had to.\"" },
+    { "type": "line", "text": "\"No.\"" },
+    { "type": "line", "text": "\"Not because you were trapped.\"" },
+    { "type": "line", "text": "You look at the door, the steps past it, the road going down to the authorities." },
+    { "type": "line", "text": "\"Those things can both be true,\" you say." },
+    { "type": "line", "text": "He folds the hinge back into the box." },
+    {
+      "type": "line",
+      "text": "The answer settles between the two of you.",
+      "textByOptionRef": "c02-first-told",
+      "textByOption": {
+        "believe": "The answer settles between the two of you.\n\nYou told him, that first day in the alley, that you believed him. You've never once taken it back — not through the fall, not through the tunnel, and not tonight, with the ridge waiting and the fog not yet lifted.",
+        "worry": "The answer settles between the two of you.\n\nYou told him, that first day, that he'd get himself killed. He's going to try it in four hours, and the old fear sits exactly where it always has, right under the ribs, and has never once been proved wrong enough to leave.",
+        "honest": "The answer settles between the two of you.\n\nYou told him, that first day, that you weren't sure — and you said it plainly instead of choosing a kinder lie. He built three frames on the strength of a girl who wouldn't pretend. That is what your honesty turned out to be worth."
+      }
+    },
+    { "type": "line", "text": "At one in the morning, Oliver asks whether you want to go home." },
+    { "type": "line", "text": "\"Which home?\"" },
+    { "type": "line", "text": "\"The room.\"" },
+    { "type": "line", "text": "\"The window.\"" },
+    { "type": "line", "text": "\"The chair.\"" },
+    { "type": "line", "text": "\"You're naming furniture as though it were a family.\"" },
+    { "type": "line", "text": "\"It's what I know.\"" },
+    { "type": "line", "text": "You look through the goggle lenses. The stars smear into faint lines." },
+    {
+      "type": "choice",
+      "key": "c19-afraid",
+      "text": "There is one sentence you have never said in three years, to him or to anybody.",
+      "options": [
+        {
+          "id": "afraid",
+          "label": "\"I'm afraid.\"",
+          "beats": [
+            { "type": "line", "text": "Oliver's hands go still." },
+            { "type": "line", "text": "You haven't said it before. Not about the chair, the roads, the authorities, or the machine." },
+            { "type": "line", "text": "\"Of me falling?\" he asks." },
+            { "type": "line", "text": "\"Of you coming back.\"" },
+            { "type": "line", "text": "He waits." },
+            { "type": "line", "text": "\"If you come back unchanged, I'll have to find a way to be glad,\" you say. \"If you don't come back, I'll have to keep a window open for somebody who isn't there.\"" },
+            { "type": "line", "text": "Oliver looks at the ridge." },
+            { "type": "line", "text": "\"I don't know how to answer that.\"" },
+            { "type": "line", "text": "\"Good.\"" },
+            { "type": "line", "text": "\"Good?\"" },
+            { "type": "line", "text": "\"It means you heard it.\"" }
+          ]
+        },
+        {
+          "id": "furniture",
+          "label": "\"Then let's name it properly. It's a room, a window, a chair, and you.\"",
+          "beats": [
+            { "type": "line", "text": "He goes very still." },
+            { "type": "line", "text": "\"That's four things,\" he says. \"Three of them can't leave.\"" },
+            { "type": "line", "text": "\"Yes.\"" },
+            { "type": "line", "text": "\"That's what you're afraid of.\"" },
+            { "type": "line", "text": "It's the first time in three years anybody has said the sentence for you." },
+            { "type": "line", "text": "\"If you come back unchanged, I'll have to find a way to be glad,\" you say. \"If you don't come back, I'll have to keep a window open for somebody who isn't there. Those are the two outcomes. There isn't a third.\"" },
+            { "type": "line", "text": "\"I don't know how to answer that.\"" },
+            { "type": "line", "text": "\"Good. It means you heard it.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He rests his forehead against the wooden handle of your chair." },
+    { "type": "line", "text": "He stays there a long time. You don't move your hand from the rim." },
+    { "type": "line", "text": "The fog lifts before dawn." },
+    { "type": "line", "text": "The plain comes up under the ridge, silver with frost. The bridge is visible. Past it, the hills go up into a bank of cloud." },
+    { "type": "line", "text": "Oliver moves the glider to the launch point." },
+    { "type": "line", "text": "The authorities see him. Lanterns start up the path." },
+    { "type": "line", "text": "He comes back and kneels beside the chair." },
+    { "type": "line", "text": "\"I need you to hold the rope till the second gust.\"" },
+    { "type": "line", "text": "\"I know.\"" },
+    { "type": "line", "text": "\"Don't pull too early.\"" },
+    { "type": "line", "text": "\"I know.\"" },
+    { "type": "line", "text": "\"Don't let go because they shout.\"" },
+    { "type": "line", "text": "\"I know.\"" },
+    { "type": "line", "text": "\"If something breaks, I'll call.\"" },
+    { "type": "line", "text": "\"I know.\"" },
+    { "type": "line", "text": "He looks at the goggles. \"Can you see?\"" },
+    { "type": "line", "text": "\"You're doubled.\"" },
+    { "type": "line", "text": "\"That isn't an answer.\"" },
+    { "type": "line", "text": "\"Neither's the sky.\"" },
+    { "type": "line", "text": "He puts his hand on the arm of your chair." },
+    { "type": "line", "text": "\"Thank you,\" he says." },
+    {
+      "type": "choice",
+      "key": "c19-thanks",
+      "text": "He has said that twice in three years and both times it sounded like a door closing.",
+      "options": [
+        {
+          "id": "unfinished",
+          "label": "\"Don't make it sound finished.\"",
+          "beats": [
+            { "type": "line", "text": "He takes his hand back." },
+            { "type": "line", "text": "\"Say something you'll have to keep,\" you tell him." },
+            { "type": "line", "text": "\"I'll be back before the frost goes off the reeds.\"" },
+            { "type": "line", "text": "\"That's better. That's a thing I can hold you to.\"" }
+          ]
+        },
+        {
+          "id": "accept",
+          "label": "\"You're welcome.\" — Let him have it.",
+          "beats": [
+            { "type": "line", "text": "He looks up, surprised. He had a whole argument prepared for you." },
+            { "type": "line", "text": "\"You're not going to say it's not finished?\"" },
+            { "type": "line", "text": "\"Not this morning,\" you say. \"This morning you may thank me and I may accept it, like two people in a story where nothing goes wrong.\"" },
+            { "type": "line", "text": "He keeps his hand on the arm of the chair a moment longer than he meant to." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The cap's tied to the central spar. The red pencil sits under the belt." },
+    { "type": "line", "text": "The woman in the dark coat reaches the ridge." },
+    { "type": "line", "text": "\"Oliver Wright,\" she calls. \"Stand away from the machine.\"" },
+    { "type": "line", "text": "Oliver climbs into the cradle." },
+    { "type": "line", "text": "The first gust hits the canvas and twists the wing. The frame holds." },
+    { "type": "line", "text": "You take the rope." },
+    { "type": "line", "text": "The woman says, \"Monica. Don't do this.\"" },
+    { "type": "line", "text": "You look at her through the scratched lenses. Her face splits into two pale figures, both wearing the same polished buttons." },
+    {
+      "type": "choice",
+      "key": "c19-close",
+      "text": "The second gust is coming out of the east. There is time for exactly one sentence.",
+      "options": [
+        {
+          "id": "tunnel",
+          "label": "\"You should have said that before the tunnel.\"",
+          "beats": [
+            { "type": "line", "text": "She stops walking." },
+            { "type": "line", "text": "It's the only blow you land on her in three years, and you land it once, and you don't need to land it twice." }
+          ]
+        },
+        {
+          "id": "watch",
+          "label": "\"Stand still and watch. You'll want to have seen it.\"",
+          "beats": [
+            { "type": "line", "text": "\"I am here to prevent it.\"" },
+            { "type": "line", "text": "\"You're here to write it down,\" you say. \"You've been writing it down for two years. This is the page.\"" },
+            { "type": "line", "text": "She stops walking." },
+            { "type": "line", "text": "You will find out, much later, that she did stand still, and that she did watch, and that what she wrote in the folder was not what she'd been ordered to write." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The second gust comes from the east." },
+    { "type": "line", "text": "The glider shifts." },
+    { "type": "line", "text": "Oliver looks back." },
+    { "type": "line", "text": "You hold the rope." },
+    { "type": "line", "text": "The authorities shout. The plain waits below. The cloud hangs over the hills with its lower edges going bright with the first light." },
+    { "type": "line", "text": "Oliver raises one hand." },
+    { "type": "line", "text": "The rope pulls against your palms." },
+    { "type": "line", "text": "You do not let go." }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "_note": "Season Shop money offers — Naira only, same rules as topup-packages.json (never purchasable with Solars/gems). Distinct from the in-game-currency Season Shop (.season shop), which spends Season Points. These are themed, limited-time bundles surfaced only via `.season offer`, DM-only. IDs are CAPS 'PREFIX-NAME' (GEM- for gem bundles, SOL- for solar bundles, low to high); buy lookup in plugins/season.js is case-insensitive so players can type any case. Edit priceNaira/gems/solars freely — nothing else in the code depends on the numbers.",
+  "packages": [
+    { "id": "GEM-SPARK",     "gems": 10,  "solars": 0,       "priceNaira": 900 },
+    { "id": "GEM-GLIMMER",   "gems": 25,  "solars": 0,       "priceNaira": 2000 },
+    { "id": "GEM-SHINE",     "gems": 50,  "solars": 0,       "priceNaira": 3750 },
+    { "id": "GEM-RADIANCE",  "gems": 100, "solars": 0,       "priceNaira": 7000 },
+    { "id": "GEM-SUPERNOVA", "gems": 250, "solars": 0,       "priceNaira": 16250 },
+    { "id": "SOL-EMBER",     "gems": 0,   "solars": 50000,   "priceNaira": 2750 },
+    { "id": "SOL-BLAZE",     "gems": 0,   "solars": 100000,  "priceNaira": 5000 },
+    { "id": "SOL-INFERNO",   "gems": 0,   "solars": 250000,  "priceNaira": 11250 },
+    { "id": "SOL-WILDFIRE",  "gems": 0,   "solars": 500000,  "priceNaira": 20000 },
+    { "id": "SOL-SUPERNOVA", "gems": 0,   "solars": 1000000, "priceNaira": 35000 }
+  ]
+}

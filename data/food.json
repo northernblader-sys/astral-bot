@@ -1,0 +1,158 @@
+[
+  {
+    "id": "wheat",
+    "name": "Wheat",
+    "type": "ingredient",
+    "rarity": "common",
+    "cookShopPrice": 8,
+    "description": "A humble bundle of golden grain. The start of most bread."
+  },
+  {
+    "id": "rice",
+    "name": "Rice",
+    "type": "ingredient",
+    "rarity": "common",
+    "cookShopPrice": 8,
+    "description": "Plain white rice. Filling and endlessly versatile."
+  },
+  {
+    "id": "vegetables",
+    "name": "Vegetables",
+    "type": "ingredient",
+    "rarity": "common",
+    "cookShopPrice": 10,
+    "description": "A fresh mix of garden vegetables."
+  },
+  {
+    "id": "egg",
+    "name": "Egg",
+    "type": "ingredient",
+    "rarity": "common",
+    "cookShopPrice": 12,
+    "description": "A fresh farm egg."
+  },
+  {
+    "id": "milk",
+    "name": "Milk",
+    "type": "ingredient",
+    "rarity": "common",
+    "cookShopPrice": 12,
+    "description": "A jug of creamy milk."
+  },
+  {
+    "id": "honey",
+    "name": "Honey",
+    "type": "ingredient",
+    "rarity": "uncommon",
+    "cookShopPrice": 18,
+    "description": "Sweet golden honey, straight from the comb."
+  },
+  {
+    "id": "berries",
+    "name": "Berries",
+    "type": "ingredient",
+    "rarity": "uncommon",
+    "cookShopPrice": 15,
+    "description": "A handful of wild sweet berries."
+  },
+  {
+    "id": "fish_raw",
+    "name": "Raw Fish",
+    "type": "ingredient",
+    "rarity": "uncommon",
+    "cookShopPrice": 20,
+    "description": "A fresh-caught fish, ready for the pan."
+  },
+  {
+    "id": "meat_raw",
+    "name": "Raw Meat",
+    "type": "ingredient",
+    "rarity": "uncommon",
+    "cookShopPrice": 25,
+    "description": "A cut of raw meat. Best not eaten as-is."
+  },
+  {
+    "id": "spice",
+    "name": "Spice",
+    "type": "ingredient",
+    "rarity": "uncommon",
+    "cookShopPrice": 22,
+    "description": "A pinch of aromatic spice that lifts any dish."
+  },
+
+  {
+    "id": "bread",
+    "name": "Bread",
+    "type": "food",
+    "rarity": "common",
+    "hunger": 25,
+    "description": "A warm, crusty loaf. Restores 25 hunger."
+  },
+  {
+    "id": "rice_bowl",
+    "name": "Rice Bowl",
+    "type": "food",
+    "rarity": "common",
+    "hunger": 30,
+    "description": "A steaming bowl of rice and vegetables. Restores 30 hunger."
+  },
+  {
+    "id": "omelette",
+    "name": "Omelette",
+    "type": "food",
+    "rarity": "common",
+    "hunger": 35,
+    "description": "Fluffy eggs folded with milk. Restores 35 hunger."
+  },
+  {
+    "id": "grilled_fish",
+    "name": "Grilled Fish",
+    "type": "food",
+    "rarity": "uncommon",
+    "hunger": 42,
+    "description": "Fish grilled with a touch of spice. Restores 42 hunger."
+  },
+  {
+    "id": "berry_pie",
+    "name": "Berry Pie",
+    "type": "food",
+    "rarity": "uncommon",
+    "hunger": 50,
+    "description": "A sweet berry pie glazed with honey. Restores 50 hunger."
+  },
+  {
+    "id": "meat_stew",
+    "name": "Meat Stew",
+    "type": "food",
+    "rarity": "uncommon",
+    "hunger": 58,
+    "description": "A hearty stew of meat and vegetables. Restores 58 hunger."
+  },
+  {
+    "id": "honey_glazed_ham",
+    "name": "Honey-Glazed Ham",
+    "type": "food",
+    "rarity": "rare",
+    "hunger": 68,
+    "description": "Rich ham glazed in honey and spice. Restores 68 hunger."
+  },
+  {
+    "id": "feast_platter",
+    "name": "Feast Platter",
+    "type": "food",
+    "rarity": "rare",
+    "hunger": 92,
+    "description": "A groaning platter of meat, fish, and rice. Restores 92 hunger."
+  },
+
+  {
+    "id": "golden_apple",
+    "name": "Golden Apple",
+    "type": "food",
+    "rarity": "legendary",
+    "hunger": 100,
+    "immunity": true,
+    "cookShopPrice": 5000,
+    "description": "A shimmering apple of pure gold. Eat it and you will never hunger again — until the day you die."
+  }
+]

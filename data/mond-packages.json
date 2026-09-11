@@ -1,0 +1,27 @@
+{
+  "_comment": [
+    "Mond packs, sold for Naira by bank transfer (plugins/monds.js), on the same",
+    "screenshot-confirmation flow as gem top-ups (lib/pending-purchase.js).",
+    "",
+    "`monds` is the TOTAL credited on confirm, already inclusive of `bonus`.",
+    "`base` is what the price buys at the flat N2,000/Mond baseline, so",
+    "base + bonus === monds for every row. Nothing reads `base` to compute a",
+    "charge; it exists so the pack list can show the free portion honestly",
+    "instead of the player having to work the rate out themselves.",
+    "",
+    "Baseline is N2,000/Mond (Starter and Basic sit exactly on it). Everything",
+    "above Basic pays the same rate and gets the bonus on top, which is what",
+    "drives the effective rate down: N1,667 at Value, N1,481 at Popular,",
+    "N1,333 at Best Value.",
+    "",
+    "A character costs 5 Monds (CHARACTER_MOND_PRICE in lib/monds.js), so Basic",
+    "is exactly one character and Best Value is twelve."
+  ],
+  "mondPackages": [
+    { "id": "starter", "label": "Starter",    "monds": 1,  "base": 1,  "bonus": 0,  "priceNaira": 2000 },
+    { "id": "basic",   "label": "Basic",      "monds": 5,  "base": 5,  "bonus": 0,  "priceNaira": 10000 },
+    { "id": "value",   "label": "Value",      "monds": 12, "base": 10, "bonus": 2,  "priceNaira": 20000 },
+    { "id": "popular", "label": "Popular",    "monds": 27, "base": 20, "bonus": 7,  "priceNaira": 40000 },
+    { "id": "best",    "label": "Best Value", "monds": 60, "base": 40, "bonus": 20, "priceNaira": 80000 }
+  ]
+}

@@ -1,0 +1,413 @@
+{
+  "num": 2,
+  "id": "nobody-owns-the-sky",
+  "title": "Nobody Owns the Sky",
+  "requires": "the-boy-who-watched-birds",
+  "beats": [
+    { "type": "line", "text": "Morning again. The promised invention is waiting on the pavement below your window, wrapped in a blanket that used to be red." },
+    { "type": "line", "text": "It's tied with string. One corner is patched with a man's necktie." },
+    { "type": "line", "text": "\"You could've brought it through the door,\" you call." },
+    { "type": "line", "text": "\"The door has opinions.\"" },
+    {
+      "type": "choice",
+      "key": "c02-door",
+      "text": "The door is a door. Do you say so?",
+      "options": [
+        {
+          "id": "flat",
+          "label": "\"The door is a door.\"",
+          "beats": [
+            { "type": "line", "text": "\"It knows I'm poor,\" he says." },
+            { "type": "line", "text": "\"Doors don't know things.\"" },
+            { "type": "line", "text": "\"This one's been trained.\"" }
+          ]
+        },
+        {
+          "id": "conspire",
+          "label": "\"Then we'll go around it.\"",
+          "beats": [
+            { "type": "line", "text": "He stops with his hand on the string." },
+            { "type": "line", "text": "\"We,\" he repeats, like he's testing whether the word holds weight." },
+            { "type": "line", "text": "\"It's my window,\" you say. \"I'm entitled to a share of the crime.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He unties the string one knot at a time, the way people do when they've had things taken off them in a hurry before." },
+    { "type": "line", "text": "The blanket comes away." },
+    { "type": "line", "text": "It's a frame. Slats and spars, longer than he is tall, curved at both ends like something's been holding its breath inside it." },
+    { "type": "line", "text": "Every joint is wrapped in cloth. Copper wire binds two of the slats. The rest are held by nails of every size he could find." },
+    { "type": "line", "text": "\"How many times have you built it?\" you ask." },
+    { "type": "line", "text": "\"This version?\"" },
+    { "type": "line", "text": "\"The question.\"" },
+    { "type": "line", "text": "He squints at the frame. \"Fourteen, perhaps.\"" },
+    {
+      "type": "choice",
+      "key": "c02-fourteen",
+      "text": "Fourteen. Perhaps.",
+      "options": [
+        {
+          "id": "tease",
+          "label": "\"Perhaps? You've lost count of your own disasters?\"",
+          "beats": [
+            { "type": "line", "text": "\"I stopped counting after the first one broke my nose.\"" },
+            { "type": "line", "text": "\"Which one was that?\"" },
+            { "type": "line", "text": "\"The third. The first two didn't get far enough off the ground to be rude about it.\"" }
+          ]
+        },
+        {
+          "id": "count",
+          "label": "\"Fourteen. And you're still out here at dawn.\"",
+          "beats": [
+            { "type": "line", "text": "He shrugs, which is a thing he does instead of saying yes." },
+            { "type": "line", "text": "\"The fourteenth one taught me something the thirteenth didn't,\" he says." },
+            { "type": "line", "text": "\"And the fifteenth?\"" },
+            { "type": "line", "text": "\"Hasn't spoken to me yet.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"You should keep a notebook,\" you say." },
+    { "type": "line", "text": "\"I have one.\"" },
+    { "type": "line", "text": "He says it too quickly, then puts his hand flat against his coat, over the inside pocket, as if the notebook might make a run for it." },
+    {
+      "type": "choice",
+      "key": "c02-notebook",
+      "text": "He's waiting to see whether you'll ask.",
+      "options": [
+        {
+          "id": "ask",
+          "label": "\"Show me.\"",
+          "beats": [
+            { "type": "line", "text": "He looks at the window. Then at the notebook. Then at the window again." },
+            { "type": "line", "text": "He climbs three rungs of the drainpipe and holds it up, open, so you can see without touching." },
+            { "type": "line", "text": "Oil-stained cover. Pages of figures. Curved spars. Lines of force drawn with a straight edge that was probably a butter knife." },
+            { "type": "line", "text": "One page is a bird, drawn from below. Every feather marked." },
+            { "type": "line", "text": "\"You drew that?\"" },
+            { "type": "line", "text": "\"The bird didn't volunteer.\"" },
+            { "type": "line", "text": "He shuts it before you get to the next page. But he let you have that one." }
+          ]
+        },
+        {
+          "id": "wait",
+          "label": "You don't ask. You wait.",
+          "beats": [
+            { "type": "line", "text": "The silence goes on long enough to become a decision." },
+            { "type": "line", "text": "He takes the notebook out himself." },
+            { "type": "line", "text": "\"You didn't ask,\" he says, holding it up toward your sill." },
+            { "type": "line", "text": "\"You'd have said no.\"" },
+            { "type": "line", "text": "\"Yes,\" he agrees, and opens it anyway." },
+            { "type": "line", "text": "Curved spars. Lines of force. A bird drawn from below with every feather marked, in a hand steadier than any other part of him." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"Nobody owns the sky,\" he says, tapping the page. \"That's the whole argument.\"" },
+    { "type": "line", "text": "The kitchen door bangs at the far end of the alley." },
+    { "type": "line", "text": "The landlord's son comes out with a broom. Seventeen, broad, and fond of finding reasons to use his size." },
+    { "type": "line", "text": "He sees the frame. He kicks one of the slats." },
+    { "type": "line", "text": "\"Move your rubbish.\"" },
+    { "type": "line", "text": "Oliver catches the frame before it goes over. \"It isn't rubbish.\"" },
+    { "type": "line", "text": "\"Everything you own is rubbish.\"" },
+    { "type": "line", "text": "The broom comes up. Oliver goes very still, and you understand all at once that he has been hit before and has learned not to move first." },
+    {
+      "type": "choice",
+      "key": "c02-broom",
+      "text": "Your hand is already on the window latch.",
+      "options": [
+        {
+          "id": "loud",
+          "label": "\"Leave it.\"",
+          "beats": [
+            { "type": "line", "text": "The boy looks up. Finds a girl in a chair at a first-floor window." },
+            { "type": "line", "text": "He laughs. \"You paying for the pavement?\"" },
+            { "type": "line", "text": "\"No. I'm paying to watch you make a fool of yourself. Do it without damaging the frame.\"" },
+            { "type": "line", "text": "He works out slowly that there's no version of the next minute where he looks clever." },
+            { "type": "line", "text": "He mutters something about tongues and windows, and goes." }
+          ]
+        },
+        {
+          "id": "cold",
+          "label": "\"Careful. That's the landlord's drainpipe you're standing on.\"",
+          "beats": [
+            { "type": "line", "text": "The boy stops. Looks down at his own boots on the iron bracket." },
+            { "type": "line", "text": "\"So?\"" },
+            { "type": "line", "text": "\"So when it bends, he'll ask who bent it, and I'll be at this window, as I always am.\"" },
+            { "type": "line", "text": "You've never threatened anyone before. It turns out to be mostly arithmetic." },
+            { "type": "line", "text": "He steps off the bracket, calls Oliver a word you won't repeat, and goes." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Oliver waits until the kitchen door shuts. Then he checks every joint, thumb pressing each knot as if listening for a fault beneath the cloth." },
+    { "type": "line", "text": "\"You didn't have to say anything,\" he tells you." },
+    { "type": "line", "text": "\"I know.\"" },
+    { "type": "line", "text": "\"He might complain about me.\"" },
+    { "type": "line", "text": "\"He complains when the weather changes.\"" },
+    { "type": "line", "text": "He laughs. His eyes stay on the frame." },
+    { "type": "line", "text": "You've started noticing when he laughs. After constables pass. When a room goes too quiet. When his stomach makes a sound loud enough to hear through glass." },
+    {
+      "type": "choice",
+      "key": "c02-courage",
+      "text": "\"Some people,\" he says, \"would call that courage.\"",
+      "options": [
+        {
+          "id": "deflect",
+          "label": "\"Some people would be mistaken.\"",
+          "beats": [
+            { "type": "line", "text": "\"Would they?\"" },
+            { "type": "line", "text": "\"Courage is when you could run and don't.\" You tap the arm of the chair. \"I'm just sitting here being rude at height.\"" },
+            { "type": "line", "text": "He doesn't argue. He also doesn't agree, which is worse." }
+          ]
+        },
+        {
+          "id": "own",
+          "label": "\"It's the only kind I've got left.\"",
+          "beats": [
+            { "type": "line", "text": "You didn't plan to say it. It comes out level, which is somehow worse than if it had wobbled." },
+            { "type": "line", "text": "Oliver doesn't look up at you with that face people make. He keeps his eyes on the knot under his thumb." },
+            { "type": "line", "text": "\"Then it's a good one,\" he says." },
+            { "type": "line", "text": "That's all. He goes back to the wire. You breathe again." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"What's it meant to do?\" you ask." },
+    { "type": "line", "text": "His fingers stop." },
+    { "type": "line", "text": "\"It's meant to leave the ground.\"" },
+    { "type": "line", "text": "The alley seems to shrink around the words. A bucket tips somewhere above you and water threads down the brick." },
+    {
+      "type": "choice",
+      "key": "c02-guess",
+      "text": "Leave the ground.",
+      "options": [
+        {
+          "id": "balloon",
+          "label": "\"A balloon?\"",
+          "beats": [
+            { "type": "line", "text": "\"No.\"" },
+            { "type": "line", "text": "\"A kite, then. A very large, very stupid kite.\"" },
+            { "type": "line", "text": "\"No.\"" },
+            { "type": "line", "text": "\"You're enjoying this.\"" },
+            { "type": "line", "text": "\"I've waited a long time to be asked properly.\"" }
+          ]
+        },
+        {
+          "id": "straight",
+          "label": "\"Don't make me guess. Say it.\"",
+          "beats": [
+            { "type": "line", "text": "He puts the pliers down. That's how you know it's coming." },
+            { "type": "line", "text": "\"A person,\" he says." },
+            { "type": "line", "text": "\"A person.\"" },
+            { "type": "line", "text": "\"Me. Off the ground. On purpose.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "You close the window halfway. Not for the cold. The room has gone suddenly exposed." },
+    { "type": "line", "text": "\"People don't fly.\"" },
+    { "type": "line", "text": "\"I'm aware.\"" },
+    { "type": "line", "text": "\"Birds have wings.\"" },
+    { "type": "line", "text": "\"So will I.\"" },
+    { "type": "line", "text": "He says it the way a boy tells you he plans to mend a boot. No performance. He hasn't saved the dramatic part for you." },
+    {
+      "type": "choice",
+      "key": "c02-howhigh",
+      "text": "There's only one question left worth asking.",
+      "options": [
+        {
+          "id": "howhigh",
+          "label": "\"How high?\"",
+          "beats": [
+            { "type": "line", "text": "\"Above the roofs first.\"" },
+            { "type": "line", "text": "\"And then?\"" },
+            { "type": "line", "text": "\"Above the clouds.\"" },
+            { "type": "line", "text": "That one comes out quieter than the others, and you realise he has never said it out loud before. Not to anyone. Not even to the alley." }
+          ]
+        },
+        {
+          "id": "whyhigh",
+          "label": "\"Why does it have to be you?\"",
+          "beats": [
+            { "type": "line", "text": "He thinks about it longer than you expect." },
+            { "type": "line", "text": "\"Because nobody's coming,\" he says." },
+            { "type": "line", "text": "\"That isn't a reason.\"" },
+            { "type": "line", "text": "\"It's the only one anyone's ever given me for anything.\"" },
+            { "type": "line", "text": "Then, quieter: \"Above the clouds. That's how high. I'd like to see whether it's blue all the way up or whether it stops.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He lifts the frame and carries it toward the abandoned washhouse at the end of the alley. The door has been off its hinges for years." },
+    { "type": "line", "text": "You take the chair as far as the broken stones allow. The front wheel drops into a gap and the jolt goes straight up your leg, white and immediate." },
+    { "type": "line", "text": "Oliver turns at once. You raise a hand before he can reach you." },
+    { "type": "line", "text": "\"Don't fuss.\"" },
+    { "type": "line", "text": "\"I wasn't.\"" },
+    { "type": "line", "text": "\"You were thinking about it.\"" },
+    {
+      "type": "choice",
+      "key": "c02-path",
+      "text": "\"There's a smoother path round the back,\" he says. He doesn't offer to push.",
+      "options": [
+        {
+          "id": "show",
+          "label": "\"Then show me.\"",
+          "beats": [
+            { "type": "line", "text": "The path behind the washhouse runs beside a wall furred with moss." },
+            { "type": "line", "text": "He goes ahead of you clearing loose bricks out of the ruts with the side of his boot, and never once looks back to check whether you're managing." },
+            { "type": "line", "text": "Twice the wheel drops into mud. Both times he waits, hands at his sides, until you ask." },
+            { "type": "line", "text": "You ask once. He lifts. You don't speak about it." }
+          ]
+        },
+        {
+          "id": "refuse",
+          "label": "\"I'll take this one.\"",
+          "beats": [
+            { "type": "line", "text": "The broken stones take you four minutes and cost you more than you'd admit out loud." },
+            { "type": "line", "text": "Oliver walks beside you at exactly your pace, talking the entire way about hinges, so that neither of you has to acknowledge what's happening." },
+            { "type": "line", "text": "When you reach the doorway he says, \"The back path is smoother.\"" },
+            { "type": "line", "text": "\"I know.\"" },
+            { "type": "line", "text": "\"Right,\" he says, and lets it go, which is the kindest thing he's done all week." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Inside, the washhouse smells of wet plaster and rust. Weeds grow through the cracked floor. A patch of sky shows through the high broken window." },
+    { "type": "line", "text": "He sets the frame beneath a shelf." },
+    { "type": "line", "text": "The shelf is where he keeps the rest of it. Thin ribs. A bent pulley. A strip of silk. A brass hinge with teeth like a tiny comb." },
+    { "type": "line", "text": "You reach toward the hinge." },
+    { "type": "line", "text": "\"Careful,\" he says, faster than he's said anything all morning." },
+    {
+      "type": "choice",
+      "key": "c02-hinge",
+      "text": "His hand has come halfway out to stop you, and stopped itself.",
+      "options": [
+        {
+          "id": "pushit",
+          "label": "\"What's it for?\"",
+          "beats": [
+            { "type": "line", "text": "\"Nothing yet.\"" },
+            { "type": "line", "text": "\"It's brass. You don't own brass.\"" },
+            { "type": "line", "text": "\"I own that.\"" },
+            { "type": "line", "text": "He takes the hinge off the shelf and puts it in his coat pocket, and changes the subject so obviously that it counts as an answer." },
+            { "type": "line", "text": "You let him have it. You'll remember the hinge for a long time." }
+          ]
+        },
+        {
+          "id": "withdraw",
+          "label": "You pull your hand back.",
+          "beats": [
+            { "type": "line", "text": "\"Only dangerous to fingers,\" he says, too late to be about the hinge." },
+            { "type": "line", "text": "\"Then it's a strange thing to keep on a high shelf.\"" },
+            { "type": "line", "text": "\"Everything I keep is on a high shelf.\"" },
+            { "type": "line", "text": "He turns the hinge over once, so the little teeth catch the light, and puts it back where it was, facing away from you." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He crouches beside the chair, at eye level, which nobody does." },
+    { "type": "line", "text": "\"I'll make it work,\" he says." },
+    { "type": "line", "text": "\"You haven't asked whether I think you should.\"" },
+    { "type": "line", "text": "\"I know what you think.\"" },
+    { "type": "line", "text": "\"Do you?\"" },
+    { "type": "line", "text": "He looks up at the patch of sky in the broken window. \"You think nobody owns it.\"" },
+    { "type": "line", "text": "Then he puts both hands flat on the frame." },
+    {
+      "type": "choice",
+      "key": "c02-first-told",
+      "text": "\"You're the first person I've told.\"\n\nYou look at the patchwork blanket, the stolen wire, the raw marks on his knuckles. Above him, through the broken window, a gull turns a full circle without moving its wings.",
+      "options": [
+        {
+          "id": "believe",
+          "label": "\"Then I believe you. Don't make me regret it.\"",
+          "beats": [
+            { "type": "line", "text": "He nods once, hard, like a man taking delivery of something heavy." },
+            { "type": "line", "text": "\"I won't.\"" },
+            { "type": "line", "text": "\"You can't promise that.\"" },
+            { "type": "line", "text": "\"No,\" he says. \"But you can hold me to it, which is nearly the same and much worse for me.\"" }
+          ]
+        },
+        {
+          "id": "worry",
+          "label": "\"You're going to get yourself killed.\"",
+          "beats": [
+            { "type": "line", "text": "\"Probably.\"" },
+            { "type": "line", "text": "\"Don't say it like that.\"" },
+            { "type": "line", "text": "\"How would you like it said?\"" },
+            { "type": "line", "text": "\"Like something you'd mind.\"" },
+            { "type": "line", "text": "He goes quiet. Actually quiet, not the performing kind." },
+            { "type": "line", "text": "\"I'll show you the numbers,\" he says finally. \"Every joint. You can tell me where it's wrong.\"" },
+            { "type": "line", "text": "It isn't a promise to stop. It's the first time he's offered to let anyone check his work." }
+          ]
+        },
+        {
+          "id": "honest",
+          "label": "\"I want to see what's above the clouds.\"",
+          "beats": [
+            { "type": "line", "text": "For a second he doesn't answer, and you think you've said the wrong thing to the only person who'd have understood the right one." },
+            { "type": "line", "text": "\"Then I'll go and look,\" he says, \"and come back and tell you.\"" },
+            { "type": "line", "text": "\"That isn't the same.\"" },
+            { "type": "line", "text": "\"No,\" he says. \"It's what I've got.\"" },
+            { "type": "line", "text": "Neither of you says anything for a while. The gull comes round again." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The light through the broken window moves off the shelf and onto the floor. Somewhere up on the main road a horse is being shouted at." },
+    { "type": "line", "text": "\"I should get you back before they notice the window's open,\" he says." },
+    { "type": "line", "text": "\"They won't.\"" },
+    { "type": "line", "text": "\"They might.\"" },
+    { "type": "line", "text": "\"Oliver. Nobody notices the window.\"" },
+    { "type": "line", "text": "He stops in the doorway with the frame's shadow lying across the floor behind him." },
+    { "type": "line", "text": "\"I do,\" he says." },
+    {
+      "type": "choice",
+      "key": "c02-close",
+      "text": "The last word of the morning is yours.",
+      "options": [
+        {
+          "id": "tomorrow",
+          "label": "\"Then be at it tomorrow.\"",
+          "beats": [
+            { "type": "line", "text": "\"I'm at it every day.\"" },
+            { "type": "line", "text": "\"Be at it where I can see.\"" },
+            { "type": "line", "text": "He grins, and this time you get the whole thing." }
+          ]
+        },
+        {
+          "id": "thanks",
+          "label": "\"Thank you for the back path.\"",
+          "beats": [
+            { "type": "line", "text": "He shrugs. \"It was already there.\"" },
+            { "type": "line", "text": "\"You cleared it.\"" },
+            { "type": "line", "text": "\"It was in the way,\" he says, which is not the same as denying it, and walks ahead so he doesn't have to be thanked twice." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "That night you lie awake doing arithmetic you have no business doing. Fourteen frames. One boy. No parents, no trade, no coin." },
+    { "type": "line", "text": "Above the roofs first. Then above the clouds." },
+    { "type": "line", "text": "You have been at that window for eleven months, and it is the first thing anyone has ever told you first." }
+  ],
+  "branch": {
+    "onChapterId": "the-boy-who-watched-birds",
+    "cases": {
+      "guess": [
+        { "type": "line", "text": "\"You said a proper invention,\" you remind him. \"I guessed a stolen object.\"" },
+        { "type": "line", "text": "\"It's both,\" he says, from somewhere behind the blanket. \"That's what makes it proper.\"" }
+      ],
+      "hope": [
+        { "type": "line", "text": "\"You said something that flies,\" you remind him." },
+        { "type": "line", "text": "There's a pause from behind the blanket." },
+        { "type": "line", "text": "\"I said I'd show you something,\" he says. \"You're the one who guessed the rest.\"" },
+        { "type": "line", "text": "\"Was I wrong?\"" },
+        { "type": "line", "text": "\"Not yet.\"" }
+      ]
+    },
+    "default": [
+      { "type": "line", "text": "\"You promised me something,\" you remind him." },
+      { "type": "line", "text": "\"I did,\" he says, from somewhere behind the blanket. \"I'm about to be held to it.\"" }
+    ],
+    "resumeBeats": []
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "note": "Skill Packs \u2014 gem-only gacha pulls granting pack-exclusive skills (data/skills.json entries with \"source\": \"skill_pack\"). One purchase = 3 pulls from the shared 55-skill pool below. Pulling a skill the player already owns is wasted (skipped, not replaced) \u2014 see plugins/skillpack.js. Odds are per-pull percentages across the 5 tiers and must sum to 100.",
+  "poolTierCounts": {
+    "common": 12,
+    "uncommon": 12,
+    "rare": 11,
+    "legendary": 10,
+    "mythic": 10
+  },
+  "packs": [
+    {
+      "id": "common_cache",
+      "name": "Common Cache",
+      "aliases": [
+        "common",
+        "cache",
+        "common_pack"
+      ],
+      "gemPrice": 30,
+      "pullsPerPurchase": 3,
+      "description": "The entry-level pull. Mostly common/uncommon skills with a modest shot at something rarer.",
+      "odds": {
+        "common": 44,
+        "uncommon": 30,
+        "rare": 17,
+        "legendary": 5,
+        "mythic": 4
+      }
+    },
+    {
+      "id": "rare_vault",
+      "name": "Rare Vault",
+      "aliases": [
+        "rare",
+        "vault",
+        "rare_pack"
+      ],
+      "gemPrice": 40,
+      "pullsPerPurchase": 3,
+      "description": "Weighted toward the middle tiers \u2014 better odds at rare and epic, a real shot at mythic.",
+      "odds": {
+        "common": 19,
+        "uncommon": 29,
+        "rare": 27,
+        "legendary": 15,
+        "mythic": 10
+      }
+    },
+    {
+      "id": "mythic_reliquary",
+      "name": "Mythic Reliquary",
+      "aliases": [
+        "mythic",
+        "reliquary",
+        "mythic_pack"
+      ],
+      "gemPrice": 50,
+      "pullsPerPurchase": 3,
+      "description": "The premium pull. Highest mythic odds of any pack \u2014 built for players chasing the top tier.",
+      "odds": {
+        "common": 6,
+        "uncommon": 18,
+        "rare": 28,
+        "legendary": 27,
+        "mythic": 21
+      }
+    }
+  ]
+}

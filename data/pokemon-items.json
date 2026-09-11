@@ -1,0 +1,765 @@
+[
+  {
+    "id": "poke_oran_berry",
+    "name": "Oran Berry",
+    "category": "battle",
+    "rarity": "common",
+    "currency": "solars",
+    "buyPrice": 80,
+    "sellPrice": 20,
+    "effect": {
+      "type": "heal",
+      "stat": "hp",
+      "amount": 30
+    },
+    "description": "A berry with a faintly sweet and tart flavor. Restores 30 HP to one Pokémon.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_sitrus_berry",
+    "name": "Sitrus Berry",
+    "category": "battle",
+    "rarity": "common",
+    "currency": "solars",
+    "buyPrice": 150,
+    "sellPrice": 40,
+    "effect": {
+      "type": "heal",
+      "stat": "hp",
+      "amount": 60
+    },
+    "description": "A berry that is rich in natural energy. Restores 60 HP to one Pokémon.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_pecha_berry",
+    "name": "Pecha Berry",
+    "category": "battle",
+    "rarity": "common",
+    "currency": "solars",
+    "buyPrice": 60,
+    "sellPrice": 15,
+    "effect": {
+      "type": "heal",
+      "stat": "hp",
+      "amount": 20
+    },
+    "description": "A tiny, tart berry. Restores a small amount of HP mid-battle.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_super_potion",
+    "name": "Super Potion",
+    "category": "battle",
+    "rarity": "uncommon",
+    "currency": "solars",
+    "buyPrice": 300,
+    "sellPrice": 75,
+    "effect": {
+      "type": "heal",
+      "stat": "hp",
+      "amount": 120
+    },
+    "description": "A spray-type medicine for treating wounds. Restores 120 HP to one Pokémon.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_hyper_potion",
+    "name": "Hyper Potion",
+    "category": "battle",
+    "rarity": "uncommon",
+    "currency": "solars",
+    "buyPrice": 600,
+    "sellPrice": 150,
+    "effect": {
+      "type": "heal",
+      "stat": "hp",
+      "amount": 250
+    },
+    "description": "A high-grade spray for Pokémon. Restores 250 HP to one Pokémon.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_x_attack",
+    "name": "X Attack",
+    "category": "battle",
+    "rarity": "uncommon",
+    "currency": "solars",
+    "buyPrice": 250,
+    "sellPrice": 60,
+    "effect": {
+      "type": "strengthen",
+      "stat": "atk",
+      "value": 20,
+      "duration": 3
+    },
+    "description": "Boosts a Pokémon's Attack by 20 for 3 turns of battle.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_x_defend",
+    "name": "X Defend",
+    "category": "battle",
+    "rarity": "uncommon",
+    "currency": "solars",
+    "buyPrice": 250,
+    "sellPrice": 60,
+    "effect": {
+      "type": "strengthen",
+      "stat": "def",
+      "value": 20,
+      "duration": 3
+    },
+    "description": "Boosts a Pokémon's Defense by 20 for 3 turns of battle.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_x_sp_atk",
+    "name": "X Sp. Atk",
+    "category": "battle",
+    "rarity": "uncommon",
+    "currency": "solars",
+    "buyPrice": 250,
+    "sellPrice": 60,
+    "effect": {
+      "type": "strengthen",
+      "stat": "spAtk",
+      "value": 20,
+      "duration": 3
+    },
+    "description": "Boosts a Pokémon's Sp. Atk by 20 for 3 turns of battle.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_antidote",
+    "name": "Antidote",
+    "category": "battle",
+    "rarity": "rare",
+    "currency": "gems",
+    "buyPrice": 3,
+    "sellPrice": null,
+    "effect": {
+      "type": "cure",
+      "targets": [
+        "poison"
+      ]
+    },
+    "description": "A spray-type medicine that lifts the effect of poison from one Pokémon.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_burn_heal",
+    "name": "Burn Heal",
+    "category": "battle",
+    "rarity": "rare",
+    "currency": "gems",
+    "buyPrice": 3,
+    "sellPrice": null,
+    "effect": {
+      "type": "cure",
+      "targets": [
+        "burn"
+      ]
+    },
+    "description": "A spray-type medicine that heals a single Pokémon suffering from a burn.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_ice_heal",
+    "name": "Ice Heal",
+    "category": "battle",
+    "rarity": "rare",
+    "currency": "gems",
+    "buyPrice": 3,
+    "sellPrice": null,
+    "effect": {
+      "type": "cure",
+      "targets": [
+        "freeze"
+      ]
+    },
+    "description": "A spray-type medicine that thaws out a single frozen Pokémon.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_paralyze_heal",
+    "name": "Paralyze Heal",
+    "category": "battle",
+    "rarity": "rare",
+    "currency": "gems",
+    "buyPrice": 3,
+    "sellPrice": null,
+    "effect": {
+      "type": "cure",
+      "targets": [
+        "stun"
+      ]
+    },
+    "description": "A spray-type medicine that eliminates paralysis from a single Pokémon.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_full_heal",
+    "name": "Full Heal",
+    "category": "battle",
+    "rarity": "rare",
+    "currency": "gems",
+    "buyPrice": 8,
+    "sellPrice": null,
+    "effect": {
+      "type": "cure",
+      "targets": "all"
+    },
+    "description": "A medicine that cures all status conditions affecting a Pokémon.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_max_potion",
+    "name": "Max Potion",
+    "category": "battle",
+    "rarity": "rare",
+    "currency": "gems",
+    "buyPrice": 12,
+    "sellPrice": null,
+    "effect": {
+      "type": "heal",
+      "stat": "hp",
+      "amount": 9999
+    },
+    "description": "A medicine that fully restores the HP of a single Pokémon.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_x_speed",
+    "name": "X Speed",
+    "category": "battle",
+    "rarity": "epic",
+    "currency": "gems",
+    "buyPrice": 20,
+    "sellPrice": null,
+    "effect": {
+      "type": "strengthen",
+      "stat": "spd",
+      "value": 30,
+      "duration": 5
+    },
+    "description": "Sharply boosts Speed by 30 for 5 turns — a bigger, longer buff than the Solars-tier X items.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_power_herb",
+    "name": "Power Herb",
+    "category": "battle",
+    "rarity": "epic",
+    "currency": "gems",
+    "buyPrice": 25,
+    "sellPrice": null,
+    "effect": {
+      "type": "strengthen",
+      "stat": "atk",
+      "value": 50,
+      "duration": 5
+    },
+    "description": "A single-use herb that supercharges Attack by 50 for 5 turns.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_battle_crown",
+    "name": "Battle Crown",
+    "category": "battle",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 75,
+    "sellPrice": null,
+    "effect": [
+      {
+        "type": "strengthen",
+        "stat": "atk",
+        "value": 60,
+        "duration": 3
+      },
+      {
+        "type": "strengthen",
+        "stat": "spAtk",
+        "value": 60,
+        "duration": 3
+      },
+      {
+        "type": "strengthen",
+        "stat": "spd",
+        "value": 40,
+        "duration": 3
+      }
+    ],
+    "description": "The pinnacle of battle consumables. Grants a combined ATK+SPA+SPD boost for 3 turns. Single-target, single-battle — no permanent effect.",
+    "usableInBattle": true
+  },
+  {
+    "id": "poke_ribbon_basic",
+    "name": "Effort Ribbon",
+    "category": "cosmetic",
+    "rarity": "uncommon",
+    "currency": "solars",
+    "buyPrice": 500,
+    "sellPrice": null,
+    "effect": null,
+    "description": "A shiny ribbon awarded to a Pokémon that has worked very hard. Shows next to the Pokémon's name in .pokemon info. No mechanical effect.",
+    "cosmeticTag": "🎀"
+  },
+  {
+    "id": "poke_ribbon_champ",
+    "name": "Champion Ribbon",
+    "category": "cosmetic",
+    "rarity": "rare",
+    "currency": "gems",
+    "buyPrice": 10,
+    "sellPrice": null,
+    "effect": null,
+    "description": "A prestigious ribbon proving this Pokémon has a champion-caliber trainer. Displayed in .pokemon info.",
+    "cosmeticTag": "🏆"
+  },
+  {
+    "id": "poke_spotlight_charm",
+    "name": "Spotlight Charm",
+    "category": "cosmetic",
+    "rarity": "rare",
+    "currency": "gems",
+    "buyPrice": 15,
+    "sellPrice": null,
+    "effect": null,
+    "description": "A glowing charm that adds a sparkle to your Pokémon's display name in the Pokédex and info view — purely cosmetic, no shiny/catch effect of any kind.",
+    "cosmeticTag": "✨"
+  },
+  {
+    "id": "poke_trainer_title_ace",
+    "name": "Ace Trainer Title",
+    "category": "cosmetic",
+    "rarity": "epic",
+    "currency": "gems",
+    "buyPrice": 40,
+    "sellPrice": null,
+    "effect": null,
+    "description": "Unlocks the 'Ace Trainer' title shown next to your name, using this bot's existing player.title convention (same slot .profile already displays).",
+    "trainerTitle": "🌟 Ace Trainer"
+  },
+  {
+    "id": "poke_trainer_title_champion",
+    "name": "Champion Title",
+    "category": "cosmetic",
+    "rarity": "epic",
+    "currency": "gems",
+    "buyPrice": 60,
+    "sellPrice": null,
+    "effect": null,
+    "description": "Unlocks the 'Champion' title shown next to your name in-profile.",
+    "trainerTitle": "👑 Champion"
+  },
+  {
+    "id": "poke_prestige_aura",
+    "name": "Elite Trainer Aura",
+    "category": "cosmetic",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 150,
+    "sellPrice": null,
+    "effect": null,
+    "description": "The rarest cosmetic in the Pokémon shop. Grants the 'Elite Trainer' title and a matching cosmetic tag shown on every Pokémon in your collection.",
+    "trainerTitle": "💎 Elite Trainer",
+    "cosmeticTag": "💎"
+  },
+  {
+    "id": "poke_fire_stone",
+    "name": "Fire Stone",
+    "category": "evolution",
+    "rarity": "rare",
+    "currency": "solars",
+    "buyPrice": 800,
+    "sellPrice": 300,
+    "apiItemName": "fire-stone",
+    "effect": null,
+    "description": "A peculiar stone that radiates heat. Evolves certain Fire-compatible Pokémon."
+  },
+  {
+    "id": "poke_water_stone",
+    "name": "Water Stone",
+    "category": "evolution",
+    "rarity": "rare",
+    "currency": "solars",
+    "buyPrice": 800,
+    "sellPrice": 300,
+    "apiItemName": "water-stone",
+    "effect": null,
+    "description": "A blue, watery stone. Evolves certain Water-compatible Pokémon."
+  },
+  {
+    "id": "poke_thunder_stone",
+    "name": "Thunder Stone",
+    "category": "evolution",
+    "rarity": "rare",
+    "currency": "solars",
+    "buyPrice": 800,
+    "sellPrice": 300,
+    "apiItemName": "thunder-stone",
+    "effect": null,
+    "description": "A stone that sparkles with electricity. Evolves certain Electric-compatible Pokémon."
+  },
+  {
+    "id": "poke_leaf_stone",
+    "name": "Leaf Stone",
+    "category": "evolution",
+    "rarity": "rare",
+    "currency": "solars",
+    "buyPrice": 800,
+    "sellPrice": 300,
+    "apiItemName": "leaf-stone",
+    "effect": null,
+    "description": "A stone with a leaf pattern. Evolves certain Grass-compatible Pokémon."
+  },
+  {
+    "id": "poke_moon_stone",
+    "name": "Moon Stone",
+    "category": "evolution",
+    "rarity": "epic",
+    "currency": "solars",
+    "buyPrice": 1200,
+    "sellPrice": 450,
+    "apiItemName": "moon-stone",
+    "effect": null,
+    "description": "A stone as black as the night sky. Evolves certain moonlight-loving Pokémon."
+  },
+  {
+    "id": "poke_sun_stone",
+    "name": "Sun Stone",
+    "category": "evolution",
+    "rarity": "epic",
+    "currency": "solars",
+    "buyPrice": 1200,
+    "sellPrice": 450,
+    "apiItemName": "sun-stone",
+    "effect": null,
+    "description": "A stone that glows like the sun. Evolves certain sunlight-loving Pokémon."
+  },
+  {
+    "id": "poke_shiny_stone",
+    "name": "Shiny Stone",
+    "category": "evolution",
+    "rarity": "epic",
+    "currency": "solars",
+    "buyPrice": 1200,
+    "sellPrice": 450,
+    "apiItemName": "shiny-stone",
+    "effect": null,
+    "description": "A stone that sparkles brightly. Evolves certain radiant Pokémon. (Cosmetic name only — no relation to Shiny catch odds.)"
+  },
+  {
+    "id": "poke_dusk_stone",
+    "name": "Dusk Stone",
+    "category": "evolution",
+    "rarity": "epic",
+    "currency": "solars",
+    "buyPrice": 1200,
+    "sellPrice": 450,
+    "apiItemName": "dusk-stone",
+    "effect": null,
+    "description": "A dark, ominous stone. Evolves certain Dark/Ghost-affiliated Pokémon."
+  },
+  {
+    "id": "poke_dawn_stone",
+    "name": "Dawn Stone",
+    "category": "evolution",
+    "rarity": "epic",
+    "currency": "solars",
+    "buyPrice": 1200,
+    "sellPrice": 450,
+    "apiItemName": "dawn-stone",
+    "effect": null,
+    "description": "A stone that sparkles like the morning sky. Evolves certain Pokémon."
+  },
+  {
+    "id": "poke_ice_stone",
+    "name": "Ice Stone",
+    "category": "evolution",
+    "rarity": "rare",
+    "currency": "solars",
+    "buyPrice": 800,
+    "sellPrice": 300,
+    "apiItemName": "ice-stone",
+    "effect": null,
+    "description": "A stone that is cold to the touch. Evolves certain Ice-compatible Pokémon."
+  },
+  {
+    "id": "poke_leftovers",
+    "name": "Leftovers",
+    "category": "held",
+    "rarity": "uncommon",
+    "currency": "solars",
+    "buyPrice": 600,
+    "sellPrice": 200,
+    "megaStone": false,
+    "effect": {
+      "type": "end-of-turn-heal",
+      "fraction": 0.0625
+    },
+    "description": "Restores a small amount of HP to its holder at the end of every turn, without being consumed."
+  },
+  {
+    "id": "poke_choice_band",
+    "name": "Choice Band",
+    "category": "held",
+    "rarity": "rare",
+    "currency": "gems",
+    "buyPrice": 20,
+    "sellPrice": 8,
+    "megaStone": false,
+    "effect": {
+      "type": "choice-lock",
+      "boostStat": "atk",
+      "boostMultiplier": 1.5
+    },
+    "description": "Boosts the holder's Attack by 50%, but locks it into the first move it uses for the rest of the battle."
+  },
+  {
+    "id": "poke_choice_specs",
+    "name": "Choice Specs",
+    "category": "held",
+    "rarity": "rare",
+    "currency": "gems",
+    "buyPrice": 20,
+    "sellPrice": 8,
+    "megaStone": false,
+    "effect": {
+      "type": "choice-lock",
+      "boostStat": "spAtk",
+      "boostMultiplier": 1.5
+    },
+    "description": "Boosts the holder's Special Attack by 50%, but locks it into the first move it uses for the rest of the battle."
+  },
+  {
+    "id": "poke_resist_berry",
+    "name": "Enigma Berry",
+    "category": "held",
+    "rarity": "uncommon",
+    "currency": "solars",
+    "buyPrice": 500,
+    "sellPrice": 150,
+    "megaStone": false,
+    "effect": {
+      "type": "resist-berry",
+      "healFraction": 0.25
+    },
+    "description": "Auto-triggers the first time its holder is hit by a super-effective move, healing a portion of max HP. Consumed on use."
+  },
+  {
+    "id": "poke_life_orb",
+    "name": "Life Orb",
+    "category": "held",
+    "rarity": "epic",
+    "currency": "gems",
+    "buyPrice": 35,
+    "sellPrice": 12,
+    "megaStone": false,
+    "effect": {
+      "type": "life-orb",
+      "damageMultiplier": 1.3,
+      "recoilFraction": 0.1
+    },
+    "description": "Boosts the power of the holder's moves by 30%, but the holder loses a little HP after each attack."
+  },
+  {
+    "id": "poke_focus_sash",
+    "name": "Focus Sash",
+    "category": "held",
+    "rarity": "rare",
+    "currency": "gems",
+    "buyPrice": 18,
+    "sellPrice": 6,
+    "megaStone": false,
+    "effect": {
+      "type": "survive-ko",
+      "minHp": 1
+    },
+    "description": "If the holder is at full HP, a hit that would knock it out instead leaves it with 1 HP. Consumed on use."
+  },
+  {
+    "id": "poke_absolite",
+    "name": "Absolite",
+    "category": "held",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 200,
+    "sellPrice": 75,
+    "megaStone": true,
+    "megaStoneId": "absolite",
+    "effect": null,
+    "description": "A mysterious stone that lets a held Absol Mega Evolve in battle."
+  },
+  {
+    "id": "poke_blazikenite",
+    "name": "Blazikenite",
+    "category": "held",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 200,
+    "sellPrice": 75,
+    "megaStone": true,
+    "megaStoneId": "blazikenite",
+    "effect": null,
+    "description": "A mysterious stone that lets a held Blaziken Mega Evolve in battle."
+  },
+  {
+    "id": "poke_charizardite_x",
+    "name": "Charizardite X",
+    "category": "held",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 200,
+    "sellPrice": 75,
+    "megaStone": true,
+    "megaStoneId": "charizardite-x",
+    "effect": null,
+    "description": "A mysterious stone that lets a held Charizard Mega Evolve in battle."
+  },
+  {
+    "id": "poke_charizardite_y",
+    "name": "Charizardite Y",
+    "category": "held",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 200,
+    "sellPrice": 75,
+    "megaStone": true,
+    "megaStoneId": "charizardite-y",
+    "effect": null,
+    "description": "A mysterious stone that lets a held Charizard Mega Evolve in battle."
+  },
+  {
+    "id": "poke_garchompite",
+    "name": "Garchompite",
+    "category": "held",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 200,
+    "sellPrice": 75,
+    "megaStone": true,
+    "megaStoneId": "garchompite",
+    "effect": null,
+    "description": "A mysterious stone that lets a held Garchomp Mega Evolve in battle."
+  },
+  {
+    "id": "poke_gengarite",
+    "name": "Gengarite",
+    "category": "held",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 200,
+    "sellPrice": 75,
+    "megaStone": true,
+    "megaStoneId": "gengarite",
+    "effect": null,
+    "description": "A mysterious stone that lets a held Gengar Mega Evolve in battle."
+  },
+  {
+    "id": "poke_gyaradosite",
+    "name": "Gyaradosite",
+    "category": "held",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 200,
+    "sellPrice": 75,
+    "megaStone": true,
+    "megaStoneId": "gyaradosite",
+    "effect": null,
+    "description": "A mysterious stone that lets a held Gyarados Mega Evolve in battle."
+  },
+  {
+    "id": "poke_kangaskhanite",
+    "name": "Kangaskhanite",
+    "category": "held",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 200,
+    "sellPrice": 75,
+    "megaStone": true,
+    "megaStoneId": "kangaskhanite",
+    "effect": null,
+    "description": "A mysterious stone that lets a held Kangaskhan Mega Evolve in battle."
+  },
+  {
+    "id": "poke_lucarionite",
+    "name": "Lucarionite",
+    "category": "held",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 200,
+    "sellPrice": 75,
+    "megaStone": true,
+    "megaStoneId": "lucarionite",
+    "effect": null,
+    "description": "A mysterious stone that lets a held Lucario Mega Evolve in battle."
+  },
+  {
+    "id": "poke_metagrossite",
+    "name": "Metagrossite",
+    "category": "held",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 200,
+    "sellPrice": 75,
+    "megaStone": true,
+    "megaStoneId": "metagrossite",
+    "effect": null,
+    "description": "A mysterious stone that lets a held Metagross Mega Evolve in battle."
+  },
+  {
+    "id": "poke_mewtwonite_x",
+    "name": "Mewtwonite X",
+    "category": "held",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 200,
+    "sellPrice": 75,
+    "megaStone": true,
+    "megaStoneId": "mewtwonite-x",
+    "effect": null,
+    "description": "A mysterious stone that lets a held Mewtwo Mega Evolve in battle."
+  },
+  {
+    "id": "poke_mewtwonite_y",
+    "name": "Mewtwonite Y",
+    "category": "held",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 200,
+    "sellPrice": 75,
+    "megaStone": true,
+    "megaStoneId": "mewtwonite-y",
+    "effect": null,
+    "description": "A mysterious stone that lets a held Mewtwo Mega Evolve in battle."
+  },
+  {
+    "id": "poke_rayquazite",
+    "name": "Rayquazite",
+    "category": "held",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 200,
+    "sellPrice": 75,
+    "megaStone": true,
+    "megaStoneId": "rayquazite",
+    "effect": null,
+    "description": "A mysterious stone that lets a held Rayquaza Mega Evolve in battle."
+  },
+  {
+    "id": "poke_salamencite",
+    "name": "Salamencite",
+    "category": "held",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 200,
+    "sellPrice": 75,
+    "megaStone": true,
+    "megaStoneId": "salamencite",
+    "effect": null,
+    "description": "A mysterious stone that lets a held Salamence Mega Evolve in battle."
+  }
+]

@@ -1,0 +1,35 @@
+{
+  "tiers": [
+    {
+      "id": "common",
+      "multiplier": 1.0,
+      "emoji": "\u26aa"
+    },
+    {
+      "id": "uncommon",
+      "multiplier": 1.4,
+      "emoji": "\ud83d\udfe2"
+    },
+    {
+      "id": "rare",
+      "multiplier": 1.9,
+      "emoji": "\ud83d\udd35"
+    },
+    {
+      "id": "epic",
+      "multiplier": 2.4,
+      "emoji": "\ud83d\udfe3"
+    },
+    {
+      "id": "legendary",
+      "multiplier": 3.0,
+      "emoji": "\ud83d\udfe1"
+    },
+    {
+      "id": "mythic",
+      "multiplier": 3.8,
+      "emoji": "\ud83d\udd34"
+    }
+  ],
+  "note": "multiplier applied to primaryStat to compute rawDamage. mythic exists only on Skill Pack pulls (data/skill-packs.json) — no normal class/level-up skill uses it, so the level-up grant path (getNewlyUnlockedSkills) never needs to know about it."
+}

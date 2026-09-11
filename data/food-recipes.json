@@ -1,0 +1,10 @@
+[
+  {"id":"recipe_bread",            "output":"bread",            "materials":[{"itemId":"wheat","qty":2}],                                                              "solarsCost":5,  "category":"food"},
+  {"id":"recipe_rice_bowl",        "output":"rice_bowl",        "materials":[{"itemId":"rice","qty":2},{"itemId":"vegetables","qty":1}],                                "solarsCost":5,  "category":"food"},
+  {"id":"recipe_omelette",         "output":"omelette",         "materials":[{"itemId":"egg","qty":2},{"itemId":"milk","qty":1}],                                       "solarsCost":8,  "category":"food"},
+  {"id":"recipe_grilled_fish",     "output":"grilled_fish",     "materials":[{"itemId":"fish_raw","qty":1},{"itemId":"spice","qty":1}],                                 "solarsCost":10, "category":"food"},
+  {"id":"recipe_berry_pie",        "output":"berry_pie",        "materials":[{"itemId":"berries","qty":2},{"itemId":"wheat","qty":1},{"itemId":"honey","qty":1}],        "solarsCost":12, "category":"food"},
+  {"id":"recipe_meat_stew",        "output":"meat_stew",        "materials":[{"itemId":"meat_raw","qty":1},{"itemId":"vegetables","qty":2},{"itemId":"spice","qty":1}],   "solarsCost":15, "category":"food"},
+  {"id":"recipe_honey_glazed_ham", "output":"honey_glazed_ham", "materials":[{"itemId":"meat_raw","qty":2},{"itemId":"honey","qty":1},{"itemId":"spice","qty":1}],       "solarsCost":18, "category":"food"},
+  {"id":"recipe_feast_platter",    "output":"feast_platter",    "materials":[{"itemId":"meat_raw","qty":2},{"itemId":"fish_raw","qty":1},{"itemId":"rice","qty":1},{"itemId":"vegetables","qty":1}], "solarsCost":25, "category":"food"}
+]

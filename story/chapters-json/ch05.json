@@ -1,0 +1,408 @@
+{
+  "num": 5,
+  "id": "names-we-dont-ask-for",
+  "title": "Names We Don't Ask For",
+  "requires": "the-ribs-of-a-wing",
+  "beats": [
+    { "type": "line", "text": "The sky stays clear for three days and Oliver spends all three under the washhouse roof." },
+    { "type": "line", "text": "He's built a bench out of a packing case. One leg is shorter than the others. He's put a folded page of his notebook under it, which means he'd rather sacrifice the page." },
+    { "type": "line", "text": "He measures things. The spar. The cradle. The distance from the wall to the workbench. The window. The door. The length of your armrest." },
+    { "type": "line", "text": "On the fourth morning he takes a length of string and puts it round your head." },
+    {
+      "type": "choice",
+      "key": "c05-string",
+      "text": "The string is cold. His knuckles are not.",
+      "options": [
+        {
+          "id": "hands",
+          "label": "\"Your theory has hands.\"",
+          "beats": [
+            { "type": "line", "text": "\"I'm testing it.\"" },
+            { "type": "line", "text": "\"Test it further away.\"" },
+            { "type": "line", "text": "He marks the string with charcoal. \"Hold still.\"" },
+            { "type": "line", "text": "\"I am holding still.\"" },
+            { "type": "line", "text": "\"You're glaring.\"" },
+            { "type": "line", "text": "\"That isn't a movement.\"" },
+            { "type": "line", "text": "\"It shifts the measurement.\"" }
+          ]
+        },
+        {
+          "id": "still",
+          "label": "Hold still.",
+          "beats": [
+            { "type": "line", "text": "You hold still." },
+            { "type": "line", "text": "He's careful about it in a way that takes longer than it needs to, and neither of you mentions that either." },
+            { "type": "line", "text": "The charcoal mark goes on the string. He measures twice and writes a number down." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He lets go. The string drops round his wrist." },
+    { "type": "line", "text": "\"What's it for?\"" },
+    { "type": "line", "text": "\"A later problem.\"" },
+    { "type": "line", "text": "\"You're building something for my head.\"" },
+    { "type": "line", "text": "\"I'm building something for a problem near your head.\"" },
+    {
+      "type": "choice",
+      "key": "c05-silence",
+      "text": "There's an obvious move available.",
+      "options": [
+        {
+          "id": "freeze",
+          "label": "Refuse to speak to him.",
+          "beats": [
+            { "type": "line", "text": "You give it seven minutes. He lasts four." },
+            { "type": "line", "text": "\"Are you angry?\"" },
+            { "type": "line", "text": "\"No.\"" },
+            { "type": "line", "text": "\"That answer sounded angry.\"" },
+            { "type": "line", "text": "\"You've a poor ear.\"" },
+            { "type": "line", "text": "\"I've two.\"" }
+          ]
+        },
+        {
+          "id": "ask",
+          "label": "\"Tell me now or don't measure me again.\"",
+          "beats": [
+            { "type": "line", "text": "He puts the string in his pocket." },
+            { "type": "line", "text": "\"Then I won't measure you again,\" he says, and means it, and you have won absolutely nothing." },
+            { "type": "line", "text": "Ten minutes later he asks whether he might have the number he already has. You say yes. He writes it down twice." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He goes back to sanding a narrow brass plate. The filing makes a small steady rasp. Outside, a coal cart goes past and the horse slips on the wet stones." },
+    { "type": "line", "text": "\"You could tell me,\" you say." },
+    { "type": "line", "text": "\"I could.\"" },
+    { "type": "line", "text": "\"You've decided not to.\"" },
+    { "type": "line", "text": "\"For now.\"" },
+    {
+      "type": "choice",
+      "key": "c05-why",
+      "text": "He hasn't looked up from the plate.",
+      "options": [
+        {
+          "id": "why",
+          "label": "\"Why?\"",
+          "beats": [
+            { "type": "line", "text": "\"Because if I tell you, you'll ask whether it works.\"" },
+            { "type": "line", "text": "\"Does it?\"" },
+            { "type": "line", "text": "\"There,\" he says." },
+            { "type": "line", "text": "You turn the chair away from the bench. The left wheel knocks the wall." },
+            { "type": "line", "text": "\"It might,\" he says, softer." },
+            { "type": "line", "text": "\"That isn't an answer.\"" },
+            { "type": "line", "text": "\"It's the only honest one.\"" }
+          ]
+        },
+        {
+          "id": "drop",
+          "label": "\"All right.\"",
+          "beats": [
+            { "type": "line", "text": "The rasp stops." },
+            { "type": "line", "text": "\"All right?\" he says. \"You've never once said all right.\"" },
+            { "type": "line", "text": "\"I'm expanding.\"" },
+            { "type": "line", "text": "He looks so unsettled by it that he tells you a piece anyway: \"It won't be finished this month. It might not work at all. That's why.\"" },
+            { "type": "line", "text": "\"It might, though.\"" },
+            { "type": "line", "text": "\"It might,\" he says, and goes back to the plate." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He sets the plate down beside the locked box. The two tiny hinges catch the light." },
+    { "type": "line", "text": "At noon you ask him something he's been avoiding by being busy." },
+    { "type": "line", "text": "\"Where did you sleep before the washhouse?\"" },
+    { "type": "line", "text": "He fits a pin into the frame. \"Here and there.\"" },
+    { "type": "line", "text": "\"That isn't a place.\"" },
+    { "type": "line", "text": "\"It's several.\"" },
+    {
+      "type": "choice",
+      "key": "c05-where",
+      "text": "He's holding the pin very steady.",
+      "options": [
+        {
+          "id": "inventory",
+          "label": "\"Roofs?\"",
+          "beats": [
+            { "type": "line", "text": "\"Some.\"" },
+            { "type": "line", "text": "\"Beds?\"" },
+            { "type": "line", "text": "\"Occasionally.\"" },
+            { "type": "line", "text": "\"People?\"" },
+            { "type": "line", "text": "He taps the pin. \"Often.\"" },
+            { "type": "line", "text": "You don't ask which sort of people. You'll wonder about that answer for years." }
+          ]
+        },
+        {
+          "id": "wait",
+          "label": "Wait him out.",
+          "beats": [
+            { "type": "line", "text": "You wait. He knows you're waiting. He's better at silence than anyone you've met and he still loses." },
+            { "type": "line", "text": "A fly lands on the canvas and walks across the fish-shaped patch." },
+            { "type": "line", "text": "\"There were four winters of it,\" he says, to the pin. \"I don't keep them in order.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"My mother worked at the thread mill,\" he says. \"My father repaired boilers, when anybody paid him.\"" },
+    { "type": "line", "text": "\"Then the mill closed its upper floor.\"" },
+    { "type": "line", "text": "\"What happened?\"" },
+    { "type": "line", "text": "\"The roof came down.\"" },
+    { "type": "line", "text": "He doesn't say whether they were under it." },
+    {
+      "type": "choice",
+      "key": "c05-parents",
+      "text": "There's a question in the room and it only has one shape.",
+      "options": [
+        {
+          "id": "both",
+          "label": "\"Both of them?\"",
+          "beats": [
+            { "type": "line", "text": "\"That's how families become stories,\" he says." },
+            { "type": "line", "text": "He turns the frame over. A knot has loosened under the spar and he attends to it." },
+            { "type": "line", "text": "You don't ask the question that would make him tell you where they went afterward." }
+          ]
+        },
+        {
+          "id": "roofs",
+          "label": "\"Is that why you measure everything?\"",
+          "beats": [
+            { "type": "line", "text": "His hands stop." },
+            { "type": "line", "text": "It's the first time you've ever seen him caught out, and you'd give a great deal to take it back." },
+            { "type": "line", "text": "\"The mill had a certificate,\" he says. \"Signed by a man who never went up the stairs.\"" },
+            { "type": "line", "text": "\"Oliver—\"" },
+            { "type": "line", "text": "\"I measure everything,\" he says, \"because somebody didn't.\"" },
+            { "type": "line", "text": "Then he ties the knot again and the subject is closed like a door in a wind." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"Did you have a different name then?\" he asks, after a while." },
+    { "type": "line", "text": "\"No.\"" },
+    { "type": "line", "text": "\"Everyone has a different name somewhere.\"" },
+    { "type": "line", "text": "\"Not everyone.\"" },
+    { "type": "line", "text": "\"Your aunt calls you Mon.\"" },
+    {
+      "type": "choice",
+      "key": "c05-mon",
+      "text": "He's got no business knowing that. Your window is open a great deal.",
+      "options": [
+        {
+          "id": "bitter",
+          "label": "\"She calls me that when she remembers I exist.\"",
+          "beats": [
+            { "type": "line", "text": "\"Is that why you sit at the window?\"" },
+            { "type": "line", "text": "\"I sit at the window because the table's too low.\"" },
+            { "type": "line", "text": "\"That's a practical answer.\"" },
+            { "type": "line", "text": "\"You asked a practical question.\"" }
+          ]
+        },
+        {
+          "id": "forbid",
+          "label": "\"Don't you call me it.\"",
+          "beats": [
+            { "type": "line", "text": "\"I wasn't going to.\"" },
+            { "type": "line", "text": "\"Why not?\"" },
+            { "type": "line", "text": "He thinks about it properly, which is the thing about him." },
+            { "type": "line", "text": "\"Because it's short,\" he says. \"People shorten things they've stopped looking at.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He leans back against the bench. \"Do you know why people call me Wright?\"" },
+    { "type": "line", "text": "\"Because it's your name.\"" },
+    { "type": "line", "text": "\"Because my father was a wright. Woodwork, mostly. He could make a wheel out of a tree and have it turning by supper.\"" },
+    { "type": "line", "text": "He looks at the glider frame." },
+    { "type": "line", "text": "\"He said anything with a joint could be taught to move.\"" },
+    { "type": "line", "text": "\"Did he teach you?\"" },
+    { "type": "line", "text": "\"He tried.\"" },
+    { "type": "line", "text": "It lands without explanation. You pull the chair nearer." },
+    {
+      "type": "choice",
+      "key": "c05-leg",
+      "text": "He asks about your leg while the light's still good.\n\nNot with pity. He asks because the bandage has slipped and because he's seen your hand close on the armrest.\n\n\"How did it happen?\"",
+      "options": [
+        {
+          "id": "carriage",
+          "label": "\"A carriage overturned. I was inside it.\"",
+          "beats": [
+            { "type": "line", "text": "\"Whose carriage?\"" },
+            { "type": "line", "text": "\"Not ours.\"" },
+            { "type": "line", "text": "\"Did anyone pay for it?\"" },
+            { "type": "line", "text": "\"They sent a letter,\" you say. \"It was very well written.\"" },
+            { "type": "line", "text": "Something moves behind his face and gets put away for later." }
+          ]
+        },
+        {
+          "id": "deflect",
+          "label": "\"The doctor says it's none of your business.\"",
+          "beats": [
+            { "type": "line", "text": "\"Does he say that about everything?\"" },
+            { "type": "line", "text": "\"He says it about the leg. He's more forthcoming about the weather.\"" },
+            { "type": "line", "text": "Oliver nods and asks nothing else about it, then or for two years." },
+            { "type": "line", "text": "He asks about it in the fourth year, once, and by then you want him to." }
+          ]
+        },
+        {
+          "id": "too-big",
+          "label": "\"I don't know how to tell it without making the room smaller.\"",
+          "beats": [
+            { "type": "line", "text": "He puts the pin down." },
+            { "type": "line", "text": "\"Then make the room smaller,\" he says. \"I'll sit in it.\"" },
+            { "type": "line", "text": "So you tell him. Not much of it. The corner, the sound, the weight, the eleven months since." },
+            { "type": "line", "text": "He doesn't say a single one of the things people say. When you finish he says, \"Thank you,\" which is not on the list at all." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Then he only asks, \"Does it hurt now?\"" },
+    { "type": "line", "text": "\"Yes.\"" },
+    { "type": "line", "text": "\"Does it always?\"" },
+    { "type": "line", "text": "\"No.\"" },
+    { "type": "line", "text": "\"That's something.\"" },
+    { "type": "line", "text": "\"You're very generous with small things.\"" },
+    { "type": "line", "text": "\"Small things are what I can afford.\"" },
+    { "type": "line", "text": "He takes the end of the bandage and shows you the frayed edge. \"May I?\"" },
+    {
+      "type": "choice",
+      "key": "c05-bandage",
+      "text": "Nobody has asked you that. They announce it, or they do it.",
+      "options": [
+        {
+          "id": "yes",
+          "label": "Nod.",
+          "beats": [
+            { "type": "line", "text": "He reties it without tightening the cloth. His fingers are warm from the brass plate." },
+            { "type": "line", "text": "He doesn't look at the scar. He watches the knot." },
+            { "type": "line", "text": "It takes eight seconds and you'll remember it longer than several years." }
+          ]
+        },
+        {
+          "id": "self",
+          "label": "\"I'll do it.\"",
+          "beats": [
+            { "type": "line", "text": "\"Right,\" he says, and turns fully round to the bench so that you're not being watched." },
+            { "type": "line", "text": "He does it without being asked to, and without making a performance of it, and he keeps the rasp going the whole time so the room has a sound in it." },
+            { "type": "line", "text": "When you're done he doesn't turn back until you speak." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"Can you walk?\" he asks." },
+    { "type": "line", "text": "\"Not freely.\"" },
+    { "type": "line", "text": "He considers this. \"Can you stand?\"" },
+    { "type": "line", "text": "\"For a little while.\"" },
+    { "type": "line", "text": "\"Can you climb?\"" },
+    {
+      "type": "choice",
+      "key": "c05-climb",
+      "text": "He's asking like a man taking stock, not like a man being kind. It's oddly restful.",
+      "options": [
+        {
+          "id": "joke",
+          "label": "\"If the building catches fire I'll become very persuasive.\"",
+          "beats": [
+            { "type": "line", "text": "His mouth tilts." },
+            { "type": "line", "text": "\"You don't have to answer every question,\" he says." },
+            { "type": "line", "text": "\"You've spent weeks answering none.\"" },
+            { "type": "line", "text": "\"That's different.\"" },
+            { "type": "line", "text": "\"It's the same sport.\"" }
+          ]
+        },
+        {
+          "id": "plain",
+          "label": "\"No. Not stairs, not ladders, not ever.\"",
+          "beats": [
+            { "type": "line", "text": "He takes it the way he takes a measurement." },
+            { "type": "line", "text": "\"Then the door has to widen,\" he says, \"and the bench has to come down four inches, and I'll move the shelf.\"" },
+            { "type": "line", "text": "\"Oliver.\"" },
+            { "type": "line", "text": "\"What?\"" },
+            { "type": "line", "text": "\"Nothing,\" you say, because if you say the thing you're thinking you'll cry in a washhouse, and you've decided against that." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Later you find the name scratched into the underside of his bench." },
+    { "type": "line", "text": "OLIVER WRIGHT. Deep letters, made with a nail rather than a pen." },
+    { "type": "line", "text": "Underneath, half hidden by the short leg, another line." },
+    { "type": "line", "text": "DO NOT ASK FOR THE REST." },
+    {
+      "type": "choice",
+      "key": "c05-bench",
+      "text": "You could pretend you never got down that far.",
+      "options": [
+        {
+          "id": "call",
+          "label": "Call him over.",
+          "beats": [
+            { "type": "line", "text": "\"Did you write this?\"" },
+            { "type": "line", "text": "He looks under the bench. \"No.\"" },
+            { "type": "line", "text": "\"Do you know who did?\"" },
+            { "type": "line", "text": "\"Perhaps.\"" },
+            { "type": "line", "text": "\"You're becoming irritating.\"" },
+            { "type": "line", "text": "\"That's hereditary.\"" },
+            { "type": "line", "text": "He sits on the floor to look at the letters. The ribs of the glider throw shadows over his shoulders." }
+          ]
+        },
+        {
+          "id": "quiet",
+          "label": "Say nothing about it.",
+          "beats": [
+            { "type": "line", "text": "You put your hand flat over the second line, as if the bench might be embarrassed." },
+            { "type": "line", "text": "He comes past a minute later with a coil of thread, sees where your hand is, and stops." },
+            { "type": "line", "text": "\"You found it.\"" },
+            { "type": "line", "text": "\"I found a bench.\"" },
+            { "type": "line", "text": "He sits down on the floor next to it, which is the closest he can get to thanking you without using words he doesn't own." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"When I was small, people used to ask where my mother was,\" he says. \"They didn't want the answer.\"" },
+    { "type": "line", "text": "\"What did they want?\"" },
+    { "type": "line", "text": "\"To decide what sort of boy I was.\"" },
+    { "type": "line", "text": "You're still holding the string he used to measure your head." },
+    { "type": "line", "text": "\"What sort of boy are you?\"" },
+    { "type": "line", "text": "\"The sort who measures before cutting.\"" },
+    { "type": "line", "text": "\"That isn't a character.\"" },
+    { "type": "line", "text": "\"It is when you're poor.\"" },
+    { "type": "line", "text": "At dusk he shuts the washhouse door and checks the alley through the crack." },
+    { "type": "line", "text": "The constables have started walking in pairs near the foundry road. Their boots leave clean prints in the mud, and the prints go past the washhouse both ways." },
+    { "type": "line", "text": "He comes back to the bench and opens the locked box." },
+    { "type": "line", "text": "Inside, the brass plate has been joined to a strip of leather. The tiny hinges flex when he presses them." },
+    { "type": "line", "text": "You say nothing. He closes the box." },
+    { "type": "line", "text": "\"You may ask,\" he says." },
+    {
+      "type": "choice",
+      "key": "c05-box",
+      "text": "He's given you permission, which from him is a considerable sum.",
+      "options": [
+        {
+          "id": "ask",
+          "label": "\"What is it?\"",
+          "beats": [
+            { "type": "line", "text": "\"A promise.\"" },
+            { "type": "line", "text": "\"That's worse than a practical answer.\"" },
+            { "type": "line", "text": "He holds the box against his chest. \"It'll be finished when it's ready.\"" },
+            { "type": "line", "text": "\"And if it's dreadful?\"" },
+            { "type": "line", "text": "\"Then you may tell me.\"" },
+            { "type": "line", "text": "\"I will.\"" },
+            { "type": "line", "text": "\"I know.\"" }
+          ]
+        },
+        {
+          "id": "refuse",
+          "label": "\"No. Keep it.\"",
+          "beats": [
+            { "type": "line", "text": "That stops him properly." },
+            { "type": "line", "text": "\"You don't want to know?\"" },
+            { "type": "line", "text": "\"I want you to have one thing in this city that nobody's taken off you yet.\"" },
+            { "type": "line", "text": "He stands there with the box against his chest for long enough that you look away first." },
+            { "type": "line", "text": "\"It's a promise,\" he says. \"That's all you're getting.\"" },
+            { "type": "line", "text": "\"Then it had better be a good one.\"" },
+            { "type": "line", "text": "\"It's the only one I've made.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He says your name on his way out. \"Good night, Monica.\"" },
+    { "type": "line", "text": "You've heard it hundreds of times from people who needed you to move, wait, eat, listen, or forgive." },
+    { "type": "line", "text": "In his mouth it sounds like a place he intends to come back to." }
+  ]
+}

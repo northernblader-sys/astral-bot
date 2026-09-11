@@ -1,0 +1,365 @@
+{
+  "num": 14,
+  "id": "what-it-costs",
+  "title": "What It Costs",
+  "requires": "the-authorities-circle",
+  "beats": [
+    { "type": "line", "text": "The printing office cellar smells of ink, coal, and wet stone." },
+    { "type": "line", "text": "The old man gives you one lantern and no questions." },
+    { "type": "line", "text": "Ada knows the room already. She leads Oliver through stacks of paper and presses under tarpaulin without touching a single thing." },
+    { "type": "line", "text": "The glider's down to bundles. The long spar rests across Oliver's shoulders. Ada's got the map and a coil of rope. You've got the brass box in your lap and the narrow aisles to steer." },
+    { "type": "line", "text": "\"How far to the chimney?\" you ask." },
+    { "type": "line", "text": "\"Twenty-three paces,\" Ada says." },
+    {
+      "type": "choice",
+      "key": "c14-cellar",
+      "text": "She said it without pausing to think.",
+      "options": [
+        {
+          "id": "counted",
+          "label": "\"You counted?\"",
+          "beats": [
+            { "type": "line", "text": "\"I count everything.\"" },
+            { "type": "line", "text": "\"Except potatoes,\" Oliver says." },
+            { "type": "line", "text": "\"Potatoes are temporary.\"" },
+            { "type": "line", "text": "That's the last joke any of the three of you makes tonight. You don't know it. Nobody in the cellar knows it." }
+          ]
+        },
+        {
+          "id": "faster",
+          "label": "\"Then walk it at my speed and tell me the number that matters.\"",
+          "beats": [
+            { "type": "line", "text": "\"Twenty-three paces is the number that matters,\" Ada says, \"because eleven of them have paper stacked to your elbow and two have a step, and I'll take the paper down before you get to it.\"" },
+            { "type": "line", "text": "She's already moving. She takes down eleven stacks of paper with her arms full of rope and map." },
+            { "type": "line", "text": "She'll do it for four more minutes." },
+            { "type": "line", "text": "That's the whole of the time left." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Above you, boots cross the printing floor." },
+    { "type": "line", "text": "The old man's voice comes up. \"No, officer. I've not seen them.\"" },
+    { "type": "line", "text": "A woman's voice answers. \"We will inspect the premises.\"" },
+    { "type": "line", "text": "Ada turns the lantern down." },
+    { "type": "line", "text": "\"There's another exit,\" Oliver whispers." },
+    { "type": "line", "text": "\"There's always another exit,\" Ada says." },
+    { "type": "line", "text": "\"Where?\"" },
+    { "type": "line", "text": "She points at the wall." },
+    { "type": "line", "text": "The wall has a door painted the same black as the bricks. She finds the latch under a shelf of type blocks." },
+    { "type": "line", "text": "It opens onto a service tunnel no wider than your chair." },
+    { "type": "line", "text": "Oliver goes first with the spar. Ada follows. You come last." },
+    { "type": "line", "text": "The wheels scrape both walls. Mortar comes down on your coat. Your left leg throbs under the bandage at an angle the passage won't let you change." },
+    { "type": "line", "text": "\"How far?\" you ask." },
+    { "type": "line", "text": "\"Forty paces.\"" },
+    { "type": "line", "text": "\"You counted this one as well?\"" },
+    { "type": "line", "text": "\"I count until I'm safe.\"" },
+    { "type": "line", "text": "Behind you, the black door opens." },
+    { "type": "line", "text": "A constable shouts, \"There!\"" },
+    { "type": "line", "text": "Oliver pushes forward. The spar jams against the ceiling." },
+    { "type": "line", "text": "\"Lower it,\" you say." },
+    { "type": "line", "text": "\"I'm trying.\"" },
+    { "type": "line", "text": "Ada turns round in the passage. There's no room for her to get past you." },
+    {
+      "type": "choice",
+      "key": "c14-tunnel",
+      "text": "\"Monica. Can you reverse?\"",
+      "options": [
+        {
+          "id": "notquickly",
+          "label": "\"Not quickly.\"",
+          "beats": [
+            { "type": "line", "text": "\"Quickly isn't required.\"" },
+            { "type": "line", "text": "The constable's boots come into the tunnel." },
+            { "type": "line", "text": "You reverse one hand at a time. The rear wheel catches on the wall." }
+          ]
+        },
+        {
+          "id": "no",
+          "label": "\"No. Go forward. Leave me in the gap — I'm as wide as the tunnel.\"",
+          "beats": [
+            { "type": "line", "text": "\"Absolutely not,\" says Ada." },
+            { "type": "line", "text": "\"I am a door,\" you say. \"For once in my life I am a door.\"" },
+            { "type": "line", "text": "\"You're a girl in a chair in front of a man with a club.\"" },
+            { "type": "line", "text": "\"Ada—\"" },
+            { "type": "line", "text": "\"Reverse,\" she says, in a voice you've not heard her use, \"because I've a plan and it needs eight feet of tunnel, and you are standing in it.\"" },
+            { "type": "line", "text": "You reverse one hand at a time. The rear wheel catches on the wall." },
+            { "type": "line", "text": "You will spend a great deal of the rest of your life wondering what happens if you'd refused." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Oliver lowers the spar until it rests across Ada's shoulders." },
+    { "type": "line", "text": "\"Give it me,\" she says." },
+    { "type": "line", "text": "\"You can't carry it and move.\"" },
+    { "type": "line", "text": "\"Then I'll carry it and not move.\"" },
+    { "type": "line", "text": "\"Ada.\"" },
+    { "type": "line", "text": "\"Go.\"" },
+    {
+      "type": "choice",
+      "key": "c14-spar",
+      "text": "She presses herself flat against the wall. The spar fills the tunnel between her and the constable.",
+      "options": [
+        {
+          "id": "go",
+          "label": "\"Go\" — take Oliver and go.",
+          "beats": [
+            { "type": "line", "text": "Oliver grabs the back of your chair and pulls." },
+            { "type": "line", "text": "The chair moves." },
+            { "type": "line", "text": "Your wheels grind over the stone. The pain in your leg goes hot and sharp. You bite the inside of your cheek and keep your hands on the rims." }
+          ]
+        },
+        {
+          "id": "refuse",
+          "label": "\"We don't split up. Not for a spar.\"",
+          "beats": [
+            { "type": "line", "text": "\"It isn't for the spar,\" Ada says. \"It's forty paces and a bend. I'll be behind you the whole way.\"" },
+            { "type": "line", "text": "\"Say it plainly.\"" },
+            { "type": "line", "text": "\"I'll be behind you the whole way,\" she says, and looks straight at you when she says it, which is how you know she means it, and it is nevertheless not true." },
+            { "type": "line", "text": "Oliver grabs the back of your chair and pulls." },
+            { "type": "line", "text": "The chair moves." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The constable reaches the bend. Ada brings the spar up." },
+    { "type": "line", "text": "\"Back,\" she says." },
+    { "type": "line", "text": "The man stops. \"Move aside.\"" },
+    { "type": "line", "text": "\"There is no aside.\"" },
+    { "type": "line", "text": "\"By order of the district.\"" },
+    { "type": "line", "text": "\"Then the district will have to widen the tunnel.\"" },
+    { "type": "line", "text": "She glances back at you once." },
+    { "type": "line", "text": "\"Go.\"" },
+    { "type": "line", "text": "Oliver pulls harder." },
+    {
+      "type": "battle",
+      "text": "The tunnel opens into a low chamber under the river embankment. Oliver drags you through first. Ada stays in the passage with the spar.\n\nThe constable lunges. The spar catches his chest and puts him against the wall. He strikes at the wood. She twists it aside, but the blow breaks the binding near the middle.\n\nA second constable comes in behind him.\n\nOliver sets his end down and runs back.\n\n\"No,\" you say.\n\nHe doesn't hear you.\n\nAda kicks the loose type blocks off the shelf above the tunnel mouth. They come down into the passage and the constables retreat as metal letters scatter across the floor.\n\nThe woman in the dark coat appears at the far end. \"Ada Pike. You are under arrest.\"\n\nAda looks at Oliver. \"Don't make that face.\"\n\n\"What face?\"\n\n\"The one that suggests heroism.\"\n\nShe throws him the red pencil.\n\nThen the ceiling beam gives way.",
+      "encounter": {
+        "enemyName": "The Net",
+        "enemyHp": 60,
+        "enemyAtk": 18,
+        "fixedStats": true,
+        "playerStatsIgnored": true,
+        "onWin": "You are faster than you have ever been. You get the chair round, you get the lantern up, you get your voice into the chamber before the dust does. It buys the moment it takes Oliver to reach the spar. That is all it buys. The beam comes down anyway. It was always going to come down. There is no version of this that you win.",
+        "onLose": "The beam comes down before anyone can stop it. Ada does not survive the collapse. There is no version of this fight Monica wins outright. The most she buys is the moment it takes Oliver to reach the spar, and the seconds after, when it is already too late."
+      }
+    },
+    { "type": "line", "text": "The dust tastes of chalk and ink." },
+    { "type": "line", "text": "You can't see the tunnel. You can hear Oliver coughing somewhere to your right." },
+    { "type": "line", "text": "\"Ada!\"" },
+    { "type": "line", "text": "No answer." },
+    { "type": "line", "text": "The woman in the dark coat has Oliver by the collar. He's clawing at her hand." },
+    { "type": "line", "text": "\"Let him go,\" you say." },
+    { "type": "line", "text": "\"Your friend has obstructed officers and endangered the public.\"" },
+    { "type": "line", "text": "\"She's a child.\"" },
+    { "type": "line", "text": "\"She is a repeat trespasser.\"" },
+    { "type": "line", "text": "\"She's under the beam.\"" },
+    { "type": "line", "text": "\"Then she should have moved.\"" },
+    {
+      "type": "choice",
+      "key": "c14-takeme",
+      "text": "You turn the chair toward her. The chamber swings round the lantern light.",
+      "options": [
+        {
+          "id": "instead",
+          "label": "\"Take me instead.\"",
+          "beats": [
+            { "type": "line", "text": "\"You wanted a machine,\" you say. \"You wanted a thief. You wanted a charge to put in that folder. Take me.\"" },
+            { "type": "line", "text": "Oliver says, \"No.\"" },
+            { "type": "line", "text": "\"You have no permit,\" the woman says." },
+            { "type": "line", "text": "\"I have a chair. I have a ruined leg. I have a name already in your records. I'll sit in your station and speak until every clerk in the building knows exactly what happened in this tunnel.\"" },
+            { "type": "line", "text": "Her face stays unreadable." }
+          ]
+        },
+        {
+          "id": "ordinance",
+          "label": "\"You brought men into a tunnel you'd called unsafe an hour ago.\"",
+          "beats": [
+            { "type": "line", "text": "She doesn't answer." },
+            { "type": "line", "text": "\"You said the tunnel was unsafe. You said it to the old man upstairs. I heard you through the floor.\"" },
+            { "type": "line", "text": "\"Officers accept risk.\"" },
+            { "type": "line", "text": "\"So did she,\" you say, \"and she's fifteen, and she's under your ceiling, and you are going to be asked about it by somebody who can spell.\"" },
+            { "type": "line", "text": "Something goes across the woman's face. It isn't remorse. It's arithmetic." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Behind the beam, Ada makes a small sound." },
+    { "type": "line", "text": "Oliver tears free." },
+    {
+      "type": "battle",
+      "text": "He reaches the fallen spar. The wood has her pinned across the shoulder and chest. One hand is showing, fingers curled round the red pencil.\n\n\"Don't pull it,\" she says.\n\n\"I can lift it.\"\n\n\"You can break me.\"\n\nThe constables get hold of him. He kicks, twists, bites one man's wrist. The woman orders them to hold him.\n\nYou shout for the lantern. The light swings across the chamber. Her face is grey under the dust.\n\n\"Monica,\" she says.\n\n\"I'm here.\"\n\n\"The river tunnel goes east. The second turn's flooded. Don't take it.\"\n\n\"You can tell me later.\"\n\n\"No. I can't.\"\n\nShe says it plainly. She doesn't soften it for you.\n\nOliver goes still.\n\nYou put both hands on the rims and drive at the beam. The front wheel hits the wood. It doesn't move.\n\n\"Get help,\" you say.\n\nThe woman looks at the blocked passage.\n\n\"You have men,\" you tell her. \"Use them.\"",
+      "encounter": {
+        "enemyName": "The Beam",
+        "enemyHp": 45,
+        "enemyAtk": 14,
+        "fixedStats": true,
+        "playerStatsIgnored": true,
+        "onWin": "The constables lift the spar together. Ada's body shifts. The beam rises just enough for Oliver to crawl beneath it.",
+        "onLose": "The constables hold longer than they should. Oliver strains against their grip while the beam holds, and holds, and will not move. When it finally gives, more of the ceiling comes with it — dust, splinters, a second crack somewhere overhead. It costs him a few more seconds he does not have. But the gap opens, and he reaches her."
+      }
+    },
+    { "type": "line", "text": "He drags her clear." },
+    { "type": "line", "text": "Her eyes are open. The red pencil is broken in her hand." },
+    { "type": "line", "text": "He puts his coat under her head." },
+    { "type": "line", "text": "\"Look at me,\" he says." },
+    { "type": "line", "text": "She does. \"Your face is dreadful.\"" },
+    { "type": "line", "text": "\"You've said that already.\"" },
+    { "type": "line", "text": "\"I'm repeating myself. It's a serious condition.\"" },
+    { "type": "line", "text": "You get as close as the chair will go. It won't fit under the fallen beam. You stop at the edge of the chamber, four feet short, which is where you stay." },
+    {
+      "type": "choice",
+      "key": "c14-pencil",
+      "text": "Four feet. You have never in your life hated four feet the way you hate these four feet.",
+      "options": [
+        {
+          "id": "doctor",
+          "label": "\"She needs a doctor.\"",
+          "beats": [
+            { "type": "line", "text": "The woman kneels and puts two fingers at Ada's throat. She looks at the blood under the coat." },
+            { "type": "line", "text": "\"The nearest is across the river.\"" },
+            { "type": "line", "text": "\"Then send someone.\"" },
+            { "type": "line", "text": "\"The tunnel is unsafe.\"" },
+            { "type": "line", "text": "\"Then carry her.\"" }
+          ]
+        },
+        {
+          "id": "hand",
+          "label": "\"Oliver. Move her hand where I can reach it.\"",
+          "beats": [
+            { "type": "line", "text": "He looks up at you. Then he understands, and moves along the floor on his knees, and brings her arm across until her fingers are inside the reach of yours." },
+            { "type": "line", "text": "Her hand is cold and there's brick dust in it." },
+            { "type": "line", "text": "\"You've got my pencil,\" she says." },
+            { "type": "line", "text": "\"You threw it at him.\"" },
+            { "type": "line", "text": "\"Then he's got my pencil,\" she says, \"and you've got my hand, and that's the estate settled.\"" },
+            { "type": "line", "text": "\"She needs a doctor,\" you say, to the woman, to anyone. \"The nearest is across the river.\" \"Then carry her.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Ada's fingers find Oliver's sleeve." },
+    { "type": "line", "text": "\"Don't let them take the frame,\" she whispers." },
+    { "type": "line", "text": "\"Forget the frame.\"" },
+    { "type": "line", "text": "\"You're terrible at following maps.\"" },
+    { "type": "line", "text": "He bends over her." },
+    { "type": "line", "text": "\"I marked the bridge,\" she says. \"Behind the observatory. It's higher than the quarry.\"" },
+    { "type": "line", "text": "\"Ada.\"" },
+    { "type": "line", "text": "\"You promised.\"" },
+    { "type": "line", "text": "\"I didn't promise.\"" },
+    { "type": "line", "text": "\"You should have.\"" },
+    {
+      "type": "choice",
+      "key": "c14-promise",
+      "text": "There is nothing here that any answer changes. You know that already. You answer anyway, because she is looking at you.",
+      "options": [
+        {
+          "id": "promise",
+          "label": "\"He promises. I'm a witness.\"",
+          "beats": [
+            { "type": "line", "text": "Her eyes come across to you." },
+            { "type": "line", "text": "\"Write it down,\" she says." },
+            { "type": "line", "text": "\"I haven't a pencil.\"" },
+            { "type": "line", "text": "\"Then remember it. You're better than paper.\"" },
+            { "type": "line", "text": "\"I'll remember it.\"" },
+            { "type": "line", "text": "\"Good,\" she says. \"That's the road done, then.\"" }
+          ]
+        },
+        {
+          "id": "stay",
+          "label": "\"Stop giving instructions and stay.\"",
+          "beats": [
+            { "type": "line", "text": "\"That isn't a thing people can do,\" she says." },
+            { "type": "line", "text": "\"Then do it badly.\"" },
+            { "type": "line", "text": "Something happens at the side of her mouth that has to stand in for a laugh." },
+            { "type": "line", "text": "\"Monica,\" she says. \"The second turn is flooded.\"" },
+            { "type": "line", "text": "\"I know. You said.\"" },
+            { "type": "line", "text": "\"I'm saying it twice because you'll want to go east,\" she says, \"and I shan't be there to stop you.\"" }
+          ]
+        },
+        {
+          "id": "silent",
+          "label": "Say nothing. Hold on.",
+          "beats": [
+            { "type": "line", "text": "You have had an answer for every person who has ever stood over you. Every constable, every clerk, every woman with a folder." },
+            { "type": "line", "text": "There isn't one for this." },
+            { "type": "line", "text": "So you hold on, and you say nothing, and she doesn't seem to mind, and that turns out to have been allowed the whole time." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Her fingers loosen." },
+    { "type": "line", "text": "The lantern flame bends in the draught." },
+    { "type": "line", "text": "Ada Pike dies before the doctor arrives." },
+    { "type": "line", "text": "There's no final speech. No sudden strength coming back into her." },
+    { "type": "line", "text": "Her breathing gets shallow while Oliver holds her hand and goes on asking her questions she can't answer." },
+    { "type": "line", "text": "You watch the broken red pencil come out of her fingers and roll away under the spar." },
+    { "type": "line", "text": "You had been worrying about her chest." },
+    { "type": "line", "text": "For eleven months, quietly, every time she coughed into that short sleeve, you had been worrying about her chest." },
+    { "type": "line", "text": "The woman in the dark coat stands over the three of you. The constables wait behind her." },
+    { "type": "line", "text": "\"You cannot remain here,\" she says." },
+    { "type": "line", "text": "You look at the beam, and the crushed map, and the blood going dark on Oliver's coat." },
+    { "type": "line", "text": "\"Move,\" she says." },
+    { "type": "line", "text": "Oliver doesn't." },
+    {
+      "type": "choice",
+      "key": "c14-move",
+      "text": "You put your hand on his wrist. His skin is cold.",
+      "options": [
+        {
+          "id": "wehaveto",
+          "label": "\"We have to go.\"",
+          "beats": [
+            { "type": "line", "text": "He looks at you as though the words are in another language." },
+            { "type": "line", "text": "\"Oliver.\"" },
+            { "type": "line", "text": "Nothing." },
+            { "type": "line", "text": "\"Oliver. Her cap.\"" },
+            { "type": "line", "text": "That reaches him. He picks up the cap." }
+          ]
+        },
+        {
+          "id": "notyet",
+          "label": "\"Not yet.\" — to the woman, not to him.",
+          "beats": [
+            { "type": "line", "text": "\"I said—\"" },
+            { "type": "line", "text": "\"I heard you. Not yet.\"" },
+            { "type": "line", "text": "\"There is no purpose in—\"" },
+            { "type": "line", "text": "\"Then there's no hurry either,\" you say, \"and you'll give a boy four minutes on a floor with his friend, and you'll do it standing up and silent, because there is a doctor on his way here who is going to ask what happened, and I want you to have something decent to tell him.\"" },
+            { "type": "line", "text": "She stands there. She's silent. It's four minutes." },
+            { "type": "line", "text": "It's the only thing anybody wins in this chamber tonight." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The doctor arrives too late. He kneels, checks her, and closes his bag." },
+    { "type": "line", "text": "The authorities take the broken frame." },
+    { "type": "line", "text": "They leave the map where it lies." },
+    {
+      "type": "choice",
+      "key": "c14-carry",
+      "text": "There are three things on the floor of this chamber that belong to your household and only two hands going out of it that are free.",
+      "options": [
+        {
+          "id": "cap",
+          "label": "The cap for him. The box for you.",
+          "beats": [
+            { "type": "line", "text": "Oliver carries Ada's cap." },
+            { "type": "line", "text": "You carry the brass box." },
+            { "type": "line", "text": "The tunnel out is narrow. Your chair scrapes the stone the whole way to the river." }
+          ]
+        },
+        {
+          "id": "map",
+          "label": "Go back for the map.",
+          "beats": [
+            { "type": "line", "text": "\"Leave it,\" the woman says. \"It is crushed.\"" },
+            { "type": "line", "text": "\"It's stitched,\" you say. \"The rivers are thread. Thread doesn't crush.\"" },
+            { "type": "line", "text": "You get it with the crutch, dragging it in over the brick dust, and you fold it on your knees, badly, in the dark, with both hands shaking." },
+            { "type": "line", "text": "Oliver carries Ada's cap. You carry the brass box and the blue cloth." },
+            { "type": "line", "text": "The tunnel out is narrow. Your chair scrapes the stone the whole way to the river." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Above the embankment the sky is getting light at one edge." },
+    { "type": "line", "text": "Neither of you looks at it." }
+  ]
+}

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "astral_vanguard",
+    "name": "Astral Vanguard",
+    "emoji": "⚔️",
+    "location": "astral_town",
+    "description": "Front-line conquerors who believe every floor exists to be cleared first. No ceremony, no hierarchy — just whoever's still climbing."
+  },
+  {
+    "id": "shadow_covenant",
+    "name": "Shadow Covenant",
+    "emoji": "🌑",
+    "location": "astral_town",
+    "description": "A quiet, calculating guild that trusts results over reputation. They let their floor counts speak for them."
+  },
+  {
+    "id": "gilded_order",
+    "name": "Gilded Order",
+    "emoji": "⚜️",
+    "location": "astral_town",
+    "description": "Disciplined and prestige-driven — every member treats a conquered floor like a badge of honor."
+  },
+  {
+    "id": "stormbreakers",
+    "name": "Stormbreakers",
+    "emoji": "⛈️",
+    "location": "astral_town",
+    "description": "Reckless, loud, and always first through the dungeon gate. Leadership goes to whoever dives deepest."
+  },
+  {
+    "id": "emberwake",
+    "name": "Emberwake",
+    "emoji": "🔥",
+    "location": "astral_town",
+    "description": "Bound by rivalry and fire — every member is chasing the next floor record, and the guild answers to whoever's winning."
+  }
+]

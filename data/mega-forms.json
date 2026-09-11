@@ -1,0 +1,128 @@
+[
+  {
+    "dexId": 150,
+    "speciesName": "mewtwo",
+    "megaName": "Mega Mewtwo X",
+    "megaStoneItemId": "mewtwonite-x",
+    "type": ["psychic", "fighting"],
+    "statMultipliers": { "hp": 1.0, "atk": 1.727, "def": 1.111, "spAtk": 1.0, "spDef": 1.111, "spd": 1.0 },
+    "ability": "steadfast"
+  },
+  {
+    "dexId": 150,
+    "speciesName": "mewtwo",
+    "megaName": "Mega Mewtwo Y",
+    "megaStoneItemId": "mewtwonite-y",
+    "type": ["psychic"],
+    "statMultipliers": { "hp": 1.0, "atk": 1.364, "def": 0.778, "spAtk": 1.26, "spDef": 1.333, "spd": 1.077 },
+    "ability": "insomnia"
+  },
+  {
+    "dexId": 6,
+    "speciesName": "charizard",
+    "megaName": "Mega Charizard X",
+    "megaStoneItemId": "charizardite-x",
+    "type": ["fire", "dragon"],
+    "statMultipliers": { "hp": 1.0, "atk": 1.548, "def": 1.423, "spAtk": 1.193, "spDef": 1.0, "spd": 1.0 },
+    "ability": "tough-claws"
+  },
+  {
+    "dexId": 6,
+    "speciesName": "charizard",
+    "megaName": "Mega Charizard Y",
+    "megaStoneItemId": "charizardite-y",
+    "type": ["fire", "flying"],
+    "statMultipliers": { "hp": 1.0, "atk": 1.238, "def": 1.0, "spAtk": 1.459, "spDef": 1.353, "spd": 1.0 },
+    "ability": "drought"
+  },
+  {
+    "dexId": 257,
+    "speciesName": "blaziken",
+    "megaName": "Mega Blaziken",
+    "megaStoneItemId": "blazikenite",
+    "type": ["fire", "fighting"],
+    "statMultipliers": { "hp": 1.0, "atk": 1.333, "def": 1.143, "spAtk": 1.182, "spDef": 1.143, "spd": 1.25 },
+    "ability": "speed-boost"
+  },
+  {
+    "dexId": 448,
+    "speciesName": "lucario",
+    "megaName": "Mega Lucario",
+    "megaStoneItemId": "lucarionite",
+    "type": ["fighting", "steel"],
+    "statMultipliers": { "hp": 1.0, "atk": 1.318, "def": 1.257, "spAtk": 1.217, "spDef": 1.0, "spd": 1.244 },
+    "ability": "adaptability"
+  },
+  {
+    "dexId": 94,
+    "speciesName": "gengar",
+    "megaName": "Mega Gengar",
+    "megaStoneItemId": "gengarite",
+    "type": ["ghost", "poison"],
+    "statMultipliers": { "hp": 1.0, "atk": 1.0, "def": 1.333, "spAtk": 1.308, "spDef": 1.267, "spd": 1.182 },
+    "ability": "shadow-tag"
+  },
+  {
+    "dexId": 115,
+    "speciesName": "kangaskhan",
+    "megaName": "Mega Kangaskhan",
+    "megaStoneItemId": "kangaskhanite",
+    "type": ["normal"],
+    "statMultipliers": { "hp": 1.0, "atk": 1.316, "def": 1.25, "spAtk": 1.5, "spDef": 1.25, "spd": 1.111 },
+    "ability": "parental-bond"
+  },
+  {
+    "dexId": 130,
+    "speciesName": "gyarados",
+    "megaName": "Mega Gyarados",
+    "megaStoneItemId": "gyaradosite",
+    "type": ["water", "dark"],
+    "statMultipliers": { "hp": 1.0, "atk": 1.24, "def": 1.38, "spAtk": 1.167, "spDef": 1.3, "spd": 1.0 },
+    "ability": "mold-breaker"
+  },
+  {
+    "dexId": 359,
+    "speciesName": "absol",
+    "megaName": "Mega Absol",
+    "megaStoneItemId": "absolite",
+    "type": ["dark"],
+    "statMultipliers": { "hp": 1.0, "atk": 1.154, "def": 1.0, "spAtk": 1.533, "spDef": 1.0, "spd": 1.533 },
+    "ability": "magic-bounce"
+  },
+  {
+    "dexId": 445,
+    "speciesName": "garchomp",
+    "megaName": "Mega Garchomp",
+    "megaStoneItemId": "garchompite",
+    "type": ["dragon", "ground"],
+    "statMultipliers": { "hp": 1.0, "atk": 1.308, "def": 1.211, "spAtk": 1.5, "spDef": 1.118, "spd": 0.902 },
+    "ability": "sand-force"
+  },
+  {
+    "dexId": 376,
+    "speciesName": "metagross",
+    "megaName": "Mega Metagross",
+    "megaStoneItemId": "metagrossite",
+    "type": ["steel", "psychic"],
+    "statMultipliers": { "hp": 1.0, "atk": 1.074, "def": 1.154, "spAtk": 1.105, "spDef": 1.222, "spd": 1.571 },
+    "ability": "tough-claws"
+  },
+  {
+    "dexId": 373,
+    "speciesName": "salamence",
+    "megaName": "Mega Salamence",
+    "megaStoneItemId": "salamencite",
+    "type": ["dragon", "flying"],
+    "statMultipliers": { "hp": 1.0, "atk": 1.074, "def": 1.625, "spAtk": 1.091, "spDef": 1.125, "spd": 1.2 },
+    "ability": "aerilate"
+  },
+  {
+    "dexId": 384,
+    "speciesName": "rayquaza",
+    "megaName": "Mega Rayquaza",
+    "megaStoneItemId": "rayquazite",
+    "type": ["dragon", "flying"],
+    "statMultipliers": { "hp": 1.0, "atk": 1.2, "def": 1.111, "spAtk": 1.2, "spDef": 1.111, "spd": 1.211 },
+    "ability": "delta-stream"
+  }
+]

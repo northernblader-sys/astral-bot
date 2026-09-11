@@ -1,0 +1,12 @@
+{
+  "gemPackages": [
+    { "id": "starter", "gems": 1,   "priceNaira": 500 },
+    { "id": "small",   "gems": 3,   "priceNaira": 1400 },
+    { "id": "medium",  "gems": 5,   "priceNaira": 2250 },
+    { "id": "large",   "gems": 10,  "priceNaira": 4300 },
+    { "id": "mega",    "gems": 20,  "priceNaira": 8000 },
+    { "id": "gem_boost_100", "gems": 100, "priceNaira": 5000 },
+    { "id": "titan",   "gems": 50,  "priceNaira": 19000 },
+    { "id": "colossal","gems": 250, "priceNaira": 90000 }
+  ]
+}

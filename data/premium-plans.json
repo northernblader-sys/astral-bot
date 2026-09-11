@@ -1,0 +1,19 @@
+{
+  "plans": {
+    "weekly": {
+      "label": "1 Week",
+      "priceNaira": 1000,
+      "durationDays": 7
+    },
+    "monthly": {
+      "label": "1 Month",
+      "priceNaira": 2500,
+      "durationDays": 30
+    },
+    "yearly": {
+      "label": "1 Year",
+      "priceNaira": 13000,
+      "durationDays": 365
+    }
+  }
+}

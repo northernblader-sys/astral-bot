@@ -1,0 +1,98 @@
+{
+  "tiers": [
+    {
+      "id": "tent",
+      "name": "Canvas Tent",
+      "rank": 0,
+      "solars": 0,
+      "rooms": 1,
+      "decorSlots": 1,
+      "plots": 1,
+      "restBonus": 2,
+      "storage": 5,
+      "blurb": "A patched canvas lean-to on the edge of Astral Town. It keeps the rain off. Mostly."
+    },
+    {
+      "id": "cottage",
+      "name": "Stone Cottage",
+      "rank": 1,
+      "solars": 75000,
+      "rooms": 3,
+      "decorSlots": 4,
+      "plots": 3,
+      "restBonus": 5,
+      "storage": 20,
+      "blurb": "Low stone walls, a real door, a hearth that actually draws. The first place that feels like yours."
+    },
+    {
+      "id": "manor",
+      "name": "Timber Manor",
+      "rank": 2,
+      "solars": 400000,
+      "rooms": 6,
+      "decorSlots": 8,
+      "plots": 6,
+      "restBonus": 9,
+      "storage": 60,
+      "blurb": "Two floors, a stair that creaks in one exact spot, and enough land out back to plant properly."
+    },
+    {
+      "id": "estate",
+      "name": "Astral Estate",
+      "rank": 3,
+      "solars": 2000000,
+      "rooms": 10,
+      "decorSlots": 14,
+      "plots": 10,
+      "restBonus": 14,
+      "storage": 150,
+      "blurb": "Iron gates, a walled garden, and a name the neighbours know before they know yours."
+    }
+  ],
+
+  "rooms": [
+    { "id": "bedroom",    "name": "Bedroom",     "solars": 8000,   "minRank": 0, "perk": "rest",    "value": 3, "blurb": "Somewhere to actually sleep. Rest recovers more HP." },
+    { "id": "kitchen",    "name": "Kitchen",     "solars": 15000,  "minRank": 1, "perk": "cook",    "value": 1, "blurb": "Turns raw crops and fish into something worth eating." },
+    { "id": "workshop",   "name": "Workshop",    "solars": 30000,  "minRank": 1, "perk": "craft",   "value": 5, "blurb": "A bench and a vice. Crafting here is 5% cheaper on materials." },
+    { "id": "study",      "name": "Study",       "solars": 45000,  "minRank": 1, "perk": "xp",      "value": 3, "blurb": "Quiet, and lined with books. Small standing XP bonus." },
+    { "id": "greenhouse", "name": "Greenhouse",  "solars": 60000,  "minRank": 2, "perk": "growth",  "value": 15, "blurb": "Glass and warm air. Crops grow 15% faster." },
+    { "id": "cellar",     "name": "Cellar",      "solars": 50000,  "minRank": 2, "perk": "storage", "value": 30, "blurb": "Cool, dark, and dry. Adds home storage." },
+    { "id": "forge",      "name": "Forge",       "solars": 120000, "minRank": 2, "perk": "repair",  "value": 10, "blurb": "Coal, anvil, quench barrel. Repairs cost less." },
+    { "id": "shrine",     "name": "Shrine",      "solars": 180000, "minRank": 3, "perk": "luck",    "value": 2, "blurb": "A small stone altar. Fortune leans your way, slightly." },
+    { "id": "library",    "name": "Library",     "solars": 250000, "minRank": 3, "perk": "xp",      "value": 5, "blurb": "Floor to ceiling, two ladders. A larger XP bonus than the study." },
+    { "id": "solarium",   "name": "Solarium",    "solars": 320000, "minRank": 3, "perk": "rest",    "value": 8, "blurb": "Glass roof, long couches, afternoon light. The best rest in the game." }
+  ],
+
+  "decor": [
+    { "id": "rug",        "name": "Woven Rug",        "solars": 4000,   "comfort": 2 },
+    { "id": "hearth",     "name": "Open Hearth",      "solars": 9000,   "comfort": 4 },
+    { "id": "bookshelf",  "name": "Bookshelf",        "solars": 12000,  "comfort": 4 },
+    { "id": "banner",     "name": "House Banner",     "solars": 18000,  "comfort": 5 },
+    { "id": "aquarium",   "name": "Glass Aquarium",   "solars": 35000,  "comfort": 7 },
+    { "id": "trophy",     "name": "Trophy Mount",     "solars": 50000,  "comfort": 8 },
+    { "id": "chandelier", "name": "Crystal Chandelier","solars": 90000, "comfort": 11 },
+    { "id": "fountain",   "name": "Courtyard Fountain","solars": 150000,"comfort": 14 },
+    { "id": "starmap",    "name": "Astral Star Map",  "solars": 260000, "comfort": 18 }
+  ],
+
+  "crops": [
+    { "id": "wheat",     "name": "Wheat",         "seedCost": 300,   "minutes": 20,   "yieldMin": 2, "yieldMax": 4, "sell": 260,    "minRank": 0 },
+    { "id": "carrot",    "name": "Carrot",        "seedCost": 550,   "minutes": 45,   "yieldMin": 2, "yieldMax": 4, "sell": 480,    "minRank": 0 },
+    { "id": "pumpkin",   "name": "Pumpkin",       "seedCost": 1400,  "minutes": 120,  "yieldMin": 2, "yieldMax": 3, "sell": 1500,   "minRank": 1 },
+    { "id": "sunleaf",   "name": "Sunleaf",       "seedCost": 3200,  "minutes": 240,  "yieldMin": 2, "yieldMax": 4, "sell": 2600,   "minRank": 1 },
+    { "id": "moonberry", "name": "Moonberry",     "seedCost": 7500,  "minutes": 480,  "yieldMin": 2, "yieldMax": 3, "sell": 7000,   "minRank": 2 },
+    { "id": "starroot",  "name": "Star Root",     "seedCost": 18000, "minutes": 720,  "yieldMin": 1, "yieldMax": 3, "sell": 19000,  "minRank": 2 },
+    { "id": "voidbloom", "name": "Void Bloom",    "seedCost": 45000, "minutes": 1440, "yieldMin": 1, "yieldMax": 2, "sell": 60000,  "minRank": 3 }
+  ],
+
+  "fish": [
+    { "id": "minnow",     "name": "Silver Minnow",   "weight": 34, "sell": 220,    "difficulty": 1 },
+    { "id": "carp",       "name": "River Carp",      "weight": 24, "sell": 600,    "difficulty": 2 },
+    { "id": "pike",       "name": "Spotted Pike",    "weight": 16, "sell": 1500,   "difficulty": 3 },
+    { "id": "eel",        "name": "Shadow Eel",      "weight": 11, "sell": 3400,   "difficulty": 4 },
+    { "id": "sunfish",    "name": "Gilded Sunfish",  "weight": 7,  "sell": 8000,   "difficulty": 5 },
+    { "id": "moonfin",    "name": "Moonfin",         "weight": 4,  "sell": 21000,  "difficulty": 6 },
+    { "id": "astral_ray", "name": "Astral Ray",      "weight": 2,  "sell": 65000,  "difficulty": 7 },
+    { "id": "void_koi",   "name": "Void Koi",        "weight": 1,  "sell": 180000, "difficulty": 8 }
+  ]
+}

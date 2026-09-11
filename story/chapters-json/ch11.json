@@ -1,0 +1,460 @@
+{
+  "num": 11,
+  "id": "a-second-set-of-hands",
+  "title": "A Second Set of Hands",
+  "requires": "half-a-volume",
+  "beats": [
+    { "type": "line", "text": "Ada Pike steals the map off your wall on a Thursday afternoon." },
+    { "type": "line", "text": "You see the fingers first, through the open window. Narrow, brown with coal dust, and unhurried." },
+    { "type": "line", "text": "She lifts the blue cloth off its pin and folds it with care, which is somehow worse." },
+    {
+      "type": "choice",
+      "key": "c11-theft",
+      "text": "You are eight feet away and the chair is facing the wrong direction.",
+      "options": [
+        {
+          "id": "shout",
+          "label": "\"Put that back.\"",
+          "beats": [
+            { "type": "line", "text": "The fingers vanish." },
+            { "type": "line", "text": "\"I said put it back.\"" },
+            { "type": "line", "text": "Nothing. Then a face comes up over the sill." }
+          ]
+        },
+        {
+          "id": "trap",
+          "label": "\"You've got the top corner. There's a second pin at the bottom.\"",
+          "beats": [
+            { "type": "line", "text": "The hand stops dead." },
+            { "type": "line", "text": "\"There isn't,\" says a voice below the sill." },
+            { "type": "line", "text": "\"No,\" you agree. \"But you looked.\"" },
+            { "type": "line", "text": "A pause. \"That was well done,\" the voice says, with real approval, and a face comes up over the sill." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "She's about Oliver's age, maybe a little older, with a cap pulled low over one eye and a red pencil behind her ear." },
+    { "type": "line", "text": "She's holding the map against her chest." },
+    { "type": "line", "text": "\"You drew the river wrong,\" she says." },
+    { "type": "line", "text": "\"I didn't draw the river.\"" },
+    { "type": "line", "text": "\"Then whoever did is a liar.\"" },
+    { "type": "line", "text": "\"You're trespassing.\"" },
+    { "type": "line", "text": "\"You're keeping bad geography.\"" },
+    { "type": "line", "text": "Oliver comes through the washhouse door with a bundle of wire and stops when he sees her." },
+    { "type": "line", "text": "\"Give that back,\" he says." },
+    { "type": "line", "text": "She looks at him. \"You've built a wing without marking the wind direction.\"" },
+    { "type": "line", "text": "His eyes go to the map." },
+    { "type": "line", "text": "\"Give it back.\"" },
+    { "type": "line", "text": "She folds it once more, perfectly, and sets it on the sill, and keeps one hand flat on top of it." },
+    { "type": "line", "text": "\"The hill west of the quarry isn't a hill,\" she says. \"It's an old spoil bank. The ground shifts after rain. That's why your right skid dug in.\"" },
+    { "type": "line", "text": "Oliver's whole face changes. \"You were there.\"" },
+    { "type": "line", "text": "\"I've eyes.\"" },
+    { "type": "line", "text": "\"You were there.\"" },
+    { "type": "line", "text": "\"I collect information.\"" },
+    {
+      "type": "choice",
+      "key": "c11-coat",
+      "text": "Her coat has three sleeves sewn into it. One of them is too short to reach her wrist.",
+      "options": [
+        {
+          "id": "sleeves",
+          "label": "\"Do you collect coats as well?\"",
+          "beats": [
+            { "type": "line", "text": "She looks down at it as though noticing it for the first time." },
+            { "type": "line", "text": "\"This one was abandoned.\"" },
+            { "type": "line", "text": "\"By whom?\"" },
+            { "type": "line", "text": "\"A gentleman careless enough to leave it unattended.\"" },
+            { "type": "line", "text": "\"That's my line,\" Oliver says." },
+            { "type": "line", "text": "\"Then you've been using it badly.\"" }
+          ]
+        },
+        {
+          "id": "third",
+          "label": "\"Why three sleeves?\"",
+          "beats": [
+            { "type": "line", "text": "\"The third's a pocket,\" she says, and turns it out, and there's a stub of chalk in it, a bootlace, and a brass surveyor's rule with somebody else's initials filed off the end." },
+            { "type": "line", "text": "\"You made a pocket out of a sleeve.\"" },
+            { "type": "line", "text": "\"I made a pocket out of a sleeve that didn't fit an arm.\" She rolls it back up. \"Everything's for something. Most things aren't for what they were called.\"" },
+            { "type": "line", "text": "Oliver has gone very quiet behind her, in the way he goes quiet when a sentence has cost him something." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "She slides the map toward you. \"The bridge under the reeds is real. The shepherd was right. Your mark isn't.\"" },
+    { "type": "line", "text": "\"It's my mark,\" you say." },
+    { "type": "line", "text": "\"That's the trouble.\"" },
+    { "type": "line", "text": "Oliver puts the wire down. \"What do you want?\"" },
+    { "type": "line", "text": "She points at the glider frame. \"A look.\"" },
+    { "type": "line", "text": "He puts himself in the washhouse doorway. All of him. Bad arm and everything." },
+    { "type": "line", "text": "She tilts her head. \"If I meant to tell the Toll Man, I'd have done it.\"" },
+    { "type": "line", "text": "\"You know him?\"" },
+    { "type": "line", "text": "\"Everyone knows him.\"" },
+    { "type": "line", "text": "\"You could be working for him.\"" },
+    { "type": "line", "text": "\"I haven't the patience for ledgers.\"" },
+    {
+      "type": "choice",
+      "key": "c11-let",
+      "text": "He hasn't moved out of the doorway. He's waiting for you.",
+      "options": [
+        {
+          "id": "letsee",
+          "label": "\"Let her see it.\"",
+          "beats": [
+            { "type": "line", "text": "He looks round at you." },
+            { "type": "line", "text": "\"She knows something about the quarry,\" you say." },
+            { "type": "line", "text": "\"She stole the map.\"" },
+            { "type": "line", "text": "\"She gave it back.\"" },
+            { "type": "line", "text": "\"After correcting it.\"" },
+            { "type": "line", "text": "\"You've corrected worse things,\" you say." },
+            { "type": "line", "text": "She gives you a quick look. It's the first time she's been interested in you rather than the cloth." }
+          ]
+        },
+        {
+          "id": "terms",
+          "label": "\"She can look. She tells us where she sleeps first.\"",
+          "beats": [
+            { "type": "line", "text": "Her hand stops halfway to the doorframe." },
+            { "type": "line", "text": "\"Why.\"" },
+            { "type": "line", "text": "\"Because if you sell us, I want to know which door to be furious at.\"" },
+            { "type": "line", "text": "There's a silence. Oliver has stopped breathing again." },
+            { "type": "line", "text": "\"Behind the printing office,\" she says. \"Under the loading step. It's warm on Tuesdays.\"" },
+            { "type": "line", "text": "She said it too easily, and you'll work out much later that she'd never told a soul before, and that she did it because you'd asked as if the answer had a price." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Oliver steps aside." },
+    { "type": "line", "text": "She circles the glider without touching the canvas. She looks at the knots, the skids, the angle of the cradle." },
+    { "type": "line", "text": "\"Your left spar's too proud,\" she says." },
+    { "type": "line", "text": "\"It's meant to hold the wing.\"" },
+    { "type": "line", "text": "\"It's meant to hold the wind. Those are different jobs.\"" },
+    { "type": "line", "text": "He crouches by the joint. She points. He presses the wood." },
+    { "type": "line", "text": "The spar shifts." },
+    { "type": "line", "text": "She's got a joke for every broken thing in the room." },
+    { "type": "line", "text": "The cracked bearing's a philosopher, because it refuses to move. The missing brace is a widow, because it's lost its partner." },
+    { "type": "line", "text": "When Oliver tells her that isn't how tools are named, she says, \"That's why tools have no poetry.\"" },
+    { "type": "line", "text": "She finds the weak point in the right spar before he does — a split in the grain under the binding — and taps it once with a finger." },
+    { "type": "line", "text": "\"You want another length here.\"" },
+    { "type": "line", "text": "\"I know.\"" },
+    { "type": "line", "text": "\"You didn't.\"" },
+    { "type": "line", "text": "\"I was going to.\"" },
+    {
+      "type": "choice",
+      "key": "c11-spar",
+      "text": "\"That's a future tense,\" she says. \"The spar's breaking in the present.\"",
+      "options": [
+        {
+          "id": "enjoy",
+          "label": "Enjoy this enormously and say so.",
+          "beats": [
+            { "type": "line", "text": "\"Say that again,\" you tell her." },
+            { "type": "line", "text": "\"Which part.\"" },
+            { "type": "line", "text": "\"The tenses.\"" },
+            { "type": "line", "text": "\"The spar is breaking in the present,\" she repeats, obligingly, and Oliver says \"Thank you, both,\" in a voice like a closing door." }
+          ]
+        },
+        {
+          "id": "defend",
+          "label": "\"He's had one arm for a fortnight.\"",
+          "beats": [
+            { "type": "line", "text": "She looks at the sling folded on the bench. Then at his shoulder, properly, for the first time." },
+            { "type": "line", "text": "\"The spoil bank,\" she says. \"That wasn't your build. That was the ground.\"" },
+            { "type": "line", "text": "\"It was the spar,\" Oliver says." },
+            { "type": "line", "text": "\"It was the ground and then the spar,\" she says. \"In that order. It matters which order.\"" },
+            { "type": "line", "text": "He doesn't answer, but he sits down, and he hasn't sat down all afternoon." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He takes a knife out of his pocket. She catches his wrist." },
+    { "type": "line", "text": "\"Not that one.\"" },
+    { "type": "line", "text": "\"Why?\"" },
+    { "type": "line", "text": "\"It's dull.\"" },
+    { "type": "line", "text": "She produces a smaller blade with a bone handle. Bright, narrow, well kept." },
+    { "type": "line", "text": "\"Where'd you get that?\" he asks." },
+    { "type": "line", "text": "\"A mapmaker's widow.\"" },
+    { "type": "line", "text": "\"You stole it.\"" },
+    { "type": "line", "text": "\"She gave it me. After I stole something else.\"" },
+    {
+      "type": "choice",
+      "key": "c11-knife",
+      "text": "She puts the blade in Oliver's hand, handle first, the way you hand a blade to somebody you've decided about.",
+      "options": [
+        {
+          "id": "what",
+          "label": "\"What did you steal?\"",
+          "beats": [
+            { "type": "line", "text": "She smiles for the first time." },
+            { "type": "line", "text": "\"A map.\"" },
+            { "type": "line", "text": "\"And she gave you a knife for it.\"" },
+            { "type": "line", "text": "\"She gave me a knife because I brought it back better than I took it,\" Ada says. \"Her husband had the coast in the wrong place. He'd been dead nine years and nobody had told the coast.\"" }
+          ]
+        },
+        {
+          "id": "widow",
+          "label": "\"Is she still alive? The widow?\"",
+          "beats": [
+            { "type": "line", "text": "The smile doesn't arrive." },
+            { "type": "line", "text": "\"No.\"" },
+            { "type": "line", "text": "\"I'm sorry.\"" },
+            { "type": "line", "text": "\"She was eighty-one and she died indoors,\" Ada says. \"That's a good death. I've seen the other kind.\"" },
+            { "type": "line", "text": "Then she turns back to the spar, and you understand that the subject is shut, and that she's fifteen." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "She stays until dark." },
+    { "type": "line", "text": "For the first hour Oliver keeps asking her to move away from the bench. By the second, he's asking her for the thread." },
+    { "type": "line", "text": "She holds the spars while he binds them. She knows how to tie a parcel so it'll survive a river. She knows how to fold cloth round something fragile. She knows which knots tighten when they're wet." },
+    { "type": "line", "text": "\"Who taught you?\" you ask." },
+    { "type": "line", "text": "\"A man who sold maps.\"" },
+    { "type": "line", "text": "\"Where is he?\"" },
+    { "type": "line", "text": "\"He sold himself a better life.\"" },
+    { "type": "line", "text": "\"Did it fit?\"" },
+    { "type": "line", "text": "\"Poorly.\"" },
+    { "type": "line", "text": "Halfway through the binding she stops and coughs into the short sleeve. It goes on longer than a cough ought to." },
+    {
+      "type": "choice",
+      "key": "c11-cough",
+      "text": "She straightens up and carries on with the thread as though the last twenty seconds were somebody else's.",
+      "options": [
+        {
+          "id": "ask",
+          "label": "\"How long have you had that?\"",
+          "beats": [
+            { "type": "line", "text": "\"Since the print works,\" she says. \"It's the paper dust. Everyone behind that building sounds like me.\"" },
+            { "type": "line", "text": "\"That isn't an answer about how long.\"" },
+            { "type": "line", "text": "\"Two winters.\" She ties off. \"It's better in summer. It's summer.\"" },
+            { "type": "line", "text": "You'll spend the next eleven months quietly worrying about her chest." },
+            { "type": "line", "text": "Her chest is not what takes her." }
+          ]
+        },
+        {
+          "id": "water",
+          "label": "Push the tin cup across the bench without comment.",
+          "beats": [
+            { "type": "line", "text": "She looks at it. Then at you." },
+            { "type": "line", "text": "\"I didn't ask,\" she says." },
+            { "type": "line", "text": "\"No.\"" },
+            { "type": "line", "text": "She drinks the lot and sets it down and says nothing else about it, and after that she starts handing you the small parts to hold without being told to." },
+            { "type": "line", "text": "You'll spend the next eleven months quietly worrying about her chest." },
+            { "type": "line", "text": "Her chest is not what takes her." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "She marks the blue cloth with the red pencil. A new line runs from the city toward the coast." },
+    { "type": "line", "text": "\"You can't draw a road because you want one,\" Oliver says." },
+    { "type": "line", "text": "\"You can't fly because you want to.\"" },
+    { "type": "line", "text": "He looks at her." },
+    {
+      "type": "choice",
+      "key": "c11-line",
+      "text": "\"That wasn't an insult,\" she says. \"That was companionship.\"",
+      "options": [
+        {
+          "id": "unpleasant",
+          "label": "\"Your companionship is unpleasant.\"",
+          "beats": [
+            { "type": "line", "text": "\"It's accurate.\"" },
+            { "type": "line", "text": "\"Those are compatible.\"" },
+            { "type": "line", "text": "\"Not in my experience,\" she says, and adds a small circle out past the blank plain." }
+          ]
+        },
+        {
+          "id": "welcome",
+          "label": "\"Then welcome. That's the tariff here.\"",
+          "beats": [
+            { "type": "line", "text": "She goes still for a second, with the pencil on the cloth." },
+            { "type": "line", "text": "\"That was fast,\" she says." },
+            { "type": "line", "text": "\"You fixed a spar and insulted him inside an hour. There's no faster route in.\"" },
+            { "type": "line", "text": "\"I've been in cities eleven months,\" she says, to the map, \"and nobody's said welcome,\" and then she adds a small circle out past the blank plain and doesn't look up again for a while." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"What's there?\" you ask." },
+    { "type": "line", "text": "\"If I knew, it wouldn't be blank.\"" },
+    { "type": "line", "text": "She eats the heel of the bread Oliver brought. She bites it with the concentration of somebody working out a difficult problem." },
+    {
+      "type": "choice",
+      "key": "c11-heel",
+      "text": "There's a whole middle of the loaf on the bench and she went straight for the crust.",
+      "options": [
+        {
+          "id": "middle",
+          "label": "\"You can have the middle.\"",
+          "beats": [
+            { "type": "line", "text": "\"The middle's where people hide the good part.\"" },
+            { "type": "line", "text": "\"It's also softer.\"" },
+            { "type": "line", "text": "\"Soft things make poor evidence.\"" },
+            { "type": "line", "text": "She holds the heel out to you." },
+            { "type": "line", "text": "\"I've teeth,\" you say." },
+            { "type": "line", "text": "\"That isn't a map,\" she says, which is not a reply to anything, and Oliver laughs from the floor." }
+          ]
+        },
+        {
+          "id": "split",
+          "label": "Take the middle yourself and eat it in front of her.",
+          "beats": [
+            { "type": "line", "text": "She watches you do it with narrow interest." },
+            { "type": "line", "text": "\"You're not going to insist,\" she says." },
+            { "type": "line", "text": "\"You chose the heel.\"" },
+            { "type": "line", "text": "\"Everyone insists.\"" },
+            { "type": "line", "text": "\"Then everyone's rude,\" you say, \"and there's a second heel, and it's yours, and I shan't mention that either.\"" },
+            { "type": "line", "text": "Oliver laughs from the floor." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "It's the first time you've heard him laugh without using it as a shield." },
+    { "type": "line", "text": "Ada points at him. \"There. That's useful.\"" },
+    { "type": "line", "text": "\"What is?\"" },
+    { "type": "line", "text": "\"A laugh that arrives before the danger.\"" },
+    { "type": "line", "text": "\"You talk as though danger keeps a schedule.\"" },
+    { "type": "line", "text": "\"It does. I keep a map.\"" },
+    { "type": "line", "text": "She pulls a folded paper out of her sleeve. It's covered in tiny marks." },
+    {
+      "type": "choice",
+      "key": "c11-paper",
+      "text": "Crosses and stars. Mostly crosses.",
+      "options": [
+        {
+          "id": "what",
+          "label": "\"What are those?\"",
+          "beats": [
+            { "type": "line", "text": "\"Places I've slept.\"" },
+            { "type": "line", "text": "\"Why are some crossed out?\"" },
+            { "type": "line", "text": "\"They were bad places.\"" },
+            { "type": "line", "text": "\"And the stars?\"" },
+            { "type": "line", "text": "\"Places where somebody gave me food.\"" },
+            { "type": "line", "text": "You count them, because you can't stop yourself. Forty-one crosses. Six stars." }
+          ]
+        },
+        {
+          "id": "star",
+          "label": "\"Put a star on this one.\"",
+          "beats": [
+            { "type": "line", "text": "She looks up." },
+            { "type": "line", "text": "\"I haven't slept here.\"" },
+            { "type": "line", "text": "\"You've eaten here. That's the qualification, isn't it? The stars.\"" },
+            { "type": "line", "text": "Her hand doesn't move for a moment." },
+            { "type": "line", "text": "Then she takes the red pencil from behind her ear and marks the corner of the paper, small, and folds it away." },
+            { "type": "line", "text": "\"Seven,\" she says." },
+            { "type": "line", "text": "You'll find that paper in a coat pocket two years from now and you will not be able to open it for three days." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "When the glider's covered she asks for the route to the roof." },
+    { "type": "line", "text": "\"There isn't one,\" Oliver says." },
+    { "type": "line", "text": "\"There's always one.\"" },
+    { "type": "line", "text": "\"There's a ladder.\"" },
+    { "type": "line", "text": "\"Then that's the route.\"" },
+    { "type": "line", "text": "She's up it before either of you can object. Oliver goes after her with the lantern." },
+    { "type": "line", "text": "You stay below and listen to two sets of footsteps cross the boards over your head." },
+    {
+      "type": "choice",
+      "key": "c11-roof",
+      "text": "The washhouse roof is a hundred and ten years old and has opinions about weight.",
+      "options": [
+        {
+          "id": "fall",
+          "label": "\"Don't fall through the roof.\"",
+          "beats": [
+            { "type": "line", "text": "\"I've fallen through worse,\" Ada calls down." },
+            { "type": "line", "text": "\"That isn't reassuring.\"" },
+            { "type": "line", "text": "\"It wasn't meant to be.\"" }
+          ]
+        },
+        {
+          "id": "beams",
+          "label": "\"Left of the chimney the beam's rotten. Stay right.\"",
+          "beats": [
+            { "type": "line", "text": "The footsteps stop, move, and start again further over." },
+            { "type": "line", "text": "\"How do you know that?\" Ada calls." },
+            { "type": "line", "text": "\"I've sat under this ceiling for nine months. I know which parts of it drip.\"" },
+            { "type": "line", "text": "A pause." },
+            { "type": "line", "text": "\"She's the surveyor,\" Ada says to Oliver, up above, quite clearly, not meaning you to hear it." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Her face appears at the high window a minute later, with the roofline open above her." },
+    { "type": "line", "text": "She looks out over the city, then west, where the sky's gone copper." },
+    { "type": "line", "text": "\"You can see the river from here,\" she says." },
+    { "type": "line", "text": "Oliver comes up beside her." },
+    { "type": "line", "text": "\"And the old observatory,\" she says. \"There's a road behind it that isn't on any city map.\"" },
+    { "type": "line", "text": "\"How do you know?\"" },
+    { "type": "line", "text": "\"Because I put it there.\"" },
+    { "type": "line", "text": "She leaves after sunset. She takes no food, no brass, and no part of the glider." },
+    { "type": "line", "text": "At the door Oliver says, \"Come back tomorrow.\"" },
+    { "type": "line", "text": "She stops. \"Was that an invitation?\"" },
+    { "type": "line", "text": "\"It was a request.\"" },
+    { "type": "line", "text": "\"Requests are invitations wearing a hat.\"" },
+    { "type": "line", "text": "\"Come back.\"" },
+    { "type": "line", "text": "She looks at you. \"Does she agree?\"" },
+    {
+      "type": "choice",
+      "key": "c11-invite",
+      "text": "Two hours ago she had your map in her hands and one leg over your windowsill.",
+      "options": [
+        {
+          "id": "pencil",
+          "label": "\"Bring a better pencil.\"",
+          "beats": [
+            { "type": "line", "text": "\"I haven't hired you,\" you add." },
+            { "type": "line", "text": "\"That wasn't the question.\"" },
+            { "type": "line", "text": "You look at the repaired spar, and the map, and the empty patch of floor where she was standing all evening." },
+            { "type": "line", "text": "\"Bring a better pencil.\"" },
+            { "type": "line", "text": "She smiles. \"I've three.\"" }
+          ]
+        },
+        {
+          "id": "early",
+          "label": "\"Come early. He gets stupid after four o'clock.\"",
+          "beats": [
+            { "type": "line", "text": "\"I do not,\" Oliver says." },
+            { "type": "line", "text": "\"You steam-bent a spar at half past five and put it back in the copper because you'd forgotten which way round it went.\"" },
+            { "type": "line", "text": "\"That was the lantern.\"" },
+            { "type": "line", "text": "\"Early, then,\" Ada says, to you, not to him. \"And I'll bring the rule. It's brass and it's honest and it'll ruin your afternoon.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "She disappears into the dark. Oliver shuts the door." },
+    { "type": "line", "text": "\"Her name's Ada,\" he says." },
+    { "type": "line", "text": "\"I know.\"" },
+    { "type": "line", "text": "\"She sleeps behind the printing office.\"" },
+    { "type": "line", "text": "\"You know a great deal about her.\"" },
+    { "type": "line", "text": "\"I asked.\"" },
+    { "type": "line", "text": "\"And she answered?\"" },
+    { "type": "line", "text": "\"Some of it.\"" },
+    {
+      "type": "choice",
+      "key": "c11-close",
+      "text": "He's standing in the middle of the washhouse with a bone-handled knife he didn't own this morning.",
+      "options": [
+        {
+          "id": "pin",
+          "label": "Pin the map back on the wall.",
+          "beats": [
+            { "type": "line", "text": "The new line toward the coast looks uncertain." },
+            { "type": "line", "text": "It points somewhere, though." }
+          ]
+        },
+        {
+          "id": "three",
+          "label": "\"There are three of us now.\"",
+          "beats": [
+            { "type": "line", "text": "He doesn't say anything for a moment." },
+            { "type": "line", "text": "\"Say that again,\" he says." },
+            { "type": "line", "text": "\"No.\"" },
+            { "type": "line", "text": "\"You've said it twice this month. The good things.\"" },
+            { "type": "line", "text": "\"I'm ill,\" you say, and pin the map back on the wall, and the new line toward the coast looks uncertain, but it points somewhere." }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,415 @@
+{
+  "num": 16,
+  "id": "why-i-help",
+  "title": "Why I Help",
+  "requires": "the-quiet-after",
+  "beats": [
+    { "type": "line", "text": "Oliver asks the question while tightening the chair's left bearing." },
+    { "type": "line", "text": "He's come every day for three weeks. He brings the brass box. He brings no frame, no map, and no plans." },
+    { "type": "line", "text": "He sits on the floor and mends whatever's nearest his hands." },
+    { "type": "line", "text": "\"Why do you help me?\" he asks." },
+    { "type": "line", "text": "The chair's tipped onto its side. You're on the bed with the bad leg stretched out and the crutch inside reach." },
+    {
+      "type": "choice",
+      "key": "c16-question",
+      "text": "He has picked a moment when you cannot leave the room. He is getting better at this.",
+      "options": [
+        {
+          "id": "deny",
+          "label": "\"I don't.\"",
+          "beats": [
+            { "type": "line", "text": "\"You do.\"" },
+            { "type": "line", "text": "\"I criticise you.\"" },
+            { "type": "line", "text": "\"You do that as well.\"" }
+          ]
+        },
+        {
+          "id": "turnit",
+          "label": "\"Why do you keep asking?\"",
+          "beats": [
+            { "type": "line", "text": "\"Because nobody's ever done it,\" he says, \"and I've been waiting three years for the invoice.\"" },
+            { "type": "line", "text": "That lands somewhere under your ribs and stays there." },
+            { "type": "line", "text": "\"There isn't one.\"" },
+            { "type": "line", "text": "\"Everything's got one.\"" },
+            { "type": "line", "text": "\"That's how you were raised,\" you say. \"It isn't how the world's built.\"" },
+            { "type": "line", "text": "\"Then tell me why.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He turns the bearing with his thumb." },
+    { "type": "line", "text": "\"Why do you keep showing up?\"" },
+    { "type": "line", "text": "\"I live here.\"" },
+    { "type": "line", "text": "\"Why do you open the window?\"" },
+    { "type": "line", "text": "\"It gets stuffy.\"" },
+    { "type": "line", "text": "\"Why did you lie to Mrs. Vale?\"" },
+    { "type": "line", "text": "\"The spoon was innocent.\"" },
+    { "type": "line", "text": "He looks at you." },
+    { "type": "line", "text": "You look at the ceiling." },
+    { "type": "line", "text": "\"That's a question with too many parts,\" you say." },
+    { "type": "line", "text": "\"It's got one answer.\"" },
+    { "type": "line", "text": "He sets the chair upright and tests the wheel. It turns without a sound." },
+    { "type": "line", "text": "\"There,\" he says." },
+    { "type": "line", "text": "\"You've become very fond of that word.\"" },
+    { "type": "line", "text": "\"It's useful.\"" },
+    { "type": "line", "text": "He parks the chair by the window. You lower yourself into it on the crutch." },
+    { "type": "line", "text": "It's difficult after too much sitting. The knee won't bend properly and the floor is farther away than it ought to be." },
+    { "type": "line", "text": "Oliver watches the chair, not your leg." },
+    {
+      "type": "choice",
+      "key": "c16-coward",
+      "text": "He has watched the chair instead of the leg every single time, for three years, and has never once been caught at it.",
+      "options": [
+        {
+          "id": "canask",
+          "label": "\"You can ask.\"",
+          "beats": [
+            { "type": "line", "text": "\"I wasn't.\"" },
+            { "type": "line", "text": "\"You were thinking.\"" },
+            { "type": "line", "text": "\"I was thinking the bearing works.\"" },
+            { "type": "line", "text": "\"Coward.\"" },
+            { "type": "line", "text": "He smiles faintly." }
+          ]
+        },
+        {
+          "id": "noticed",
+          "label": "\"You always look at the wheel. I've noticed. For years.\"",
+          "beats": [
+            { "type": "line", "text": "His thumb stops on the rim." },
+            { "type": "line", "text": "\"Was I meant to look at the leg?\"" },
+            { "type": "line", "text": "\"No.\"" },
+            { "type": "line", "text": "\"Then I'll go on with the wheel.\"" },
+            { "type": "line", "text": "\"It isn't a complaint, Oliver.\"" },
+            { "type": "line", "text": "\"I know what it is,\" he says, and goes back to the rim, and his ears have gone red." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The brass box is on the table. Ada's cap is inside it." },
+    { "type": "line", "text": "You know because he's never mended the torn crown, and the cloth shows through where the lid closes." },
+    { "type": "line", "text": "\"Does it need a reason?\" you ask." },
+    { "type": "line", "text": "\"Everything needs a reason.\"" },
+    { "type": "line", "text": "\"That's a very expensive belief.\"" },
+    { "type": "line", "text": "\"It's cost me plenty.\"" },
+    { "type": "line", "text": "He touches the box." },
+    { "type": "line", "text": "You get the string out of the drawer — the one he measured your head with, in May, two years ago. It's knotted round itself." },
+    {
+      "type": "choice",
+      "key": "c16-lookaway",
+      "text": "Fine. He wants the reason. Start somewhere you can say out loud.",
+      "options": [
+        {
+          "id": "lookaway",
+          "label": "\"I help because you don't look away.\"",
+          "beats": [
+            { "type": "line", "text": "Oliver watches your fingers on the string." },
+            { "type": "line", "text": "\"From what?\"" },
+            { "type": "line", "text": "\"From me.\"" },
+            { "type": "line", "text": "He frowns." }
+          ]
+        },
+        {
+          "id": "brave",
+          "label": "\"Because you've never once called me brave.\"",
+          "beats": [
+            { "type": "line", "text": "\"Is that bad?\"" },
+            { "type": "line", "text": "\"It's the word people use when they want a thing to be finished,\" you say. \"You're so brave. Meaning: I've had my feeling about you now, and I'd like to go.\"" },
+            { "type": "line", "text": "Oliver considers this." },
+            { "type": "line", "text": "\"You aren't brave,\" he says. \"You're difficult.\"" },
+            { "type": "line", "text": "\"Thank you.\"" },
+            { "type": "line", "text": "\"I wasn't being kind.\"" },
+            { "type": "line", "text": "\"I know. That's the part I'm thanking you for.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"People look at the chair,\" you say. \"They look at the bandage. They look at the door behind me and work out how long it'll take to get me through it.\"" },
+    { "type": "line", "text": "\"You look at the wheel. You look at the road. You look at the thing wanting doing.\"" },
+    { "type": "line", "text": "\"I look at you.\"" },
+    { "type": "line", "text": "\"Not first.\"" },
+    { "type": "line", "text": "He takes the correction without argument." },
+    { "type": "line", "text": "\"You've also never asked whether I want to be brave,\" you say. \"You ask whether I want the latch opened. You ask which route's level. You ask before you move the chair.\"" },
+    { "type": "line", "text": "Oliver sits on the edge of the bed." },
+    { "type": "line", "text": "\"Is that all?\"" },
+    { "type": "line", "text": "\"No.\"" },
+    { "type": "line", "text": "\"What else?\"" },
+    {
+      "type": "choice",
+      "key": "c16-else",
+      "text": "Below the window nothing moves. The sky over the chimneys is the colour of tin.",
+      "options": [
+        {
+          "id": "window",
+          "label": "\"You make the window worth opening.\"",
+          "beats": [
+            { "type": "line", "text": "He looks out toward the alley." },
+            { "type": "line", "text": "It's a good sentence. It's also a smaller one than the truth, and you both let it stand for a moment as though it weren't." }
+          ]
+        },
+        {
+          "id": "counted",
+          "label": "\"You counted the mice.\"",
+          "beats": [
+            { "type": "line", "text": "\"What?\"" },
+            { "type": "line", "text": "\"When you were nine. You'd been in that yard four years and you knew how many mice lived under the coal store and which of the birds came back in March.\"" },
+            { "type": "line", "text": "\"That's just paying attention.\"" },
+            { "type": "line", "text": "\"Yes,\" you say. \"Nobody had ever done it in my direction before. I wanted to know what it was like from the inside.\"" },
+            { "type": "line", "text": "He looks out toward the alley and doesn't say anything for a while." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Oliver takes the string out of your hand." },
+    { "type": "line", "text": "\"You could have let me go after Ada,\" he says." },
+    {
+      "type": "choice",
+      "key": "c16-letgo",
+      "text": "He says it flatly, the way he says measurements. He has been carrying it for three weeks.",
+      "options": [
+        {
+          "id": "not-alone",
+          "label": "\"You weren't the only one who lost her.\"",
+          "beats": [
+            { "type": "line", "text": "He stops turning the string." },
+            { "type": "line", "text": "\"No,\" he says. \"I know.\"" },
+            { "type": "line", "text": "\"You don't, quite. You've been grieving as though you had the lease on it.\"" },
+            { "type": "line", "text": "\"She was mine.\"" },
+            { "type": "line", "text": "\"She corrected my map as well,\" you say. \"She was eleven months in my life and she made a joke about my chair and it was the first joke about my chair I'd ever laughed at.\"" },
+            { "type": "line", "text": "He puts his hand over his eyes for the space of four seconds, and then takes it away, and that's all there is." }
+          ]
+        },
+        {
+          "id": "angry",
+          "label": "\"I was angry enough to keep you alive.\"",
+          "beats": [
+            { "type": "line", "text": "\"At me?\"" },
+            { "type": "line", "text": "\"At the beam. At the woman with the folder. At the tunnel for being three inches too narrow. At the ceiling. At the district surveyor, whoever he is, and at whoever built a service passage no wider than a chair.\"" },
+            { "type": "line", "text": "\"That's a great many things.\"" },
+            { "type": "line", "text": "\"I'd four feet and nothing to do with them,\" you say. \"You have to put that somewhere, so I put it into getting you home, and I'm not sorry, and I'd do it again worse.\"" },
+            { "type": "line", "text": "He winds the string round his finger until the end goes white." }
+          ]
+        },
+        {
+          "id": "window-wall",
+          "label": "\"If you leave, the window becomes a wall.\"",
+          "beats": [
+            { "type": "line", "text": "He goes still." },
+            { "type": "line", "text": "It's the most honest thing you've said in this room, and it costs you more than the other two would have, and you say it anyway." },
+            { "type": "line", "text": "\"That isn't fair,\" he says quietly." },
+            { "type": "line", "text": "\"No.\"" },
+            { "type": "line", "text": "\"You can't put that on me.\"" },
+            { "type": "line", "text": "\"I'm not putting it on you. I'm telling you what's true and then not asking you for anything,\" you say. \"That's the difference. It took me nine years to learn it and I'd like some credit.\"" },
+            { "type": "line", "text": "He winds the string round his finger and doesn't look up." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He folds the string into a small circle." },
+    { "type": "line", "text": "\"You said you can't fly,\" he says." },
+    { "type": "line", "text": "\"I said I can't walk freely.\"" },
+    { "type": "line", "text": "\"That isn't the same.\"" },
+    { "type": "line", "text": "\"It's near enough for people who want me to stay put.\"" },
+    { "type": "line", "text": "He turns the circle of string between his fingers." },
+    { "type": "line", "text": "\"I can make you something.\"" },
+    { "type": "line", "text": "\"You already have.\"" },
+    { "type": "line", "text": "\"The headpiece isn't finished.\"" },
+    { "type": "line", "text": "You take the brass box and set it on your knees. \"You made this after we met.\"" },
+    { "type": "line", "text": "\"I made parts of it.\"" },
+    { "type": "line", "text": "\"For what?\"" },
+    { "type": "line", "text": "\"For seeing.\"" },
+    { "type": "line", "text": "\"I can see.\"" },
+    { "type": "line", "text": "\"You can see what's in front of you.\"" },
+    { "type": "line", "text": "The words are careless. He knows it the instant they're out." },
+    { "type": "line", "text": "You close the box." },
+    {
+      "type": "choice",
+      "key": "c16-boast",
+      "text": "He is twelve. He has just said the sort of thing that gets said to you in shop doorways.",
+      "options": [
+        {
+          "id": "boast",
+          "label": "\"And you can see what's above you?\"",
+          "beats": [
+            { "type": "line", "text": "\"Not yet.\"" },
+            { "type": "line", "text": "\"Then perhaps neither of us should boast.\"" },
+            { "type": "line", "text": "His face tightens." },
+            { "type": "line", "text": "\"I didn't mean it that way.\"" },
+            { "type": "line", "text": "\"You meant it some way.\"" }
+          ]
+        },
+        {
+          "id": "letpass",
+          "label": "Let it pass. He'll find it himself by tonight.",
+          "beats": [
+            { "type": "line", "text": "You put the box on the table and talk about the bearing." },
+            { "type": "line", "text": "He answers about the bearing. He answers about the bearing for four minutes and then stops in the middle of a sentence about grease." },
+            { "type": "line", "text": "\"I said something,\" he says." },
+            { "type": "line", "text": "\"You did.\"" },
+            { "type": "line", "text": "\"You let me.\"" },
+            { "type": "line", "text": "\"I let everybody,\" you say. \"You're the only one who's ever come back to it.\"" },
+            { "type": "line", "text": "\"I didn't mean it that way.\"" },
+            { "type": "line", "text": "\"You meant it some way.\"" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "text": "He doesn't answer at once. Whatever you said, it stays with him a moment before he lets it go.",
+      "textByOptionRef": "c05-leg",
+      "textByOption": {
+        "carriage": "He doesn't answer at once. Whatever you said, it stays with him a moment before he lets it go.\n\nHe still remembers how you told him about the carriage — plain as weather, in a scrap yard, with a broom in your hand. He has never once tried to make it a smaller story than it was.",
+        "deflect": "He doesn't answer at once. Whatever you said, it stays with him a moment before he lets it go.\n\nHe never did get an answer about the leg, not really. He stopped asking years ago, and you've never decided whether that was a kindness or a retreat.",
+        "too-big": "He doesn't answer at once. Whatever you said, it stays with him a moment before he lets it go.\n\nYou told him once that the question was too big for a scrap yard. He's remembered the shape of it ever since without ever asking again, and today the room is finally the right size."
+      }
+    },
+    { "type": "line", "text": "Oliver takes the box off your knees. He doesn't open it." },
+    { "type": "line", "text": "\"When I fly,\" he says, \"I can tell you what's there.\"" },
+    { "type": "line", "text": "\"Birds.\"" },
+    { "type": "line", "text": "\"You don't know that.\"" },
+    { "type": "line", "text": "\"Clouds.\"" },
+    { "type": "line", "text": "\"You don't know that either.\"" },
+    { "type": "line", "text": "\"More sky.\"" },
+    { "type": "line", "text": "\"You've said that.\"" },
+    { "type": "line", "text": "\"It remains likely.\"" },
+    { "type": "line", "text": "He looks down at the brass lid. \"Ada wanted the bridge.\"" },
+    { "type": "line", "text": "\"She wanted to map the road past it.\"" },
+    { "type": "line", "text": "\"I want to finish because she saw the route.\"" },
+    { "type": "line", "text": "\"And because you want the sky.\"" },
+    { "type": "line", "text": "\"Yes.\"" },
+    { "type": "line", "text": "\"Good.\"" },
+    { "type": "line", "text": "He looks up." },
+    {
+      "type": "choice",
+      "key": "c16-excuse",
+      "text": "There is a way for a boy to spend the rest of his life carrying a dead girl instead of a wing.",
+      "options": [
+        {
+          "id": "excuse",
+          "label": "\"Don't turn her into an excuse. Don't turn me into one either.\"",
+          "beats": [
+            { "type": "line", "text": "\"What should I turn you into?\"" },
+            { "type": "line", "text": "\"A person who's here.\"" },
+            { "type": "line", "text": "The answer troubles him. You can see it go somewhere he can't reach." }
+          ]
+        },
+        {
+          "id": "forher",
+          "label": "\"If you fly it for her, you'll be finished the moment you land.\"",
+          "beats": [
+            { "type": "line", "text": "\"Then I'll be finished.\"" },
+            { "type": "line", "text": "\"No,\" you say. \"You'll be twelve, and standing in a field, with the one thing you wanted spent on a debt. And then you'll come and find another debt, and after that another, and you'll be forty and you'll have flown eleven times and enjoyed none of them.\"" },
+            { "type": "line", "text": "He stares at the box." },
+            { "type": "line", "text": "\"You're allowed to want it,\" you say. \"That's what I'm telling you. You're allowed to want it for no reason but the wanting.\"" },
+            { "type": "line", "text": "\"Nobody's ever said that to me.\"" },
+            { "type": "line", "text": "\"Nobody's ever said it to me either. I've had to work it out from scratch, twice, and I'd rather it were said out loud in a room.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He goes back to the chair's bearing." },
+    { "type": "line", "text": "Not because it wants repairing. He's already fixed it. His fingers go round the rim, hunting for another job." },
+    { "type": "line", "text": "\"I thought helping you would be the nearest I came,\" you say." },
+    { "type": "line", "text": "\"Nearest to what?\"" },
+    { "type": "line", "text": "\"The edge.\"" },
+    { "type": "line", "text": "\"Which edge?\"" },
+    { "type": "line", "text": "\"The one everyone says is there.\"" },
+    { "type": "line", "text": "He waits." },
+    { "type": "line", "text": "\"The edge of the road,\" you say. \"The edge of the room. The edge of what a body's allowed to do.\"" },
+    { "type": "line", "text": "\"I thought if I could stand beside somebody going past it, the air might reach me.\"" },
+    { "type": "line", "text": "Oliver says nothing." },
+    { "type": "line", "text": "You rest the crutch against the chair." },
+    {
+      "type": "choice",
+      "key": "c16-truth",
+      "text": "There it is, then. The room is the right size and he has asked twice and there is nobody else here.",
+      "options": [
+        {
+          "id": "notnoble",
+          "label": "\"That isn't noble.\"",
+          "beats": [
+            { "type": "line", "text": "\"I didn't ask for noble.\"" },
+            { "type": "line", "text": "\"You asked for a reason.\"" },
+            { "type": "line", "text": "\"I asked why you help me.\"" },
+            { "type": "line", "text": "\"There it is.\"" },
+            { "type": "line", "text": "He nods slowly." },
+            { "type": "line", "text": "The room holds the answer without improving it." }
+          ]
+        },
+        {
+          "id": "plain",
+          "label": "Say the whole of it, plainly, once.",
+          "beats": [
+            { "type": "line", "text": "\"I can't fly, Oliver.\"" },
+            { "type": "line", "text": "\"I know.\"" },
+            { "type": "line", "text": "\"No — you know I can't walk. Listen to the other one.\" You keep your hands still on the armrests. \"I can't fly. Not with a frame, not with a better chair, not if you spent your whole life on it. Not ever. There's no version of me in the sky.\"" },
+            { "type": "line", "text": "He's stopped breathing properly." },
+            { "type": "line", "text": "\"I worked that out when I was eleven,\" you say. \"In a bed, in November, with a doctor talking about me in the corridor as though I were furniture. And I decided that if I couldn't go, then somebody had better go, and they had better come back and tell me, and they had better be somebody worth sending.\"" },
+            { "type": "line", "text": "\"And you picked me.\"" },
+            { "type": "line", "text": "\"You were nine and counting birds through a fence,\" you say. \"You never stood a chance.\"" },
+            { "type": "line", "text": "He nods slowly. He is crying, in the extremely economical way he does everything." },
+            { "type": "line", "text": "The room holds the answer without improving it." }
+          ]
+        },
+        {
+          "id": "usefully",
+          "label": "\"And it's the most use I'll ever be. Take it.\"",
+          "beats": [
+            { "type": "line", "text": "\"Don't say it like that.\"" },
+            { "type": "line", "text": "\"Why not?\"" },
+            { "type": "line", "text": "\"Because you say everything like that,\" he says, with more heat than you've heard from him since the tunnel. \"Like you're a tool somebody's going to put down. You're the only person who's ever come back to that yard twice. That isn't use. That's—\"" },
+            { "type": "line", "text": "He can't find the word. He's twelve. Nobody's taught him the word." },
+            { "type": "line", "text": "\"I'd sit in a doorway for you,\" he says finally. \"That's all I've got.\"" },
+            { "type": "line", "text": "\"That's the word,\" you say. \"That's exactly the word.\"" },
+            { "type": "line", "text": "The room holds the answer without improving it." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "When Oliver goes, he takes the brass box and the old washer out of the bearing he mended." },
+    { "type": "line", "text": "\"What'll you do with that?\" you ask." },
+    { "type": "line", "text": "\"Keep it.\"" },
+    { "type": "line", "text": "\"It's worn out.\"" },
+    { "type": "line", "text": "\"It carried you.\"" },
+    { "type": "line", "text": "\"It carried a wheel.\"" },
+    { "type": "line", "text": "\"That's where you were sitting.\"" },
+    { "type": "line", "text": "He puts the washer in his pocket." },
+    { "type": "line", "text": "Outside, the cloud's opened over the alley. A narrow bar of blue shows between the chimneys." },
+    { "type": "line", "text": "Oliver stops underneath it." },
+    { "type": "line", "text": "\"Tomorrow,\" he says, \"I start again.\"" },
+    { "type": "line", "text": "\"Start with the spar.\"" },
+    { "type": "line", "text": "\"I will.\"" },
+    { "type": "line", "text": "\"Then the cradle.\"" },
+    { "type": "line", "text": "\"I know.\"" },
+    {
+      "type": "choice",
+      "key": "c16-close",
+      "text": "There is one more item on the list and you have spent two years not naming it.",
+      "options": [
+        {
+          "id": "askforit",
+          "label": "\"Then the parts for the thing on my head.\"",
+          "beats": [
+            { "type": "line", "text": "He turns." },
+            { "type": "line", "text": "\"You said you wouldn't ask.\"" },
+            { "type": "line", "text": "\"I've changed my mind.\"" },
+            { "type": "line", "text": "He smiles. It isn't the old shield. It's smaller, and it stays." }
+          ]
+        },
+        {
+          "id": "hersfirst",
+          "label": "\"Then a stone with her name spelled right.\"",
+          "beats": [
+            { "type": "line", "text": "He stops in the middle of the alley." },
+            { "type": "line", "text": "\"They wrote Pike with a Y,\" you say. \"In the district book. I sent Mrs. Vale down to look.\"" },
+            { "type": "line", "text": "\"Then we'll have it cut properly.\"" },
+            { "type": "line", "text": "\"And after that,\" you say, \"the parts for the thing on my head.\"" },
+            { "type": "line", "text": "He turns round. \"You said you wouldn't ask.\"" },
+            { "type": "line", "text": "\"I've changed my mind.\"" },
+            { "type": "line", "text": "He smiles. It isn't the old shield. It's smaller, and it stays." }
+          ]
+        }
+      ]
+    }
+  ]
+}

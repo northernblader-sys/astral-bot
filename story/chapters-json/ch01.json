@@ -1,0 +1,468 @@
+{
+  "num": 1,
+  "id": "the-boy-who-watched-birds",
+  "title": "The Boy Who Watched Birds",
+  "requires": null,
+  "beats": [
+    {
+      "type": "line",
+      "text": "The window sticks in damp weather."
+    },
+    {
+      "type": "line",
+      "text": "You brace one hand on the sill and lean your shoulder into the frame."
+    },
+    {
+      "type": "line",
+      "text": "Your chair won't get close enough on its own, so you use the brass latch as a handhold."
+    },
+    {
+      "type": "line",
+      "text": "Below, the alley is a narrow strip of brick, soot, and yesterday's rain."
+    },
+    {
+      "type": "line",
+      "text": "A pair of chimney swifts cuts over it, black against the pale morning."
+    },
+    {
+      "type": "line",
+      "text": "The boy is already there."
+    },
+    {
+      "type": "line",
+      "text": "Oliver Wright crouches by a crate, a screwdriver clenched between his teeth."
+    },
+    {
+      "type": "line",
+      "text": "You rap the window."
+    },
+    {
+      "type": "line",
+      "text": "He looks up. \"Morning, window ghost.\""
+    },
+    {
+      "type": "choice",
+      "text": "How do you greet him back?",
+      "options": [
+        {
+          "id": "warm",
+          "label": "\"Morning, alley rat.\""
+        },
+        {
+          "id": "dry",
+          "label": "\"You're up early for a criminal.\""
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "text": "He grins and turns back to the crate."
+    },
+    {
+      "type": "line",
+      "text": "It's gone before you can decide who it was for — you, or the bird."
+    },
+    {
+      "type": "line",
+      "text": "Breakfast comes in a chipped bowl, left on the table by the window."
+    },
+    {
+      "type": "line",
+      "text": "You drag the tray close with a cord tied to its handle."
+    },
+    {
+      "type": "line",
+      "text": "Oliver's wearing a coat too big for him. Cracked lenses sit over his eyes, held on with a leather strap."
+    },
+    {
+      "type": "line",
+      "text": "\"Those yours?\" you call."
+    },
+    {
+      "type": "line",
+      "text": "\"Borrowed.\""
+    },
+    {
+      "type": "choice",
+      "text": "Push on it, or let it go?",
+      "options": [
+        {
+          "id": "push",
+          "label": "\"That means stolen.\""
+        },
+        {
+          "id": "let_go",
+          "label": "\"I don't want to know, do I.\""
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "text": "He lifts the lenses toward a chimney swift. The bird turns, rises, slips between two rooflines."
+    },
+    {
+      "type": "line",
+      "text": "\"What are you looking for?\" you ask."
+    },
+    {
+      "type": "line",
+      "text": "He takes the goggles off. \"Evidence.\""
+    },
+    {
+      "type": "line",
+      "text": "\"Of what?\""
+    },
+    {
+      "type": "line",
+      "text": "He points up, though there's nothing there now but cloud. \"That they're doing it properly.\""
+    },
+    {
+      "type": "line",
+      "text": "You've watched him for six mornings now."
+    },
+    {
+      "type": "line",
+      "text": "He never asks what you're doing at the window. No one does."
+    },
+    {
+      "type": "line",
+      "text": "Oliver nods at your chair. \"Is that wheel meant to wobble?\""
+    },
+    {
+      "type": "line",
+      "text": "\"It's meant to turn.\""
+    },
+    {
+      "type": "line",
+      "text": "\"It turns with conviction.\""
+    },
+    {
+      "type": "line",
+      "text": "\"More than can be said for your coat.\""
+    },
+    {
+      "type": "line",
+      "text": "He comes up to the wall below you."
+    },
+    {
+      "type": "line",
+      "text": "\"You could oil the wheel,\" he says."
+    },
+    {
+      "type": "choice",
+      "text": "\"You could mind your own business,\" or something softer?",
+      "options": [
+        {
+          "id": "sharp",
+          "label": "\"You could mind your own business.\""
+        },
+        {
+          "id": "soft",
+          "label": "\"Maybe I like the sound it makes.\""
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "text": "\"I am,\" he says. \"You're in it.\""
+    },
+    {
+      "type": "line",
+      "text": "That one catches you before you can throw anything back."
+    },
+    {
+      "type": "line",
+      "text": "A cart rattles at the mouth of the alley. Oliver slips behind the rain barrel."
+    },
+    {
+      "type": "line",
+      "text": "Two constables pass without looking down."
+    },
+    {
+      "type": "line",
+      "text": "When they're gone, he steps back out, copper wire looped round his wrist."
+    },
+    {
+      "type": "line",
+      "text": "\"Did you see the one with the packet?\" he asks."
+    },
+    {
+      "type": "choice",
+      "text": "How much do you admit to noticing?",
+      "options": [
+        {
+          "id": "both",
+          "label": "\"I saw both.\""
+        },
+        {
+          "id": "careful",
+          "label": "\"I saw you hiding, mostly.\""
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "text": "\"Crumbs on his glove,\" Oliver says. \"That's how you know a man's never had to steal his own breakfast.\""
+    },
+    {
+      "type": "line",
+      "text": "You lower the spoon. \"You steal yours?\""
+    },
+    {
+      "type": "line",
+      "text": "\"Sometimes breakfast steals itself.\""
+    },
+    {
+      "type": "line",
+      "text": "\"That's not an answer.\""
+    },
+    {
+      "type": "line",
+      "text": "\"It's the one I've got.\""
+    },
+    {
+      "type": "line",
+      "text": "By noon the light's crossed the room. Oliver hasn't come back to the alley."
+    },
+    {
+      "type": "line",
+      "text": "You tap the glass, because there's no reason not to."
+    },
+    {
+      "type": "line",
+      "text": "He appears below with a sack over one shoulder. \"You missed the exciting portion.\""
+    },
+    {
+      "type": "line",
+      "text": "\"More birds?\""
+    },
+    {
+      "type": "line",
+      "text": "\"A pigeon fell off a roof.\""
+    },
+    {
+      "type": "line",
+      "text": "\"Did it survive?\""
+    },
+    {
+      "type": "line",
+      "text": "\"Dignity damaged. Otherwise, yes.\""
+    },
+    {
+      "type": "line",
+      "text": "He pulls out a curved sliver of wood, sanded smooth, a row of drilled holes down one side."
+    },
+    {
+      "type": "line",
+      "text": "\"What is that?\" you ask."
+    },
+    {
+      "type": "line",
+      "text": "\"A rib.\""
+    },
+    {
+      "type": "choice",
+      "text": "Tease him, or ask it straight?",
+      "options": [
+        {
+          "id": "tease",
+          "label": "\"You've a broken bird in that sack?\""
+        },
+        {
+          "id": "straight",
+          "label": "\"A rib of what, exactly?\""
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "text": "He holds the piece to the light. The curve looks almost too thin to trust."
+    },
+    {
+      "type": "line",
+      "text": "He looks at the chimney, then back at you. \"Something that hasn't been named yet.\""
+    },
+    {
+      "type": "line",
+      "text": "Next morning he brings a tin cup of tea and sets it on the ledge — too far for you to reach."
+    },
+    {
+      "type": "line",
+      "text": "He climbs the drainpipe and pushes it closer with one finger."
+    },
+    {
+      "type": "line",
+      "text": "\"If you fall,\" you say, \"I'll tell everyone you were killed by tea.\""
+    },
+    {
+      "type": "line",
+      "text": "\"Mention the heroic rescue attempt.\""
+    },
+    {
+      "type": "line",
+      "text": "He settles below your sill. There's a torn seam in his glove. Underneath, his knuckles are scraped raw."
+    },
+    {
+      "type": "choice",
+      "text": "Say something about his hands, or let it go?",
+      "options": [
+        {
+          "id": "say",
+          "label": "\"You should wash your hands.\""
+        },
+        {
+          "id": "let_go",
+          "label": "You decide not to mention it."
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "text": "A sparrow lands on the gutter. He watches it. You watch him watching it."
+    },
+    {
+      "type": "line",
+      "text": "\"You're allowed to blink,\" you say."
+    },
+    {
+      "type": "line",
+      "text": "\"I'm saving them.\""
+    },
+    {
+      "type": "line",
+      "text": "That evening the sky clears enough for the first stars."
+    },
+    {
+      "type": "line",
+      "text": "Oliver's below, threading wire through the carved rib by the light of a stolen lantern."
+    },
+    {
+      "type": "line",
+      "text": "\"Oliver.\""
+    },
+    {
+      "type": "line",
+      "text": "He glances up."
+    },
+    {
+      "type": "line",
+      "text": "\"What happens if it breaks?\""
+    },
+    {
+      "type": "line",
+      "text": "\"The rib?\""
+    },
+    {
+      "type": "line",
+      "text": "\"The thing you haven't named.\""
+    },
+    {
+      "type": "line",
+      "text": "He studies the wire in his fingers. \"Then I find out why.\""
+    },
+    {
+      "type": "line",
+      "text": "\"And if you can't?\""
+    },
+    {
+      "type": "line",
+      "text": "\"Then I find someone who can.\""
+    },
+    {
+      "type": "choice",
+      "text": "He looks up at your window. \"It's clear tonight. Come down — I'll show you the roofline properly, from the ground.\"",
+      "options": [
+        {
+          "id": "go_out",
+          "label": "\"Alright. Give me a minute with the latch.\""
+        },
+        {
+          "id": "stay_home",
+          "label": "\"Not tonight. I'm tired.\"",
+          "detour": {
+            "lines": [
+              "Oliver looks up at the dark window, then shrugs. \"Ah — well. Night anyway.\"",
+              "\"Get some sleep, window ghost.\"",
+              "He bundles the lantern under his coat and heads off down the alley.",
+              "You watch the light bob away between the buildings, then fade."
+            ],
+            "lockHours": 2,
+            "resumeLine": "Later, once the lamps are lit again — you both went out after all, the ordinary way, the next evening. No fuss made of it."
+          }
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "text": "A gust moves through the alley. It catches the loose edge of his coat, and for a second he looks smaller than he is."
+    },
+    {
+      "type": "line",
+      "text": "He climbs until he can pass the lantern up through the window."
+    },
+    {
+      "type": "line",
+      "text": "His shoulder brushes the side of your chair. He doesn't ask whether you can move back — he just finds the space that exists and works inside it."
+    },
+    {
+      "type": "line",
+      "text": "The wire straightens under his pliers."
+    },
+    {
+      "type": "line",
+      "text": "\"There,\" he says."
+    },
+    {
+      "type": "choice",
+      "text": "\"That's still crooked,\" or let him have the win?",
+      "options": [
+        {
+          "id": "tease",
+          "label": "\"That's still crooked.\""
+        },
+        {
+          "id": "let_win",
+          "label": "\"Good enough.\""
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "text": "\"It's a different kind of crooked,\" he says."
+    },
+    {
+      "type": "line",
+      "text": "You look past him. The swifts have gone. Above the chimneys, the stars sit clean and unreachable."
+    },
+    {
+      "type": "line",
+      "text": "Oliver follows your gaze. \"Tomorrow,\" he says, \"I'll show you something.\""
+    },
+    {
+      "type": "choice",
+      "text": "One last line before the window closes.",
+      "options": [
+        {
+          "id": "guess",
+          "label": "\"A stolen object?\""
+        },
+        {
+          "id": "hope",
+          "label": "\"Something that flies?\""
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "text": "\"A proper invention,\" he says."
+    },
+    {
+      "type": "line",
+      "text": "He smiles. This time it stays."
+    },
+    {
+      "type": "line",
+      "text": "You close the window only after he's climbed down. In the quiet room, the brass wheel of your chair gives a small, answering click as you turn toward the table."
+    }
+  ]
+}

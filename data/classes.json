@@ -1,0 +1,83 @@
+{
+  "warrior": {
+    "name": "Warrior",
+    "description": "A battle-hardened fighter who excels at melee combat and absorbing punishment. High STR and DEF, generous HP pool.",
+    "primaryStat": "str",
+    "school": "PHY",
+    "baseStats": { "str": 10, "agi": 5, "int": 2, "def": 8, "lck": 3, "maxHp": 150, "maxMp": 30 },
+    "startingSkills": ["warrior_slash"],
+    "startingItems": ["iron_sword", "leather_armor", "health_potion"]
+  },
+  "mage": {
+    "name": "Mage",
+    "description": "A scholarly spellcaster who channels arcane forces into devastating attacks. High INT and MP, fragile body.",
+    "primaryStat": "int",
+    "school": "MAG",
+    "baseStats": { "str": 3, "agi": 5, "int": 12, "def": 2, "lck": 4, "maxHp": 80, "maxMp": 150 },
+    "startingSkills": ["mage_fireball"],
+    "startingItems": ["oak_staff", "linen_robe", "mana_potion"]
+  },
+  "rogue": {
+    "name": "Rogue",
+    "description": "A swift and cunning opportunist who strikes from the shadows. High AGI and LCK, balanced survivability.",
+    "primaryStat": "agi",
+    "school": "PHY",
+    "baseStats": { "str": 6, "agi": 11, "int": 4, "def": 4, "lck": 8, "maxHp": 100, "maxMp": 60 },
+    "startingSkills": ["rogue_backstab"],
+    "startingItems": ["rusty_dagger", "cloth_vest", "health_potion"]
+  },
+  "cleric": {
+    "name": "Cleric",
+    "description": "A divine healer who balances restorative magic with solid defence. High INT and DEF, excellent support.",
+    "primaryStat": "int",
+    "school": "MAG",
+    "baseStats": { "str": 4, "agi": 4, "int": 9, "def": 7, "lck": 4, "maxHp": 110, "maxMp": 120 },
+    "startingSkills": ["cleric_holy_light"],
+    "startingItems": ["iron_mace", "chainmail", "mana_potion"]
+  },
+  "samurai": {
+    "name": "Samurai",
+    "description": "A disciplined warrior of the blade whose strikes carry the weight of honour. High STR and AGI with sharp burst damage.",
+    "primaryStat": "str",
+    "school": "PHY",
+    "baseStats": { "str": 12, "agi": 9, "int": 3, "def": 5, "lck": 5, "maxHp": 130, "maxMp": 40 },
+    "startingSkills": ["samurai_draw_cut"],
+    "startingItems": ["katana", "ashigaru_armor", "health_potion"]
+  },
+  "knight": {
+    "name": "Knight",
+    "description": "An armoured crusader who can absorb punishment others cannot survive. Highest DEF in the game, strong STR, low AGI.",
+    "primaryStat": "str",
+    "school": "PHY",
+    "baseStats": { "str": 9, "agi": 3, "int": 4, "def": 13, "lck": 3, "maxHp": 170, "maxMp": 35 },
+    "startingSkills": ["knight_shield_bash"],
+    "startingItems": ["longsword", "iron_shield", "health_potion"]
+  },
+  "duelist": {
+    "name": "Duelist",
+    "description": "A fencer who turns speed into lethality. Exceptional AGI and LCK, devastating on crits, paper-thin armour.",
+    "primaryStat": "agi",
+    "school": "PHY",
+    "baseStats": { "str": 5, "agi": 14, "int": 4, "def": 3, "lck": 9, "maxHp": 95, "maxMp": 55 },
+    "startingSkills": ["duelist_riposte"],
+    "startingItems": ["rapier", "leather_vest", "health_potion"]
+  },
+  "berserker": {
+    "name": "Berserker",
+    "description": "A fury-driven brawler who trades defence for raw destruction. Highest STR in the game, almost no DEF.",
+    "primaryStat": "str",
+    "school": "PHY",
+    "baseStats": { "str": 16, "agi": 7, "int": 1, "def": 2, "lck": 4, "maxHp": 140, "maxMp": 20 },
+    "startingSkills": ["berserker_wild_swing"],
+    "startingItems": ["battle_axe", "fur_cloak", "health_potion"]
+  },
+  "assassin": {
+    "name": "Assassin",
+    "description": "A shadow operative who poisons, blinds, and executes. High AGI and LCK with devastating single-target burst.",
+    "primaryStat": "agi",
+    "school": "PHY",
+    "baseStats": { "str": 5, "agi": 13, "int": 5, "def": 3, "lck": 10, "maxHp": 90, "maxMp": 70 },
+    "startingSkills": ["assassin_shadowstrike"],
+    "startingItems": ["twin_daggers", "shadow_cloak", "health_potion"]
+  }
+}

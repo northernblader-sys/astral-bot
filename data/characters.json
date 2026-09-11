@@ -1,0 +1,339 @@
+[
+  {
+    "id": "mei",
+    "stars": 3,
+    "name": "Mei",
+    "emoji": "🌸",
+    "rarity": "mythic",
+    "tag": "legendary",
+    "gemPrice": 0,
+    "seasonId": "season_01",
+    "characterTier": "major",
+    "abilityTier": "mythic",
+    "image": "https://i.ibb.co/BHqLcBLF/Whats-App-Image-2026-08-05-at-11-35-37.jpg",
+    "description": "A prayer-born warrior whose final form awakens beneath the edge of defeat.",
+    "ability": {
+      "name": "Final Form",
+      "flavor": "Below 70% HP, prayer becomes transformation: heal, gain +200% attack, and surge with defensive power. Her seal also catches a killing blow twice per battle, weaker the second time. The third one lands."
+    }
+  },
+  {
+    "id": "urahara",
+    "stars": 2,
+    "name": "Kisuke Urahara",
+    "emoji": "🎩",
+    "rarity": "epic",
+    "tag": "special",
+    "gemPrice": 0,
+    "seasonId": "season_01",
+    "characterTier": "peak",
+    "abilityTier": "high",
+    "image": "https://i.ibb.co/YBnyF7c2/Urahara-Kisuke-aesthetic-artwork.jpg",
+    "description": "The smiling shopkeeper who reshapes the battlefield with one ruthless cut.",
+    "ability": {
+      "name": "Tear / Reshape",
+      "flavor": "Inflicts a severe percentage-based bleed that is difficult to cure."
+    }
+  },
+  {
+    "id": "wither",
+    "stars": 2,
+    "name": "Wither",
+    "emoji": "🔥",
+    "rarity": "epic",
+    "gemPrice": 0,
+    "seasonId": "season_01",
+    "characterTier": "peak",
+    "abilityTier": "high",
+    "image": "https://i.ibb.co/b5XMKDqy/Wither.jpg",
+    "description": "An ash-crowned arbiter who passes sentence in embers. What she names, burns.",
+    "statBonuses": {
+      "int": 40
+    },
+    "ability": {
+      "name": "Cinder Verdict",
+      "flavor": "Once per battle, no MP: sentences the enemy to an 8x INT-scaled pyre. Defense still mitigates it."
+    }
+  },
+  {
+    "id": "willow",
+    "stars": 1,
+    "name": "Willow",
+    "emoji": "🌿",
+    "rarity": "uncommon",
+    "gemPrice": 0,
+    "seasonId": "season_01",
+    "characterTier": "minor",
+    "abilityTier": "low",
+    "image": "https://i.ibb.co/zWvCXJWm/watermark-removed-Gemini-Generated-Image-qii4x3qii4x3qii4.png",
+    "description": "A quiet battle advisor who sees the strongest move before anyone else.",
+    "ability": {
+      "name": "Battle Advisor",
+      "flavor": "Reads the enemy and recommends the single most effective move without taking a turn."
+    }
+  },
+  {
+    "id": "miyashi",
+    "stars": 3,
+    "name": "Miyashi",
+    "emoji": "❄️",
+    "rarity": "legendary",
+    "gemPrice": null,
+    "image": "https://i.ibb.co/5NSRh7t/dragon-girl.jpg",
+    "description": "Dragon-marked and glacial. Where she stands, the air itself turns against you.",
+    "ability": {
+      "name": "Absolute Zero",
+      "flavor": "Her aura alone burns the enemy and freezes their options down to a single blunt attack, and the closer they get to death, the harder it bites."
+    },
+    "exclusive": true
+  },
+  {
+    "id": "nisha",
+    "stars": 3,
+    "name": "Nisha",
+    "emoji": "🐉",
+    "rarity": "legendary",
+    "gemPrice": null,
+    "image": "https://i.ibb.co/60vdcP07/download-1.jpg",
+    "description": "Bonded to her dragon in blood. Attacks slip past her like smoke, and every clash feeds her more.",
+    "ability": {
+      "name": "Absolute One",
+      "flavor": "Nearly untouchable in a fight, and every turn she draws a little more life from whoever is foolish enough to still be standing."
+    },
+    "exclusive": true
+  },
+  {
+    "id": "yoriichi",
+    "stars": 3,
+    "name": "Yoriichi",
+    "emoji": "🐈‍⬛",
+    "rarity": "legendary",
+    "gemPrice": null,
+    "image": "https://i.ibb.co/TDtsQrmK/yoruchi-bleach.jpg",
+    "description": "She does not fight for herself. When her owner falls, she is the one who refuses to let it end there.",
+    "ability": {
+      "name": "Cat Form Awakening",
+      "flavor": "The moment her master falls, Yoriichi comes to life and takes the fight over completely. You do not get another turn and you cannot direct her: she fights the enemy herself, on her own, from a separate 3,000 HP bar. Your defense is hers, so every hit aimed at her is blunted by your armour exactly as it would be if you were still standing. She hits harder than a normal strike and slips a third of all incoming attacks, dodging more the more she wins at your side. The bot plays out her every move. Triggers once per battle. If her own life runs out, the fight is truly lost."
+    },
+    "exclusive": true
+  },
+  {
+    "id": "monica",
+    "stars": 2,
+    "name": "Monica",
+    "emoji": "🪶",
+    "rarity": "legendary",
+    "gemPrice": null,
+    "image": "https://i.ibb.co/1YtJCCNp/748934613062832796.jpg",
+    "description": "She never got wings. She got the whole world instead: every road open, every map found.",
+    "ability": {
+      "name": "Beyond the Astral",
+      "flavor": "Free, feeless travel to every location, including hidden ground nothing else in the bot reaches."
+    },
+    "exclusive": true
+  },
+  {
+    "id": "tyla_alya",
+    "stars": 3,
+    "name": "Tyla & Alya",
+    "emoji": "🌗",
+    "rarity": "legendary",
+    "gemPrice": null,
+    "image": "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcnd4cGljMmp4NmQ4NmU4a3Rscjd0YmJzMHAycHZ2bmJsZm5iNXR0bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YVGMCpiU4af7ri4vxd/giphy.gif",
+    "description": "Two souls, one bond. Tyla splits herself to shield you from every blow that matters; Alya unmakes whatever the enemy relies on most.",
+    "ability": {
+      "name": "Twin Bond",
+      "flavor": "Tyla: any hit that would deal more than 10% of your current HP is tanked by a clone instead, so you take zero damage, up to 3 times per battle. Alya: every 3rd turn, she zeroes out a random enemy stat for 6 turns. Together, once the battle reaches turn 10: Dance of the Rain, an automatic legendary-tier twin strike."
+    },
+    "exclusive": true
+  },
+  {
+    "id": "anastasia",
+    "stars": 4,
+    "name": "Demon Lord Anastasia",
+    "emoji": "🕰️",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "fontStyle": "fraktur",
+    "image": "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjU5b3h3dGl0dGpjbmYxaWVzZ3g3dWp5dWh3bHlybHUwaXE1bGcyOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rXLkDTTw1iEcWTo2k7/giphy.gif",
+    "description": "The last hour answers to her. Anastasia does not undo your death. She simply refuses to have witnessed it, and the clock has never once argued.",
+    "ability": {
+      "name": "Hypnosis",
+      "flavor": "When you fall, in a dungeon or a duel, the hour turns back and the fight begins again from the first breath, with your enemy short 15% of the health they held. She will turn the clock twice. The third death is yours to keep."
+    },
+    "exclusive": true
+  },
+  {
+    "id": "circe",
+    "stars": 5,
+    "name": "Circe, the Jester",
+    "emoji": "🃏",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "image": "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWZkcHphNWJsbm5oZTJlYW1oMXltMXhjaHRidGVzMTB0ZjQwY2F3YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RlVjuiEOLqjb0jJ20x/giphy.gif",
+    "description": "A trickster witch draped in stars, gold, and gambler's luck. Beneath the wide-brimmed hat and the playful smile is someone who treats every battle like a stage and every card she draws like fate itself. She never seems worried, because she already knows the house always wins, especially when she's the house.",
+    "ability": {
+      "name": "Wild Card",
+      "flavor": "Six cards erupt into the air, and she snaps her fingers to stop the wheel. Whatever it lands on, she commits to completely: 🌟 Wishing Star annihilates the enemy outright · 🎭 Fool's Gambit swaps places so the blow lands on them · 🃏 Final Dash slips the next attack entirely · 🤡 Last Laugh leaves every enemy strike 50% weaker for 10 turns · 🎪 Wings of a Butterfly fills the field with copies for 5 turns · 🦋 Vanishing Act, castable only when she is nearly gone, ends the fight and puts her safely back in town. Three draws per battle."
+    },
+    "exclusive": true
+  },
+  {
+    "id": "megumi",
+    "stars": 4,
+    "name": "Megumi Fushiguro",
+    "emoji": "🌑",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "image": "https://i.ibb.co/VY7VY4Nq/Megumi-Fushiguro.jpg",
+    "description": "The last heir of the Ten Shadows. He fights from the dark itself, a thousand cursed spirits at his back, and a general no sorcerer in history has ever tamed sleeping beneath them.",
+    "ability": {
+      "name": "Ten Shadows Technique",
+      "flavor": "A thousand cursed spirits swarm from his shadow, draining the enemy's life force and crushing their attack turn after turn while he heals from what they take. His Domain, Chimera Shadow Garden, floods the field, doubling the swarm and letting him slip through the dark untouched, and calls Mahoraga, the Divine General, whose Wheel adapts to any single move used against him three times over and renders it forever null."
+    },
+    "exclusive": true
+  },
+  {
+    "id": "xiao",
+    "stars": 3,
+    "name": "Xiao",
+    "emoji": "👁️",
+    "rarity": "mythic",
+    "gemPrice": null,
+    "image": "https://i.ibb.co/MkFBWp4V/Xiao-Fu-Kan-Early-year-s.jpg",
+    "description": "A watcher first and a thief second. Xiao never blocks a technique and never endures one. She studies it, and the second time you reach for it, it is already hers. Nothing she takes is ever given back.",
+    "ability": {
+      "name": "Thief's Eye",
+      "flavor": "Once per battle, she throws the enemy's own last move straight back at them, echoing at least half again as hard as the blow that taught it to her. Then the move is simply gone: whoever owned it never uses it again for the rest of the fight. Time your theft, because you only get one, and she can only copy a move that has a name."
+    },
+    "exclusive": true
+  },
+  {
+    "id": "minna",
+    "stars": 3,
+    "name": "Minna",
+    "emoji": "🕳️",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "image": "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3N4MWc5NmpoeXB6ajhkdXM2b2RkcDAwaWc1bjRuMjd5NW03OTJjMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RlBXPlMNjsJEXHbs23/giphy.gif",
+    "description": "Minna does not heal, and she does not wound. She opens the space between two people and lets it even out, and the one who was winning always has more to lose. She only works when she is nearly gone, which is why so few ever see her do it.",
+    "ability": {
+      "name": "Hollow Exchange",
+      "flavor": "Once per battle, when she is running on almost nothing, she trades her condition for the enemy's: your last sliver of health for whatever they were comfortably sitting on. It is not a heal and it is not a wound, it is an exchange, and it never takes anyone all the way down. Its entire value is when you call it."
+    },
+    "exclusive": true
+  },
+  {
+    "id": "shunya",
+    "stars": 4,
+    "name": "Shunya",
+    "emoji": "⭕",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "image": "https://i.ibb.co/pB052qFg/Shunya-Yamashita.jpg",
+    "description": "शून्य. Zero, the void, the space where nothing can take hold. Every curse, poison, and hex reaches for her and closes on emptiness; face her in a duel and the void hands your own malice back.",
+    "ability": {
+      "name": "The Empty Vessel",
+      "flavor": "Nothing hostile can take root in the void. Shunya is permanently immune to every negative effect there is: burn, poison, freeze, stun, blindness, weakness, frost-lock, bleed, armour-shred, and even a boss's lifespan-drain all slide off untouched. She is not unkillable. Raw force still wounds her, so she can be beaten honestly. But against another summoner the void gives back what it is given, and any debuff a duelist tries to place on her rebounds onto the caster instead."
+    },
+    "exclusive": true
+  },
+  {
+    "id": "ariel",
+    "stars": 4,
+    "name": "Ariel",
+    "emoji": "⚡",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "image": "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzVzd2gxaHZsb2twaXl2emE1dHdzdHc0czgyNDNuNmMwdW85czRpNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9DC65CrSMymi4GJr0D/giphy.gif",
+    "description": "She does not move faster than you. She moves twice in the time you move once, and both of them are the first. Every swing she has ever thrown has a second one already standing behind it, waiting to be noticed.",
+    "ability": {
+      "name": "Second Transcendance",
+      "flavor": "A second wind that never has to be earned. Every single turn, every attack and every skill, in dungeons, co-op raids and duels alike, her strike lands and then lands again, with its own aim and its own critical. The echo rolls its own accuracy, so it can miss on its own, and it obeys defence, shields, and every guard a boss or a rival can raise. It grants no extra turn and never hurries the clock: two hits, one turn, forever."
+    },
+    "exclusive": true
+  },
+  {
+    "id": "yato",
+    "stars": 5,
+    "name": "Yato",
+    "emoji": "📺",
+    "rarity": "mythic",
+    "gemPrice": null,
+    "spinOnly": true,
+    "image": "https://i.ibb.co/Y7RDw0ts/733805333097772865.jpg",
+    "description": "A boy who woke up in a world of mountains and trees with no memory of ever having been anything else. Fame was only a number on a profile until he thought to point a camera at a dungeon. Now the crowd is the weapon, and ten thousand people watching a boss at once is a force the boss has no stat for.",
+    "ability": {
+      "name": "Live Blast",
+      "flavor": "Go live before the fight and let the room fill. Once per battle, *.live-blast* turns every viewer currently watching into raw force that no armour reduces: an empty stream does nothing at all, a modest crowd chips, and a full house at the height of your fame arrives heavy enough to end a 50,000 HP boss in a single moment. And should the blow that finally kills him ever land, something older than the boy refuses it. *Tear of God* gives back half of everything, once, and only ever against a strike. It cannot catch what is already inside him, so poison, burn, bleed and rot finish him regardless."
+    },
+    "trueForm": {
+      "name": "Unwritten",
+      "image": "",
+      "flavor": "The crowd was never the power, only the first thing he thought to reach for. Ascended, he stops hitting what is in front of him: *.unwritten* takes part of it back out of the world, and what is taken does not come back. Healing pours into a smaller and smaller space, a boss's second wind refills a room that keeps getting narrower, and armour has no part in it because nothing is being blocked. It needs no stream, no crowd, no mana and no fame, and it can be used every single turn. It stops short of the end every time, though. The last tenth of anything has to be killed the ordinary way, and nine turns spent erasing are nine turns spent being hit. *Tear of God* still holds, once, exactly as it always did."
+    }
+  },
+  {
+    "id": "gojo",
+    "stars": 5,
+    "name": "Gojo Satoru",
+    "emoji": "♾️",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "spinOnly": true,
+    "image": "https://i.ibb.co/G48h68Bs/satoru-gojo-icon.jpg",
+    "statBonuses": { "str": 30, "agi": 40, "int": 35, "def": 25, "lck": 20, "maxHp": 200, "maxMp": 120 },
+    "description": "The strongest there has ever been. Born with the Six Eyes and the Limitless, Gojo does not dodge and does not guard, because the space in front of him never lets you arrive. Standing against him is not a fight you are losing. It is a fight that was never yours to have.",
+    "ability": {
+      "name": "Limitless",
+      "flavor": "Infinity sits between Gojo and every blow, and it is the space itself that guards him. A strike slows the closer it gets and thins the whole way in, until it arrives at barely a third of its force, and anything small enough simply never lands. The Six Eyes read the entire battlefield, sharpening every stat he carries. Once per battle he claps Cursed Technique Lapse: Blue and Cursed Technique Reversal: Red into Hollow Purple, an imaginary mass that erases whatever stands in its path, never misses, and no armour softens. Once per battle he opens his Domain, Unlimited Void: a boundless grey where every distance is endless. The enemy is shown the birth and death of all things at once, handed infinite information with no beginning and no end, and they lock up completely, unable to move, unable to think, unable to act for as long as it holds."
+    }
+  },
+  {
+    "id": "alexa",
+    "stars": 4,
+    "name": "Alexa, the Witch of Love",
+    "emoji": "💗",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "image": "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExczA2YjBscjRvZ2VtbjVoZDZ2OGVwbG9mZ3ZxNWd2d2lnenAwYTN1MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/wglWHi9YmQ7ofAoy7h/giphy.gif",
+    "description": "Nobody has ever put a clean hit on the Witch of Love, and not one of them could tell you why. They raise the blade, they look at her, and the reason for the swing goes missing.",
+    "ability": {
+      "name": "Lovestruck",
+      "flavor": "Whatever comes for her owner falls in love with her instead, and loses the will to finish the swing."
+    },
+    "exclusive": true
+  },
+  {
+    "id": "gogeta",
+    "stars": 5,
+    "name": "Gogeta",
+    "emoji": "🔵",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "exclusive": true,
+    "image": "https://i.ibb.co/20J4NGM7/Una-vittoria-stellata.jpg",
+    "statBonuses": { "str": 34, "agi": 40, "int": 18, "def": 22, "lck": 18, "maxHp": 175, "maxMp": 140 },
+    "description": "Two rivals who spent their whole lives refusing to lose to each other, folded into one body for a handful of minutes. Fusion of Equals hands him strength and speed neither half could reach alone, and a clock to spend them against: when the fusion times out the boost leaves, and Big Bang Kamehameha leaves with it. Instant Transmission means the blow aimed at him arrives at empty air, and now and then he is already standing somewhere else with the next move charged. Soul Punisher is a ki blast he can throw nearly every turn. Big Bang Kamehameha needs a full energy bar, spends all of it, and erases the space between him and whatever he pointed it at.",
+    "ability": {
+      "name": "Fusion of Equals",
+      "flavor": "Strength and speed no single fighter can hold, on a timer that does not negotiate."
+    }
+  },
+  {
+    "id": "red_rose",
+    "stars": 4,
+    "name": "Red Rose",
+    "emoji": "🌹",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "spinOnly": true,
+    "image": "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcHJiNWpic25hNGxpcHhobHp0NWRudGxxYTIzOWhqc3U5M2p2ajlsaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/w89WCov06vMcaGeoiO/giphy.gif",
+    "spinImage": "https://i.ibb.co/sYD5M6Y/red-rose-silver-palace.jpg",
+    "description": "She keeps the smile of a girl at a garden party and the hands of something far older. Nothing she fights ever quite fights back the way it meant to, because the moment she takes an interest, whose body it is stops being a settled question. Everyone adores her. Almost none of them chose to.",
+    "ability": {
+      "name": "Puppet Strings",
+      "flavor": "Once per battle, no mana: she takes the strings and the enemy turns on itself. Its own attack lands on the one who threw it, run through its own guard, so the harder it hits the more it wounds itself, and then it hangs tangled for a turn and loses its next move. In a duel the strings catch their companion too. She never cuts all the way down: a puppet is worth more still dancing than broken."
+    }
+  }
+]

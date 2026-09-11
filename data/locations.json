@@ -1,0 +1,159 @@
+[
+  {
+    "id": "astral_town",
+    "name": "Astral Town",
+    "type": "town",
+    "safe": true,
+    "floors": null,
+    "levelRange": null,
+    "entryLevel": 1,
+    "bossFloors": [],
+    "checkpointInterval": null,
+    "prerequisite": null,
+    "travelCost": 0,
+    "services": [
+      "shop",
+      "inn",
+      "bank",
+      "guild",
+      "petStore"
+    ],
+    "description": "The last surviving settlement in the shattered world of Astral. Every adventurer begins their journey here. The guild board, shops, the old inn, and a small pet store lining Market Row are always open."
+  },
+  {
+    "id": "entry_tower",
+    "name": "Entry Tower",
+    "type": "dungeon",
+    "safe": false,
+    "floors": 100,
+    "levelRange": [
+      1,
+      20
+    ],
+    "entryLevel": 1,
+    "bossFloors": [
+      100
+    ],
+    "checkpointInterval": 10,
+    "prerequisite": null,
+    "travelCost": 49,
+    "description": "A crumbling tower at the edge of town. Weak monsters lurk within, the proving ground for every new adventurer. One ancient guardian waits at the top."
+  },
+  {
+    "id": "gambits_dungeon",
+    "name": "Gambit's Dungeon",
+    "type": "dungeon",
+    "safe": false,
+    "floors": 100,
+    "levelRange": [
+      15,
+      40
+    ],
+    "entryLevel": 15,
+    "bossFloors": [
+      100
+    ],
+    "checkpointInterval": 10,
+    "prerequisite": "entry_tower",
+    "travelCost": 65,
+    "description": "The domain of the trickster Gambit. A labyrinth that shifts with each descent: mirrors show what never was, and shadows move on their own. Ten of Gambit's champions bar the way deeper."
+  },
+  {
+    "id": "centurions_dungeon",
+    "name": "Centurion's Dungeon",
+    "type": "dungeon",
+    "safe": false,
+    "floors": 100,
+    "levelRange": [
+      35,
+      65
+    ],
+    "entryLevel": 35,
+    "bossFloors": [
+      100
+    ],
+    "checkpointInterval": 10,
+    "prerequisite": "gambits_dungeon",
+    "travelCost": 80,
+    "description": "A fortress of endless war. The Centurion's elite legions patrol every hall, growing deadlier with each descent. Ten warlords of iron and blood hold the gates."
+  },
+  {
+    "id": "astral_tower",
+    "name": "The Other Side: Astral Tower",
+    "type": "dungeon",
+    "safe": false,
+    "floors": 100,
+    "levelRange": [
+      60,
+      85
+    ],
+    "entryLevel": 60,
+    "bossFloors": [
+      100
+    ],
+    "checkpointInterval": 10,
+    "prerequisite": "centurions_dungeon",
+    "travelCost": 90,
+    "description": "A rift between worlds. The creatures here are not flesh, they are pure astral energy given violent form. Ten fractured entities guard the passage between realities."
+  },
+  {
+    "id": "eternal_dungeon",
+    "name": "The End: Eternal Dungeon",
+    "type": "dungeon",
+    "safe": false,
+    "floors": 100,
+    "levelRange": [
+      80,
+      100
+    ],
+    "entryLevel": 80,
+    "bossFloors": [
+      100
+    ],
+    "checkpointInterval": 10,
+    "prerequisite": "astral_tower",
+    "travelCost": 100,
+    "description": "The final frontier. Those who reach its depths are said to have touched eternity itself. Ten ancient horrors mark the long walk to the end of everything."
+  },
+  {
+    "id": "season_01_ruins",
+    "name": "The Beginning of the End: Sunken Ruins",
+    "type": "dungeon",
+    "safe": false,
+    "floors": 100,
+    "levelRange": [
+      30,
+      55
+    ],
+    "entryLevel": 25,
+    "bossFloors": [
+      100
+    ],
+    "checkpointInterval": 10,
+    "prerequisite": null,
+    "travelCost": 75,
+    "services": [],
+    "description": "A cathedral swallowed by the tide long before Astral fell, half its spires still stand beneath the waterline. Something in the drowned choir still prays, and it does not want visitors. Season 1 exclusive: grants +10% XP, Fame, and Solars over normal dungeons while Season 1 is active.",
+    "seasonId": "season_01"
+  },
+  {
+    "id": "the_end",
+    "name": "The End: The Rift Where the World Sleeps",
+    "type": "dungeon",
+    "safe": false,
+    "floors": 1,
+    "levelRange": [
+      1,
+      100
+    ],
+    "entryLevel": 1,
+    "bossFloors": [
+      1
+    ],
+    "checkpointInterval": 1,
+    "prerequisite": null,
+    "travelCost": 0,
+    "services": [],
+    "description": "A wound torn in the world where the magical air runs thickest. Beyond the veil the End waits, vast, patient, and so saturated with power that the air alone will stop a mortal heart. While its long sleep lies over Astral, to step through is to be unmade on contact. Only when the aura crests, two weeks in, does the way open to those who would end it."
+  }
+]

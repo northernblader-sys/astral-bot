@@ -1,0 +1,236 @@
+[
+  {
+    "id": "iron_ore",
+    "name": "Iron Ore",
+    "type": "material",
+    "rarity": "common",
+    "sellPrice": 4,
+    "description": "A rough chunk of iron ore pulled from shallow veins. Used in basic forging.",
+    "image": "https://animeastral.qzz.io/assets/items/iron_ore.png"
+  },
+  {
+    "id": "wood_plank",
+    "name": "Wood Plank",
+    "type": "material",
+    "rarity": "common",
+    "sellPrice": 3,
+    "description": "A cut and dried plank of hardwood. Reliable stock for handles and staves.",
+    "image": "https://animeastral.qzz.io/assets/items/wood_plank.png"
+  },
+  {
+    "id": "leather_scrap",
+    "name": "Leather Scrap",
+    "type": "material",
+    "rarity": "common",
+    "sellPrice": 5,
+    "description": "A cured scrap of hide used to wrap grips and reinforce joints.",
+    "image": "https://animeastral.qzz.io/assets/items/leather_scrap.png"
+  },
+  {
+    "id": "beast_hide",
+    "name": "Beast Hide",
+    "type": "material",
+    "rarity": "uncommon",
+    "sellPrice": 18,
+    "description": "Thick hide taken from a dungeon beast. Tougher than standard leather.",
+    "image": "https://animeastral.qzz.io/assets/items/beast_hide.png"
+  },
+  {
+    "id": "monster_fang",
+    "name": "Monster Fang",
+    "type": "material",
+    "rarity": "uncommon",
+    "sellPrice": 22,
+    "description": "A serrated fang snapped from a monster's jaw. Sharp enough to be worked into a blade edge.",
+    "image": "https://animeastral.qzz.io/assets/items/monster_fang.png"
+  },
+  {
+    "id": "silver_ore",
+    "name": "Silver Ore",
+    "type": "material",
+    "rarity": "uncommon",
+    "sellPrice": 28,
+    "description": "Gleaming ore with a faint magical resonance. Used to forge weapons that resist dark energy.",
+    "image": "https://animeastral.qzz.io/assets/items/silver_ore.png"
+  },
+  {
+    "id": "arcane_essence",
+    "name": "Arcane Essence",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 65,
+    "description": "Condensed magical energy in crystalline form. Drawn from deep dungeon nodes.",
+    "image": "https://animeastral.qzz.io/assets/items/arcane_essence.png"
+  },
+  {
+    "id": "dragon_scale",
+    "name": "Dragon Scale",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 80,
+    "description": "An iridescent scale shed by a dungeon wyrm. Incredibly hard and heat-resistant.",
+    "image": "https://animeastral.qzz.io/assets/items/dragon_scale.png"
+  },
+  {
+    "id": "mythril_ore",
+    "name": "Mythril Ore",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 75,
+    "description": "A pale, feather-light ore with extraordinary tensile strength. Prized by master smiths.",
+    "image": "https://animeastral.qzz.io/assets/items/mythril_ore.png"
+  },
+  {
+    "id": "ancient_rune",
+    "name": "Ancient Rune",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 180,
+    "description": "A stone fragment inscribed with pre-Astral script. Still vibrates with the original enchantment.",
+    "image": "https://animeastral.qzz.io/assets/items/ancient_rune.png"
+  },
+  {
+    "id": "phoenix_feather",
+    "name": "Phoenix Feather",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 200,
+    "description": "A feather from a dimensional phoenix. Perpetually warm and faintly luminous.",
+    "image": "https://animeastral.qzz.io/assets/items/phoenix_feather.png"
+  },
+  {
+    "id": "void_crystal",
+    "name": "Void Crystal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 190,
+    "description": "A black crystal formed where the void has eaten through reality. Channels destructive energy.",
+    "image": "https://animeastral.qzz.io/assets/items/void_crystal.png"
+  },
+  {
+    "id": "diamond_ore",
+    "name": "Diamond Ore",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 160,
+    "description": "A brilliant crystalline ore harder than any natural stone. Holds a razor edge indefinitely.",
+    "image": "https://animeastral.qzz.io/assets/items/diamond_ore.png"
+  },
+  {
+    "id": "astral_shard",
+    "name": "Astral Shard",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 160,
+    "description": "A sliver of crystallised astral plane. Each one took centuries to form.",
+    "image": "https://animeastral.qzz.io/assets/items/astral_shard.png"
+  },
+  {
+    "id": "celestial_ore",
+    "name": "Celestial Ore",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 250,
+    "description": "Ore that fell from beyond the known dimensions. Its metallic hum never fully stops.",
+    "image": "https://animeastral.qzz.io/assets/items/celestial_ore.png"
+  },
+  {
+    "id": "eternity_dust",
+    "name": "Eternity Dust",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 220,
+    "description": "Fine dust left behind when something immortal finally dies. Imbues weapons with timeless power.",
+    "image": "https://animeastral.qzz.io/assets/items/eternity_dust.png"
+  },
+  {
+    "id": "titanium_ore",
+    "name": "Titanium Ore",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 245,
+    "description": "An impossibly dense ore pulled from the deepest dungeon veins. The pinnacle of mundane forging material.",
+    "image": "https://animeastral.qzz.io/assets/items/titanium_ore.png"
+  },
+  {
+    "id": "wood",
+    "name": "Wood",
+    "type": "material",
+    "rarity": "common",
+    "sellPrice": 3,
+    "description": "Rough-cut timber. The first thing any empire needs and the last thing it stops needing.",
+    "image": "https://animeastral.qzz.io/assets/items/wood.png"
+  },
+  {
+    "id": "stone",
+    "name": "Stone",
+    "type": "material",
+    "rarity": "common",
+    "sellPrice": 4,
+    "description": "Quarried building stone. Heavy, plain, and the foundation of every wall ever raised.",
+    "image": "https://animeastral.qzz.io/assets/items/stone.png"
+  },
+  {
+    "id": "iron",
+    "name": "Iron",
+    "type": "material",
+    "rarity": "uncommon",
+    "sellPrice": 12,
+    "description": "Smelted iron ready for construction. Turns a shack into a stronghold.",
+    "image": "https://animeastral.qzz.io/assets/items/iron.png"
+  },
+  {
+    "id": "plank",
+    "name": "Plank",
+    "type": "material",
+    "rarity": "uncommon",
+    "sellPrice": 14,
+    "description": "Wood refined into true planks. Cleaner, stronger, and worth the extra work.",
+    "image": "https://animeastral.qzz.io/assets/items/plank.png"
+  },
+  {
+    "id": "brick",
+    "name": "Brick",
+    "type": "material",
+    "rarity": "uncommon",
+    "sellPrice": 20,
+    "description": "Fired clay brick. Stacks fast and holds a city together.",
+    "image": "https://animeastral.qzz.io/assets/items/brick.png"
+  },
+  {
+    "id": "ingot",
+    "name": "Iron Ingot",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 55,
+    "description": "A dense bar of purified iron. The stuff of gates, engines, and empires that last.",
+    "image": "https://animeastral.qzz.io/assets/items/ingot.png"
+  },
+  {
+    "id": "hardwood",
+    "name": "Hardwood",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 22,
+    "description": "Dense, slow-grown timber prized for great halls and warships alike.",
+    "image": "https://animeastral.qzz.io/assets/items/hardwood.png"
+  },
+  {
+    "id": "granite",
+    "name": "Granite",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 34,
+    "description": "Speckled, unbreakable stone. What you build from granite, you build to outlive you.",
+    "image": "https://animeastral.qzz.io/assets/items/granite.png"
+  },
+  {
+    "id": "steel",
+    "name": "Steel",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 95,
+    "description": "Iron mastered by fire and carbon. The line between a fortress and a legend.",
+    "image": "https://animeastral.qzz.io/assets/items/steel.png"
+  }
+]

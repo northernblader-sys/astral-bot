@@ -1,0 +1,1988 @@
+{
+  "config": {
+    "foundCost": 50000,
+    "renameCost": 50000,
+    "starterTreasury": 15000,
+    "starterWarehouse": { "wood": 60, "stone": 40, "iron": 10 },
+    "offlineCapHours": 24,
+    "maxBuildingLevel": 10,
+    "nameMinLen": 3,
+    "nameMaxLen": 20
+  },
+
+  "tiers": [
+    { "id": "hamlet",     "rank": 0, "name": "Hamlet",     "fame": 0,    "buildingCap": 3,  "armyBase": 20,   "warehouseBase": 400,   "citizenCap": 2,  "blurb": "A cluster of huts and a hand-painted sign. Everyone knows your name because there are nine of them." },
+    { "id": "village",    "rank": 1, "name": "Village",    "fame": 20,   "buildingCap": 5,  "armyBase": 50,   "warehouseBase": 900,   "citizenCap": 4,  "blurb": "Roads, a well, and the first traders who bother to stop. People are starting to talk." },
+    { "id": "town",       "rank": 2, "name": "Town",       "fame": 50,   "buildingCap": 8,  "armyBase": 120,  "warehouseBase": 1800,  "citizenCap": 6,  "blurb": "A market square, a garrison, and a name that carries a day's ride in every direction." },
+    { "id": "city",       "rank": 3, "name": "City",       "fame": 120,  "buildingCap": 12, "armyBase": 260,  "warehouseBase": 3600,  "citizenCap": 9,  "blurb": "Walls you can see from the hills. Travelers now put you on their maps, and soon the map will put you on it." },
+    { "id": "kingdom",    "rank": 4, "name": "Kingdom",    "fame": 300,  "buildingCap": 16, "armyBase": 520,  "warehouseBase": 7200,  "citizenCap": 12, "blurb": "Banners, borders, and neighbors who choose their words carefully. You are a power now, not a rumor." },
+    { "id": "empire",     "rank": 5, "name": "Empire",     "fame": 700,  "buildingCap": 20, "armyBase": 1100, "warehouseBase": 14000, "citizenCap": 16, "blurb": "A name spoken in other people's throne rooms. What you build, the world reacts to." },
+    { "id": "ascendancy", "rank": 6, "name": "Ascendancy", "fame": 1600, "buildingCap": 25, "armyBase": 2200, "warehouseBase": 30000, "citizenCap": 20, "blurb": "Beyond borders, beyond rivals. History is written in the shape of what you leave behind." }
+  ],
+
+  "buildings": [
+    {
+      "type": "house",
+      "name": "House",
+      "emoji": "🏠",
+      "minRank": 0,
+      "maxLevel": 10,
+      "produces": null,
+      "baseYieldPerHour": 0,
+      "maintPerHour": 5,
+      "storageBonus": 0,
+      "housing": 10,
+      "baseCostSolars": 3000,
+      "baseCostMaterials": { "wood": 15, "stone": 10 },
+      "blurb": "Homes for the people. More room means more residents, and your headcount is your renown."
+    },
+    {
+      "type": "solar_mine",
+      "name": "Solar Mine",
+      "emoji": "💰",
+      "minRank": 0,
+      "maxLevel": 10,
+      "produces": "solars",
+      "baseYieldPerHour": 400,
+      "maintPerHour": 40,
+      "storageBonus": 0,
+      "housing": 2,
+      "baseCostSolars": 7000,
+      "baseCostMaterials": { "wood": 20, "stone": 10 },
+      "blurb": "Refines raw sunlight into hard currency. Your treasury's beating heart."
+    },
+    {
+      "type": "lumber_camp",
+      "name": "Lumber Camp",
+      "emoji": "🪵",
+      "minRank": 0,
+      "maxLevel": 10,
+      "produces": "wood",
+      "baseYieldPerHour": 40,
+      "maintPerHour": 25,
+      "storageBonus": 0,
+      "housing": 2,
+      "baseCostSolars": 4200,
+      "baseCostMaterials": { "stone": 10 },
+      "gathers": { "material": "wood_plank", "perHour": 2 },
+      "blurb": "Fells and mills timber. Wood is the backbone of every early building, and its offcuts pile up as planks for the smith."
+    },
+    {
+      "type": "quarry",
+      "name": "Quarry",
+      "emoji": "🪨",
+      "minRank": 0,
+      "maxLevel": 10,
+      "produces": "stone",
+      "baseYieldPerHour": 30,
+      "maintPerHour": 25,
+      "storageBonus": 0,
+      "housing": 2,
+      "baseCostSolars": 4200,
+      "baseCostMaterials": { "wood": 15 },
+      "gathers": { "material": "iron_ore", "perHour": 2 },
+      "blurb": "Cuts stone from the bedrock. Slow, heavy, and needed by almost everything, and the ore-bearing spoil feeds the forge."
+    },
+    {
+      "type": "iron_mine",
+      "name": "Iron Mine",
+      "emoji": "⛏️",
+      "minRank": 1,
+      "maxLevel": 10,
+      "produces": "iron",
+      "baseYieldPerHour": 10,
+      "maintPerHour": 50,
+      "storageBonus": 0,
+      "housing": 2,
+      "baseCostSolars": 12500,
+      "baseCostMaterials": { "wood": 25, "stone": 25 },
+      "gathers": { "material": "silver_ore", "perHour": 1 },
+      "blurb": "Sinks shafts after iron. Expensive to run, but nothing high tier is built without it, and the deep veins throw off silver for the smith."
+    },
+    {
+      "type": "barracks",
+      "name": "Barracks",
+      "emoji": "🛡️",
+      "minRank": 0,
+      "maxLevel": 10,
+      "produces": null,
+      "baseYieldPerHour": 0,
+      "maintPerHour": 15,
+      "storageBonus": 0,
+      "housing": 4,
+      "armyCapBonus": 30,
+      "baseCostSolars": 8500,
+      "baseCostMaterials": { "wood": 25, "stone": 15 },
+      "blurb": "Bunks, a drill yard, and a quartermaster. Raises how many troops your empire can field."
+    },
+    {
+      "type": "warehouse",
+      "name": "Warehouse",
+      "emoji": "📦",
+      "minRank": 0,
+      "maxLevel": 10,
+      "produces": null,
+      "baseYieldPerHour": 0,
+      "maintPerHour": 10,
+      "storageBonus": 600,
+      "housing": 1,
+      "baseCostSolars": 5500,
+      "baseCostMaterials": { "wood": 30 },
+      "blurb": "Raises how much raw material your empire can stockpile before the surplus spoils."
+    },
+    {
+      "type": "blacksmith",
+      "name": "Blacksmith",
+      "emoji": "🔨",
+      "minRank": 1,
+      "maxLevel": 10,
+      "produces": null,
+      "baseYieldPerHour": 0,
+      "maintPerHour": 20,
+      "storageBonus": 0,
+      "housing": 2,
+      "baseCostSolars": 9000,
+      "baseCostMaterials": { "wood": 20, "stone": 20, "iron": 5 },
+      "blurb": "A resident smith and a roaring forge. Turns stashed materials into real gear, and the higher its level the rarer the work it can take on."
+    },
+    {
+      "type": "bank",
+      "name": "Bank",
+      "emoji": "🏦",
+      "minRank": 2,
+      "maxLevel": 10,
+      "produces": null,
+      "baseYieldPerHour": 0,
+      "maintPerHour": 30,
+      "storageBonus": 0,
+      "housing": 2,
+      "baseCostSolars": 14000,
+      "baseCostMaterials": { "wood": 30, "stone": 20, "iron": 8 },
+      "blurb": "A counting house and a guarded vault. Your citizens store their own coin here, and the realm skims a small daily maintenance tax into the treasury."
+    },
+    {
+      "type": "coffee_house",
+      "name": "Coffee House",
+      "emoji": "☕",
+      "minRank": 1,
+      "maxLevel": 10,
+      "produces": null,
+      "baseYieldPerHour": 0,
+      "maintPerHour": 12,
+      "storageBonus": 0,
+      "housing": 3,
+      "baseCostSolars": 6500,
+      "baseCostMaterials": { "wood": 20, "stone": 10 },
+      "blurb": "A warm room, a long counter, and the smell of roasting beans. Folk gather here to sit a while, and every cup they order drops coin into the treasury."
+    }
+  ],
+
+  "regions": {
+    "capPerRegion": 3,
+    "list": [
+      { "id": "north",     "name": "North",     "angle": -90 },
+      { "id": "northeast", "name": "Northeast", "angle": -45 },
+      { "id": "east",      "name": "East",      "angle": 0 },
+      { "id": "southeast", "name": "Southeast", "angle": 45 },
+      { "id": "south",     "name": "South",     "angle": 90 },
+      { "id": "southwest", "name": "Southwest", "angle": 135 },
+      { "id": "west",      "name": "West",      "angle": 180 },
+      { "id": "northwest", "name": "Northwest", "angle": -135 }
+    ]
+  },
+
+  "shop": {
+    "wood": 18,
+    "stone": 24,
+    "iron": 65,
+    "plank": 65,
+    "brick": 90,
+    "ingot": 235,
+    "hardwood": 105,
+    "granite": 150,
+    "steel": 380
+  },
+
+  "army": {
+    "recruitCostSolars": 60,
+    "officerCap": 40,
+    "ranks": [
+      { "id": "recruit",  "name": "Recruit",  "power": 2,   "wagePerHour": 1,   "named": false },
+      { "id": "soldier",  "name": "Soldier",  "power": 6,   "wagePerHour": 3,   "named": false },
+      { "id": "veteran",  "name": "Veteran",  "power": 20,  "wagePerHour": 10,  "named": true },
+      { "id": "knight",   "name": "Knight",   "power": 50,  "wagePerHour": 28,  "named": true },
+      { "id": "champion", "name": "Champion", "power": 130, "wagePerHour": 75,  "named": true },
+      { "id": "warlord",  "name": "Warlord",  "power": 320, "wagePerHour": 190, "named": true }
+    ],
+    "promoteCost": {
+      "soldier":  { "solars": 250,   "materials": { "iron": 1 } },
+      "veteran":  { "solars": 1800,  "materials": { "iron": 4, "steel": 1 } },
+      "knight":   { "solars": 7000,  "materials": { "iron": 12, "steel": 4 } },
+      "champion": { "solars": 24000, "materials": { "steel": 18 } },
+      "warlord":  { "solars": 70000, "materials": { "steel": 55 } }
+    }
+  },
+
+  "raid": {
+    "variancePct": 0.25,
+    "lootTreasuryPct": 0.15,
+    "lootHardCap": 8000,
+    "winnerLossPct": 0.06,
+    "loserLossPct": 0.20,
+    "weightFloorPct": 0.5,
+    "deployDefenseMult": 0.6,
+    "shieldHours": 12,
+    "deployHours": 3,
+    "cooldownHours": 1,
+    "buildingDamageHours": 6,
+    "raidLogCap": 8
+  },
+
+  "assignments": {
+    "workerCap": 3,
+    "generalCap": 1,
+    "perPlayerCap": 2,
+    "workerPctPerStar": 0.04,
+    "generalPctPerStar": 0.05
+  },
+
+  "market": {
+    "mapMinRank": 3,
+    "stockCap": 8,
+    "priceFloorPct": 0.5,
+    "priceCeilPct": 2.0,
+    "citizenDiscountPct": 0.1,
+    "travelCostSolars": 200
+  },
+
+  "war": {
+    "declareCostSolars": 5000,
+    "acceptWindowHours": 24,
+    "weightFloorPct": 0.5,
+    "variancePct": 0.20,
+    "roundsToWin": 3,
+    "attackCooldownHours": 3,
+    "roundWinnerLossPct": 0.08,
+    "roundLoserLossPct": 0.25,
+    "officerLossChance": 0.5,
+    "tributePct": 0.30,
+    "tributeHardCap": 60000,
+    "victorShieldHours": 6,
+    "loserShieldHours": 48,
+    "vassalDays": 14,
+    "peaceCostSolars": 3000,
+    "warLogCap": 8
+  },
+
+  "sell": {
+    "burnPct": 0.15,
+    "minPrice": 1000,
+    "maxPrice": 100000000
+  },
+
+  "lifecycle": {
+    "dormancyDays": 21,
+    "successionDays": 45,
+    "decayFamePct": 0.10,
+    "decayTreasuryPct": 0.05
+  },
+
+  "population": {
+    "baseCap": 4,
+    "hoursPerArrival": 2,
+    "npcIncomePerHour": 3,
+    "npcWagePerHour": 1
+  },
+
+  "blacksmith": {
+    "forgeLogCap": 8,
+    "maxForgeRankByLevel": [3, 3, 3, 4, 4, 4, 5, 5, 5, 6]
+  },
+
+  "bank": {
+    "taxRatePerDay": 0.01
+  },
+
+  "coffee": {
+    "menu": [
+      { "id": "espresso", "name": "Solar Espresso", "price": 120, "line": "A short, bright jolt of daylight. The room seems to sharpen for a moment." },
+      { "id": "latte",    "name": "Comet Latte",    "price": 95,  "line": "Warm and milky, gone too soon, like the tail of a comet." },
+      { "id": "coldbrew", "name": "Void Cold Brew", "price": 150, "line": "Dark enough to lose a small thought in. You feel wide awake." },
+      { "id": "chai",     "name": "Astral Chai",    "price": 80,  "line": "Spiced steam and a slow exhale. The day loosens its grip." }
+    ]
+  },
+
+  "folk": {
+    "namedCap": 10,
+    "favorPerHour": 1,
+    "greetFavor": 12,
+    "greetCooldownHours": 6,
+    "cupFavor": 6,
+    "giftFavor": 100,
+    "trades": [
+      {
+        "id": "thresher", "name": "thresher", "emoji": "🌾", "heirloom": "threshers_coif",
+        "work": "works the threshing floor from dark to dark, beating grain loose from the straw",
+        "weapons": ["a notched threshing flail", "a long reaping hook", "a weighted grain staff"],
+        "armors": [
+          { "name": "Quilted Roughspun", "look": "padded cloth stitched in overlapping squares, the colour of dry straw" },
+          { "name": "Strawbound Vest", "look": "bundled straw lashed over a leather back, light and always rustling" },
+          { "name": "Field Leathers", "look": "sun cracked leather under a wide belt of iron rings" }
+        ]
+      },
+      {
+        "id": "fisher", "name": "fisher", "emoji": "🐟", "heirloom": "netted_cowl",
+        "work": "runs the nets before dawn and mends them on the bank all afternoon",
+        "weapons": ["a barbed gaff", "a weighted net pole", "a hooked sailor's cutlass"],
+        "armors": [
+          { "name": "Riverscale Mail", "look": "small silver scales sewn in rows, still smelling faintly of the water" },
+          { "name": "Oilskin Wrap", "look": "waxed canvas layered thick at the shoulders, beaded with old salt" },
+          { "name": "Netted Harness", "look": "knotted rope over a hide chest piece, weighted along the hem" }
+        ]
+      },
+      {
+        "id": "tanner", "name": "tanner", "emoji": "🐂", "heirloom": "layered_jerkin",
+        "work": "keeps the curing pits, and everyone downwind knows exactly where they are",
+        "weapons": ["a curved skinning knife", "a heavy fleshing blade", "a hide beater's mallet"],
+        "armors": [
+          { "name": "Studded Hide", "look": "thick cured hide punched through with rows of blunt iron studs" },
+          { "name": "Layered Buff Coat", "look": "pale ox leather in four overlapping panels, stiff as board" },
+          { "name": "Rawhide Brigandine", "look": "small plates pocketed between two skins, creaking with every step" }
+        ]
+      },
+      {
+        "id": "miner", "name": "miner", "emoji": "⛏️", "heirloom": "ironback_plate",
+        "work": "goes down the deep seam at first light and comes up grey to the eyebrows",
+        "weapons": ["a short pick", "an ironshod sledge", "a blasting rod"],
+        "armors": [
+          { "name": "Ironback Vest", "look": "seam ore hammered flat and riveted down the spine" },
+          { "name": "Soot Plated Coat", "look": "heavy wool plated at the chest, black to the elbows" },
+          { "name": "Deepstone Harness", "look": "leather straps hung with lamp hooks and a chestpiece of dull grey stone" }
+        ]
+      },
+      {
+        "id": "herbalist", "name": "herbalist", "emoji": "🌿", "heirloom": "greenstep_boots",
+        "work": "walks the hedgerows for roots and hangs them drying from every beam of the shop",
+        "weapons": ["a pruning sickle", "a root digger's spade", "a thorn whip"],
+        "armors": [
+          { "name": "Woven Leafmail", "look": "green leaves lacquered hard and overlapped like fish scales" },
+          { "name": "Greenweave Robe", "look": "living vine worked through undyed linen, never quite dry" },
+          { "name": "Barkbound Vest", "look": "strips of soft bark bound with red thread over a padded shirt" }
+        ]
+      },
+      {
+        "id": "courier", "name": "courier", "emoji": "📜", "heirloom": "longstride_boots",
+        "work": "carries the post between realms and claims to have never once been robbed",
+        "weapons": ["a riding dirk", "a weighted satchel chain", "a post rider's sabre"],
+        "armors": [
+          { "name": "Traveller's Light Coat", "look": "thin plates sewn inside a road grey coat so nothing rattles" },
+          { "name": "Roadworn Leathers", "look": "cracked riding leather patched at both knees and one shoulder" },
+          { "name": "Feathered Ridingcloak", "look": "a short cloak trimmed in grey feathers over a studded jerkin" }
+        ]
+      },
+      {
+        "id": "mason", "name": "mason", "emoji": "🧱", "heirloom": "keystone_boots",
+        "work": "dresses stone in the yard and mutters about anyone else's walls",
+        "weapons": ["a chisel hammer", "a plumb line mace", "a bricklayer's maul"],
+        "armors": [
+          { "name": "Dust Grey Apron Plate", "look": "an iron faced apron over canvas, every crease packed with pale dust" },
+          { "name": "Keystone Harness", "look": "a wedge of dressed stone slung at the chest on crossed straps" },
+          { "name": "Mortar Splashed Brigandine", "look": "plated leather spattered white and never once cleaned" }
+        ]
+      },
+      {
+        "id": "glassblower", "name": "glassblower", "emoji": "🫧", "heirloom": "lantern_shield",
+        "work": "keeps the kiln at temper and turns out panes clear enough to read through",
+        "weapons": ["a blowpipe rod", "a pair of molten shears", "a length of kiln iron"],
+        "armors": [
+          { "name": "Heat Scarred Leathers", "look": "leather glazed shiny by years of kiln mouth heat" },
+          { "name": "Mirror Panelled Vest", "look": "thumb thick glass panes set in an iron frame, throwing the room back at you" },
+          { "name": "Ashcloth Wrap", "look": "loose grey cloth wound twice and pinned with a glass stud" }
+        ]
+      },
+      {
+        "id": "watchman", "name": "watchman", "emoji": "🔔", "heirloom": "bell_buckler",
+        "work": "walks the wall at night calling the hours, and means it about the curfew",
+        "weapons": ["a watch halberd", "a signal horn club", "an iron rimmed lantern staff"],
+        "armors": [
+          { "name": "Bell Trimmed Mail", "look": "ring mail hung with small bells at the hem, audible three streets off" },
+          { "name": "Night Watch Coat", "look": "a black coat plated at the ribs, collar turned up against the cold" },
+          { "name": "Studded Guard Plate", "look": "a scarred breastplate over studded sleeves, polished only at the front" }
+        ]
+      },
+      {
+        "id": "chandler", "name": "chandler", "emoji": "🕯️", "heirloom": "waxlight_buckler",
+        "work": "renders tallow and dips candles, so the whole street smells of warm wax",
+        "weapons": ["a pair of wick trimming shears", "a tallow ladle mace", "a bar of candle iron"],
+        "armors": [
+          { "name": "Waxed Canvas Vest", "look": "canvas stiffened with wax until it turns a blade by accident" },
+          { "name": "Dripstone Apron", "look": "a leather apron built up in pale wax runnels like a cave floor" },
+          { "name": "Warmlight Robe", "look": "a long robe with a lantern ring at the belt, lit at both ends of the day" }
+        ]
+      }
+    ]
+  },
+
+  "premiumShop": {
+    "items": [
+      {
+        "id": "gem_miner",
+        "name": "Gem Miner",
+        "emoji": "⛏️",
+        "kind": "passive",
+        "priceGems": 200,
+        "blurb": "A tireless little rig that chips a single gem loose every day, rain or shine.",
+        "detail": "Once bought it's yours for good. Claim its find with *{prefix}empire premium claim* once every 24 hours, 💎1 per claim, no cap on how many days you keep it running."
+      },
+      {
+        "id": "warehouse_permit",
+        "name": "Warehouse Permit",
+        "emoji": "📜",
+        "kind": "consumable",
+        "priceGems": 60,
+        "warehouseBonus": 50,
+        "blurb": "Deeds the crown recognizes without a single extra brick laid. Stacks with every other permit you hold.",
+        "detail": "Instantly adds +50 permanent warehouse capacity to your empire. Buy as many as you like, each one stacks."
+      },
+      {
+        "id": "rename_scroll",
+        "name": "Rename Scroll",
+        "emoji": "🪶",
+        "kind": "consumable",
+        "priceGems": 120,
+        "blurb": "Strikes the old banners and raises new ones overnight, no questions asked.",
+        "detail": "Renames your empire on the spot. Same rules as founding (3-20 characters, must be unique) but no solars, no rebuild."
+      }
+    ]
+  },
+  "presets": {
+    "_readme": [
+      "Ready-to-assign preset empires. When a player's empire is lost, an owner",
+      "hands one of these over instead of rebuilding it by hand:",
+      "  .empire preset            list the ladder",
+      "  .empire preset <id>       inspect one in full",
+      "  .empire preset suggest @player   pick the one that fits their level",
+      "  .empire preset assign @player <id>",
+      "",
+      "Headcount lives in `citizens`, which is written to record.npcs, NOT to",
+      "citizenCount. citizenCount is recomputed from the player side on every boot",
+      "(reconcileCitizenCount tallies u.empireId), so anything stored there is wiped.",
+      "fame and tierId are derived by ensureEmpireShape (fame = citizenCount + npcs),",
+      "so presets never set them.",
+      "",
+      "Every preset is checked by scripts/empire-check.mjs: buildings within the",
+      "derived tier's buildingCap, army within armyCap, officers within officerCap,",
+      "warehouse within warehouseCap, and net solars per hour positive, so an",
+      "assigned empire funds its own upkeep and payroll from day one.",
+      "",
+      "`soilerRank` is the top army rank the preset ships with (the ranked, tiered",
+      "soldier ladder), and producer building levels are set to match the same",
+      "scale, so both readings of the request are covered.",
+      "",
+      "Presets above roughly 1,000 residents sit over their own popCap, so no new",
+      "townsfolk move in until the owner builds more housing. That is deliberate:",
+      "a handed-over empire arrives full, and growth is something the player earns."
+    ],
+    "list": [
+      {
+        "id": "bronzevale",
+        "name": "Bronzevale Hollow",
+        "emoji": "🌾",
+        "specialisation": "Resource frontier",
+        "tagline": "Timber, stone and grain. Wide open, cheap to run, easy to learn.",
+        "citizens": 1050,
+        "treasury": 60000,
+        "soilerRank": "veteran",
+        "soilerLabel": "Veteran-led levy",
+        "buildings": [
+          {
+            "type": "house",
+            "level": 6,
+            "region": "north"
+          },
+          {
+            "type": "lumber_camp",
+            "level": 5,
+            "region": "northeast"
+          },
+          {
+            "type": "quarry",
+            "level": 5,
+            "region": "east"
+          },
+          {
+            "type": "solar_mine",
+            "level": 4,
+            "region": "southeast"
+          },
+          {
+            "type": "warehouse",
+            "level": 4,
+            "region": "south"
+          },
+          {
+            "type": "barracks",
+            "level": 3,
+            "region": "southwest"
+          },
+          {
+            "type": "coffee_house",
+            "level": 2,
+            "region": "west"
+          },
+          {
+            "type": "house",
+            "level": 5,
+            "region": "northwest"
+          },
+          {
+            "type": "lumber_camp",
+            "level": 4,
+            "region": "north"
+          },
+          {
+            "type": "quarry",
+            "level": 4,
+            "region": "northeast"
+          },
+          {
+            "type": "house",
+            "level": 5,
+            "region": "east"
+          },
+          {
+            "type": "lumber_camp",
+            "level": 4,
+            "region": "southeast"
+          },
+          {
+            "type": "house",
+            "level": 4,
+            "region": "south"
+          }
+        ],
+        "warehouse": {
+          "wood": 1200,
+          "stone": 900,
+          "iron": 120,
+          "plank": 180,
+          "brick": 140,
+          "hardwood": 60,
+          "granite": 45,
+          "ingot": 30,
+          "steel": 8
+        },
+        "army": {
+          "levies": {
+            "recruit": 120,
+            "soldier": 40
+          },
+          "officers": [
+            {
+              "name": "Serah of the Hollow",
+              "rank": "veteran",
+              "xp": 60
+            },
+            {
+              "name": "Bram Oakhand",
+              "rank": "veteran",
+              "xp": 40
+            },
+            {
+              "name": "Wen the Quiet",
+              "rank": "veteran",
+              "xp": 20
+            }
+          ]
+        },
+        "notes": "Smallest preset. Best match for a player who was under level 40 or had a young empire."
+      },
+      {
+        "id": "stonewatch",
+        "name": "Stonewatch March",
+        "emoji": "🛡️",
+        "specialisation": "Border fortress",
+        "tagline": "Three barracks and a forge. No solar mine, this one lives off its people.",
+        "citizens": 1850,
+        "treasury": 120000,
+        "soilerRank": "knight",
+        "soilerLabel": "Knight-ranked garrison",
+        "buildings": [
+          {
+            "type": "house",
+            "level": 6,
+            "region": "north"
+          },
+          {
+            "type": "barracks",
+            "level": 7,
+            "region": "northeast"
+          },
+          {
+            "type": "quarry",
+            "level": 6,
+            "region": "east"
+          },
+          {
+            "type": "iron_mine",
+            "level": 4,
+            "region": "southeast"
+          },
+          {
+            "type": "lumber_camp",
+            "level": 5,
+            "region": "south"
+          },
+          {
+            "type": "blacksmith",
+            "level": 4,
+            "region": "southwest"
+          },
+          {
+            "type": "warehouse",
+            "level": 5,
+            "region": "west"
+          },
+          {
+            "type": "house",
+            "level": 6,
+            "region": "northwest"
+          },
+          {
+            "type": "barracks",
+            "level": 6,
+            "region": "north"
+          },
+          {
+            "type": "quarry",
+            "level": 5,
+            "region": "northeast"
+          },
+          {
+            "type": "iron_mine",
+            "level": 3,
+            "region": "east"
+          },
+          {
+            "type": "lumber_camp",
+            "level": 4,
+            "region": "southeast"
+          },
+          {
+            "type": "house",
+            "level": 5,
+            "region": "south"
+          },
+          {
+            "type": "barracks",
+            "level": 5,
+            "region": "southwest"
+          },
+          {
+            "type": "quarry",
+            "level": 5,
+            "region": "west"
+          },
+          {
+            "type": "house",
+            "level": 5,
+            "region": "northwest"
+          }
+        ],
+        "warehouse": {
+          "stone": 2200,
+          "wood": 900,
+          "iron": 700,
+          "granite": 260,
+          "brick": 300,
+          "plank": 150,
+          "ingot": 90,
+          "hardwood": 60,
+          "steel": 40
+        },
+        "army": {
+          "levies": {
+            "recruit": 300,
+            "soldier": 140
+          },
+          "officers": [
+            {
+              "name": "Dame Ysolde Vane",
+              "rank": "knight",
+              "xp": 120
+            },
+            {
+              "name": "Ser Corvin Ash",
+              "rank": "knight",
+              "xp": 90
+            },
+            {
+              "name": "Tarn Redgate",
+              "rank": "veteran",
+              "xp": 70
+            },
+            {
+              "name": "Mira Stonewatch",
+              "rank": "veteran",
+              "xp": 55
+            },
+            {
+              "name": "Odo the Wall",
+              "rank": "veteran",
+              "xp": 35
+            },
+            {
+              "name": "Pell Ironbrow",
+              "rank": "veteran",
+              "xp": 20
+            }
+          ]
+        },
+        "notes": "For a player who cared about war and raids more than income."
+      },
+      {
+        "id": "goldreach",
+        "name": "Goldreach Basin",
+        "emoji": "💰",
+        "specialisation": "Solar mining and treasury",
+        "tagline": "Five solar mines and a bank. Prints solars, thin on troops.",
+        "citizens": 2600,
+        "treasury": 260000,
+        "soilerRank": "knight",
+        "soilerLabel": "Knight and paid levy",
+        "buildings": [
+          {
+            "type": "solar_mine",
+            "level": 7,
+            "region": "north"
+          },
+          {
+            "type": "house",
+            "level": 6,
+            "region": "northeast"
+          },
+          {
+            "type": "warehouse",
+            "level": 5,
+            "region": "east"
+          },
+          {
+            "type": "bank",
+            "level": 3,
+            "region": "southeast"
+          },
+          {
+            "type": "coffee_house",
+            "level": 3,
+            "region": "south"
+          },
+          {
+            "type": "quarry",
+            "level": 5,
+            "region": "southwest"
+          },
+          {
+            "type": "lumber_camp",
+            "level": 5,
+            "region": "west"
+          },
+          {
+            "type": "barracks",
+            "level": 4,
+            "region": "northwest"
+          },
+          {
+            "type": "blacksmith",
+            "level": 3,
+            "region": "north"
+          },
+          {
+            "type": "solar_mine",
+            "level": 6,
+            "region": "northeast"
+          },
+          {
+            "type": "house",
+            "level": 6,
+            "region": "east"
+          },
+          {
+            "type": "warehouse",
+            "level": 4,
+            "region": "southeast"
+          },
+          {
+            "type": "solar_mine",
+            "level": 6,
+            "region": "south"
+          },
+          {
+            "type": "house",
+            "level": 5,
+            "region": "southwest"
+          },
+          {
+            "type": "solar_mine",
+            "level": 5,
+            "region": "west"
+          },
+          {
+            "type": "house",
+            "level": 5,
+            "region": "northwest"
+          },
+          {
+            "type": "solar_mine",
+            "level": 5,
+            "region": "north"
+          },
+          {
+            "type": "house",
+            "level": 4,
+            "region": "northeast"
+          }
+        ],
+        "warehouse": {
+          "wood": 1100,
+          "stone": 1000,
+          "iron": 300,
+          "plank": 260,
+          "brick": 240,
+          "ingot": 140,
+          "hardwood": 90,
+          "granite": 80,
+          "steel": 30
+        },
+        "army": {
+          "levies": {
+            "recruit": 180,
+            "soldier": 90
+          },
+          "officers": [
+            {
+              "name": "Ser Halden Coin",
+              "rank": "knight",
+              "xp": 100
+            },
+            {
+              "name": "Rusa Goldreach",
+              "rank": "veteran",
+              "xp": 65
+            },
+            {
+              "name": "Ferrin Slate",
+              "rank": "veteran",
+              "xp": 45
+            },
+            {
+              "name": "Isolde Marr",
+              "rank": "veteran",
+              "xp": 25
+            }
+          ]
+        },
+        "notes": "For a player whose complaint was mostly lost solars. The mines earn it back instead of a hand out."
+      },
+      {
+        "id": "ironhold",
+        "name": "Ironhold Deeps",
+        "emoji": "⚒️",
+        "specialisation": "Iron and forging",
+        "tagline": "Three iron mines feeding two forges. Built to make gear, not coin.",
+        "citizens": 3600,
+        "treasury": 180000,
+        "soilerRank": "champion",
+        "soilerLabel": "Champion of the Deeps",
+        "buildings": [
+          {
+            "type": "iron_mine",
+            "level": 8,
+            "region": "north"
+          },
+          {
+            "type": "blacksmith",
+            "level": 6,
+            "region": "northeast"
+          },
+          {
+            "type": "quarry",
+            "level": 7,
+            "region": "east"
+          },
+          {
+            "type": "lumber_camp",
+            "level": 6,
+            "region": "southeast"
+          },
+          {
+            "type": "house",
+            "level": 7,
+            "region": "south"
+          },
+          {
+            "type": "warehouse",
+            "level": 6,
+            "region": "southwest"
+          },
+          {
+            "type": "solar_mine",
+            "level": 5,
+            "region": "west"
+          },
+          {
+            "type": "barracks",
+            "level": 5,
+            "region": "northwest"
+          },
+          {
+            "type": "coffee_house",
+            "level": 3,
+            "region": "north"
+          },
+          {
+            "type": "iron_mine",
+            "level": 7,
+            "region": "northeast"
+          },
+          {
+            "type": "blacksmith",
+            "level": 5,
+            "region": "east"
+          },
+          {
+            "type": "quarry",
+            "level": 6,
+            "region": "southeast"
+          },
+          {
+            "type": "lumber_camp",
+            "level": 5,
+            "region": "south"
+          },
+          {
+            "type": "house",
+            "level": 6,
+            "region": "southwest"
+          },
+          {
+            "type": "warehouse",
+            "level": 5,
+            "region": "west"
+          },
+          {
+            "type": "solar_mine",
+            "level": 4,
+            "region": "northwest"
+          },
+          {
+            "type": "iron_mine",
+            "level": 6,
+            "region": "north"
+          },
+          {
+            "type": "house",
+            "level": 6,
+            "region": "northeast"
+          },
+          {
+            "type": "house",
+            "level": 5,
+            "region": "east"
+          },
+          {
+            "type": "house",
+            "level": 5,
+            "region": "southeast"
+          }
+        ],
+        "warehouse": {
+          "iron": 3200,
+          "stone": 2600,
+          "wood": 1800,
+          "steel": 420,
+          "ingot": 600,
+          "granite": 500,
+          "brick": 700,
+          "plank": 600,
+          "hardwood": 300
+        },
+        "army": {
+          "levies": {
+            "recruit": 240,
+            "soldier": 160
+          },
+          "officers": [
+            {
+              "name": "Grimald Deepvein",
+              "rank": "champion",
+              "xp": 180
+            },
+            {
+              "name": "Ser Aldric Forge",
+              "rank": "knight",
+              "xp": 140
+            },
+            {
+              "name": "Dame Vesna Ore",
+              "rank": "knight",
+              "xp": 110
+            },
+            {
+              "name": "Ser Bode Hammerfall",
+              "rank": "knight",
+              "xp": 80
+            },
+            {
+              "name": "Kesh Emberhand",
+              "rank": "veteran",
+              "xp": 70
+            },
+            {
+              "name": "Tolvar Rust",
+              "rank": "veteran",
+              "xp": 55
+            },
+            {
+              "name": "Ana Cinderlow",
+              "rank": "veteran",
+              "xp": 40
+            },
+            {
+              "name": "Dorn Blacktooth",
+              "rank": "veteran",
+              "xp": 30
+            },
+            {
+              "name": "Sylla Kettle",
+              "rank": "veteran",
+              "xp": 15
+            }
+          ]
+        },
+        "notes": "The forge preset. Best fit for anyone who lost armour or weapons and wants to reforge them."
+      },
+      {
+        "id": "silkmoor",
+        "name": "Silkmoor Concord",
+        "emoji": "🫖",
+        "specialisation": "Trade and banking",
+        "tagline": "Two banks, three coffee houses, warehouses stuffed to the rafters.",
+        "citizens": 5000,
+        "treasury": 420000,
+        "soilerRank": "champion",
+        "soilerLabel": "Champion of the Concord",
+        "buildings": [
+          {
+            "type": "bank",
+            "level": 6,
+            "region": "north"
+          },
+          {
+            "type": "coffee_house",
+            "level": 6,
+            "region": "northeast"
+          },
+          {
+            "type": "warehouse",
+            "level": 7,
+            "region": "east"
+          },
+          {
+            "type": "house",
+            "level": 7,
+            "region": "southeast"
+          },
+          {
+            "type": "solar_mine",
+            "level": 6,
+            "region": "south"
+          },
+          {
+            "type": "lumber_camp",
+            "level": 5,
+            "region": "southwest"
+          },
+          {
+            "type": "quarry",
+            "level": 5,
+            "region": "west"
+          },
+          {
+            "type": "iron_mine",
+            "level": 4,
+            "region": "northwest"
+          },
+          {
+            "type": "blacksmith",
+            "level": 5,
+            "region": "north"
+          },
+          {
+            "type": "barracks",
+            "level": 4,
+            "region": "northeast"
+          },
+          {
+            "type": "bank",
+            "level": 5,
+            "region": "east"
+          },
+          {
+            "type": "coffee_house",
+            "level": 5,
+            "region": "southeast"
+          },
+          {
+            "type": "warehouse",
+            "level": 6,
+            "region": "south"
+          },
+          {
+            "type": "house",
+            "level": 7,
+            "region": "southwest"
+          },
+          {
+            "type": "solar_mine",
+            "level": 5,
+            "region": "west"
+          },
+          {
+            "type": "barracks",
+            "level": 3,
+            "region": "northwest"
+          },
+          {
+            "type": "coffee_house",
+            "level": 4,
+            "region": "north"
+          },
+          {
+            "type": "warehouse",
+            "level": 5,
+            "region": "northeast"
+          },
+          {
+            "type": "house",
+            "level": 6,
+            "region": "east"
+          },
+          {
+            "type": "house",
+            "level": 6,
+            "region": "southeast"
+          },
+          {
+            "type": "house",
+            "level": 5,
+            "region": "south"
+          }
+        ],
+        "warehouse": {
+          "wood": 2000,
+          "stone": 1800,
+          "iron": 900,
+          "plank": 1400,
+          "brick": 1200,
+          "ingot": 500,
+          "hardwood": 700,
+          "granite": 600,
+          "steel": 220
+        },
+        "army": {
+          "levies": {
+            "recruit": 200,
+            "soldier": 200
+          },
+          "officers": [
+            {
+              "name": "Lady Orenna Silk",
+              "rank": "champion",
+              "xp": 200
+            },
+            {
+              "name": "Yavin Threadgold",
+              "rank": "champion",
+              "xp": 150
+            },
+            {
+              "name": "Ser Palt Bellringer",
+              "rank": "knight",
+              "xp": 130
+            },
+            {
+              "name": "Dame Nessa Quill",
+              "rank": "knight",
+              "xp": 105
+            },
+            {
+              "name": "Ser Ovid Tallow",
+              "rank": "knight",
+              "xp": 85
+            },
+            {
+              "name": "Dame Ruse Farrow",
+              "rank": "knight",
+              "xp": 60
+            },
+            {
+              "name": "Halim Copperpot",
+              "rank": "veteran",
+              "xp": 70
+            },
+            {
+              "name": "Beti Sandal",
+              "rank": "veteran",
+              "xp": 60
+            },
+            {
+              "name": "Cass Longmarket",
+              "rank": "veteran",
+              "xp": 45
+            },
+            {
+              "name": "Emric Ledger",
+              "rank": "veteran",
+              "xp": 35
+            },
+            {
+              "name": "Nyla Pennywhistle",
+              "rank": "veteran",
+              "xp": 25
+            },
+            {
+              "name": "Guld Barrowman",
+              "rank": "veteran",
+              "xp": 10
+            }
+          ]
+        },
+        "notes": "The merchant preset. Deep storage, and the banks make it the best base for a market seller."
+      },
+      {
+        "id": "ashenbastion",
+        "name": "Ashen Bastion",
+        "emoji": "⚔️",
+        "specialisation": "War machine",
+        "tagline": "Four barracks, a warlord, and iron enough to keep them all armed.",
+        "citizens": 6400,
+        "treasury": 520000,
+        "soilerRank": "warlord",
+        "soilerLabel": "Warlord and full host",
+        "buildings": [
+          {
+            "type": "barracks",
+            "level": 10,
+            "region": "north"
+          },
+          {
+            "type": "blacksmith",
+            "level": 8,
+            "region": "northeast"
+          },
+          {
+            "type": "iron_mine",
+            "level": 8,
+            "region": "east"
+          },
+          {
+            "type": "quarry",
+            "level": 8,
+            "region": "southeast"
+          },
+          {
+            "type": "house",
+            "level": 8,
+            "region": "south"
+          },
+          {
+            "type": "warehouse",
+            "level": 7,
+            "region": "southwest"
+          },
+          {
+            "type": "solar_mine",
+            "level": 6,
+            "region": "west"
+          },
+          {
+            "type": "lumber_camp",
+            "level": 6,
+            "region": "northwest"
+          },
+          {
+            "type": "coffee_house",
+            "level": 4,
+            "region": "north"
+          },
+          {
+            "type": "barracks",
+            "level": 9,
+            "region": "northeast"
+          },
+          {
+            "type": "blacksmith",
+            "level": 6,
+            "region": "east"
+          },
+          {
+            "type": "iron_mine",
+            "level": 7,
+            "region": "southeast"
+          },
+          {
+            "type": "quarry",
+            "level": 7,
+            "region": "south"
+          },
+          {
+            "type": "house",
+            "level": 7,
+            "region": "southwest"
+          },
+          {
+            "type": "warehouse",
+            "level": 6,
+            "region": "west"
+          },
+          {
+            "type": "solar_mine",
+            "level": 5,
+            "region": "northwest"
+          },
+          {
+            "type": "barracks",
+            "level": 8,
+            "region": "north"
+          },
+          {
+            "type": "iron_mine",
+            "level": 6,
+            "region": "northeast"
+          },
+          {
+            "type": "house",
+            "level": 7,
+            "region": "east"
+          },
+          {
+            "type": "barracks",
+            "level": 7,
+            "region": "southeast"
+          },
+          {
+            "type": "house",
+            "level": 6,
+            "region": "south"
+          },
+          {
+            "type": "house",
+            "level": 6,
+            "region": "southwest"
+          },
+          {
+            "type": "house",
+            "level": 5,
+            "region": "west"
+          }
+        ],
+        "warehouse": {
+          "iron": 4200,
+          "stone": 3400,
+          "wood": 2200,
+          "steel": 900,
+          "ingot": 800,
+          "granite": 700,
+          "brick": 900,
+          "plank": 700,
+          "hardwood": 400
+        },
+        "army": {
+          "levies": {
+            "recruit": 400,
+            "soldier": 380
+          },
+          "officers": [
+            {
+              "name": "Warlord Kaethe Ashfall",
+              "rank": "warlord",
+              "xp": 260
+            },
+            {
+              "name": "Sorrow of Vane",
+              "rank": "champion",
+              "xp": 220
+            },
+            {
+              "name": "Rhogar the Late",
+              "rank": "champion",
+              "xp": 190
+            },
+            {
+              "name": "Ilse Blackpyre",
+              "rank": "champion",
+              "xp": 160
+            },
+            {
+              "name": "Ser Dain Cinderfall",
+              "rank": "knight",
+              "xp": 140
+            },
+            {
+              "name": "Dame Ovra Kell",
+              "rank": "knight",
+              "xp": 125
+            },
+            {
+              "name": "Ser Malen Grist",
+              "rank": "knight",
+              "xp": 110
+            },
+            {
+              "name": "Dame Sura Holt",
+              "rank": "knight",
+              "xp": 95
+            },
+            {
+              "name": "Ser Yorrin Pale",
+              "rank": "knight",
+              "xp": 80
+            },
+            {
+              "name": "Dame Ettel Roan",
+              "rank": "knight",
+              "xp": 65
+            },
+            {
+              "name": "Bruk Emberjaw",
+              "rank": "veteran",
+              "xp": 75
+            },
+            {
+              "name": "Sella Ninefingers",
+              "rank": "veteran",
+              "xp": 65
+            },
+            {
+              "name": "Onnu Farstride",
+              "rank": "veteran",
+              "xp": 55
+            },
+            {
+              "name": "Tibb Coalsong",
+              "rank": "veteran",
+              "xp": 45
+            },
+            {
+              "name": "Wrenna Dusk",
+              "rank": "veteran",
+              "xp": 35
+            },
+            {
+              "name": "Haro Bittern",
+              "rank": "veteran",
+              "xp": 25
+            },
+            {
+              "name": "Lek Ashenhand",
+              "rank": "veteran",
+              "xp": 15
+            },
+            {
+              "name": "Provi Stray",
+              "rank": "veteran",
+              "xp": 5
+            }
+          ]
+        },
+        "notes": "Highest army power in the set. Give this to a player who ranked on the war board."
+      },
+      {
+        "id": "verdantis",
+        "name": "Verdantis Sprawl",
+        "emoji": "🌿",
+        "specialisation": "Residential megacity",
+        "tagline": "Twelve housing blocks. The only preset with real room left to grow.",
+        "citizens": 8200,
+        "treasury": 640000,
+        "soilerRank": "champion",
+        "soilerLabel": "Champion and city watch",
+        "buildings": [
+          {
+            "type": "house",
+            "level": 10,
+            "region": "north"
+          },
+          {
+            "type": "coffee_house",
+            "level": 7,
+            "region": "northeast"
+          },
+          {
+            "type": "bank",
+            "level": 5,
+            "region": "east"
+          },
+          {
+            "type": "warehouse",
+            "level": 6,
+            "region": "southeast"
+          },
+          {
+            "type": "solar_mine",
+            "level": 7,
+            "region": "south"
+          },
+          {
+            "type": "lumber_camp",
+            "level": 6,
+            "region": "southwest"
+          },
+          {
+            "type": "quarry",
+            "level": 6,
+            "region": "west"
+          },
+          {
+            "type": "barracks",
+            "level": 5,
+            "region": "northwest"
+          },
+          {
+            "type": "blacksmith",
+            "level": 4,
+            "region": "north"
+          },
+          {
+            "type": "house",
+            "level": 9,
+            "region": "northeast"
+          },
+          {
+            "type": "coffee_house",
+            "level": 6,
+            "region": "east"
+          },
+          {
+            "type": "warehouse",
+            "level": 5,
+            "region": "southeast"
+          },
+          {
+            "type": "solar_mine",
+            "level": 6,
+            "region": "south"
+          },
+          {
+            "type": "house",
+            "level": 9,
+            "region": "southwest"
+          },
+          {
+            "type": "coffee_house",
+            "level": 5,
+            "region": "west"
+          },
+          {
+            "type": "house",
+            "level": 8,
+            "region": "northwest"
+          },
+          {
+            "type": "house",
+            "level": 8,
+            "region": "north"
+          },
+          {
+            "type": "house",
+            "level": 8,
+            "region": "northeast"
+          },
+          {
+            "type": "house",
+            "level": 7,
+            "region": "east"
+          },
+          {
+            "type": "house",
+            "level": 7,
+            "region": "southeast"
+          },
+          {
+            "type": "house",
+            "level": 6,
+            "region": "south"
+          },
+          {
+            "type": "house",
+            "level": 6,
+            "region": "southwest"
+          },
+          {
+            "type": "house",
+            "level": 5,
+            "region": "west"
+          },
+          {
+            "type": "house",
+            "level": 5,
+            "region": "northwest"
+          }
+        ],
+        "warehouse": {
+          "wood": 2600,
+          "stone": 2400,
+          "plank": 1600,
+          "brick": 1500,
+          "iron": 800,
+          "hardwood": 900,
+          "granite": 800,
+          "ingot": 600,
+          "steel": 200
+        },
+        "army": {
+          "levies": {
+            "recruit": 300,
+            "soldier": 220
+          },
+          "officers": [
+            {
+              "name": "Marshal Ivenne Green",
+              "rank": "champion",
+              "xp": 210
+            },
+            {
+              "name": "Doran Vinehall",
+              "rank": "champion",
+              "xp": 170
+            },
+            {
+              "name": "Ser Kelvin Bough",
+              "rank": "knight",
+              "xp": 135
+            },
+            {
+              "name": "Dame Fira Lantern",
+              "rank": "knight",
+              "xp": 115
+            },
+            {
+              "name": "Ser Umber Lark",
+              "rank": "knight",
+              "xp": 90
+            },
+            {
+              "name": "Dame Prya Moss",
+              "rank": "knight",
+              "xp": 70
+            },
+            {
+              "name": "Nell Riverbend",
+              "rank": "veteran",
+              "xp": 65
+            },
+            {
+              "name": "Tamsin Rook",
+              "rank": "veteran",
+              "xp": 50
+            },
+            {
+              "name": "Obed Willowmere",
+              "rank": "veteran",
+              "xp": 40
+            },
+            {
+              "name": "Jessa Thistle",
+              "rank": "veteran",
+              "xp": 30
+            },
+            {
+              "name": "Cort Applewarden",
+              "rank": "veteran",
+              "xp": 20
+            },
+            {
+              "name": "Simm Hedgerow",
+              "rank": "veteran",
+              "xp": 10
+            }
+          ]
+        },
+        "notes": "Highest popCap of the set, so this one still takes new residents. Good for a player who wants to keep building."
+      },
+      {
+        "id": "thronehold",
+        "name": "Thronehold Ascendant",
+        "emoji": "👑",
+        "specialisation": "Imperial capital",
+        "tagline": "Every building type, twenty five of them, two warlords. The top of the set.",
+        "citizens": 10000,
+        "treasury": 900000,
+        "soilerRank": "warlord",
+        "soilerLabel": "Twin warlords and imperial host",
+        "buildings": [
+          {
+            "type": "house",
+            "level": 10,
+            "region": "north"
+          },
+          {
+            "type": "solar_mine",
+            "level": 10,
+            "region": "northeast"
+          },
+          {
+            "type": "iron_mine",
+            "level": 9,
+            "region": "east"
+          },
+          {
+            "type": "quarry",
+            "level": 9,
+            "region": "southeast"
+          },
+          {
+            "type": "lumber_camp",
+            "level": 9,
+            "region": "south"
+          },
+          {
+            "type": "barracks",
+            "level": 9,
+            "region": "southwest"
+          },
+          {
+            "type": "blacksmith",
+            "level": 8,
+            "region": "west"
+          },
+          {
+            "type": "bank",
+            "level": 8,
+            "region": "northwest"
+          },
+          {
+            "type": "warehouse",
+            "level": 8,
+            "region": "north"
+          },
+          {
+            "type": "coffee_house",
+            "level": 7,
+            "region": "northeast"
+          },
+          {
+            "type": "house",
+            "level": 10,
+            "region": "east"
+          },
+          {
+            "type": "solar_mine",
+            "level": 9,
+            "region": "southeast"
+          },
+          {
+            "type": "iron_mine",
+            "level": 8,
+            "region": "south"
+          },
+          {
+            "type": "quarry",
+            "level": 8,
+            "region": "southwest"
+          },
+          {
+            "type": "lumber_camp",
+            "level": 8,
+            "region": "west"
+          },
+          {
+            "type": "barracks",
+            "level": 8,
+            "region": "northwest"
+          },
+          {
+            "type": "blacksmith",
+            "level": 7,
+            "region": "north"
+          },
+          {
+            "type": "warehouse",
+            "level": 7,
+            "region": "northeast"
+          },
+          {
+            "type": "house",
+            "level": 9,
+            "region": "east"
+          },
+          {
+            "type": "solar_mine",
+            "level": 8,
+            "region": "southeast"
+          },
+          {
+            "type": "barracks",
+            "level": 7,
+            "region": "south"
+          },
+          {
+            "type": "house",
+            "level": 9,
+            "region": "southwest"
+          },
+          {
+            "type": "house",
+            "level": 8,
+            "region": "west"
+          },
+          {
+            "type": "house",
+            "level": 8,
+            "region": "northwest"
+          }
+        ],
+        "warehouse": {
+          "wood": 3000,
+          "stone": 3000,
+          "iron": 2400,
+          "steel": 1200,
+          "ingot": 1400,
+          "granite": 1200,
+          "brick": 1600,
+          "plank": 1500,
+          "hardwood": 1100
+        },
+        "army": {
+          "levies": {
+            "recruit": 500,
+            "soldier": 450
+          },
+          "officers": [
+            {
+              "name": "Warlord Sabren Thorne",
+              "rank": "warlord",
+              "xp": 300
+            },
+            {
+              "name": "Warlord Ceyla Highmark",
+              "rank": "warlord",
+              "xp": 270
+            },
+            {
+              "name": "Ossian the Crowned",
+              "rank": "champion",
+              "xp": 240
+            },
+            {
+              "name": "Vareth Goldenspur",
+              "rank": "champion",
+              "xp": 215
+            },
+            {
+              "name": "Imra Duskbanner",
+              "rank": "champion",
+              "xp": 195
+            },
+            {
+              "name": "Hollis Sunwake",
+              "rank": "champion",
+              "xp": 175
+            },
+            {
+              "name": "Ser Anselm Vault",
+              "rank": "knight",
+              "xp": 150
+            },
+            {
+              "name": "Dame Rhesa Coin",
+              "rank": "knight",
+              "xp": 140
+            },
+            {
+              "name": "Ser Bevin Halter",
+              "rank": "knight",
+              "xp": 130
+            },
+            {
+              "name": "Dame Ottilie Grave",
+              "rank": "knight",
+              "xp": 120
+            },
+            {
+              "name": "Ser Lucan Pike",
+              "rank": "knight",
+              "xp": 110
+            },
+            {
+              "name": "Dame Nerith Cole",
+              "rank": "knight",
+              "xp": 100
+            },
+            {
+              "name": "Ser Fenwick Dray",
+              "rank": "knight",
+              "xp": 90
+            },
+            {
+              "name": "Dame Ilva Sorrel",
+              "rank": "knight",
+              "xp": 80
+            },
+            {
+              "name": "Roque Tallcandle",
+              "rank": "veteran",
+              "xp": 80
+            },
+            {
+              "name": "Perrin Highwater",
+              "rank": "veteran",
+              "xp": 70
+            },
+            {
+              "name": "Adda Bellweather",
+              "rank": "veteran",
+              "xp": 60
+            },
+            {
+              "name": "Voss Marrowgate",
+              "rank": "veteran",
+              "xp": 55
+            },
+            {
+              "name": "Ceri Underbough",
+              "rank": "veteran",
+              "xp": 45
+            },
+            {
+              "name": "Dunmar Kite",
+              "rank": "veteran",
+              "xp": 35
+            },
+            {
+              "name": "Bess Ironwell",
+              "rank": "veteran",
+              "xp": 30
+            },
+            {
+              "name": "Yorel Standfast",
+              "rank": "veteran",
+              "xp": 20
+            },
+            {
+              "name": "Tovi Lampblack",
+              "rank": "veteran",
+              "xp": 15
+            },
+            {
+              "name": "Anse Reedwhistle",
+              "rank": "veteran",
+              "xp": 5
+            }
+          ]
+        },
+        "notes": "Reserve this for the top of the old leaderboard. Hand it out sparingly, it outclasses anything a player can build in a week."
+      }
+    ]
+  }
+}

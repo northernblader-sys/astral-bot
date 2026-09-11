@@ -1,0 +1,2615 @@
+[
+  {
+    "id": "iron_sword",
+    "name": "Iron Sword",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 4,
+      "agi": 0,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 20,
+    "effect": null,
+    "description": "A reliable sword forged from iron.",
+    "buyPrice": 55,
+    "recipe": null,
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/iron_sword.png"
+  },
+  {
+    "id": "oak_staff",
+    "name": "Oak Staff",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 5,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 20
+    },
+    "sellPrice": 18,
+    "effect": null,
+    "description": "A staff carved from dense oak. Channels arcane energy.",
+    "buyPrice": 50,
+    "recipe": {
+      "materials": [
+        {
+          "id": "iron_ore",
+          "qty": 2
+        },
+        {
+          "id": "wood_plank",
+          "qty": 1
+        },
+        {
+          "id": "leather_scrap",
+          "qty": 1
+        }
+      ],
+      "solars": 27
+    },
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/oak_staff.png"
+  },
+  {
+    "id": "rusty_dagger",
+    "name": "Rusty Dagger",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 0,
+      "agi": 4,
+      "int": 0,
+      "def": 0,
+      "lck": 2,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 14,
+    "effect": null,
+    "description": "A worn dagger, still sharp where it counts.",
+    "buyPrice": 39,
+    "recipe": null,
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/rusty_dagger.png"
+  },
+  {
+    "id": "iron_mace",
+    "name": "Iron Mace",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 2,
+      "agi": 0,
+      "int": 4,
+      "def": 1,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 10
+    },
+    "sellPrice": 16,
+    "effect": null,
+    "description": "A blessed mace favoured by clerics.",
+    "buyPrice": 44,
+    "recipe": null,
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/iron_mace.png"
+  },
+  {
+    "id": "katana",
+    "name": "Katana",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 5,
+      "agi": 3,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 22,
+    "effect": null,
+    "description": "A single-edged blade of exceptional balance.",
+    "buyPrice": 61,
+    "recipe": {
+      "materials": [
+        {
+          "id": "iron_ore",
+          "qty": 2
+        },
+        {
+          "id": "wood_plank",
+          "qty": 1
+        },
+        {
+          "id": "leather_scrap",
+          "qty": 1
+        }
+      ],
+      "solars": 33
+    },
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/katana.png"
+  },
+  {
+    "id": "longsword",
+    "name": "Longsword",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 5,
+      "agi": 0,
+      "int": 0,
+      "def": 1,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 20,
+    "effect": null,
+    "description": "A knight's standard blade — reliable and powerful.",
+    "buyPrice": 55,
+    "recipe": null,
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/longsword.png"
+  },
+  {
+    "id": "rapier",
+    "name": "Rapier",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 1,
+      "agi": 6,
+      "int": 0,
+      "def": 0,
+      "lck": 2,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 20,
+    "effect": null,
+    "description": "A thin thrusting blade built for speed and precision.",
+    "buyPrice": 55,
+    "recipe": null,
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/rapier.png"
+  },
+  {
+    "id": "battle_axe",
+    "name": "Battle Axe",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 8,
+      "agi": 0,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 22,
+    "effect": null,
+    "description": "A broad-headed axe that can cleave through armour.",
+    "buyPrice": 61,
+    "recipe": {
+      "materials": [
+        {
+          "id": "iron_ore",
+          "qty": 2
+        },
+        {
+          "id": "wood_plank",
+          "qty": 1
+        },
+        {
+          "id": "leather_scrap",
+          "qty": 1
+        }
+      ],
+      "solars": 33
+    },
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/battle_axe.png"
+  },
+  {
+    "id": "twin_daggers",
+    "name": "Twin Daggers",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 0,
+      "agi": 7,
+      "int": 0,
+      "def": 0,
+      "lck": 3,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 22,
+    "effect": null,
+    "description": "A matched pair of blades for rapid striking.",
+    "buyPrice": 61,
+    "recipe": null,
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/twin_daggers.png"
+  },
+  {
+    "id": "shadow_blade",
+    "name": "Shadow Blade",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 18,
+    "statBonuses": {
+      "str": 8,
+      "agi": 10,
+      "int": 0,
+      "def": 0,
+      "lck": 4,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 120,
+    "effect": null,
+    "description": "A blade forged in Gambit's image — fast and deceptive.",
+    "buyPrice": 330,
+    "recipe": null,
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/shadow_blade.png"
+  },
+  {
+    "id": "illusion_staff",
+    "name": "Illusion Staff",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 18,
+    "statBonuses": {
+      "str": 0,
+      "agi": 3,
+      "int": 14,
+      "def": 0,
+      "lck": 3,
+      "maxHp": 0,
+      "maxMp": 40
+    },
+    "sellPrice": 120,
+    "effect": null,
+    "description": "A staff that bends light. Dropped deep in Gambit's lair.",
+    "buyPrice": 330,
+    "recipe": {
+      "materials": [
+        {
+          "id": "beast_hide",
+          "qty": 3
+        },
+        {
+          "id": "silver_ore",
+          "qty": 2
+        },
+        {
+          "id": "monster_fang",
+          "qty": 1
+        }
+      ],
+      "solars": 180
+    },
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/illusion_staff.png"
+  },
+  {
+    "id": "centurion_blade",
+    "name": "Centurion Blade",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 38,
+    "statBonuses": {
+      "str": 18,
+      "agi": 5,
+      "int": 0,
+      "def": 3,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 300,
+    "effect": null,
+    "description": "The blade of an Iron Centurion. Heavy and brutal.",
+    "buyPrice": 825,
+    "recipe": null,
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/centurion_blade.png"
+  },
+  {
+    "id": "void_staff",
+    "name": "Void Staff",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 38,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 22,
+      "def": 0,
+      "lck": 2,
+      "maxHp": 0,
+      "maxMp": 60
+    },
+    "sellPrice": 300,
+    "effect": null,
+    "description": "A staff imbued with void energy from deep in the dungeon.",
+    "buyPrice": 825,
+    "recipe": {
+      "materials": [
+        {
+          "id": "mythril_ore",
+          "qty": 4
+        },
+        {
+          "id": "arcane_essence",
+          "qty": 2
+        },
+        {
+          "id": "dragon_scale",
+          "qty": 1
+        }
+      ],
+      "solars": 450
+    },
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/void_staff.png"
+  },
+  {
+    "id": "astral_sword",
+    "name": "Astral Sword",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 62,
+    "statBonuses": {
+      "str": 30,
+      "agi": 12,
+      "int": 0,
+      "def": 0,
+      "lck": 5,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 700,
+    "effect": null,
+    "description": "A blade forged from crystallised rift energy.",
+    "buyPrice": 1925,
+    "recipe": null,
+    "maxDurability": 260,
+    "image": "https://animeastral.qzz.io/assets/items/astral_sword.png"
+  },
+  {
+    "id": "astral_wand",
+    "name": "Astral Wand",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 62,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 38,
+      "def": 0,
+      "lck": 4,
+      "maxHp": 0,
+      "maxMp": 100
+    },
+    "sellPrice": 700,
+    "effect": null,
+    "description": "A wand humming with pure dimensional energy.",
+    "buyPrice": 1925,
+    "recipe": {
+      "materials": [
+        {
+          "id": "void_crystal",
+          "qty": 5
+        },
+        {
+          "id": "ancient_rune",
+          "qty": 3
+        },
+        {
+          "id": "phoenix_feather",
+          "qty": 1
+        }
+      ],
+      "solars": 1050
+    },
+    "maxDurability": 260,
+    "image": "https://animeastral.qzz.io/assets/items/astral_wand.png"
+  },
+  {
+    "id": "eternal_blade",
+    "name": "Eternal Blade",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "legendary",
+    "levelReq": 82,
+    "statBonuses": {
+      "str": 50,
+      "agi": 20,
+      "int": 0,
+      "def": 5,
+      "lck": 10,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 2000,
+    "effect": null,
+    "description": "A sword that cuts through the boundary between life and death.",
+    "buyPrice": 5500,
+    "recipe": null,
+    "maxDurability": 420,
+    "image": "https://animeastral.qzz.io/assets/items/eternal_blade.png"
+  },
+  {
+    "id": "end_staff",
+    "name": "End Staff",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "legendary",
+    "levelReq": 82,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 65,
+      "def": 0,
+      "lck": 8,
+      "maxHp": 0,
+      "maxMp": 200
+    },
+    "sellPrice": 2000,
+    "effect": null,
+    "description": "The staff carried by the last mage to reach floor 1000.",
+    "buyPrice": 5500,
+    "recipe": {
+      "materials": [
+        {
+          "id": "astral_shard",
+          "qty": 6
+        },
+        {
+          "id": "eternity_dust",
+          "qty": 3
+        },
+        {
+          "id": "celestial_ore",
+          "qty": 1
+        }
+      ],
+      "solars": 3000
+    },
+    "maxDurability": 420,
+    "image": "https://animeastral.qzz.io/assets/items/end_staff.png"
+  },
+  {
+    "id": "shadow_reaper",
+    "name": "Shadow Reaper",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "legendary",
+    "levelReq": 82,
+    "statBonuses": {
+      "str": 15,
+      "agi": 50,
+      "int": 0,
+      "def": 0,
+      "lck": 20,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 2000,
+    "effect": null,
+    "description": "Twin scythes that have harvested ten thousand souls.",
+    "buyPrice": 5500,
+    "recipe": null,
+    "maxDurability": 420,
+    "image": "https://animeastral.qzz.io/assets/items/shadow_reaper.png"
+  },
+  {
+    "id": "short_bow",
+    "name": "Short Bow",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 0,
+      "agi": 5,
+      "int": 0,
+      "def": 0,
+      "lck": 2,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 16,
+    "buyPrice": 45,
+    "recipe": null,
+    "effect": null,
+    "description": "A simple hunting bow, light and quick to draw.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/short_bow.png"
+  },
+  {
+    "id": "spiked_club",
+    "name": "Spiked Club",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 7,
+      "agi": 0,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 15,
+    "buyPrice": 40,
+    "recipe": {
+      "materials": [
+        {
+          "id": "iron_ore",
+          "qty": 2
+        },
+        {
+          "id": "wood_plank",
+          "qty": 1
+        },
+        {
+          "id": "leather_scrap",
+          "qty": 1
+        }
+      ],
+      "solars": 23
+    },
+    "effect": null,
+    "description": "A crude club studded with iron spikes.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/spiked_club.png"
+  },
+  {
+    "id": "bronze_spear",
+    "name": "Bronze Spear",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 4,
+      "agi": 2,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 18,
+    "buyPrice": 46,
+    "recipe": null,
+    "effect": null,
+    "description": "A cast bronze spear favoured by town militia.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/bronze_spear.png"
+  },
+  {
+    "id": "novice_wand",
+    "name": "Novice Wand",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 4,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 12
+    },
+    "sellPrice": 16,
+    "buyPrice": 44,
+    "recipe": null,
+    "effect": null,
+    "description": "A trainee mage's first wand, humming faintly.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/novice_wand.png"
+  },
+  {
+    "id": "hunting_knife",
+    "name": "Hunting Knife",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 0,
+      "agi": 4,
+      "int": 0,
+      "def": 0,
+      "lck": 2,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 14,
+    "buyPrice": 41,
+    "recipe": {
+      "materials": [
+        {
+          "id": "iron_ore",
+          "qty": 2
+        },
+        {
+          "id": "wood_plank",
+          "qty": 1
+        },
+        {
+          "id": "leather_scrap",
+          "qty": 1
+        }
+      ],
+      "solars": 21
+    },
+    "effect": null,
+    "description": "A short, practical blade carried by trackers.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/hunting_knife.png"
+  },
+  {
+    "id": "steel_sword",
+    "name": "Steel Sword",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 5,
+    "statBonuses": {
+      "str": 10,
+      "agi": 0,
+      "int": 0,
+      "def": 2,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 38,
+    "buyPrice": 113,
+    "recipe": null,
+    "effect": null,
+    "description": "A tempered steel blade, sharper than iron.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/steel_sword.png"
+  },
+  {
+    "id": "ashwood_staff",
+    "name": "Ashwood Staff",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 5,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 9,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 27
+    },
+    "sellPrice": 40,
+    "buyPrice": 119,
+    "recipe": null,
+    "effect": null,
+    "description": "Carved from ash wood said to resist corruption.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/ashwood_staff.png"
+  },
+  {
+    "id": "serrated_dagger",
+    "name": "Serrated Dagger",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 5,
+    "statBonuses": {
+      "str": 0,
+      "agi": 8,
+      "int": 0,
+      "def": 0,
+      "lck": 3,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 34,
+    "buyPrice": 96,
+    "recipe": {
+      "materials": [
+        {
+          "id": "iron_ore",
+          "qty": 2
+        },
+        {
+          "id": "wood_plank",
+          "qty": 1
+        },
+        {
+          "id": "leather_scrap",
+          "qty": 1
+        }
+      ],
+      "solars": 51
+    },
+    "effect": null,
+    "description": "A jagged blade that tears rather than cuts.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/serrated_dagger.png"
+  },
+  {
+    "id": "war_pick",
+    "name": "War Pick",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 5,
+    "statBonuses": {
+      "str": 8,
+      "agi": 0,
+      "int": 0,
+      "def": 4,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 42,
+    "buyPrice": 122,
+    "recipe": null,
+    "effect": null,
+    "description": "A pick designed to punch through plate armour.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/war_pick.png"
+  },
+  {
+    "id": "hunters_bow",
+    "name": "Hunter's Bow",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 5,
+    "statBonuses": {
+      "str": 0,
+      "agi": 9,
+      "int": 0,
+      "def": 0,
+      "lck": 3,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 36,
+    "buyPrice": 100,
+    "recipe": null,
+    "effect": null,
+    "description": "A well-strung recurve bow for seasoned trackers.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/hunters_bow.png"
+  },
+  {
+    "id": "battle_spear",
+    "name": "Battle Spear",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 5,
+    "statBonuses": {
+      "str": 7,
+      "agi": 5,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 38,
+    "buyPrice": 112,
+    "recipe": {
+      "materials": [
+        {
+          "id": "iron_ore",
+          "qty": 2
+        },
+        {
+          "id": "wood_plank",
+          "qty": 1
+        },
+        {
+          "id": "leather_scrap",
+          "qty": 1
+        }
+      ],
+      "solars": 57
+    },
+    "effect": null,
+    "description": "A reinforced spear used in Astral Town's militia drills.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/battle_spear.png"
+  },
+  {
+    "id": "apprentice_wand",
+    "name": "Apprentice Wand",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 5,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 9,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 27
+    },
+    "sellPrice": 40,
+    "buyPrice": 117,
+    "recipe": null,
+    "effect": null,
+    "description": "A wand awarded to mages who pass their first trial.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/apprentice_wand.png"
+  },
+  {
+    "id": "bone_club",
+    "name": "Bone Club",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 5,
+    "statBonuses": {
+      "str": 13,
+      "agi": 0,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 44,
+    "buyPrice": 112,
+    "recipe": null,
+    "effect": null,
+    "description": "A heavy club fashioned from a monster's femur.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/bone_club.png"
+  },
+  {
+    "id": "silver_blade",
+    "name": "Silver Blade",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 15,
+    "statBonuses": {
+      "str": 16,
+      "agi": 0,
+      "int": 0,
+      "def": 4,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 100,
+    "buyPrice": 268,
+    "recipe": null,
+    "effect": null,
+    "description": "A silver-inlaid sword, prized for its balance.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/silver_blade.png"
+  },
+  {
+    "id": "moonlit_rapier",
+    "name": "Moonlit Rapier",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 16,
+    "statBonuses": {
+      "str": 0,
+      "agi": 16,
+      "int": 0,
+      "def": 0,
+      "lck": 5,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 105,
+    "buyPrice": 271,
+    "recipe": null,
+    "effect": null,
+    "description": "A slender rapier that gleams faintly under moonlight.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/moonlit_rapier.png"
+  },
+  {
+    "id": "sable_fang",
+    "name": "Sable Fang",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 16,
+    "statBonuses": {
+      "str": 0,
+      "agi": 15,
+      "int": 0,
+      "def": 0,
+      "lck": 6,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 105,
+    "buyPrice": 283,
+    "recipe": {
+      "materials": [
+        {
+          "id": "beast_hide",
+          "qty": 3
+        },
+        {
+          "id": "silver_ore",
+          "qty": 2
+        },
+        {
+          "id": "monster_fang",
+          "qty": 1
+        }
+      ],
+      "solars": 158
+    },
+    "effect": null,
+    "description": "A black-fanged dagger looted from a Gambit thief.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/sable_fang.png"
+  },
+  {
+    "id": "arcane_rod",
+    "name": "Arcane Rod",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 17,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 18,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 54
+    },
+    "sellPrice": 112,
+    "buyPrice": 294,
+    "recipe": null,
+    "effect": null,
+    "description": "A short rod that crackles with unstable arcane current.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/arcane_rod.png"
+  },
+  {
+    "id": "phantom_bow",
+    "name": "Phantom Bow",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 17,
+    "statBonuses": {
+      "str": 0,
+      "agi": 17,
+      "int": 0,
+      "def": 0,
+      "lck": 6,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 112,
+    "buyPrice": 323,
+    "recipe": null,
+    "effect": null,
+    "description": "A bow strung with what looks like spun shadow.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/phantom_bow.png"
+  },
+  {
+    "id": "twilight_spear",
+    "name": "Twilight Spear",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 18,
+    "statBonuses": {
+      "str": 14,
+      "agi": 9,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 118,
+    "buyPrice": 327,
+    "recipe": {
+      "materials": [
+        {
+          "id": "beast_hide",
+          "qty": 3
+        },
+        {
+          "id": "silver_ore",
+          "qty": 2
+        },
+        {
+          "id": "monster_fang",
+          "qty": 1
+        }
+      ],
+      "solars": 177
+    },
+    "effect": null,
+    "description": "A spear taken from the dusk-guard of Gambit's lair.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/twilight_spear.png"
+  },
+  {
+    "id": "jesters_knives",
+    "name": "Jester's Knives",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 18,
+    "statBonuses": {
+      "str": 0,
+      "agi": 16,
+      "int": 0,
+      "def": 0,
+      "lck": 7,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 118,
+    "buyPrice": 316,
+    "recipe": null,
+    "effect": null,
+    "description": "A matched set of throwing knives etched with playing-card suits.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/jesters_knives.png"
+  },
+  {
+    "id": "charlatans_cane",
+    "name": "Charlatan's Cane",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 15,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 10,
+      "def": 6,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 30
+    },
+    "sellPrice": 100,
+    "buyPrice": 264,
+    "recipe": null,
+    "effect": null,
+    "description": "A trickster's walking cane that hides a heavier truth.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/charlatans_cane.png"
+  },
+  {
+    "id": "veiled_edge",
+    "name": "Veiled Edge",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 16,
+    "statBonuses": {
+      "str": 17,
+      "agi": 0,
+      "int": 0,
+      "def": 4,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 106,
+    "buyPrice": 266,
+    "recipe": {
+      "materials": [
+        {
+          "id": "beast_hide",
+          "qty": 3
+        },
+        {
+          "id": "silver_ore",
+          "qty": 2
+        },
+        {
+          "id": "monster_fang",
+          "qty": 1
+        }
+      ],
+      "solars": 159
+    },
+    "effect": null,
+    "description": "A blade wrapped in cloth that never quite comes clean.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/veiled_edge.png"
+  },
+  {
+    "id": "whispering_wand",
+    "name": "Whispering Wand",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 17,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 19,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 57
+    },
+    "sellPrice": 112,
+    "buyPrice": 331,
+    "recipe": null,
+    "effect": null,
+    "description": "A wand that murmurs faintly when spells are cast.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/whispering_wand.png"
+  },
+  {
+    "id": "nightshade_dagger",
+    "name": "Nightshade Dagger",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 15,
+    "statBonuses": {
+      "str": 0,
+      "agi": 14,
+      "int": 0,
+      "def": 0,
+      "lck": 6,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 100,
+    "buyPrice": 262,
+    "recipe": null,
+    "effect": null,
+    "description": "A dagger treated with a numbing poison.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/nightshade_dagger.png"
+  },
+  {
+    "id": "rogues_crossbow",
+    "name": "Rogue's Crossbow",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 18,
+    "statBonuses": {
+      "str": 0,
+      "agi": 16,
+      "int": 0,
+      "def": 0,
+      "lck": 7,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 118,
+    "buyPrice": 309,
+    "recipe": {
+      "materials": [
+        {
+          "id": "beast_hide",
+          "qty": 3
+        },
+        {
+          "id": "silver_ore",
+          "qty": 2
+        },
+        {
+          "id": "monster_fang",
+          "qty": 1
+        }
+      ],
+      "solars": 177
+    },
+    "effect": null,
+    "description": "A compact crossbow favoured by Gambit's enforcers.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/rogues_crossbow.png"
+  },
+  {
+    "id": "illusive_hammer",
+    "name": "Illusive Hammer",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 17,
+    "statBonuses": {
+      "str": 15,
+      "agi": 0,
+      "int": 0,
+      "def": 7,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 112,
+    "buyPrice": 305,
+    "recipe": null,
+    "effect": null,
+    "description": "A hammer that seems to shift weight mid-swing.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/illusive_hammer.png"
+  },
+  {
+    "id": "tricksters_blade",
+    "name": "Trickster's Blade",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 18,
+    "statBonuses": {
+      "str": 15,
+      "agi": 8,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 118,
+    "buyPrice": 347,
+    "recipe": null,
+    "effect": null,
+    "description": "A curved blade carried by Gambit's inner circle.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/tricksters_blade.png"
+  },
+  {
+    "id": "legion_broadsword",
+    "name": "Legion Broadsword",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 35,
+    "statBonuses": {
+      "str": 24,
+      "agi": 0,
+      "int": 0,
+      "def": 6,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 260,
+    "buyPrice": 756,
+    "recipe": null,
+    "effect": null,
+    "description": "A broadsword issued to the Iron Legion's front line.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/legion_broadsword.png"
+  },
+  {
+    "id": "centurion_spear",
+    "name": "Centurion's Spear",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 36,
+    "statBonuses": {
+      "str": 19,
+      "agi": 12,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 270,
+    "buyPrice": 804,
+    "recipe": null,
+    "effect": null,
+    "description": "A ceremonial spear carried by centurion officers.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/centurion_spear.png"
+  },
+  {
+    "id": "iron_legion_axe",
+    "name": "Iron Legion Axe",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 36,
+    "statBonuses": {
+      "str": 31,
+      "agi": 0,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 270,
+    "buyPrice": 801,
+    "recipe": {
+      "materials": [
+        {
+          "id": "mythril_ore",
+          "qty": 4
+        },
+        {
+          "id": "arcane_essence",
+          "qty": 2
+        },
+        {
+          "id": "dragon_scale",
+          "qty": 1
+        }
+      ],
+      "solars": 405
+    },
+    "effect": null,
+    "description": "A heavy axe standard-issue to Legion shock troops.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/iron_legion_axe.png"
+  },
+  {
+    "id": "void_wand",
+    "name": "Void Wand",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 37,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 27,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 81
+    },
+    "sellPrice": 280,
+    "buyPrice": 776,
+    "recipe": null,
+    "effect": null,
+    "description": "A wand that seems to drink in nearby light.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/void_wand.png"
+  },
+  {
+    "id": "abyssal_dagger",
+    "name": "Abyssal Dagger",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 35,
+    "statBonuses": {
+      "str": 0,
+      "agi": 21,
+      "int": 0,
+      "def": 0,
+      "lck": 9,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 260,
+    "buyPrice": 764,
+    "recipe": null,
+    "effect": null,
+    "description": "A dagger pulled from the dungeon's deepest pit.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/abyssal_dagger.png"
+  },
+  {
+    "id": "guardians_mace",
+    "name": "Guardian's Mace",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 38,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 17,
+      "def": 10,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 51
+    },
+    "sellPrice": 290,
+    "buyPrice": 747,
+    "recipe": {
+      "materials": [
+        {
+          "id": "mythril_ore",
+          "qty": 4
+        },
+        {
+          "id": "arcane_essence",
+          "qty": 2
+        },
+        {
+          "id": "dragon_scale",
+          "qty": 1
+        }
+      ],
+      "solars": 435
+    },
+    "effect": null,
+    "description": "A blessed mace wielded by the Centurion's temple guard.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/guardians_mace.png"
+  },
+  {
+    "id": "legionnaires_bow",
+    "name": "Legionnaire's Bow",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 36,
+    "statBonuses": {
+      "str": 0,
+      "agi": 23,
+      "int": 0,
+      "def": 0,
+      "lck": 8,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 270,
+    "buyPrice": 684,
+    "recipe": null,
+    "effect": null,
+    "description": "A composite bow used by Legion skirmishers.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/legionnaires_bow.png"
+  },
+  {
+    "id": "centurions_rapier",
+    "name": "Centurion's Rapier",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 37,
+    "statBonuses": {
+      "str": 0,
+      "agi": 24,
+      "int": 0,
+      "def": 0,
+      "lck": 8,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 280,
+    "buyPrice": 750,
+    "recipe": null,
+    "effect": null,
+    "description": "A dueling rapier awarded for valour in the Legion ranks.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/centurions_rapier.png"
+  },
+  {
+    "id": "voidtouched_katana",
+    "name": "Voidtouched Katana",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 38,
+    "statBonuses": {
+      "str": 21,
+      "agi": 12,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 290,
+    "buyPrice": 828,
+    "recipe": {
+      "materials": [
+        {
+          "id": "mythril_ore",
+          "qty": 4
+        },
+        {
+          "id": "arcane_essence",
+          "qty": 2
+        },
+        {
+          "id": "dragon_scale",
+          "qty": 1
+        }
+      ],
+      "solars": 435
+    },
+    "effect": null,
+    "description": "A katana warped by prolonged exposure to void energy.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/voidtouched_katana.png"
+  },
+  {
+    "id": "iron_sentinel_hammer",
+    "name": "Iron Sentinel Hammer",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 35,
+    "statBonuses": {
+      "str": 21,
+      "agi": 0,
+      "int": 0,
+      "def": 9,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 260,
+    "buyPrice": 757,
+    "recipe": null,
+    "effect": null,
+    "description": "A hammer wielded by the Legion's statuesque sentinels.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/iron_sentinel_hammer.png"
+  },
+  {
+    "id": "obsidian_scythe",
+    "name": "Obsidian Scythe",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 38,
+    "statBonuses": {
+      "str": 17,
+      "agi": 17,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 290,
+    "buyPrice": 783,
+    "recipe": null,
+    "effect": null,
+    "description": "A scythe of volcanic glass, wickedly sharp.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/obsidian_scythe.png"
+  },
+  {
+    "id": "legion_warpick",
+    "name": "Legion War Pick",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 37,
+    "statBonuses": {
+      "str": 22,
+      "agi": 0,
+      "int": 0,
+      "def": 10,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 280,
+    "buyPrice": 822,
+    "recipe": {
+      "materials": [
+        {
+          "id": "mythril_ore",
+          "qty": 4
+        },
+        {
+          "id": "arcane_essence",
+          "qty": 2
+        },
+        {
+          "id": "dragon_scale",
+          "qty": 1
+        }
+      ],
+      "solars": 420
+    },
+    "effect": null,
+    "description": "A war pick built to crack the Centurion's own armour design.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/legion_warpick.png"
+  },
+  {
+    "id": "rift_blade",
+    "name": "Rift Blade",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 60,
+    "statBonuses": {
+      "str": 35,
+      "agi": 0,
+      "int": 0,
+      "def": 9,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 620,
+    "buyPrice": 1778,
+    "recipe": null,
+    "effect": null,
+    "description": "A blade with an edge that occasionally fades from view.",
+    "maxDurability": 260,
+    "image": "https://animeastral.qzz.io/assets/items/rift_blade.png"
+  },
+  {
+    "id": "astral_bow",
+    "name": "Astral Bow",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 61,
+    "statBonuses": {
+      "str": 0,
+      "agi": 35,
+      "int": 0,
+      "def": 0,
+      "lck": 12,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 650,
+    "buyPrice": 1804,
+    "recipe": null,
+    "effect": null,
+    "description": "A bow strung with a thread of solidified starlight.",
+    "maxDurability": 260,
+    "image": "https://animeastral.qzz.io/assets/items/astral_bow.png"
+  },
+  {
+    "id": "dimensional_spear",
+    "name": "Dimensional Spear",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 61,
+    "statBonuses": {
+      "str": 28,
+      "agi": 18,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 650,
+    "buyPrice": 1869,
+    "recipe": {
+      "materials": [
+        {
+          "id": "void_crystal",
+          "qty": 5
+        },
+        {
+          "id": "ancient_rune",
+          "qty": 3
+        },
+        {
+          "id": "phoenix_feather",
+          "qty": 1
+        }
+      ],
+      "solars": 975
+    },
+    "effect": null,
+    "description": "A spear whose tip seems to exist a moment before it strikes.",
+    "maxDurability": 260,
+    "image": "https://animeastral.qzz.io/assets/items/dimensional_spear.png"
+  },
+  {
+    "id": "rift_dagger",
+    "name": "Rift Dagger",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 60,
+    "statBonuses": {
+      "str": 0,
+      "agi": 31,
+      "int": 0,
+      "def": 0,
+      "lck": 13,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 620,
+    "buyPrice": 1740,
+    "recipe": null,
+    "effect": null,
+    "description": "A dagger that flickers between two positions at once.",
+    "maxDurability": 260,
+    "image": "https://animeastral.qzz.io/assets/items/rift_dagger.png"
+  },
+  {
+    "id": "astral_katana",
+    "name": "Astral Katana",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 62,
+    "statBonuses": {
+      "str": 31,
+      "agi": 17,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 690,
+    "buyPrice": 1986,
+    "recipe": null,
+    "effect": null,
+    "description": "A katana folded from rift-tempered star-steel.",
+    "maxDurability": 260,
+    "image": "https://animeastral.qzz.io/assets/items/astral_katana.png"
+  },
+  {
+    "id": "rift_forged_axe",
+    "name": "Rift-Forged Axe",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 62,
+    "statBonuses": {
+      "str": 48,
+      "agi": 0,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 690,
+    "buyPrice": 2033,
+    "recipe": {
+      "materials": [
+        {
+          "id": "void_crystal",
+          "qty": 5
+        },
+        {
+          "id": "ancient_rune",
+          "qty": 3
+        },
+        {
+          "id": "phoenix_feather",
+          "qty": 1
+        }
+      ],
+      "solars": 1035
+    },
+    "effect": null,
+    "description": "An axe forged in the heat of a collapsing rift.",
+    "maxDurability": 260,
+    "image": "https://animeastral.qzz.io/assets/items/rift_forged_axe.png"
+  },
+  {
+    "id": "astral_scepter",
+    "name": "Astral Scepter",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 61,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 32,
+      "def": 0,
+      "lck": 14,
+      "maxHp": 0,
+      "maxMp": 96
+    },
+    "sellPrice": 650,
+    "buyPrice": 1717,
+    "recipe": null,
+    "effect": null,
+    "description": "A scepter that channels fortune from beyond the veil.",
+    "maxDurability": 260,
+    "image": "https://animeastral.qzz.io/assets/items/astral_scepter.png"
+  },
+  {
+    "id": "dimensional_wand",
+    "name": "Dimensional Wand",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 60,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 37,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 111
+    },
+    "sellPrice": 620,
+    "buyPrice": 1724,
+    "recipe": null,
+    "effect": null,
+    "description": "A wand that bends space just enough to redirect a spell.",
+    "maxDurability": 260,
+    "image": "https://animeastral.qzz.io/assets/items/dimensional_wand.png"
+  },
+  {
+    "id": "eternal_spear",
+    "name": "Eternal Spear",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "legendary",
+    "levelReq": 80,
+    "statBonuses": {
+      "str": 37,
+      "agi": 25,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 1700,
+    "buyPrice": 4459,
+    "recipe": null,
+    "effect": null,
+    "description": "A spear said to have pierced the boundary of time itself.",
+    "maxDurability": 420,
+    "image": "https://animeastral.qzz.io/assets/items/eternal_spear.png"
+  },
+  {
+    "id": "celestial_bow",
+    "name": "Celestial Bow",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "legendary",
+    "levelReq": 81,
+    "statBonuses": {
+      "str": 0,
+      "agi": 50,
+      "int": 0,
+      "def": 0,
+      "lck": 17,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 1850,
+    "buyPrice": 5255,
+    "recipe": {
+      "materials": [
+        {
+          "id": "astral_shard",
+          "qty": 6
+        },
+        {
+          "id": "eternity_dust",
+          "qty": 3
+        },
+        {
+          "id": "celestial_ore",
+          "qty": 1
+        }
+      ],
+      "solars": 2775
+    },
+    "effect": null,
+    "description": "A bow strung with a captured strand of a dying star.",
+    "maxDurability": 420,
+    "image": "https://animeastral.qzz.io/assets/items/celestial_bow.png"
+  },
+  {
+    "id": "void_reaper",
+    "name": "Void Reaper",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "legendary",
+    "levelReq": 82,
+    "statBonuses": {
+      "str": 35,
+      "agi": 35,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 2000,
+    "buyPrice": 5003,
+    "recipe": null,
+    "effect": null,
+    "description": "A scythe that has reaped souls on both sides of the void.",
+    "maxDurability": 420,
+    "image": "https://animeastral.qzz.io/assets/items/void_reaper.png"
+  },
+  {
+    "id": "infinity_wand",
+    "name": "Infinity Wand",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "legendary",
+    "levelReq": 81,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 56,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 168
+    },
+    "sellPrice": 1850,
+    "buyPrice": 4713,
+    "recipe": null,
+    "effect": null,
+    "description": "A wand whose power seems to have no upper limit.",
+    "maxDurability": 420,
+    "image": "https://animeastral.qzz.io/assets/items/infinity_wand.png"
+  },
+  {
+    "id": "eternal_katana",
+    "name": "Eternal Katana",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "legendary",
+    "levelReq": 82,
+    "statBonuses": {
+      "str": 46,
+      "agi": 25,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 2000,
+    "buyPrice": 5670,
+    "recipe": {
+      "materials": [
+        {
+          "id": "astral_shard",
+          "qty": 6
+        },
+        {
+          "id": "eternity_dust",
+          "qty": 3
+        },
+        {
+          "id": "celestial_ore",
+          "qty": 1
+        }
+      ],
+      "solars": 3000
+    },
+    "effect": null,
+    "description": "A katana passed down since the Astral realm's founding.",
+    "maxDurability": 420,
+    "image": "https://animeastral.qzz.io/assets/items/eternal_katana.png"
+  },
+  {
+    "id": "t_sword_1",
+    "name": "Training Sword",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 3,
+      "agi": 0,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 12,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "iron_ore",
+          "qty": 1
+        },
+        {
+          "itemId": "wood_plank",
+          "qty": 1
+        }
+      ],
+      "solars": 30
+    },
+    "effect": null,
+    "description": "A basic iron sword forged at the blacksmith. A reliable sidearm for new adventurers.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/t_sword_1.png"
+  },
+  {
+    "id": "t_sword_2",
+    "name": "Iron Blade",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 15,
+    "statBonuses": {
+      "str": 8,
+      "agi": 0,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 80,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "silver_ore",
+          "qty": 2
+        },
+        {
+          "itemId": "wood_plank",
+          "qty": 1
+        },
+        {
+          "itemId": "leather_scrap",
+          "qty": 1
+        }
+      ],
+      "solars": 100
+    },
+    "effect": null,
+    "description": "A silver-tempered iron blade with a well-wrapped grip.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/t_sword_2.png"
+  },
+  {
+    "id": "t_sword_3",
+    "name": "Diamond Blade",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 35,
+    "statBonuses": {
+      "str": 15,
+      "agi": 0,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 300,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "diamond_ore",
+          "qty": 2
+        },
+        {
+          "itemId": "mythril_ore",
+          "qty": 1
+        },
+        {
+          "itemId": "leather_scrap",
+          "qty": 1
+        }
+      ],
+      "solars": 400
+    },
+    "effect": null,
+    "description": "A diamond-edge blade ground to a molecular edge. Cuts through lesser armour cleanly.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/t_sword_3.png"
+  },
+  {
+    "id": "t_sword_4",
+    "name": "Titanium Blade",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 60,
+    "statBonuses": {
+      "str": 24,
+      "agi": 0,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 750,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "titanium_ore",
+          "qty": 2
+        },
+        {
+          "itemId": "dragon_scale",
+          "qty": 1
+        },
+        {
+          "itemId": "beast_hide",
+          "qty": 1
+        }
+      ],
+      "solars": 1200
+    },
+    "effect": null,
+    "description": "A titanium long blade with a dragon-scale crossguard. Virtually indestructible.",
+    "maxDurability": 260,
+    "image": "https://animeastral.qzz.io/assets/items/t_sword_4.png"
+  },
+  {
+    "id": "t_sword_5",
+    "name": "Divine Blade",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "legendary",
+    "levelReq": 85,
+    "statBonuses": {
+      "str": 36,
+      "agi": 0,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 2000,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "celestial_ore",
+          "qty": 2
+        },
+        {
+          "itemId": "eternity_dust",
+          "qty": 1
+        },
+        {
+          "itemId": "phoenix_feather",
+          "qty": 1
+        }
+      ],
+      "solars": 4000
+    },
+    "effect": null,
+    "description": "A blade born of celestial ore and eternity dust. Its edge exists outside normal space.",
+    "maxDurability": 420,
+    "image": "https://animeastral.qzz.io/assets/items/t_sword_5.png"
+  },
+  {
+    "id": "t_dagger_1",
+    "name": "Training Dagger",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 0,
+      "agi": 3,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 10,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "iron_ore",
+          "qty": 1
+        },
+        {
+          "itemId": "leather_scrap",
+          "qty": 1
+        }
+      ],
+      "solars": 25
+    },
+    "effect": null,
+    "description": "A short iron dagger, light in the hand and fast to draw.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/t_dagger_1.png"
+  },
+  {
+    "id": "t_dagger_2",
+    "name": "Iron Fang",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 15,
+    "statBonuses": {
+      "str": 0,
+      "agi": 8,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 75,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "silver_ore",
+          "qty": 2
+        },
+        {
+          "itemId": "leather_scrap",
+          "qty": 1
+        }
+      ],
+      "solars": 90
+    },
+    "effect": null,
+    "description": "A silver-edged fang-shaped blade favoured by scouts and rogues.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/t_dagger_2.png"
+  },
+  {
+    "id": "t_dagger_3",
+    "name": "Diamond Fang",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 35,
+    "statBonuses": {
+      "str": 0,
+      "agi": 15,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 290,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "diamond_ore",
+          "qty": 2
+        },
+        {
+          "itemId": "mythril_ore",
+          "qty": 1
+        },
+        {
+          "itemId": "leather_scrap",
+          "qty": 1
+        }
+      ],
+      "solars": 380
+    },
+    "effect": null,
+    "description": "A needle-thin diamond dagger that finds gaps in any armour.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/t_dagger_3.png"
+  },
+  {
+    "id": "t_dagger_4",
+    "name": "Titanium Fang",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 60,
+    "statBonuses": {
+      "str": 0,
+      "agi": 24,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 740,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "titanium_ore",
+          "qty": 2
+        },
+        {
+          "itemId": "dragon_scale",
+          "qty": 1
+        },
+        {
+          "itemId": "beast_hide",
+          "qty": 1
+        }
+      ],
+      "solars": 1150
+    },
+    "effect": null,
+    "description": "A titanium fang so light it barely registers in the hand.",
+    "maxDurability": 260,
+    "image": "https://animeastral.qzz.io/assets/items/t_dagger_4.png"
+  },
+  {
+    "id": "t_dagger_5",
+    "name": "Divine Fang",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "legendary",
+    "levelReq": 85,
+    "statBonuses": {
+      "str": 0,
+      "agi": 36,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 1950,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "celestial_ore",
+          "qty": 2
+        },
+        {
+          "itemId": "eternity_dust",
+          "qty": 1
+        },
+        {
+          "itemId": "phoenix_feather",
+          "qty": 1
+        }
+      ],
+      "solars": 3800
+    },
+    "effect": null,
+    "description": "A fang-blade that flickers between planes on each strike.",
+    "maxDurability": 420,
+    "image": "https://animeastral.qzz.io/assets/items/t_dagger_5.png"
+  },
+  {
+    "id": "t_staff_1",
+    "name": "Training Staff",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "common",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 3,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 10,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "iron_ore",
+          "qty": 1
+        },
+        {
+          "itemId": "wood_plank",
+          "qty": 2
+        }
+      ],
+      "solars": 25
+    },
+    "effect": null,
+    "description": "An iron-capped wooden staff, suitable for channelling entry-level spells.",
+    "maxDurability": 60,
+    "image": "https://animeastral.qzz.io/assets/items/t_staff_1.png"
+  },
+  {
+    "id": "t_staff_2",
+    "name": "Iron Staff",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "uncommon",
+    "levelReq": 15,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 8,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 75,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "silver_ore",
+          "qty": 2
+        },
+        {
+          "itemId": "wood_plank",
+          "qty": 2
+        }
+      ],
+      "solars": 90
+    },
+    "effect": null,
+    "description": "A silver-banded hardwood staff that channels spell energy efficiently.",
+    "maxDurability": 100,
+    "image": "https://animeastral.qzz.io/assets/items/t_staff_2.png"
+  },
+  {
+    "id": "t_staff_3",
+    "name": "Diamond Staff",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "rare",
+    "levelReq": 35,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 15,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 290,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "diamond_ore",
+          "qty": 2
+        },
+        {
+          "itemId": "mythril_ore",
+          "qty": 1
+        },
+        {
+          "itemId": "arcane_essence",
+          "qty": 1
+        }
+      ],
+      "solars": 380
+    },
+    "effect": null,
+    "description": "A diamond-tipped staff infused with arcane essence. Amplifies all cast spells.",
+    "maxDurability": 160,
+    "image": "https://animeastral.qzz.io/assets/items/t_staff_3.png"
+  },
+  {
+    "id": "t_staff_4",
+    "name": "Titanium Staff",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 60,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 24,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 740,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "titanium_ore",
+          "qty": 2
+        },
+        {
+          "itemId": "dragon_scale",
+          "qty": 1
+        },
+        {
+          "itemId": "arcane_essence",
+          "qty": 1
+        }
+      ],
+      "solars": 1150
+    },
+    "effect": null,
+    "description": "A staff whose titanium core resonates with spell frequencies to boost output.",
+    "maxDurability": 260,
+    "image": "https://animeastral.qzz.io/assets/items/t_staff_4.png"
+  },
+  {
+    "id": "t_staff_5",
+    "name": "Divine Staff",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "legendary",
+    "levelReq": 85,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 36,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 1950,
+    "recipe": {
+      "materials": [
+        {
+          "itemId": "celestial_ore",
+          "qty": 2
+        },
+        {
+          "itemId": "eternity_dust",
+          "qty": 1
+        },
+        {
+          "itemId": "void_crystal",
+          "qty": 1
+        }
+      ],
+      "solars": 3800
+    },
+    "effect": null,
+    "description": "A staff of celestial ore threaded through the void. Spells cast with it leave echoes.",
+    "maxDurability": 420,
+    "image": "https://animeastral.qzz.io/assets/items/t_staff_5.png"
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "id": "beyond-the-astral",
+  "title": "The Boy Who Glided the Skies",
+  "volumeTitle": "Beyond the Astral",
+  "book": 1,
+  "tagline": "Beyond that eye, what can you actually see? The injustice in this world, or the sanity we think we all have?",
+  "coverImage": "https://i.ibb.co/fYFzZDzM/Book-one.jpg",
+  "character": {
+    "id": "monica",
+    "name": "Monica",
+    "unlockRewards": {
+      "characterUnlock": "monica",
+      "items": [
+        "oliver-goggles"
+      ],
+      "perks": [
+        "free-travel-all-locations",
+        "hidden-map-access"
+      ]
+    }
+  }
+}

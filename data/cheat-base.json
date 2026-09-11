@@ -1,0 +1,174 @@
+{
+  "_comment": "This is the ONLY source of truth for what a mod can do. A player's uploaded mod JSON is never executed — its effect_id is looked up here, and if (and only if) it matches, the fixed effect + value below is what gets applied. Nothing from the player's file is ever eval'd, parsed as logic, or trusted for magnitude.",
+  "maxActiveMods": 5,
+  "cheats": [
+    {
+      "effect_id": "no_death_inventory_loss",
+      "category": "survival",
+      "label": "Undying Grace",
+      "description": "Prevents inventory items from being dropped/lost on death.",
+      "value": true,
+      "storePrice": 4500
+    },
+    {
+      "effect_id": "no_death_currency_loss",
+      "category": "survival",
+      "label": "Coin Ward",
+      "description": "Prevents solars from being lost on death.",
+      "value": true,
+      "storePrice": 3000
+    },
+    {
+      "effect_id": "no_durability_loss",
+      "category": "survival",
+      "label": "Unbreaking Grip",
+      "description": "Equipped gear no longer loses durability from combat use.",
+      "value": true,
+      "storePrice": 3500
+    },
+    {
+      "effect_id": "death_cooldown_reduction",
+      "category": "survival",
+      "label": "Swift Revival",
+      "description": "Reduces post-death revive cooldown by 50%.",
+      "value": 0.5,
+      "storePrice": 2000
+    },
+    {
+      "effect_id": "damage_multiplier",
+      "category": "combat",
+      "label": "Heavy Hand",
+      "description": "Small flat boost to outgoing combat damage.",
+      "value": 1.05,
+      "storePrice": 3000
+    },
+    {
+      "effect_id": "boss_damage_vs_high_def",
+      "category": "combat",
+      "label": "Titan Breaker",
+      "description": "Adds 15% PvE damage against enemies with more than 3,000 DEF.",
+      "value": 0.15,
+      "storePrice": 4500
+    },
+    {
+      "effect_id": "crit_chance_boost",
+      "category": "combat",
+      "label": "Lucky Edge",
+      "description": "Adds flat crit chance percentage.",
+      "value": 0.05,
+      "storePrice": 2500
+    },
+    {
+      "effect_id": "boss_cooldown_reduction",
+      "category": "combat",
+      "label": "Relentless Pursuit",
+      "description": "Reduces boss re-attempt cooldown by 25%.",
+      "value": 0.25,
+      "storePrice": 2200
+    },
+    {
+      "effect_id": "boss_entry_fee_waived",
+      "category": "combat",
+      "label": "Free Passage",
+      "description": "Waives the currency cost to enter a boss fight.",
+      "value": true,
+      "storePrice": 1800
+    },
+    {
+      "effect_id": "xp_boost",
+      "category": "economy",
+      "label": "Quick Study",
+      "description": "Flat percentage boost to XP earned.",
+      "value": 0.10,
+      "storePrice": 3200
+    },
+    {
+      "effect_id": "currency_drop_boost",
+      "category": "economy",
+      "label": "Golden Touch",
+      "description": "Flat percentage boost to solars earned from drops.",
+      "value": 0.10,
+      "storePrice": 3200
+    },
+    {
+      "effect_id": "shop_discount",
+      "category": "economy",
+      "label": "Merchant's Favor",
+      "description": "Percentage discount on game-shop purchases.",
+      "value": 0.10,
+      "storePrice": 2000
+    },
+    {
+      "effect_id": "auction_fee_waived",
+      "category": "economy",
+      "label": "No Toll",
+      "description": "Waives the listing fee when posting to the auction house.",
+      "value": true,
+      "storePrice": 1500
+    },
+    {
+      "effect_id": "shiny_rate_boost",
+      "category": "collection",
+      "label": "Glimmer Sight",
+      "description": "Flat percentage boost to shiny/rare spawn rate.",
+      "value": 0.03,
+      "storePrice": 5000
+    },
+    {
+      "effect_id": "catch_rate_boost",
+      "category": "collection",
+      "label": "Steady Hands",
+      "description": "Flat percentage boost to catch success rate.",
+      "value": 0.08,
+      "storePrice": 2800
+    },
+    {
+      "effect_id": "pet_reroll_free",
+      "category": "collection",
+      "label": "Second Chance",
+      "description": "One free pet stat re-roll per day, no cost.",
+      "value": 1,
+      "storePrice": 2500
+    },
+    {
+      "effect_id": "crafting_cost_reduction",
+      "category": "crafting",
+      "label": "Efficient Hands",
+      "description": "Percentage reduction in crafting material cost.",
+      "value": 0.10,
+      "storePrice": 2600
+    },
+    {
+      "effect_id": "free_repair",
+      "category": "crafting",
+      "label": "Self-Mending",
+      "description": "Gear repairs cost no materials or currency.",
+      "value": true,
+      "storePrice": 2200
+    },
+    {
+      "effect_id": "spawn_cooldown_reduction",
+      "category": "qol",
+      "label": "Restless Wanderer",
+      "description": "Reduces spawn/encounter cooldown by 20%.",
+      "value": 0.20,
+      "storePrice": 2400
+    },
+    {
+      "effect_id": "extra_daily_claim",
+      "category": "qol",
+      "label": "Double Dawn",
+      "description": "Grants one additional daily reward claim per day.",
+      "value": 1,
+      "storePrice": 3800
+    },
+    {
+      "effect_id": "cosmetic_badge",
+      "category": "qol",
+      "label": "Modder's Mark",
+      "description": "Displays a small cosmetic badge next to your name. No gameplay effect.",
+      "value": true,
+      "storePrice": 500
+    }
+  ]
+}
