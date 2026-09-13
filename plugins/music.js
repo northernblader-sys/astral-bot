@@ -1,21 +1,39 @@
 /**
- * music.js — .song  (search YouTube, download, send as MP3)
+ * music.js — .song  (search YouTube Music, download via own song-api, send as MP3)
  *
- * Download strategy (in order), matching the proven chain from the
- * Astral Utility bot's music.js:
- *   1. qasimdev  api.qasimdev.dpdns.org  ← primary
- *   2. nayan     nayan-video-downloader.vercel.app
- *   3. ytdl-core direct stream           ← last resort
- * Title always comes from the YouTube search result, never the API
- * response — APIs frequently return a generic "Video" title.
+ * Download source: your own Vercel song-api (https://musicapi-ranz.vercel.app),
+ * which uses yt-dlp internally to resolve a direct audio stream URL. This
+ * plugin just fetches that URL and converts it to MP3 — no third-party
+ * download APIs, no ytdl-core fallback.
  */
 import axios       from 'axios'
-import yts         from 'yt-search'
+import YTMusic     from 'ytmusic-api'
 import { toAudio } from '../lib/converter.js'
 
-const QASIM_API  = 'https://api.qasimdev.dpdns.org/api/loaderto/download'
-const QASIM_KEY  = 'qasim-dev'
-const NAYAN_BASE = 'https://nayan-video-downloader.vercel.app'
+const SONG_API = 'https://musicapi-ranz.vercel.app/api/song'
+
+// ytmusic-api needs a one-time async init before it can search. We do this
+// lazily (on first .song call) and cache the instance so every call after
+// the first one is fast. If init ever fails, we retry on the next call
+// instead of leaving the plugin permanently broken.
+let ytmusic     = null
+let ytmusicInit = null
+
+async function getYTMusic() {
+  if (ytmusic) return ytmusic
+  if (!ytmusicInit) {
+    ytmusicInit = (async () => {
+      const client = new YTMusic()
+      await client.initialize()
+      ytmusic = client
+      return client
+    })().catch(e => {
+      ytmusicInit = null // allow retry on next call
+      throw e
+    })
+  }
+  return ytmusicInit
+}
 
 // ─── Fetch a URL and return a real Buffer ───────────────
 async function fetchBuffer(url, timeout = 90_000) {
@@ -30,68 +48,65 @@ async function fetchBuffer(url, timeout = 90_000) {
   return buf
 }
 
-// ─── YouTube search helper ──────────────────────────────
+// ─── YouTube Music search helper ────────────────────────
+// Returns the same shape the rest of the file already expects:
+// { url, title, thumbnail, timestamp }
 async function searchYT(query) {
   if (/youtu\.?be/.test(query)) return { url: query, title: query, thumbnail: null, timestamp: '' }
+
+  try {
+    const client  = await getYTMusic()
+    const results = await client.searchSongs(query)
+    if (results?.length) {
+      const song = results[0]
+      const thumb = song.thumbnails?.[song.thumbnails.length - 1]?.url || null
+      return {
+        url:       `https://www.youtube.com/watch?v=${song.videoId}`,
+        title:     song.artist?.name ? `${song.name} - ${song.artist.name}` : song.name,
+        thumbnail: thumb,
+        timestamp: song.duration ? formatDuration(song.duration) : '',
+      }
+    }
+  } catch (e) {
+    // fall through to yt-search below — don't let a ytmusic-api hiccup
+    // (e.g. init failure) take the whole command down
+  }
+
+  // fallback: plain YouTube search, in case YT Music has no match
+  // (e.g. very obscure or non-music content)
+  const yts     = (await import('yt-search')).default
   const { videos } = await yts(query)
   if (!videos?.length) throw new Error('no results found')
   return videos[0]
 }
 
-// ─── Source 1: qasimdev (primary) ──────────────────────
-async function tryQasim(videoUrl) {
-  let lastErr
-  for (let i = 0; i < 2; i++) {
-    try {
-      const { data } = await axios.get(QASIM_API, {
-        params:  { apiKey: QASIM_KEY, format: 'mp3', url: videoUrl },
-        timeout: 40_000,
-      })
-      const d   = data?.data
-      const url = d?.downloadUrl || d?.url || d?.link || d?.download
-      if (!url) throw new Error('qasimdev: no download URL in response')
-      const buf = await fetchBuffer(url, 60_000)
-      return { buf, ext: 'mp3', thumbnail: d?.thumbnail, source: 'qasimdev' }
-    } catch (e) {
-      lastErr = e
-      if (i === 0) await new Promise(r => setTimeout(r, 2000))
-    }
-  }
-  throw lastErr
+function formatDuration(totalSeconds) {
+  const m = Math.floor(totalSeconds / 60)
+  const s = totalSeconds % 60
+  return `${m}:${String(s).padStart(2, '0')}`
 }
 
-// ─── Source 2: nayan ────────────────────────────────────
-async function tryNayan(videoUrl) {
-  const { data } = await axios.get(
-    `${NAYAN_BASE}/ytdown?url=${encodeURIComponent(videoUrl)}`,
-    { timeout: 20_000 },
-  )
-  if (!data?.status || !data?.data?.audio) throw new Error('nayan: no audio URL')
-  const buf = await fetchBuffer(data.data.audio, 60_000)
-  return { buf, ext: 'm4a', thumbnail: data.data.thumb, channel: data.data.channel, source: 'nayan' }
+// ─── Download source: your own song-api ────────────────
+async function tryOwnApi(query) {
+  const { data } = await axios.get(SONG_API, {
+    params:  { q: query },
+    timeout: 15_000,
+  })
+  if (!data?.audioUrl) throw new Error('song-api: no audioUrl in response')
+  const buf = await fetchBuffer(data.audioUrl, 60_000)
+  return {
+    buf,
+    ext:       'm4a',
+    thumbnail: data.thumbnail,
+    channel:   data.artist,
+    source:    'song-api',
+    title:     data.title, // song-api's own title, may be more accurate than yt-search's
+  }
 }
 
-// ─── Main download — qasimdev first, then nayan, then ytdl ────────────────
-async function downloadAudio(video) {
-  try {
-    return await tryQasim(video.url)
-  } catch {
-    try {
-      return await tryNayan(video.url)
-    } catch {
-      const ytdl   = (await import('@distube/ytdl-core')).default
-      const chunks = []
-      await new Promise((resolve, reject) => {
-        ytdl(video.url, { filter: 'audioonly', quality: 'highestaudio' })
-          .on('data',  c => chunks.push(c))
-          .on('end',   resolve)
-          .on('error', reject)
-      })
-      const buf = Buffer.concat(chunks)
-      if (buf.length < 1024) throw new Error('ytdl-core: empty stream')
-      return { buf, ext: 'webm', thumbnail: video.thumbnail, source: 'ytdl' }
-    }
-  }
+// ─── Main download — song-api only ─────────────────────
+async function downloadAudio(video, query) {
+  return tryOwnApi(query)
 }
 
 export default {
@@ -105,25 +120,35 @@ export default {
     const query = args.join(' ').trim()
 
     if (!query) {
-      return reply('🎵 *Usage:* .song <song name or YouTube link>')
+      return reply(
+        `╭─────────────╮\n` +
+        `   🎵 *SONG DOWNLOADER*\n` +
+        `╰─────────────╯\n\n` +
+        `*Usage:*\n` +
+        `\`.song <song name or YouTube link>\`\n\n` +
+        `_Example:_ \`.song faded alan walker\``,
+      )
     }
 
-    await reply(`🔎 Searching for *${query}*...`)
+    await reply(`🔍 _Searching for_ *${query}*_..._`)
 
     try {
       const video = await searchYT(query)
-      const dl    = await downloadAudio(video)
+      const dl    = await downloadAudio(video, query)
 
-      const title    = video.title || query
+      const title    = dl.title || video.title || query
       const thumbUrl = dl.thumbnail || video.thumbnail
 
       if (thumbUrl) {
         await replyImage(
           thumbUrl,
-          `🎵 *${title}*\n` +
-          `${video.timestamp ? `⏱ ${video.timestamp}\n` : ''}` +
-          `${dl.channel     ? `📺 ${dl.channel}\n`      : ''}` +
-          `_converting..._`,
+          `┏━━━━━━━━━━━━━┓\n` +
+          `   🎧 *NOW FETCHING*\n` +
+          `┗━━━━━━━━━━━━━┛\n\n` +
+          `*🎵 Title:* ${title}\n` +
+          `${video.timestamp ? `*⏱️ Duration:* ${video.timestamp}\n` : ''}` +
+          `${dl.channel     ? `*📺 Artist:* ${dl.channel}\n`         : ''}` +
+          `\n_⚙️ converting to mp3, please wait..._`,
         )
       }
 
@@ -137,7 +162,11 @@ export default {
         ptt:      false,
       }, { quoted: msg })
     } catch (e) {
-      await reply(`❌ *Download failed:* ${e.message || 'unknown error'}`)
+      await reply(
+        `❌ *Download Failed*\n` +
+        `_${e.message || 'unknown error'}_\n\n` +
+        `Try a different song name or check the link.`,
+      )
     }
   },
 }
