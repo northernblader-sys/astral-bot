@@ -7,33 +7,9 @@
  * download APIs, no ytdl-core fallback.
  */
 import axios       from 'axios'
-import YTMusic     from 'ytmusic-api'
 import { toAudio } from '../lib/converter.js'
 
 const SONG_API = 'https://musicapi-ranz.vercel.app/api/song'
-
-// ytmusic-api needs a one-time async init before it can search. We do this
-// lazily (on first .song call) and cache the instance so every call after
-// the first one is fast. If init ever fails, we retry on the next call
-// instead of leaving the plugin permanently broken.
-let ytmusic     = null
-let ytmusicInit = null
-
-async function getYTMusic() {
-  if (ytmusic) return ytmusic
-  if (!ytmusicInit) {
-    ytmusicInit = (async () => {
-      const client = new YTMusic()
-      await client.initialize()
-      ytmusic = client
-      return client
-    })().catch(e => {
-      ytmusicInit = null // allow retry on next call
-      throw e
-    })
-  }
-  return ytmusicInit
-}
 
 // ─── Fetch a URL and return a real Buffer ───────────────
 async function fetchBuffer(url, timeout = 90_000) {
@@ -46,44 +22,6 @@ async function fetchBuffer(url, timeout = 90_000) {
   const buf = Buffer.from(data)
   if (buf.length < 1024) throw new Error('response too small — likely an error page')
   return buf
-}
-
-// ─── YouTube Music search helper ────────────────────────
-// Returns the same shape the rest of the file already expects:
-// { url, title, thumbnail, timestamp }
-async function searchYT(query) {
-  if (/youtu\.?be/.test(query)) return { url: query, title: query, thumbnail: null, timestamp: '' }
-
-  try {
-    const client  = await getYTMusic()
-    const results = await client.searchSongs(query)
-    if (results?.length) {
-      const song = results[0]
-      const thumb = song.thumbnails?.[song.thumbnails.length - 1]?.url || null
-      return {
-        url:       `https://www.youtube.com/watch?v=${song.videoId}`,
-        title:     song.artist?.name ? `${song.name} - ${song.artist.name}` : song.name,
-        thumbnail: thumb,
-        timestamp: song.duration ? formatDuration(song.duration) : '',
-      }
-    }
-  } catch (e) {
-    // fall through to yt-search below — don't let a ytmusic-api hiccup
-    // (e.g. init failure) take the whole command down
-  }
-
-  // fallback: plain YouTube search, in case YT Music has no match
-  // (e.g. very obscure or non-music content)
-  const yts     = (await import('yt-search')).default
-  const { videos } = await yts(query)
-  if (!videos?.length) throw new Error('no results found')
-  return videos[0]
-}
-
-function formatDuration(totalSeconds) {
-  const m = Math.floor(totalSeconds / 60)
-  const s = totalSeconds % 60
-  return `${m}:${String(s).padStart(2, '0')}`
 }
 
 // ─── Download source: your own song-api ────────────────
@@ -99,13 +37,21 @@ async function tryOwnApi(query) {
     ext:       'm4a',
     thumbnail: data.thumbnail,
     channel:   data.artist,
+    duration:  formatDuration(data.duration),
     source:    'song-api',
-    title:     data.title, // song-api's own title, may be more accurate than yt-search's
+    title:     data.title,
   }
 }
 
+function formatDuration(totalSeconds) {
+  if (!totalSeconds && totalSeconds !== 0) return ''
+  const m = Math.floor(totalSeconds / 60)
+  const s = Math.floor(totalSeconds % 60)
+  return `${m}:${String(s).padStart(2, '0')}`
+}
+
 // ─── Main download — song-api only ─────────────────────
-async function downloadAudio(video, query) {
+async function downloadAudio(query) {
   return tryOwnApi(query)
 }
 
@@ -133,11 +79,10 @@ export default {
     await reply(`🔍 _Searching for_ *${query}*_..._`)
 
     try {
-      const video = await searchYT(query)
-      const dl    = await downloadAudio(video, query)
+      const dl = await downloadAudio(query)
 
-      const title    = dl.title || video.title || query
-      const thumbUrl = dl.thumbnail || video.thumbnail
+      const title    = dl.title || query
+      const thumbUrl = dl.thumbnail
 
       if (thumbUrl) {
         await replyImage(
@@ -146,8 +91,8 @@ export default {
           `   🎧 *NOW FETCHING*\n` +
           `┗━━━━━━━━━━━━━┛\n\n` +
           `*🎵 Title:* ${title}\n` +
-          `${video.timestamp ? `*⏱️ Duration:* ${video.timestamp}\n` : ''}` +
-          `${dl.channel     ? `*📺 Artist:* ${dl.channel}\n`         : ''}` +
+          `${dl.duration ? `*⏱️ Duration:* ${dl.duration}\n` : ''}` +
+          `${dl.channel  ? `*📺 Artist:* ${dl.channel}\n`    : ''}` +
           `\n_⚙️ converting to mp3, please wait..._`,
         )
       }
