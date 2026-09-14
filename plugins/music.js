@@ -201,7 +201,17 @@ function availableYoutubeClients(youtube, preferred) {
   if (!knownClients.length) return preferred
 
   const selected = preferred.filter((name) => knownClients.includes(name))
-  return selected.length ? selected : knownClients
+  const clientNames = selected.length ? selected : knownClients
+
+  // Constants.CLIENTS is keyed by friendly names such as TV and IOS, but
+  // Innertube.create() expects the actual client NAME values such as
+  // TVHTML5 and iOS.
+  return clientNames.map(
+    (name) =>
+      youtube.Constants.CLIENTS[name]?.NAME ||
+      youtube.ClientType?.[name] ||
+      name,
+  )
 }
 
 async function searchYoutube(query) {
@@ -700,8 +710,23 @@ async function runSong(ctx, query) {
     )
   }
 
-  const buffer = await nativeYoutubeAudio(video.id)
-  await sendAudio(ctx, buffer, video.title)
+  try {
+    const buffer = await nativeYoutubeAudio(video.id)
+    return sendAudio(ctx, buffer, video.title)
+  } catch (nativeError) {
+    // YouTube may reject an anonymous native stream even when search works.
+    // Keep .song usable without cookies by falling back to the same y2mate
+    // audio path exposed by .yta.
+    const info = await getY2mateInfo(video.id)
+    const url = info && await downloadWithY2mate(video.id, 'audio')
+    if (!url) {
+      throw new Error(
+        `Native YouTube failed (${nativeError.message}); y2mate fallback also failed`,
+      )
+    }
+    const buffer = await downloadUrlToBuffer(url)
+    return sendAudio(ctx, buffer, info.title || video.title)
+  }
 }
 
 async function runYta(ctx, query) {
