@@ -196,6 +196,14 @@ async function getYoutubeClient(clientType = 'WEB') {
   return client
 }
 
+function availableYoutubeClients(youtube, preferred) {
+  const knownClients = Object.keys(youtube.Constants?.CLIENTS || {})
+  if (!knownClients.length) return preferred
+
+  const selected = preferred.filter((name) => knownClients.includes(name))
+  return selected.length ? selected : knownClients
+}
+
 async function searchYoutube(query) {
   const input = String(query || '').trim()
   const id = extractVideoId(input)
@@ -269,7 +277,7 @@ async function searchYoutube(query) {
 async function nativeYoutubeAudio(videoId) {
   await ensureTempDir()
   const youtube = await loadYoutubeModule()
-  const clientTypes = [
+  const clientTypes = availableYoutubeClients(youtube, [
     'TV',
     'TV_EMBEDDED',
     'WEB',
@@ -277,7 +285,7 @@ async function nativeYoutubeAudio(videoId) {
     'ANDROID',
     'ANDROID_VR',
     'IOS',
-  ]
+  ])
   let lastError
 
   for (const clientType of clientTypes) {
@@ -312,7 +320,14 @@ async function nativeYoutubeAudio(videoId) {
 async function nativeYoutubeVideo(videoId, quality = 'best') {
   await ensureTempDir()
   const youtube = await loadYoutubeModule()
-  const clientTypes = ['TV', 'TV_EMBEDDED', 'WEB', 'MWEB', 'ANDROID', 'IOS']
+  const clientTypes = availableYoutubeClients(youtube, [
+    'TV',
+    'TV_EMBEDDED',
+    'WEB',
+    'MWEB',
+    'ANDROID',
+    'IOS',
+  ])
   let lastError
 
   for (const clientType of clientTypes) {
