@@ -31,6 +31,22 @@ export default {
 
   async run(ctx) {
     const { db, from } = ctx
+
+    // Final Form runs on the PvE turn engine: activateFinalForm() treats
+    // player.battleState as a monster fight, and this plugin has no PvP turn
+    // handoff. In a duel that battleState is type 'pvp' with no enemy on it, so
+    // falling through would apply Mei's heal and buff OUTSIDE the exchange: a
+    // free transform that never costs a turn and slips past the wager backstop
+    // in plugins/pvp.js. Refuse cleanly here, the same way .unwritten and
+    // .liveblast do. If Mei ever needs Final Form in duels, add a pvpFinalForm()
+    // handoff in plugins/pvp.js like the other character actives.
+    if (ctx.player?.battleState?.type === 'pvp') {
+      return ctx.reply(
+        `🌀 *Final Form doesn't reach a duel.*\n\n` +
+        `_Mei's transformation only awakens against monsters, on dungeon runs and boss fights._`,
+      )
+    }
+
     let replyMsg = ''
     let handled = false
 

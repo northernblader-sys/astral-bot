@@ -2,7 +2,7 @@
   "plans": {
     "weekly": {
       "label": "1 Week",
-      "priceNaira": 1000,
+      "priceNaira": 2500,
       "durationDays": 7
     },
     "monthly": {

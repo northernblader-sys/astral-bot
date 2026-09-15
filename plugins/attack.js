@@ -63,6 +63,7 @@ import {
   hasSecondTranscendance,
 } from '../lib/character-abilities.js'
 import { isStreaming, rampStreamViewers } from './stream.js'
+import { applyStruckReactions, applyPackLifestealOnDeal } from '../lib/premium-abilities.js'
 
 /** True when the current fight is against an anime boss with active bossState. */
 function isBossFight(player) {
@@ -422,6 +423,16 @@ export default {
         )
         if (hitNamedResult.lines.length)
           msg += hitNamedResult.lines.join('\n') + '\n'
+
+        // Dark Monarch pack — Dread lifesteal: heal the wielder a share of the
+        // damage they just dealt (the incoming-cut half lives in absorbDamage).
+        if (finalDmg > 0) {
+          const ls = applyPackLifestealOnDeal(player, finalDmg)
+          if (ls.heal > 0) {
+            player.hp = Math.min(player.maxHp, player.hp + ls.heal)
+            msg += ls.lines.join('\n') + '\n'
+          }
+        }
 
         // Urahara — Tear/Reshape (spec §13.2): apply the in-battle 'sever'
         // bleed to the enemy on the player's own hit landing. Applied
@@ -784,6 +795,23 @@ export default {
         return handleVictory(player, e, ctx)
       }
 
+      // Premium ability passive + pack thorns: the player was struck this turn,
+      // so punish the attacker (freeze/burn/sleep chance, Gemstone flame-thorns
+      // burn, Sicilian riposte reflect). Runs after the TURN_END victory check
+      // and before the status bar so any riposte chip — and a possible KO from
+      // it — land on the same HP the bar then renders.
+      if (player.hp < hpBeforeTurn && e.hp > 0) {
+        const struck = applyStruckReactions(player, e, hpBeforeTurn - player.hp)
+        if (struck.lines.length) msg += '\n' + struck.lines.join('\n')
+        if (struck.counterDamage > 0) {
+          e.hp = Math.max(0, e.hp - struck.counterDamage)
+          if (e.hp <= 0) {
+            if (boss) cleanupBossFight(player)
+            return handleVictory(player, e, ctx)
+          }
+        }
+      }
+
       msg +=
         `\n\n👤 *${player.name}*\n❤️ ${hpBar(player.hp, player.maxHp)}  💧 ${player.mp}/${player.maxMp} MP\n` +
         `${e.emoji ?? '👾'} *${e.name}*\n❤️ ${hpBar(e.hp, e.maxHp)}\n\n` +
@@ -797,7 +825,7 @@ export default {
       const wWear = wearWeaponOnTurn(player)
       msg += breakMessage(wWear)
       if (player.hp < hpBeforeTurn) {
-        const aWear = wearArmorOnHit(player)
+        const aWear = wearArmorOnHit(player, hpBeforeTurn - player.hp)
         msg += breakMessage(aWear)
       }
 

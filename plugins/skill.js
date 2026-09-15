@@ -55,6 +55,7 @@ import {
   hasSecondTranscendance,
 } from '../lib/character-abilities.js'
 import { isStreaming, rampStreamViewers } from './stream.js'
+import { applyStruckReactions, applyPackLifestealOnDeal } from '../lib/premium-abilities.js'
 import {
   applyBossSpecial,
   checkBossPhase,
@@ -493,6 +494,15 @@ export default {
           }
           msg += buildDanceOfTheRainMessage(bs, player)
 
+          // Dark Monarch pack — Dread lifesteal on the skill's dealt damage.
+          if (finalDmg > 0) {
+            const ls = applyPackLifestealOnDeal(player, finalDmg)
+            if (ls.heal > 0) {
+              player.hp = Math.min(player.maxHp, player.hp + ls.heal)
+              msg += ls.lines.join('\n') + '\n'
+            }
+          }
+
           // Urahara — Tear/Reshape: apply the in-battle 'sever' bleed on the
           // player's own hit landing, same as attack.js. Guarded on e.hp > 0
           // so a lethal skill short-circuits to victory instead of bleeding
@@ -773,6 +783,21 @@ export default {
         if (teResult.narrativeLine) msg += `\n_${teResult.narrativeLine}_`
       }
 
+      // Premium ability passive + pack thorns: player was struck this turn →
+      // punish the attacker (see attack.js for the full rationale). Before the
+      // status bar so a riposte chip/KO shows on the same HP the bar renders.
+      if (player.hp < hpBeforeTurn && e.hp > 0) {
+        const struck = applyStruckReactions(player, e, hpBeforeTurn - player.hp)
+        if (struck.lines.length) msg += '\n' + struck.lines.join('\n')
+        if (struck.counterDamage > 0) {
+          e.hp = Math.max(0, e.hp - struck.counterDamage)
+          if (e.hp <= 0) {
+            if (boss) cleanupBossFight(player)
+            return handleVictory(player, e, ctx)
+          }
+        }
+      }
+
       msg +=
         `\n\n👤 *${player.name}*\n❤️ ${hpBar(player.hp, player.maxHp)}  💧 ${player.mp}/${player.maxMp} MP\n` +
         `${e.emoji ?? '👾'} *${e.name}*\n❤️ ${hpBar(e.hp, e.maxHp)}\n\n` +
@@ -786,7 +811,7 @@ export default {
       const wWear = wearWeaponOnTurn(player)
       msg += breakMessage(wWear)
       if (player.hp < hpBeforeTurn) {
-        const aWear = wearArmorOnHit(player)
+        const aWear = wearArmorOnHit(player, hpBeforeTurn - player.hp)
         msg += breakMessage(aWear)
       }
 
