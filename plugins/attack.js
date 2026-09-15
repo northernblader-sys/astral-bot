@@ -21,6 +21,7 @@ import {
 import { getEffectiveStat, addStatusEffect, absorbDamage } from '../lib/effects.js'
 import { getModValue, applyHighDefenseCatchup } from '../lib/mods.js'
 import { sendBattleTurnReply } from '../lib/battle-frame-render.mjs'
+import { sendCinematicBossTurn } from '../lib/boss-cinematic.js'
 import {
   applyBossSpecial,
   checkBossPhase,
@@ -680,7 +681,7 @@ export default {
         }
 
         if (bossAtk.narrativeLines?.length)
-          msg += `_${bossAtk.narrativeLines[0]}_\n`
+          msg += bossAtk.narrativeLines.map(l => `_${l}_`).join('\n') + '\n'
         if (dealResult.narrativeLine) msg += `_${dealResult.narrativeLine}_\n`
 
         // Side-effects: Naruto Baryon lifespan drain reduces player stats
@@ -812,10 +813,12 @@ export default {
         }
       }
 
-      msg +=
-        `\n\n👤 *${player.name}*\n❤️ ${hpBar(player.hp, player.maxHp)}  💧 ${player.mp}/${player.maxMp} MP\n` +
-        `${e.emoji ?? '👾'} *${e.name}*\n❤️ ${hpBar(e.hp, e.maxHp)}\n\n` +
-        `*${p}attack* · *${p}skill <name>* · *${p}defend* · *${p}flee*`
+      if (!boss) {
+        msg +=
+          `\n\n👤 *${player.name}*\n❤️ ${hpBar(player.hp, player.maxHp)}  💧 ${player.mp}/${player.maxMp} MP\n` +
+          `${e.emoji ?? '👾'} *${e.name}*\n❤️ ${hpBar(e.hp, e.maxHp)}\n\n` +
+          `*${p}attack* · *${p}skill <name>* · *${p}defend* · *${p}flee*`
+      }
 
       bs.turn = (bs.turn ?? 1) + 1
       player.battleState = bs
@@ -830,7 +833,8 @@ export default {
       }
 
       await sendWillowAdvisory(ctx, player, e, boss)
-      await sendBattleTurnReply(ctx, { bs, player, e, msg, hpBeforeTurn, eHpBeforeTurn, boss })
+      if (boss) await sendCinematicBossTurn(ctx, { player, e, body: msg })
+      else await sendBattleTurnReply(ctx, { bs, player, e, msg, hpBeforeTurn, eHpBeforeTurn, boss })
       return player
     })
   },

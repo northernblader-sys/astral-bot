@@ -38,6 +38,7 @@ import {
   tickPermanentSever,
   applyIncomingDamage,
 } from '../lib/character-abilities.js'
+import { sendCinematicBossTurn } from '../lib/boss-cinematic.js'
 
 function isBossFight(player) {
   return !!(player.battleState?.enemy?.isBoss && player.battleState?.bossState)
@@ -285,7 +286,8 @@ export default {
             msg += `🩸 *${primaryHit}* damage!${bossAtk.bypassDefense ? ' _(bypasses DEF)_' : ''}\n`
           }
         }
-        if (bossAtk.narrativeLines?.length) msg += `_${bossAtk.narrativeLines[0]}_\n`
+        if (bossAtk.narrativeLines?.length)
+          msg += bossAtk.narrativeLines.map(l => `_${l}_`).join('\n') + '\n'
         if (dealResult.narrativeLine) msg += `_${dealResult.narrativeLine}_\n`
         msg += `\n💬 _"${getBossTaunt(player)}"_\n`
         if (player.hp <= 0) {
@@ -315,14 +317,17 @@ export default {
         if (teResult.narrativeLine) msg += `\n_${teResult.narrativeLine}_`
       }
 
-      msg += `\n\n👤 *${player.name}*\n❤️ ${hpBar(player.hp, player.maxHp)}  💧 ${player.mp}/${player.maxMp} MP\n` +
-             `${e.emoji ?? '👾'} *${e.name}*\n❤️ ${hpBar(e.hp, e.maxHp)}\n\n` +
-             `*${p}attack* · *${p}skill <name>* · *${p}useability <name>* · *${p}defend* · *${p}flee*`
+      if (!boss) {
+        msg += `\n\n👤 *${player.name}*\n❤️ ${hpBar(player.hp, player.maxHp)}  💧 ${player.mp}/${player.maxMp} MP\n` +
+               `${e.emoji ?? '👾'} *${e.name}*\n❤️ ${hpBar(e.hp, e.maxHp)}\n\n` +
+               `*${p}attack* · *${p}skill <name>* · *${p}useability <name>* · *${p}defend* · *${p}flee*`
+      }
 
       bs.turn = (bs.turn ?? 1) + 1
       player.battleState = bs
       await sendWillowAdvisory(ctx, player, e, boss)
-      await ctx.reply(msg)
+      if (boss) await sendCinematicBossTurn(ctx, { player, e, body: msg })
+      else await ctx.reply(msg)
       return player
     })
   },

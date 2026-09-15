@@ -49,6 +49,17 @@ export function isDungeonUnlocked(player, locId) {
   const loc = locationsMap[locId]
   if (!loc || loc.type !== 'dungeon') return false
 
+  // After an owner-run .dungeon-reset, this player must climb the prerequisite
+  // chain again from scratch: the level-eligibility bypass below is suspended
+  // until each tower is re-conquered. A dungeon with no prerequisite
+  // (entry_tower, season_01_ruins) stays open. Per-player flag, so only reset
+  // players are gated this way; everyone else keeps the bypass.
+  if (player.dungeonsRelocked) {
+    const prereq = loc.prerequisite
+    if (!prereq) return true
+    return player.dungeonProgress?.[prereq]?.conquered === true
+  }
+
   // Level-eligible players are never blocked by prerequisite/conquered
   // state — this covers migrated accounts with empty dungeonProgress and
   // high-level players who never formally "conquered" earlier towers.
