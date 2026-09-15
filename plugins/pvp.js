@@ -80,6 +80,7 @@ import { addStatusEffect, getEffectiveStat, absorbDamage, isNegativeEffect, appl
 import { findEquippedAbility, resolveActiveAbility } from '../lib/ability-engine.js'
 import { beastIntervention, awardBeastCp, BEAST_EVENT } from '../lib/beast-engine.js'
 import { wearWeaponOnTurn, wearArmorOnHit, breakMessage } from '../lib/durability.js'
+import { applyStruckReactions, applyPackLifestealOnDeal } from '../lib/premium-abilities.js'
 import { getGroupSettings, saveGroupSettings, saveFailedMessage, isGroupOrBotOwner } from '../lib/group-settings.js'
 import { NOT_GROUP, NOT_ALLOWED } from '../lib/group-helpers.js'
 import { isPremiumActive } from '../lib/premium.js'
@@ -2045,6 +2046,15 @@ async function runPvpTurn(ctx, action, skillQuery) {
   let voidReboundDmg = 0
   const voidReboundEffects = []
 
+  // Premium ability passives (freeze/burn/sleep the attacker) + pack thorns
+  // (Gemstone flame, Sicilian riposte) + Dark Monarch lifesteal are all
+  // ATTACKER-side effects, but the hit resolves inside the opponent's
+  // updatePlayer() where the actor is only a snapshot. Same split as the
+  // void-rebound accumulators above: capture the numbers here, apply them to the
+  // live actor further down in an actorJid updatePlayer call.
+  let pvpDmgDealtToOpp = 0        // Dark Monarch lifesteal heals the actor by a share of this
+  let pvpDefenderCanReact = false // the defender was struck AND is still standing
+
   let frostbindIntensified = false
   await updatePlayer(db, actorJid, (actor) => {
     // Only touched for the Absolute Zero one-way latch (battleState) — the
@@ -2675,7 +2685,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
         }
       }
 
-      const aWear = wearArmorOnHit(opp)
+      const aWear = wearArmorOnHit(opp, absorbed)
       msg += breakMessage(aWear)
 
       // Urahara — Tear/Reshape: applies on attack/skill hits landing too.
@@ -2683,6 +2693,13 @@ async function runPvpTurn(ctx, action, skillQuery) {
         const tearLine = applyTearOnHit(actorForCalc, opp, ctx)
         if (tearLine) msg += tearLine + '\n'
       }
+
+      // Capture the landed hit for the actor-side premium/pack effects applied
+      // after this mutator closes (see the accumulators up top). isOpponentLive
+      // is already false if this hit downed opp, so a felled defender doesn't
+      // riposte or chill — but the actor still lifesteals off the killing blow.
+      pvpDmgDealtToOpp += applied.damage
+      pvpDefenderCanReact = applied.damage > 0 && isOpponentLive(opp)
 
       // Yoriichi's cat form — check at the same "would this hit kill them"
       // point Mei's sustain already occupies, since PvP has no
@@ -2766,6 +2783,30 @@ async function runPvpTurn(ctx, action, skillQuery) {
   }
   // (the remaining skipsOpponentHit case — a defensive Wild Card — has nothing
   // to do to the opponent at all: her cards resolve on THEIR swing, not hers.)
+
+  // ── Premium ability passive + pack signatures (actor-side) ───────────────
+  // Applied on the live actor now that the opponent mutator has closed (see the
+  // accumulators declared up top). Runs only while the duel continues: the
+  // defender (opp, read fresh only for WHICH ability/pack they own) punishes the
+  // attacker for landing the blow — freeze/burn/sleep chance, Gemstone flame,
+  // Sicilian riposte — and the attacker heals from Dark Monarch's Dread. Riposte
+  // is floored non-lethal here: this file has no attacker-death chain to hook
+  // (see the cat-form note in the hit block), so a duel never ends on a reflect.
+  if (!opponentDefeated && pvpDmgDealtToOpp > 0) {
+    const oppSnap = pvpDefenderCanReact ? getPlayer(db, opponentJid) : null
+    await updatePlayer(db, actorJid, (actor) => {
+      const ls = applyPackLifestealOnDeal(actor, pvpDmgDealtToOpp)
+      if (ls.heal > 0) {
+        actor.hp = Math.min(actor.maxHp, actor.hp + ls.heal)
+        msg += ls.lines.join('\n') + '\n'
+      }
+      if (oppSnap) {
+        const struck = applyStruckReactions(oppSnap, actor, pvpDmgDealtToOpp)
+        if (struck.lines.length) msg += struck.lines.join('\n') + '\n'
+        if (struck.counterDamage > 0) actor.hp = Math.max(1, actor.hp - struck.counterDamage)
+      }
+    })
+  }
 
   // ── Deduct skill MP cost now that the hit has resolved (actor-side) ─────
   if (action === 'skill') {

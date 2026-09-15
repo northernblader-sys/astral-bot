@@ -70,6 +70,20 @@ export default {
       )
     }
 
+    // Equipped abilities resolve on the PvE turn engine: everything below reads
+    // bs.enemy and works a monster fight. A duel's battleState is type 'pvp'
+    // with no enemy on it, so this plugin never hands off to the PvP turn engine
+    // the way the character actives (Gojo, Kamehameha, etc.) do. Refuse cleanly
+    // here instead of computing a turn against an undefined opponent, matching
+    // .unwritten and .liveblast. Listing (the no-args branch above) still works
+    // in a duel since it never touches the battle state.
+    if (ctx.player?.battleState?.type === 'pvp') {
+      return ctx.reply(
+        `✨ *Equipped abilities don't work in a duel.*\n\n` +
+        `_Save them for dungeon runs, boss fights and swarms. In a duel, fight with ${p}attack, ${p}defend and your character's own power._`,
+      )
+    }
+
     await updatePlayer(ctx.db, ctx.from, async player => {
       if (!player.inBattle || !player.battleState) {
         await ctx.reply(`❌ Not in battle. Use *${p}dungeon* to find an enemy.`)

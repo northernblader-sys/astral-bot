@@ -20,6 +20,7 @@ import { addPremiumGroup, removePremiumGroup } from '../lib/premium-groups.js'
 import { isPremiumActive, grantPremium } from '../lib/premium.js'
 import { premiumPlans as plansData } from '../lib/game-data.js'
 import { sendImage } from '../lib/image.js'
+import { attemptWeeklyAbilitySpin } from '../lib/premium-abilities.js'
 
 const PLAN_KEYS = Object.keys(plansData.plans)
 
@@ -33,10 +34,51 @@ function daysLeft(expiresAt) {
   return Math.max(0, Math.ceil((expiresAt - Date.now()) / 86400000))
 }
 
+/**
+ * abilitySpinLine(spin) — the buyer-facing result of the weekly one-of-one
+ * ability spin (attemptWeeklyAbilitySpin), shown in the confirmation DM.
+ * Empty string when there was no spin (non-weekly plan).
+ */
+function abilitySpinLine(spin) {
+  switch (spin?.outcome) {
+    case 'won': {
+      const a = spin.ability
+      const move = a?.activeCommand ? `Active move: *${config.prefix}${a.activeCommand}*.\n` : `Passive only, no active move.\n`
+      return (
+        `🎰 *ABILITY SPIN — JACKPOT!*\n` +
+        `You claimed ${a?.emoji ?? '✨'} *${a?.name ?? spin.abilityId}* — one of only *5* in the whole game, and now yours alone forever.\n` +
+        move +
+        `${a?.passiveDesc ?? ''}`
+      )
+    }
+    case 'no_win':
+      return `🎰 *Ability Spin:* no ability this time. The 5 premium abilities are one-of-one — each weekly plan takes a single luck-based spin at whatever is still unclaimed.`
+    case 'sold_out':
+      return `🎰 *Ability Spin:* all 5 one-of-one abilities have already been claimed bot-wide, so there was nothing left to spin for.`
+    case 'already':
+      return `🎰 *Ability Spin:* you already hold *${spin.ability?.name ?? 'an ability'}* — a player can only ever hold one, so this weekly plan did not spin.`
+    default:
+      return ''
+  }
+}
+
+/** Short owner-facing note appended to the confirm ack. */
+function spinOutcomeShort(spin) {
+  switch (spin?.outcome) {
+    case 'won':      return `🎰 Won *${spin.ability?.name ?? spin.abilityId}*!`
+    case 'no_win':   return `🎰 Spin: no ability.`
+    case 'sold_out': return `🎰 Spin: all 5 claimed.`
+    case 'already':  return `🎰 Spin: already holds one.`
+    default:         return ''
+  }
+}
+
 function planList(pr) {
   return Object.entries(plansData.plans)
     .map(([key, plan]) => `  • *${key}* — ${plan.label}, ₦${plan.priceNaira.toLocaleString()} / ${plan.durationDays}d`)
-    .join('\n') + `\n\nBuy with *${pr}premium buy <plan>* _(DM only)_.`
+    .join('\n') +
+    `\n\nBuy with *${pr}premium buy <plan>* _(DM only)_.` +
+    `\n\n🎰 The *weekly* plan takes one luck-based spin at a legendary one-of-one ability — only *5* exist in the entire game, and each can be won by a single player, once, ever.`
 }
 
 function statusText(player, pr) {
@@ -45,7 +87,8 @@ function statusText(player, pr) {
       `👑 *Premium active!*\n` +
       `Plan: *${player.premium.plan}*\n` +
       `Expires in *${daysLeft(player.premium.expiresAt)} day(s)* _(${new Date(player.premium.expiresAt).toLocaleDateString()})_\n\n` +
-      `Perks: ✨ 1.25× XP/Solars on kill · 💫 1 free auto-revive/day`
+      `Perks: ✨ 1.25× XP/Solars on kill · 💫 1 free auto-revive/day\n` +
+      `🎰 Weekly plan: one spin at a one-of-one ability (only 5 exist ever)`
     )
   }
   return `🔓 *No active Premium.*\n\n📦 *Plans:*\n${planList(pr)}`
@@ -93,21 +136,31 @@ async function handleConfirm(ctx) {
   const target = findPlayerByName(allUsers, name)
   if (!target) return ctx.reply(`❌ No player found matching *"${name}"*.`)
 
+  let spinResult = null
   await updatePlayer(ctx.db, target.id, p => {
     grantPremium(p, planKey, plansData)
     p.premiumPending = null
+    // Weekly buyers get one luck-based spin at a one-of-one ability. Claimed
+    // through the shared exclusive-spin registry INSIDE this mutator so the
+    // claim persists atomically with the grant (see attemptWeeklyAbilitySpin).
+    if (planKey === 'weekly') {
+      spinResult = attemptWeeklyAbilitySpin(ctx.db, target.id, p)
+    }
   })
 
   const fresh = getPlayer(ctx.db, target.id)
+  const spinBlock = spinResult ? `\n\n${abilitySpinLine(spinResult)}` : ''
   await ctx.sock.sendMessage(target.id, {
     text:
       `🎉 *Premium activated!*\n` +
       `Plan: *${planKey}* — expires *${new Date(fresh.premium.expiresAt).toLocaleDateString()}*\n\n` +
-      `Perks: ✨ 1.25× XP/Solars on kill · 💫 1 free auto-revive/day\n` +
-      `Thank you for supporting the game!`,
+      `Perks: ✨ 1.25× XP/Solars on kill · 💫 1 free auto-revive/day` +
+      spinBlock +
+      `\n\nThank you for supporting the game!`,
   }).catch(() => {})
 
-  return ctx.reply(`✅ Granted *${planKey}* Premium to *${target.name}*.`)
+  const ownerNote = spinResult ? ` ${spinOutcomeShort(spinResult)}` : ''
+  return ctx.reply(`✅ Granted *${planKey}* Premium to *${target.name}*.${ownerNote}`)
 }
 
 async function handleReject(ctx) {

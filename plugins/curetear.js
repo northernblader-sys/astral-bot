@@ -1,21 +1,20 @@
 /**
  * <prefix>curetear
  *
- * Removes Urahara's PERMANENT PvP Tear/Reshape debuff (spec §13.2: "the
- * affected player must consume 300 Elixirs to remove the effect"). This is
- * deliberately its own command rather than routed through the generic
- * <prefix>use — 300 Severing Elixirs exceeds the standard inventory cap
- * (see lib/inventory-limits.js), so requiring 30 separate `.use` commands
- * would be a genuinely painful UX with zero gameplay upside; this command
- * consumes all 300 in one action and reports how many more are needed if
+ * Removes Urahara's PERMANENT PvP Tear/Reshape debuff. This is deliberately
+ * its own command rather than routed through the generic <prefix>use:
+ * clearing the permanent sever consumes REQUIRED (30) Severing Elixirs in a
+ * single action, and making the player fire that many separate `.use`
+ * commands would be a genuinely painful UX with zero gameplay upside. This
+ * command consumes them all at once and reports how many more are needed if
  * the player doesn't have enough yet.
  *
  * Does NOT touch the in-battle 'sever'-style activeEffects DOT (that one
  * cures normally via <prefix>use severing_elixir since it IS a normal
  * activeEffects entry once effects.js's cure() is given explicit
- * targets: ['tear'] — see data/season-01-content.json's severing_elixir).
- * This command is specifically for player.permanentSever, which lives
- * outside activeEffects entirely (see lib/character-abilities.js).
+ * targets: ['tear']; see data/items.json's severing_elixir, a cheap
+ * shop-buyable cure). This command is specifically for player.permanentSever,
+ * which lives outside activeEffects entirely (see lib/character-abilities.js).
  */
 import { config } from '../config.js'
 import { updatePlayer } from '../lib/player-repo.js'
@@ -43,8 +42,8 @@ export default {
     if (owned < REQUIRED) {
       return ctx.reply(
         `🩸 *Permanent Tear active.* _(0.5% max HP lost on every action, until cured.)_\n\n` +
-        `You need *${REQUIRED}* Severing Elixirs to cure it — you have *${owned}*.\n` +
-        `_Severing Elixirs drop from Season 1's dungeon (${p}dungeon — The Beginning of the End) and its boss._`,
+        `You need *${REQUIRED}* Severing Elixirs to cure it. You have *${owned}*.\n` +
+        `_Buy them cheap from the ${p}shop, or find them in Season 1's dungeon (${p}dungeon: The Beginning of the End) and its boss._`,
       )
     }
 

@@ -47,6 +47,7 @@ const CATEGORY_META = {
   dungeon:   { emoji: '🗺️', label: 'Dungeon',   blurb: 'Deep beneath Astral, ancient rifts hide treasure and terror in equal measure.' },
   inventory: { emoji: '🎒', label: 'Inventory', blurb: 'Everything you carry, everything you\'ve earned. Manage your gear and supplies here.' },
   town:      { emoji: '🏘️', label: 'Town',      blurb: 'The heart of Astral Town — rest, restock, and prepare for your next journey.' },
+  packs:     { emoji: '🎁', label: 'Season Packs', blurb: 'Themed gem loadouts you carry into any fight. Each pack brings a full set, a title beside your name, and one signature power that is live only while you wear it.' },
   housing:   { emoji: '🏠', label: 'Housing',   blurb: 'A place of your own on the edge of town. Build rooms, furnish them, grow crops in real time, fish the quiet water, and have people over.' },
   pvp:       { emoji: '🥊', label: 'PvP',       blurb: 'Prove yourself against other adventurers, not just monsters.' },
   cards:     { emoji: '🎴', label: 'Cards',     blurb: 'Anime cards and Anime Series spawn across Astral — claim them, trade them, and build your collection.' },

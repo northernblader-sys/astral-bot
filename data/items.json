@@ -900,6 +900,33 @@
     "image": "https://animeastral.qzz.io/assets/items/warm_cloth.png"
   },
   {
+    "id": "severing_elixir",
+    "name": "Severing Elixir",
+    "type": "consumable",
+    "slot": null,
+    "rarity": "uncommon",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 0,
+      "def": 0,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 15,
+    "buyPrice": 50,
+    "effect": {
+      "type": "cure",
+      "targets": [
+        "tear"
+      ]
+    },
+    "description": "A bitter draught that knits a Reshaped wound shut. Drink it to stop the Tear's bleed. Alchemists began brewing it by the crate once Urahara made a habit of the wound.",
+    "image": "https://animeastral.qzz.io/assets/items/severing_elixir.png"
+  },
+  {
     "id": "smelling_salts",
     "name": "Smelling Salts",
     "type": "consumable",
@@ -1438,5 +1465,192 @@
       "autoRestock": "totem_of_undying"
     },
     "description": "A clasp of banked embers worn at the hip. Cancels one death at 40% HP, then slots a fresh Totem of Undying from your PvP kit into your off hand before the ash settles."
+  },
+  {
+    "id": "steel_helmet",
+    "name": "Steel Helmet",
+    "type": "armor",
+    "slot": "helmet",
+    "rarity": "rare",
+    "levelReq": 25,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 0,
+      "def": 6,
+      "lck": 0,
+      "maxHp": 60,
+      "maxMp": 0
+    },
+    "sellPrice": 180,
+    "buyPrice": 495,
+    "effect": null,
+    "description": "Forged steel with a hinged visor. The honest step between iron and diamond.",
+    "maxDurability": 130,
+    "image": "https://animeastral.qzz.io/assets/items/steel_helmet.png"
+  },
+  {
+    "id": "steel_chestplate",
+    "name": "Steel Chestplate",
+    "type": "armor",
+    "slot": "chestplate",
+    "rarity": "rare",
+    "levelReq": 25,
+    "statBonuses": {
+      "str": 0,
+      "agi": 0,
+      "int": 0,
+      "def": 15,
+      "lck": 0,
+      "maxHp": 40,
+      "maxMp": 0
+    },
+    "sellPrice": 220,
+    "buyPrice": 605,
+    "effect": null,
+    "description": "Layered steel plate over a padded gambeson. Turns aside what iron only slows.",
+    "maxDurability": 130,
+    "image": "https://animeastral.qzz.io/assets/items/steel_chestplate.png"
+  },
+  {
+    "id": "steel_boots",
+    "name": "Steel Boots",
+    "type": "armor",
+    "slot": "boots",
+    "rarity": "rare",
+    "levelReq": 25,
+    "statBonuses": {
+      "str": 0,
+      "agi": 3,
+      "int": 0,
+      "def": 5,
+      "lck": 0,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 150,
+    "buyPrice": 413,
+    "effect": null,
+    "description": "Steel-shod boots with articulated plates. Solid footing without the drag of full iron.",
+    "maxDurability": 130,
+    "image": "https://animeastral.qzz.io/assets/items/steel_boots.png"
+  },
+  {
+    "id": "rangers_boots",
+    "name": "Ranger's Boots",
+    "type": "armor",
+    "slot": "boots",
+    "rarity": "uncommon",
+    "levelReq": 20,
+    "statBonuses": {
+      "str": 0,
+      "agi": 6,
+      "int": 0,
+      "def": 2,
+      "lck": 1,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 90,
+    "buyPrice": 250,
+    "effect": null,
+    "description": "Light, flexible boots built for scouts who live and die by their footwork.",
+    "maxDurability": 110,
+    "image": "https://animeastral.qzz.io/assets/items/rangers_boots.png"
+  },
+  {
+    "id": "warlords_helm",
+    "name": "Warlord's Helm",
+    "type": "armor",
+    "slot": "helmet",
+    "rarity": "epic",
+    "levelReq": 50,
+    "statBonuses": {
+      "str": 5,
+      "agi": 0,
+      "int": 0,
+      "def": 12,
+      "lck": 0,
+      "maxHp": 100,
+      "maxMp": 0
+    },
+    "sellPrice": 600,
+    "buyPrice": 1650,
+    "effect": null,
+    "description": "A brutal, horned war-helm. Steel enough to trust, heavy enough to swing behind.",
+    "maxDurability": 220,
+    "image": "https://animeastral.qzz.io/assets/items/warlords_helm.png"
+  },
+  {
+    "id": "bloodrage_draught",
+    "name": "Bloodrage Draught",
+    "type": "consumable",
+    "slot": null,
+    "rarity": "rare",
+    "levelReq": 25,
+    "statBonuses": null,
+    "sellPrice": 500,
+    "buyPrice": 2000,
+    "effect": {
+      "type": "warcry",
+      "percent": 40,
+      "hits": 4
+    },
+    "description": "Drink it and the whole fight narrows to one red line. +40% damage on your next 4 landed hits."
+  },
+  {
+    "id": "ironwall_draught",
+    "name": "Ironwall Draught",
+    "type": "consumable",
+    "slot": null,
+    "rarity": "rare",
+    "levelReq": 25,
+    "statBonuses": null,
+    "sellPrice": 500,
+    "buyPrice": 2000,
+    "effect": {
+      "type": "ironskin",
+      "percent": 40,
+      "hits": 4
+    },
+    "description": "Your body forgets how to bruise. 40% less damage from the next 4 hits you take."
+  },
+  {
+    "id": "greater_barrier_tonic",
+    "name": "Greater Barrier Tonic",
+    "type": "consumable",
+    "slot": null,
+    "rarity": "epic",
+    "levelReq": 40,
+    "statBonuses": null,
+    "sellPrice": 150,
+    "buyPrice": 400,
+    "effect": {
+      "type": "shield",
+      "amount": 260,
+      "duration": 4
+    },
+    "description": "A denser weave of the old barrier spell. Absorbs up to 260 damage over 4 turns."
+  },
+  {
+    "id": "duelists_sigil",
+    "name": "Duelist's Sigil",
+    "type": "relic",
+    "slot": "offhand",
+    "rarity": "epic",
+    "levelReq": 1,
+    "statBonuses": {
+      "str": 0,
+      "agi": 15,
+      "int": 0,
+      "def": 0,
+      "lck": 10,
+      "maxHp": 0,
+      "maxMp": 0
+    },
+    "sellPrice": 1800,
+    "buyPrice": 6000,
+    "description": "A fencer's pin worn at the collar. Equip it in your offhand for a permanent +15 Agility and +10 Luck. You would rather not be hit at all.",
+    "image": "https://animeastral.qzz.io/assets/items/duelists_sigil.png"
   }
 ]

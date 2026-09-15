@@ -24,6 +24,7 @@ import {
 import { applyAllNamedPassives, NP_EVENT } from '../lib/named-passives.js'
 import { beastIntervention, BEAST_EVENT } from '../lib/beast-engine.js'
 import { wearArmorOnHit, breakMessage } from '../lib/durability.js'
+import { applyStruckReactions } from '../lib/premium-abilities.js'
 import {
   activateFinalForm,
   sendFinalFormVideo,
@@ -459,6 +460,21 @@ export default {
         return handleVictory(player, e, ctx)
       }
 
+      // Premium ability passive + pack thorns: player was struck this turn →
+      // punish the attacker (freeze/burn/sleep chance, flame-thorns, riposte).
+      // Defending deals no damage, so there's no lifesteal here.
+      if (player.hp < hpBeforeTurn && e.hp > 0) {
+        const struck = applyStruckReactions(player, e, hpBeforeTurn - player.hp)
+        if (struck.lines.length) msg += '\n' + struck.lines.join('\n')
+        if (struck.counterDamage > 0) {
+          e.hp = Math.max(0, e.hp - struck.counterDamage)
+          if (e.hp <= 0) {
+            if (boss) cleanupBossFight(player)
+            return handleVictory(player, e, ctx)
+          }
+        }
+      }
+
       msg +=
         `\n\n❤️ ${hpBar(player.hp, player.maxHp)}  💧 ${player.mp}/${player.maxMp} MP\n\n` +
         `*${p}attack* · *${p}skill <name>* · *${p}defend* · *${p}flee*`
@@ -469,7 +485,7 @@ export default {
       // Durability — armor wears if the player took damage this turn
       // (defending doesn't wear the weapon since it isn't being used).
       if (player.hp < hpBeforeTurn) {
-        const aWear = wearArmorOnHit(player)
+        const aWear = wearArmorOnHit(player, hpBeforeTurn - player.hp)
         msg += breakMessage(aWear)
       }
 

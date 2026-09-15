@@ -40,6 +40,7 @@ import {
   listCheatDefs,
   getCheatDef,
   MAX_ACTIVE_MODS,
+  DISCONNECTED_EFFECTS,
 } from '../lib/mods.js'
 
 const MIN_LISTING_PRICE = 100

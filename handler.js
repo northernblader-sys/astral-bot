@@ -319,6 +319,19 @@ const BATTLE_ALLOWED_COMMANDS = new Set([
   // couldn't even attack the shared boss.
   'dparty', 'dungeonparty', 'dp', 'coop',
   'pattack', 'pa', 'pdefend', 'pd', 'pflee', 'pcv', 'pcinder',
+  // Premium-only ability actives (plugins/freezeup.js, heatwave.js, nighteyes.js,
+  // daylight.js — granted by the weekly premium spin, see data/premium-abilities.json).
+  // Same recurring shape as the character actives above: each is a real once-per-battle
+  // battle action, and PvE (dungeon/boss/swarm) is the only thing that sets
+  // player.inBattle, so without this line they'd be unreachable in exactly the fights
+  // they exist for. Every alias is listed because cmd is the raw token (no alias resolution).
+  // NB: 'night' (plugins/night.js) and 'dl' (plugins/downloader.js) are other
+  // commands' tokens, so they're deliberately NOT here — whitelisting them would
+  // let those unrelated commands run mid-battle. The ability aliases dodge both.
+  'freezeup', 'freeze', 'fu',
+  'heatwave', 'heat', 'hw',
+  'nighteyes', 'ne',
+  'daylight', 'day', 'sunrise',
   // needed utility/reference while fighting
   'shop',
   'gm', 'gameshop',
