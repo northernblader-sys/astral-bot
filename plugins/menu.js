@@ -64,6 +64,8 @@ const CATEGORY_META = {
   moderation:{ emoji: '🛡️', label: 'Moderation', blurb: 'Keep the room in order: welcomes, guards, and cleanup tools.' },
   season:    { emoji: '🌸', label: 'Season',    blurb: 'Seasonal content: passes, checkpoints, and limited spins.' },
   story:     { emoji: '📖', label: 'Story',     blurb: 'Follow the Sun World\'s unfolding narrative, chapter by chapter.' },
+  progression: { emoji: '📈', label: 'Progression', blurb: 'Quests and milestones that push your journey forward.' },
+  download:  { emoji: '⬇️', label: 'Download',  blurb: 'Pull music straight into chat.' },
 }
 
 function capitalize(str) {

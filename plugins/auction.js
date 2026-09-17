@@ -1,187 +1,185 @@
 /**
- * auction.js — Astral Auction House. Solars-only bidding on mythic gear
- * that exists ONLY here (data/auction.json) — never in the shop, never
- * craftable.
+ * auction.js — Astral Auction House (single global auction model).
+ *
+ * ONE auction runs realm-wide at a time. The owner starts it from any group
+ * chat by picking an item id from the fixed catalog (data/auction.json —
+ * mythic gear that exists ONLY here, never in the shop, never craftable),
+ * a starting bid, and a duration. Anyone, from ANY group chat the bot is
+ * in, can then bid — bidding is global, not tied to where the auction was
+ * started. When the timer runs out, the bot returns to the ORIGINAL
+ * starting group and @tags the winner there to announce them.
  *
  * Usage:
- *   .auction              — show all 5 current lots
- *   .auction bid <#> <amt> — place a bid on lot number # (1-5)
- *   .auction history      — last few items sold
+ *   .auction start <item_id> <startbid> <duration>  — owner only, opens
+ *                                                       the auction and
+ *                                                       posts the item's
+ *                                                       image + price.
+ *                                                       duration is a
+ *                                                       number + unit,
+ *                                                       e.g. 30m or 2h.
+ *   .auction <amount>                                — bid, from any group.
+ *   .auction                                         — show current auction.
+ *   .auction history                                 — last few items sold.
+ *   .auction cancel                                  — owner only, cancels
+ *                                                       the running auction
+ *                                                       (bid refunded).
  *
- * 5 lots are active at once, shared realm-wide, and all refresh together
- * once per day (all 5 replaced with a fresh random 5 regardless of whether
- * they sold). Each lot has its own independent bid + 10-min countdown timer,
- * anti-sniped individually.
+ * Bids are escrowed immediately (deducted from the bidder's wallet the
+ * moment they bid) and refunded instantly if outbid — you only ever pay if
+ * you're the winner when the timer ends. Bidding within the last minute
+ * extends the timer by 1 minute (anti-snipe), repeatable.
  */
 import { config } from '../config.js'
-import { updatePlayer, getPlayer } from '../lib/player-repo.js'
+import { updatePlayer } from '../lib/player-repo.js'
 import { auctionItems } from '../lib/game-data.js'
-import { hasInventoryRoom, inventoryFullMessage } from '../lib/inventory-limits.js'
+import { hasInventoryRoom } from '../lib/inventory-limits.js'
 import { pushTxLog, genRef } from '../lib/astralpay.js'
+import { isOwnerJid } from '../lib/group-helpers.js'
+import { sendImageTo } from '../lib/image.js'
 
-const BID_WINDOW_MS   = 10 * 60 * 1000
-const LOT_COUNT       = 5
-const DAY_MS          = 24 * 60 * 60 * 1000
+const MIN_DURATION_MS = 60_000                 // 1 minute
+const MAX_DURATION_MS = 24 * 60 * 60_000       // 24 hours, sanity cap
 
-let lots = []            // array of up to LOT_COUNT lot objects, see startLot()
-let currentDayKey = null // which day's rotation is currently loaded
-const soldHistory = []   // { itemName, buyerName, price, at }
+const soldHistory = [] // { itemName, buyerName, price, at }
 
-function todayKey() {
-  return Math.floor(Date.now() / DAY_MS)
-}
-
-function pickRandomFive() {
-  const pool = [...auctionItems]
-  const picked = []
-  for (let i = 0; i < LOT_COUNT && pool.length; i++) {
-    const idx = Math.floor(Math.random() * pool.length)
-    picked.push(pool.splice(idx, 1)[0])
-  }
-  return picked
-}
+// The single global auction, or null if none is running.
+// { item, bid, bidderId, bidderName, endsAt, startJid, _timeout }
+let auction = null
 
 function slotLabel(item) {
   const map = { weapon: '⚔️ Weapon', offhand: '🛡️ Offhand', helmet: '⛑️ Helmet', chestplate: '👕 Chestplate', boots: '👢 Boots', relic: '💠 Relic' }
   return map[item.slot] ?? item.slot
 }
 
-function startLot(item, ctx) {
-  const lot = {
-    item,
-    bid: item.startingBid,
-    bidderId: null,
-    bidderName: null,
-    endsAt: Date.now() + BID_WINDOW_MS,
-    jid: ctx.sender,
-    _timeout: null,
-  }
-  lot._timeout = setTimeout(() => closeLot(lot, ctx), BID_WINDOW_MS)
-  return lot
+function findItem(itemId) {
+  return auctionItems.find(i => i.id === itemId) ?? null
 }
 
 /**
- * Ensures today's rotation of 5 lots is loaded. If the day has rolled over
- * since the lots were last built, wipes all 5 (regardless of sold/unsold
- * state) and replaces them with a fresh random 5 — this is a deliberate
- * "always replace all 5 daily" reset, not a carry-over.
+ * Parses a duration string like "30m", "2h", "90" (bare number = minutes)
+ * into milliseconds. Returns null if unparseable or out of bounds.
  */
-function ensureRotation(ctx) {
-  const key = todayKey()
-  if (currentDayKey === key && lots.length) return
-
-  // Clear any still-running timers from the previous rotation.
-  for (const lot of lots) {
-    if (lot?._timeout) clearTimeout(lot._timeout)
-  }
-
-  currentDayKey = key
-  lots = pickRandomFive().map(item => startLot(item, ctx))
+function parseDuration(input) {
+  if (!input) return null
+  const match = String(input).trim().match(/^(\d+(?:\.\d+)?)\s*(m|h)?$/i)
+  if (!match) return null
+  const value = parseFloat(match[1])
+  if (!value || value <= 0) return null
+  const unit = (match[2] ?? 'm').toLowerCase()
+  const ms = unit === 'h' ? value * 60 * 60_000 : value * 60_000
+  if (ms < MIN_DURATION_MS || ms > MAX_DURATION_MS) return null
+  return ms
 }
 
-async function closeLot(lot, ctx) {
-  const idx = lots.indexOf(lot)
-  if (idx === -1) return // already replaced by a daily rotation
+function humanRemaining(ms) {
+  const totalMin = Math.max(0, Math.ceil(ms / 60_000))
+  const h = Math.floor(totalMin / 60)
+  const m = totalMin % 60
+  if (h > 0 && m > 0) return `${h}h ${m}m`
+  if (h > 0) return `${h}h`
+  return `${m}m`
+}
 
-  if (!lot.bidderId) {
-    soldHistory.unshift({ itemId: lot.item.id, itemName: lot.item.name, buyerName: null, price: 0, at: Date.now() })
+function formatAuction() {
+  const p = config.prefix
+  if (!auction) {
+    return (
+      `🏛️ *ASTRAL AUCTION HOUSE*\n` +
+      `─────────────────────\n` +
+      `_No auction is currently running._\n\n` +
+      `_Check back later, or use *${p}auction history* to see recent sales._`
+    )
+  }
+
+  const item = auction.item
+  const bonusLines = Object.entries(item.statBonuses ?? {})
+    .filter(([, v]) => v !== 0)
+    .map(([k, v]) => `${k.toUpperCase()} +${v}`)
+    .join(' · ')
+
+  return (
+    `🏛️ *ASTRAL AUCTION HOUSE*\n` +
+    `─────────────────────\n` +
+    `🟥 *${item.name}* _(Mythic)_\n` +
+    `${slotLabel(item)} · 🔒 Lvl ${item.levelReq} · ${bonusLines}\n\n` +
+    `💰 Current bid: *${auction.bid.toLocaleString()} ☀️*` +
+    (auction.bidderName ? ` — *${auction.bidderName}*` : ' — no bids yet') + `\n` +
+    `⏱️ Time left: *${humanRemaining(auction.endsAt - Date.now())}*\n\n` +
+    `_Use *${p}auction <amount>* to bid, from any group — e.g. ${p}auction 25000_`
+  )
+}
+
+async function closeAuction(ctx) {
+  const closing = auction
+  if (!closing) return
+  auction = null // free the slot immediately so a new one can start
+
+  if (!closing.bidderId) {
+    soldHistory.unshift({ itemId: closing.item.id, itemName: closing.item.name, buyerName: null, price: 0, at: Date.now() })
     if (soldHistory.length > 20) soldHistory.length = 20
     try {
-      await ctx.sock.sendMessage(lot.jid, {
-        text: `🏛️ *AUCTION LOT CLOSED*\n\n*${lot.item.name}* went unsold — no bids reached the reserve.\n_All lots refresh daily — check *${config.prefix}auction*._`,
+      await ctx.sock.sendMessage(closing.startJid, {
+        text: `🏛️ *AUCTION CLOSED*\n\n*${closing.item.name}* went unsold — no bids were placed.`,
       })
     } catch {}
     return
   }
 
-  // The winning bid was already escrowed from the bidder's wallet in placeBid.
-  // At settlement we only grant the item. If the inventory is full, refund
-  // the escrowed bid instead — the bidder keeps their solars, lot goes unsold.
+  // The winning bid was already escrowed from the bidder's wallet when they
+  // bid. At settlement we only grant the item. If inventory is full, refund
+  // the escrowed bid instead — the bidder keeps their solars, sale fails.
   let outcome = 'pending'
-  await updatePlayer(ctx.db, lot.bidderId, player => {
+  await updatePlayer(ctx.db, closing.bidderId, player => {
     player.wallet = player.wallet ?? {}
     if (!hasInventoryRoom(player, 1)) {
-      // Inventory full: refund the escrowed bid
-      player.wallet.solars = (player.wallet.solars ?? 0) + lot.bid
+      player.wallet.solars = (player.wallet.solars ?? 0) + closing.bid
       pushTxLog(player, {
-        ref: genRef(), type: 'auction_refund', amount: lot.bid,
-        note: `${lot.item.name} — inventory full at settlement`,
+        ref: genRef(), type: 'auction_refund', amount: closing.bid,
+        note: `${closing.item.name} — inventory full at settlement`,
       })
       outcome = 'inventory_full'
       return player
     }
-    // Grant item — no solar deduction here, bid was already escrowed
-    if (!player.inventory.includes(lot.item.id)) player.inventory.push(lot.item.id)
+    if (!player.inventory.includes(closing.item.id)) player.inventory.push(closing.item.id)
     pushTxLog(player, {
-      ref: genRef(), type: 'auction_win', amount: lot.bid,
-      note: lot.item.name,
+      ref: genRef(), type: 'auction_win', amount: closing.bid,
+      note: closing.item.name,
     })
     outcome = 'sold'
     return player
   }).catch(() => { outcome = 'error' })
 
+  const bareWinner = String(closing.bidderId).replace(/@.*$/, '')
+
   if (outcome === 'inventory_full') {
-    soldHistory.unshift({ itemId: lot.item.id, itemName: lot.item.name, buyerName: null, price: 0, at: Date.now() })
+    soldHistory.unshift({ itemId: closing.item.id, itemName: closing.item.name, buyerName: null, price: 0, at: Date.now() })
     if (soldHistory.length > 20) soldHistory.length = 20
     try {
-      await ctx.sock.sendMessage(lot.jid, {
+      await ctx.sock.sendMessage(closing.startJid, {
         text:
-`🏛️ *AUCTION LOT CLOSED — SALE FAILED*
+`🏛️ *AUCTION CLOSED — SALE FAILED*
 
-*${lot.item.name}* would have sold to *${lot.bidderName}* for *${lot.bid.toLocaleString()} ☀️*, but their inventory is full.
-☀️ *${lot.bid.toLocaleString()} solars* refunded to *${lot.bidderName}* — lot goes unsold.
-
-_All lots refresh daily — check *${config.prefix}auction*._`,
+*${closing.item.name}* would have sold to @${bareWinner} for *${closing.bid.toLocaleString()} ☀️*, but their inventory is full.
+☀️ *${closing.bid.toLocaleString()} solars* refunded — item goes unsold.`,
+        mentions: [closing.bidderId],
       })
     } catch {}
     return
   }
 
   if (outcome === 'sold') {
-    soldHistory.unshift({ itemId: lot.item.id, itemName: lot.item.name, buyerName: lot.bidderName, price: lot.bid, at: Date.now() })
+    soldHistory.unshift({ itemId: closing.item.id, itemName: closing.item.name, buyerName: closing.bidderName, price: closing.bid, at: Date.now() })
     if (soldHistory.length > 20) soldHistory.length = 20
     try {
-      await ctx.sock.sendMessage(lot.jid, {
+      await ctx.sock.sendMessage(closing.startJid, {
         text:
-`🏛️ *AUCTION LOT CLOSED — SOLD!*
+`🏛️ *AUCTION CLOSED — SOLD!* 🎉
 
-*${lot.item.name}* sold to *${lot.bidderName}* for *${lot.bid.toLocaleString()} ☀️*!
-
-_All lots refresh daily — check *${config.prefix}auction*._`,
+Congratulations @${bareWinner}! You won *${closing.item.name}* for *${closing.bid.toLocaleString()} ☀️*!`,
+        mentions: [closing.bidderId],
       })
     } catch {}
   }
-}
-
-function formatLots(allLots) {
-  const p = config.prefix
-  const lines = [
-    `🏛️ *ASTRAL AUCTION HOUSE*`,
-    `─────────────────────`,
-    `_5 mythic lots, refreshed daily. Highest bidder wins when the timer runs out._`,
-    '',
-  ]
-
-  allLots.forEach((lot, i) => {
-    const item = lot.item
-    const remaining = Math.max(0, Math.ceil((lot.endsAt - Date.now()) / 60000))
-    const bonusLines = Object.entries(item.statBonuses ?? {})
-      .filter(([, v]) => v !== 0)
-      .map(([k, v]) => `${k.toUpperCase()} +${v}`)
-      .join(' · ')
-
-    lines.push(`*[${i + 1}]* 🟥 *${item.name}* _(Mythic)_`)
-    lines.push(`${slotLabel(item)} · 🔒 Lvl ${item.levelReq} · ${bonusLines}`)
-    lines.push(
-      `💰 ${lot.bid.toLocaleString()} ☀️` +
-      (lot.bidderName ? ` — *${lot.bidderName}*` : ' — no bids') +
-      ` · ⏱️ ${remaining}m left`,
-    )
-    lines.push('')
-  })
-
-  lines.push(`_Use *${p}auction bid <#> <amount>* — e.g. ${p}auction bid 2 5000_`)
-  return lines.join('\n')
 }
 
 export default {
@@ -189,83 +187,180 @@ export default {
   aliases:        ['ah', 'auctionhouse'],
   category:       'economy',
   requiresPlayer: true,
-  description:    'Bid on mythic gear that only ever appears in the Auction House — 5 lots, refreshed daily',
+  description:    'One global auction at a time on mythic gear that only ever appears here. Owner starts it, anyone can bid from any group.',
+  subcommands: [
+    { cmd: 'start <item_id> <startbid> <duration>', desc: 'owner only — open a new auction, e.g. .auction start solaris_reaver 18000 2h' },
+    { cmd: '<amount>', desc: 'bid on the running auction from any group, e.g. .auction 25000' },
+    { cmd: 'history', desc: 'see recently sold items' },
+    { cmd: 'cancel', desc: 'owner only — cancel the running auction' },
+  ],
 
   async run(ctx) {
     const { args, reply } = ctx
     const sub = args[0]?.toLowerCase()
 
-    ensureRotation(ctx)
-
+    if (sub === 'start')   return startAuction(ctx)
     if (sub === 'history') return showHistory(ctx)
-    if (sub === 'bid')      return placeBid(ctx)
+    if (sub === 'cancel')  return cancelAuction(ctx)
 
-    return reply(formatLots(lots))
+    // .auction <amount> — bid, if the first arg parses as a positive number
+    if (args.length && /^\d+$/.test(args[0])) return placeBid(ctx)
+
+    return reply(formatAuction())
   },
+}
+
+async function startAuction(ctx) {
+  const { args, reply, from } = ctx
+  const p = config.prefix
+
+  if (!from || !isOwnerJid(from)) {
+    return reply('❌ Owner only.')
+  }
+
+  if (auction) {
+    return reply(
+      `❌ An auction is already running — *${auction.item.name}* at *${auction.bid.toLocaleString()} ☀️*.\n` +
+      `_Wait for it to close, or use *${p}auction cancel* first._`,
+    )
+  }
+
+  const itemId       = args[1]
+  const startBid     = Math.floor(Number(args[2]))
+  const durationMs   = parseDuration(args[3])
+
+  if (!itemId || !startBid || startBid <= 0 || !durationMs) {
+    return reply(
+      `❌ Usage: *${p}auction start <item_id> <startbid> <duration>*\n` +
+      `_Duration uses m for minutes or h for hours — e.g. ${p}auction start solaris_reaver 18000 2h_`,
+    )
+  }
+
+  const item = findItem(itemId)
+  if (!item) {
+    return reply(`❌ No auction-catalog item with id *"${itemId}"*. Check data/auction.json for valid ids.`)
+  }
+
+  auction = {
+    item,
+    bid: startBid,
+    bidderId: null,
+    bidderName: null,
+    endsAt: Date.now() + durationMs,
+    startJid: ctx.sender, // the group where the auction was started — winner is announced back here
+    _timeout: null,
+  }
+  auction._timeout = setTimeout(() => closeAuction(ctx), durationMs)
+
+  const bonusLines = Object.entries(item.statBonuses ?? {})
+    .filter(([, v]) => v !== 0)
+    .map(([k, v]) => `${k.toUpperCase()} +${v}`)
+    .join(' · ')
+
+  const caption =
+    `🏛️ *AUCTION STARTED!*\n\n` +
+    `🟥 *${item.name}* _(Mythic)_\n` +
+    `${slotLabel(item)} · 🔒 Lvl ${item.levelReq} · ${bonusLines}\n\n` +
+    `💰 Starting bid: *${startBid.toLocaleString()} ☀️*\n` +
+    `⏱️ Ends in: *${humanRemaining(durationMs)}*\n\n` +
+    `_Use *${p}auction <amount>* to bid — from any group chat!_`
+
+  if (item.image) {
+    return sendImageTo(ctx, item.image, caption, ctx.sender)
+  }
+  return reply(caption)
+}
+
+async function cancelAuction(ctx) {
+  const { reply, from } = ctx
+
+  if (!from || !isOwnerJid(from)) {
+    return reply('❌ Owner only.')
+  }
+  if (!auction) {
+    return reply('❌ No auction is currently running.')
+  }
+
+  clearTimeout(auction._timeout)
+  const cancelled = auction
+  auction = null
+
+  // Refund the current top bidder, if any — they were escrowed.
+  if (cancelled.bidderId) {
+    await updatePlayer(ctx.db, cancelled.bidderId, p => {
+      p.wallet = p.wallet ?? {}
+      p.wallet.solars = (p.wallet.solars ?? 0) + cancelled.bid
+      pushTxLog(p, {
+        ref: genRef(), type: 'auction_refund', amount: cancelled.bid,
+        note: `${cancelled.item.name} — auction cancelled`,
+      })
+      return p
+    }).catch(() => {})
+  }
+
+  return reply(
+    `🏛️ *Auction cancelled.*\n*${cancelled.item.name}* — no sale.` +
+    (cancelled.bidderName ? `\n*${cancelled.bidderName}*'s bid of *${cancelled.bid.toLocaleString()} ☀️* has been refunded.` : ''),
+  )
 }
 
 async function placeBid(ctx) {
   const { player, args, reply } = ctx
   const p = config.prefix
 
-  const lotNum = parseInt(args[1], 10)
-  const amount = Math.floor(Number(args[2]))
-
-  if (!lotNum || lotNum < 1 || lotNum > lots.length) {
-    return reply(`❌ Usage: *${p}auction bid <#> <amount>* — pick a lot number from 1-${lots.length} shown in *${p}auction*.`)
+  if (!auction) {
+    return reply(`❌ No auction is currently running. Check *${p}auction* for updates.`)
   }
+
+  const amount = Math.floor(Number(args[0]))
   if (!amount || amount <= 0) {
-    return reply(`❌ Usage: *${p}auction bid <#> <amount>*`)
+    return reply(`❌ Usage: *${p}auction <amount>* — e.g. ${p}auction 25000`)
   }
-
-  const lot = lots[lotNum - 1]
-  if (!lot) {
-    return reply(`❌ Lot *#${lotNum}* isn't active right now. Run *${p}auction* to see current lots.`)
+  if (amount <= auction.bid) {
+    return reply(`❌ Your bid must beat the current bid of *${auction.bid.toLocaleString()} ☀️*.`)
   }
-  if (amount <= lot.bid) {
-    return reply(`❌ Your bid must beat the current bid of *${lot.bid.toLocaleString()} ☀️* on lot #${lotNum}.`)
-  }
-  if (player.level < lot.item.levelReq) {
-    return reply(`❌ *${lot.item.name}* requires Level *${lot.item.levelReq}* to bid on.`)
+  if (player.level < auction.item.levelReq) {
+    return reply(`❌ *${auction.item.name}* requires Level *${auction.item.levelReq}* to bid on.`)
   }
   if ((player.wallet?.solars ?? 0) < amount) {
     return reply(`❌ You don't have *${amount.toLocaleString()} ☀️*. You have: ${(player.wallet?.solars ?? 0).toLocaleString()} ☀️.`)
   }
-  if (lot.bidderId === player.id) {
-    return reply(`⚠️ You're already the top bidder on lot #${lotNum} at *${lot.bid.toLocaleString()} ☀️*.`)
+  if (auction.bidderId === player.id) {
+    return reply(`⚠️ You're already the top bidder at *${auction.bid.toLocaleString()} ☀️*.`)
   }
 
-  // Capture previous bidder before mutating the lot
-  const prevBidderId = lot.bidderId
-  const prevBid      = lot.bid
-  const prevBidderName = lot.bidderName
+  // Capture previous bidder before mutating the auction record.
+  const prevBidderId   = auction.bidderId
+  const prevBid        = auction.bid
+  const prevBidderName = auction.bidderName
 
-  // Escrow the new bid — deduct now so the balance is reserved.
-  // Re-check affordability inside updatePlayer against the FRESH balance
-  // (the ctx.player snapshot above could be stale if they spent solars elsewhere).
+  // Escrow the new bid — deduct now so the balance is reserved. Re-check
+  // affordability inside updatePlayer against the FRESH balance (the
+  // ctx.player snapshot above could be stale if they spent solars elsewhere).
   let escrowed = false
-  await updatePlayer(ctx.db, ctx.from, p => {
-    p.wallet = p.wallet ?? {}
-    const fresh = p.wallet.solars ?? 0
+  await updatePlayer(ctx.db, ctx.from, p2 => {
+    p2.wallet = p2.wallet ?? {}
+    const fresh = p2.wallet.solars ?? 0
     if (fresh < amount) {
       reply(`❌ Insufficient funds — you only have *${fresh.toLocaleString()} ☀️* right now.`).catch(() => {})
-      return p
+      return p2
     }
-    p.wallet.solars = Math.max(0, fresh - amount)
-    pushTxLog(p, {
+    p2.wallet.solars = Math.max(0, fresh - amount)
+    pushTxLog(p2, {
       ref: genRef(), type: 'auction_bid', amount,
-      note: `Bid on ${lot.item.name} (lot #${lotNum})`,
+      note: `Bid on ${auction.item.name}`,
     })
     escrowed = true
-    return p
+    return p2
   }).catch(() => {})
 
-  if (!escrowed) return  // balance changed between pre-check and escrow — bail (error already sent)
+  if (!escrowed) return // balance changed between pre-check and escrow — bail (error already sent)
+  if (!auction) return  // auction was cancelled/closed while we were escrowing — extremely rare race, bail silently
 
-  // Update the lot record
-  lot.bid        = amount
-  lot.bidderId   = player.id
-  lot.bidderName = player.name
+  // Update the auction record
+  auction.bid        = amount
+  auction.bidderId   = player.id
+  auction.bidderName = player.name
 
   // Refund the outbid player immediately
   if (prevBidderId && prevBidderId !== player.id) {
@@ -274,31 +369,25 @@ async function placeBid(ctx) {
       prev.wallet.solars = (prev.wallet.solars ?? 0) + prevBid
       pushTxLog(prev, {
         ref: genRef(), type: 'auction_outbid', amount: prevBid,
-        note: `Outbid on ${lot.item.name} — refunded`,
+        note: `Outbid on ${auction.item.name} — refunded`,
       })
       return prev
     }).catch(() => {})
-
-    // DM to the outbid player disabled on request — refund above still
-    // lands in their wallet and is logged via pushTxLog, they just aren't
-    // pinged about it in DM anymore. They'll see the balance change next
-    // time they check .stash/.mystats, or the new high bid if they're
-    // still watching the lot in the host chat.
   }
 
-  // Anti-snipe: bidding within the last minute extends that lot's window by 1 min
-  const remaining = lot.endsAt - Date.now()
+  // Anti-snipe: bidding within the last minute extends the window by 1 min.
+  const remaining = auction.endsAt - Date.now()
   if (remaining < 60_000) {
-    lot.endsAt += 60_000
-    clearTimeout(lot._timeout)
-    lot._timeout = setTimeout(() => closeLot(lot, ctx), lot.endsAt - Date.now())
+    auction.endsAt += 60_000
+    clearTimeout(auction._timeout)
+    auction._timeout = setTimeout(() => closeAuction(ctx), auction.endsAt - Date.now())
   }
 
   return reply(
-    `✅ *Bid placed on lot #${lotNum}!*\n\n` +
-    `🟥 *${lot.item.name}*\n` +
+    `✅ *Bid placed!*\n\n` +
+    `🟥 *${auction.item.name}*\n` +
     `💰 New top bid: *${amount.toLocaleString()} ☀️* _(escrowed from your wallet)_\n` +
-    `⏱️ Time left: *${Math.max(0, Math.ceil((lot.endsAt - Date.now()) / 60000))} min*\n\n` +
+    `⏱️ Time left: *${humanRemaining(auction.endsAt - Date.now())}*\n\n` +
     `_If you're outbid your solars are refunded instantly. You pay only if you win._` +
     (prevBidderName ? `\n_${prevBidderName} has been refunded their bid._` : '')
   )

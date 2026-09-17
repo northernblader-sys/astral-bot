@@ -31,6 +31,7 @@
  */
 import { config } from '../config.js'
 import { updatePlayer } from '../lib/player-repo.js'
+import { isLiveBossFight } from '../lib/boss-engine.js'
 
 export default {
   name: 'cb',
@@ -41,6 +42,19 @@ export default {
 
   async run(ctx) {
     const p = config.prefix
+
+    // Defense in depth: handler.js's in-battle gate already blocks .cb during a
+    // LIVE boss fight, so this rarely fires — but it keeps the rule local and
+    // bulletproof. A CORRUPTED boss state (no enemy / dead HP) is NOT a live boss
+    // fight, so .cb still clears it below and no one is ever left softlocked.
+    if (isLiveBossFight(ctx.player)) {
+      await ctx.reply(
+        `👑 *You can't clear out of a boss fight.*\n` +
+        `Defeat it, fall, or wait out your 5 minute turn timer.`,
+      )
+      return
+    }
+
     let wasInBattle = false
     let battleType = null
     let opponentJid = null

@@ -24,6 +24,8 @@ import { storageCap } from './lib/housing-engine.js'
 import { getActiveSpawn } from './lib/card-spawn-state.js'
 import { awardPetCommandSolars } from './lib/pet-bond.js'
 import { petMap, allItems } from './lib/game-data.js'
+import { isLiveBossFight } from './lib/boss-engine.js'
+import { BOSS_TURN_TIMEOUT_MS, resolveBossTimeoutLoss } from './lib/combat-handlers.js'
 import { runModerationScans, handleRevocation } from './lib/moderation-scan.js'
 import { runAfkScan } from './lib/afk-scan.js'
 
@@ -235,13 +237,16 @@ const BATTLE_ALLOWED_COMMANDS = new Set([
   'defend', 'def', 'd', 'block',
   'flee', 'run', 'escape',
   'useability', 'ua', 'useab',
-  // Swarm-fight movement + dodge (plugins/ml.js, plugins/mr.js, plugins/dodge.js).
-  // These ARE battle actions: each spends the turn and answers the incoming
-  // volley in a swarm fight (battleState.mode === 'swarm'), and a swarm fight
-  // sets player.inBattle — so without this line the gate rejected them on every
+  // Swarm-fight actions (plugins/al.js, ar.js, ml.js, mr.js, dodge.js). These
+  // ARE battle actions: each spends the turn and answers the incoming volley in
+  // a swarm fight (battleState.mode === 'swarm'), and a swarm fight sets
+  // player.inBattle — so without this line the gate rejected them on every
   // dungeon floor 1-99, the exact place they exist to be used. Same recurring
   // bug the character abilities below each hit. cmd is the raw typed token
   // (handler.js lowercases but does NOT resolve aliases), so every alias is listed.
+  // `.al`/`.ar` are the directional basic attacks that replaced the old plain
+  // swarm `.a`; a plain `.a` now just reprints the controls and spends no turn.
+  'al', 'attackleft', 'ar', 'attackright',
   'ml', 'moveleft', 'mr', 'moveright', 'dodge', 'dg',
   // Wither's once-per-battle move (plugins/cinderverdict.js) — a real battle
   // action, so it has to clear this gate like attack/skill/useability do.
@@ -302,6 +307,20 @@ const BATTLE_ALLOWED_COMMANDS = new Set([
   // domain-expansion above, and for the identical reason: it appeared to work
   // because duels don't set player.inBattle.
   'finalform', 'ff', 'transform',
+  // Naruto's Baryon Mode summon (plugins/kurama.js) — his once-per-battle Nine
+  // Tails finisher. Same recurring shape as every character active above: a real
+  // battle action that spends the turn and can end the fight, so it must clear
+  // this gate or `.kurama` gets rejected here in a dungeon, swarm floor or boss
+  // fight before ever reaching the plugin. Duels don't set player.inBattle, which
+  // is why it worked in PvP but nowhere else. Every alias is listed (cmd is the
+  // raw typed token, no alias resolution).
+  'kurama', 'baryon', 'kuramamode', 'ninetails', 'bijuu', 'krm',
+  // Red Rose's Puppet Strings (plugins/puppetry.js) — her once-per-battle turn
+  // that turns the enemy's own attack against it and tangles it. The identical
+  // latent bug the actives above each hit: it was never on this list, so `.puppet`
+  // was rejected mid-fight in every dungeon, swarm floor and boss fight, the only
+  // places it exists for. Every alias is listed.
+  'puppet', 'puppetry', 'puppetstrings', 'puppet-strings', 'strings', 'marionette',
   // Willow's in-battle advisory (plugins/willow.js). It hard-requires
   // `player.inBattle && battleState.enemy` and does nothing else, so leaving it
   // off this list didn't merely restrict it — it made the command unreachable in
@@ -319,6 +338,11 @@ const BATTLE_ALLOWED_COMMANDS = new Set([
   // couldn't even attack the shared boss.
   'dparty', 'dungeonparty', 'dp', 'coop',
   'pattack', 'pa', 'pdefend', 'pd', 'pflee', 'pcv', 'pcinder',
+  // The rest of the plugins/pattack.js one-word shortcuts — the party forms of
+  // the character actives. Same gate, same reason as the line above: they were
+  // missing here, so a party member's `.pk`/`.php`/`.puv` was rejected before it
+  // could touch the shared boss. Kept in lockstep with pattack.js's alias list.
+  'pk', 'pkurama', 'php', 'phollowpurple', 'puv', 'pvoid', 'punlimitedvoid',
   // Premium-only ability actives (plugins/freezeup.js, heatwave.js, nighteyes.js,
   // daylight.js — granted by the weekly premium spin, see data/premium-abilities.json).
   // Same recurring shape as the character actives above: each is a real once-per-battle
@@ -345,6 +369,26 @@ const BATTLE_ALLOWED_COMMANDS = new Set([
   // battleState traps the player with no way to reach the one command that
   // fixes it. See plugins/cb.js.
   'cb', 'clearbattle', 'resetbattle', 'unstuck',
+])
+
+// ── Boss-fight lockdown ─────────────────────────────────────────────────────
+// Inside a LIVE tower-master boss fight (isLiveBossFight), these otherwise
+// battle-legal commands are refused: no shopping for potions mid-boss, no `.cb`
+// escaping a boss you are losing (it force-clears battle state for free), and no
+// re-speccing your loadout. A boss is fight-or-fall. `.cb` is still allowed
+// against a CORRUPTED boss state (isLiveBossFight is false there), so a genuinely
+// broken fight is never an unbreakable softlock.
+const BOSS_FIGHT_BLOCKED_COMMANDS = new Set([
+  'shop', 'gm', 'gameshop',
+  'cb', 'clearbattle', 'resetbattle', 'unstuck',
+  'train', 'skillslot', 'skillslots', 'slots',
+])
+
+// Battle-legal commands that do NOT consume a boss turn, so taking one must not
+// reset the 5-minute turn clock — otherwise a player could stall their turn
+// forever by spamming `.profile`. Pure read-only status only.
+const BOSS_TURN_TIMER_EXEMPT = new Set([
+  'profile', 'inventory', 'stats', 'stat', 'menu', 'ping', 'willow', 'advise', 'advisor',
 ])
 
 // Link detection lives in lib/group-helpers.js (containsLink) and is applied by
@@ -1112,6 +1156,22 @@ export function makeHandler(sock, db, botName) {
         }
       }
 
+      // ── Boss turn timeout (compare-on-read, mirrors the PvP stall timer) ──
+      // A live boss fight where the player has let their turn sit past the
+      // 5-minute limit is resolved as a loss on the spot, on whatever command
+      // they finally send. This is also the ONLY exit from a boss fight now that
+      // `.cb` is blocked mid-boss, so no one is ever stuck: go idle and the clock
+      // ends it. No scheduler — like pvp.js the deadline is checked lazily on the
+      // next read, so it survives restarts.
+      if (ctx.player?.inBattle && isLiveBossFight(ctx.player)) {
+        const bs   = ctx.player.battleState
+        const last = bs.lastMoveAt ?? bs.startedAt ?? 0
+        if (last && Date.now() - last > BOSS_TURN_TIMEOUT_MS) {
+          await resolveBossTimeoutLoss(ctx)
+          return
+        }
+      }
+
       // ── In-battle command gate ───────────────────────────────────────────
       // Mid-battle, only real battle actions (+ a small utility allowlist,
       // shop included so potions can be bought) are permitted. Everything
@@ -1124,6 +1184,20 @@ export function makeHandler(sock, db, botName) {
           `⚔️ You're mid-battle! Only battle commands work right now:\n` +
           `*${config.prefix}attack* · *${config.prefix}skill <name>* · *${config.prefix}defend* · *${config.prefix}flee*\n` +
           `_(${config.prefix}shop and ${config.prefix}profile also work if you need to check something.)_`,
+        ).catch(() => {})
+        return
+      }
+
+      // ── Boss-fight lockdown ──────────────────────────────────────────────
+      // A live boss fight refuses shopping, the free `.cb` escape, and loadout
+      // re-specs (see BOSS_FIGHT_BLOCKED_COMMANDS). Those are all in
+      // BATTLE_ALLOWED_COMMANDS — legal in an ordinary fight — so they clear the
+      // gate above and are caught here only when the enemy is a live boss.
+      if (ctx.player?.inBattle && isLiveBossFight(ctx.player) && BOSS_FIGHT_BLOCKED_COMMANDS.has(cmd)) {
+        await ctx.reply(
+          `👑 *You are locked in a boss fight.*\n` +
+          `No shops, no clearing out, no swapping your loadout. Defeat it or fall trying.\n\n` +
+          `*${config.prefix}attack* · *${config.prefix}skill <name>* · *${config.prefix}defend*`,
         ).catch(() => {})
         return
       }
@@ -1190,6 +1264,14 @@ export function makeHandler(sock, db, botName) {
       if (handled && ctx.player) {
         await updatePlayer(ctx.db, ctx.from, fresh => {
           awardPetCommandSolars(fresh, petMap)
+          // Boss turn clock: a turn-consuming action taken during a live boss
+          // fight resets the 5-minute idle timer. Read-only status checks
+          // (BOSS_TURN_TIMER_EXEMPT) do not, so a player can't stall their turn
+          // indefinitely by spamming `.profile`. Piggybacks this one write that
+          // every handled command already funnels through.
+          if (!BOSS_TURN_TIMER_EXEMPT.has(cmd) && isLiveBossFight(fresh) && fresh.battleState) {
+            fresh.battleState.lastMoveAt = Date.now()
+          }
         }).catch(err => logger.warn({ err: err.message }, 'Pet command payout failed'))
       }
 

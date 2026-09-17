@@ -292,6 +292,9 @@ export async function handleEnter(ctx) {
         playerDefending:  false,
         turn:             1,
         abilityCooldowns: {},
+        // Boss turn clock — stamps the 5-minute idle deadline from turn 1.
+        // handler.js resolves it lazily and refreshes it after each real move.
+        lastMoveAt:       Date.now(),
       }
 
       applyPassiveAbilities(player)
@@ -351,9 +354,20 @@ export async function handleEnter(ctx) {
     const progress   = player.dungeonProgress?.[locId] ?? { highestFloor: 0, conquered: false }
     const checkpoint = progress.highestFloor ?? 0
     const season = getActiveSeason(ctx.db)
-    const startFloor = locId === season?.dungeon
-      ? (ensurePlayerSeasonState(player, season.id).seasonProgress.currentFloor ?? 1)
-      : (checkpoint > 0 ? checkpoint : 1)
+    const isSeasonDungeon = locId === season?.dungeon
+    // Resume floor. highestFloor is banked on every cleared floor no matter what,
+    // so it is the reliable source; the season's own currentFloor only advances
+    // while the season is live and can sit stuck at 1 (which is what sent season
+    // climbers back to Floor 1). Take the higher of the two so neither counter
+    // lagging can lose progress, then clamp to the party-boss floor so a solo
+    // re-entry never lands past the only party-gated floor.
+    let startFloor = checkpoint > 0 ? checkpoint : 1
+    if (isSeasonDungeon) {
+      const seasonFloor = ensurePlayerSeasonState(player, season.id).seasonProgress.currentFloor ?? 1
+      startFloor = Math.max(startFloor, seasonFloor)
+      const gate = season.partyBossFloor ?? loc.floors ?? 100
+      if (startFloor > gate) startFloor = gate
+    }
 
     player.inDungeon         = true
     player.location          = locId
@@ -519,6 +533,9 @@ async function handleAdvance(ctx) {
       playerDefending: false,
       turn:            1,
       abilityCooldowns: {},
+      // Boss turn clock (see isLiveBossFight): stamps the 5-minute idle deadline
+      // from the opening bell. Harmless on ordinary fights, which never read it.
+      lastMoveAt:      Date.now(),
     }
 
     applyPassiveAbilities(player)

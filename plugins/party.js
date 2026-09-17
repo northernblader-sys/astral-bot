@@ -84,7 +84,7 @@ import {
 import { hasInventoryRoom } from '../lib/inventory-limits.js'
 import { getModValue, applyHighDefenseCatchup } from '../lib/mods.js'
 import { getActiveSeason, ensurePlayerSeasonState, applySeasonLevel } from '../lib/season-engine.js'
-import { applyMeiSustainHeal, applyInfinity, activateFinalForm, applyTearOnHit, tickPermanentSever, activateCinderVerdict, activateHollowPurple, activateUnlimitedVoid, UNLIMITED_VOID_STUN_TURNS, sendFinalFormVideo, hasSecondTranscendance } from '../lib/character-abilities.js'
+import { applyMeiSustainHeal, applyInfinity, activateFinalForm, applyTearOnHit, tickPermanentSever, activateCinderVerdict, activateHollowPurple, activateUnlimitedVoid, UNLIMITED_VOID_STUN_TURNS, sendFinalFormVideo, hasSecondTranscendance, activateKurama, resolveKuramaDrain, narutoBattleLine, sendKuramaSummonImage } from '../lib/character-abilities.js'
 import { checkPearlSave, processStatusTurn } from '../lib/combat-handlers.js'
 import { addStatusEffect } from '../lib/effects.js'
 
@@ -1460,6 +1460,232 @@ async function battleCinderVerdict(ctx) {
   })
 }
 
+// ── Party battle: Baryon Mode / Kurama (Naruto) ─────────────────────────────
+// Naruto's once-per-battle Nine Tails summon — the party-combat twin of
+// plugins/kurama.js. Same shape as battleCinderVerdict above: the strike runs
+// through the stock calcPlayerDamage() -> applyDefense() -> applyHighDefenseCatchup()
+// pipeline with the Baryon multiplier, and the per-member charge lives on
+// party.battle.charState via activateKurama(player, cs), so it resets with the
+// fight for free. Two things it adds on top: activateKurama also burns a slice of
+// Naruto's OWN health (the Baryon self-cost, floored so it never downs him), and
+// after the strike lands a lifespan-drain rider tears a flat share of the enemy's
+// MAX HP as true damage no armour softens. The enemy then retaliates against the
+// caster normally — there is no tangle, so this is a heavy finisher, not a lock.
+async function battleKurama(ctx) {
+  const p = config.prefix
+  const party = findPartyForPlayer(ctx.db, ctx.from)
+  if (!party) return ctx.reply(`❌ You're not in a party.`)
+  if (!party.battle) return ctx.reply(`❌ Your party isn't in a battle. Use *${p}dparty enter <dungeon>*.`)
+
+  await updatePlayer(ctx.db, ctx.from, async player => {
+    const battle = party.battle
+    const e = battle.enemy
+    const eHpBeforeTurn = e.hp
+    const boss = e.isBoss ?? false
+
+    battle.charState = battle.charState ?? {}
+    const cs = battle.charState[ctx.from] = battle.charState[ctx.from] ?? {}
+
+    const gate = activateKurama(player, cs)
+    if (!gate.ok) {
+      if (gate.message) await ctx.reply(gate.message)
+      return player
+    }
+
+    // Summon splash, its own message the moment the fusion commits, before the
+    // party turn text. Never blocks the turn (media failure is swallowed).
+    await sendKuramaSummonImage(ctx, `🦊🌀 *${player.name} tears the seal open. KURAMA answers.*`, ctx.from)
+
+    let pre = ''
+    const permaSeverLine = tickPermanentSever(player)
+    if (permaSeverLine) pre += permaSeverLine + '\n'
+    // The Baryon self-cost is already paid inside the gate; show it whether the
+    // strike then lands or misses. A player the self-cost + a DoT downs is
+    // handled by the hp check below, same as Cinder Verdict's permaSever tick.
+    if (gate.selfCostLine) pre += gate.selfCostLine + '\n'
+    if (player.hp <= 0) {
+      if (pre) await ctx.reply(pre)
+      await handlePartyMemberDown(ctx, party, ctx.from)
+      return player
+    }
+
+    let msg = pre +
+      `🦊🌀 *BARYON MODE: KURAMA*\n─────────────\n` +
+      `💬 _"${narutoBattleLine('party')}"_\n` +
+      `_${player.name} and the Nine Tails fold into one against *${e.name}*._\n\n`
+
+    if (Math.random() > calcPlayerHitChance(player, e)) {
+      msg += `💨 _The fusion overshoots by a hair and *MISSES!*_\n`
+      await sendBattleTurnReply(ctx, {
+        player, e, msg: msg + `\n*${p}dparty attack* · *${p}dparty defend* · *${p}dparty flee*`,
+        hpBeforeTurn: player.hp, eHpBeforeTurn, boss,
+      })
+      return player
+    }
+
+    let { rawDmg, isCrit } = calcPlayerDamage(player, null, gate.multiplier)
+    let finalDmg = applyHighDefenseCatchup(player, e, applyDefense(rawDmg, e.def))
+
+    if (boss) {
+      // The strike counts as the player's attack for boss-special purposes —
+      // same PLAYER_BASIC_ATTACK/ENEMY_TAKE_DAMAGE pair as a regular hit, so a
+      // boss can still nullify, adapt or reflect the STRIKE. The drain rider
+      // below is true damage and deliberately bypasses this layer.
+      withBossBattleState(player, e, bp => {
+        const basicResult = applyBossSpecial(bp, EVENT.PLAYER_BASIC_ATTACK, {
+          damage: finalDmg, element: 'physical', isCrit, isHit: true,
+        })
+        if (basicResult.modified && basicResult.damage !== undefined) finalDmg = basicResult.damage
+        if (basicResult.narrativeLine) msg += `_${basicResult.narrativeLine}_\n`
+
+        const takeResult = applyBossSpecial(bp, EVENT.ENEMY_TAKE_DAMAGE, {
+          damage: finalDmg, element: 'physical', isCrit, isHit: true,
+        })
+        if (takeResult.modified && takeResult.damage !== undefined) finalDmg = takeResult.damage
+        if (takeResult.narrativeLine) msg += `_${takeResult.narrativeLine}_\n`
+
+        if (takeResult.reflectDamage) {
+          player.hp = Math.max(0, player.hp - takeResult.reflectDamage)
+          msg += `🔁 *Full Counter!* The strike is reflected!\n🩸 *${takeResult.reflectDamage}* damage back at you!\n`
+        }
+      })
+    }
+
+    e.hp = Math.max(0, e.hp - finalDmg)
+    battle.contributions[ctx.from] = (battle.contributions[ctx.from] ?? 0) + finalDmg
+    msg += `🌠 *Baryon Rasengan* lands for *${finalDmg}*!${isCrit ? ' 💥 *CRITICAL!*' : ''}\n`
+
+    // Lifespan drain rider — true damage, a flat share of the enemy's MAX HP,
+    // no armour applies. Applied after the strike so the two together can finish
+    // an enemy the strike alone left standing.
+    const drainRes = resolveKuramaDrain(e, gate.drainPct)
+    if (drainRes.drain > 0) {
+      e.hp = drainRes.newHp
+      battle.contributions[ctx.from] = (battle.contributions[ctx.from] ?? 0) + drainRes.drain
+      msg += `🦊 _The fox's touch tears *${drainRes.drain}* more lifespan out of *${e.name}*, past any armour._\n`
+    }
+    msg += `❤️ ${e.name}: ${hpBar(e.hp, e.maxHp)}\n`
+
+    if (player.hp <= 0) {
+      await ctx.reply(msg)
+      await handlePartyMemberDown(ctx, party, ctx.from)
+      return player
+    }
+
+    if (e.hp <= 0) {
+      await ctx.reply(msg)
+      await resolvePartyVictory(ctx, party)
+      return player
+    }
+
+    if (boss) {
+      withBossBattleState(player, e, bp => {
+        const hitResult = applyBossSpecial(bp, EVENT.PLAYER_HIT_ENEMY, {
+          damage: finalDmg, isCrit, element: 'physical', isHit: true,
+        })
+        if (hitResult.narrativeLine) msg += `_${hitResult.narrativeLine}_\n`
+        if (finalDmg > 0) msg += `💬 _"${getBossHitLine(bp)}"_\n`
+      })
+
+      if (e.hp <= 0) {
+        await ctx.reply(msg)
+        await resolvePartyVictory(ctx, party)
+        return player
+      }
+
+      withBossBattleState(player, e, bp => {
+        const phase = checkBossPhase(bp)
+        if (phase?.triggered && phase.lines?.length) {
+          msg += `\n⚡ *— PHASE SHIFT —*\n` + phase.lines.join('\n') + '\n'
+        }
+      })
+    }
+
+    if (e.hp <= 0) {
+      await ctx.reply(msg)
+      await resolvePartyVictory(ctx, party)
+      return player
+    }
+
+    // Enemy retaliates against the caster (the summon draws its attention).
+    const hpBeforeTurn = player.hp
+    if (boss) {
+      let bossAtk = null
+      let dealResult = null
+      withBossBattleState(player, e, bp => {
+        bossAtk = buildEnemyAttack(bp)
+        dealResult = applyBossSpecial(bp, EVENT.ENEMY_DEAL_DAMAGE, {
+          damage: bossAtk.damage, isHit: true,
+        })
+      })
+      if (!bossAtk) {
+        const fb = plainBossStrike(e)   // plain boss: bridge above no-op'd
+        bossAtk = fb.bossAtk
+        dealResult = fb.dealResult
+      }
+      const rawBossAtk = dealResult.modified && dealResult.damage !== undefined
+        ? dealResult.damage
+        : bossAtk.damage
+
+      const hitList = Array.isArray(dealResult.guaranteedHits) ? dealResult.guaranteedHits : null
+      let totalPlayerDmg = 0
+
+      if (hitList) {
+        for (const rawHit of hitList) {
+          const hDmg = applyInfinity(player, rawHit).damage
+          player.hp = Math.max(0, player.hp - hDmg)
+          totalPlayerDmg += hDmg
+        }
+        msg += `\n${e.emoji ?? '👾'} *${e.name}* unleashes *${bossAtk.attackName}*! _(${hitList.length} hits)_\n`
+        msg += `🩸 *${totalPlayerDmg}* total damage! _(ignores DEF)_\n`
+      } else {
+        const primaryHit = bossAtk.bypassDefense
+          ? rawBossAtk
+          : calcMonsterDamage(rawBossAtk, player.stats.def, false)
+        const sustain = applyPartyIncoming(player, primaryHit, cs)
+        player.hp = Math.max(0, player.hp - sustain.damage)
+        totalPlayerDmg = sustain.damage
+        if (sustain.message) msg += sustain.message + '\n'
+
+        if (bossAtk.doubleStrike) {
+          const hit2 = bossAtk.bypassDefense
+            ? rawBossAtk
+            : calcMonsterDamage(rawBossAtk, player.stats.def, false)
+          const sustain2 = applyPartyIncoming(player, hit2, cs)
+          player.hp = Math.max(0, player.hp - sustain2.damage)
+          totalPlayerDmg += sustain2.damage
+          if (sustain2.message) msg += sustain2.message + '\n'
+          msg += `\n${e.emoji ?? '👾'} *${e.name}* uses *${bossAtk.attackName}*! ⚡ *DOUBLE STRIKE!*\n`
+          msg += `🩸 *${totalPlayerDmg}* total damage!\n`
+        } else {
+          msg += `\n${e.emoji ?? '👾'} *${e.name}* uses *${bossAtk.attackName}*!\n`
+          msg += `🩸 *${totalPlayerDmg}* damage!${bossAtk.bypassDefense ? ' _(bypasses DEF)_' : ''}\n`
+        }
+      }
+
+      if (bossAtk.narrativeLines?.length) msg += `_${bossAtk.narrativeLines[0]}_\n`
+      if (dealResult.narrativeLine) msg += `_${dealResult.narrativeLine}_\n`
+      msg += `❤️ ${player.name}: ${hpBar(player.hp, player.maxHp)}`
+    } else if (Math.random() > calcMonsterHitChance(e, player)) {
+      msg += `\n${e.emoji ?? '👾'} *${e.name}* lashes back at *${player.name}*... *MISSES!*`
+    } else {
+      const dmg = calcMonsterDamage(e.atk, player.stats.def, false)
+      const sustain = applyPartyIncoming(player, dmg, cs)
+      player.hp = Math.max(0, player.hp - sustain.damage)
+      if (sustain.message) msg += sustain.message + '\n'
+      msg += `\n${e.emoji ?? '👾'} *${e.name}* strikes *${player.name}* for *${sustain.damage}* damage!\n`
+      msg += `❤️ ${player.name}: ${hpBar(player.hp, player.maxHp)}`
+    }
+
+    await sendBattleTurnReply(ctx, {
+      player, e, msg: msg + `\n\n*${p}dparty attack* · *${p}dparty defend* · *${p}dparty flee*`,
+      hpBeforeTurn, eHpBeforeTurn, boss,
+    })
+    if (player.hp <= 0) await handlePartyMemberDown(ctx, party, ctx.from)
+    return player
+  })
+}
+
 // ── Party battle: Hollow Purple (Gojo) ──────────────────────────────────────
 // Gojo's once-per-battle, no-MP imaginary-mass burst — the party-combat twin of
 // plugins/purple.js. Same shape as battleCinderVerdict above, with the two
@@ -1962,6 +2188,8 @@ export default {
       case 'attack':  case 'atk': return battleAttack(ctx)
       case 'cinderverdict': case 'cinder': case 'cv': case 'verdict':
         return battleCinderVerdict(ctx)
+      case 'kurama': case 'baryon': case 'ninetails': case 'krm':
+        return battleKurama(ctx)
       case 'hollowpurple': case 'purple': case 'hollow-purple':
         return battleHollowPurple(ctx)
       case 'unlimitedvoid': case 'void': case 'unlimited-void':
@@ -1974,4 +2202,4 @@ export default {
 }
 
 // Exported so plugins/pattack.js can offer shorter top-level aliases.
-export { battleAttack, battleDefend, battleFlee, battleCinderVerdict, battleHollowPurple, battleUnlimitedVoid }
+export { battleAttack, battleDefend, battleFlee, battleCinderVerdict, battleKurama, battleHollowPurple, battleUnlimitedVoid }

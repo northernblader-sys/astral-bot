@@ -335,5 +335,22 @@
       "name": "Puppet Strings",
       "flavor": "Once per battle, no mana: she takes the strings and the enemy turns on itself. Its own attack lands on the one who threw it, run through its own guard, so the harder it hits the more it wounds itself, and then it hangs tangled for a turn and loses its next move. In a duel the strings catch their companion too. She never cuts all the way down: a puppet is worth more still dancing than broken."
     }
+  },
+  {
+    "id": "naruto",
+    "stars": 5,
+    "name": "Naruto Uzumaki (Baryon Mode)",
+    "emoji": "🦊",
+    "rarity": "mythic",
+    "gemPrice": null,
+    "spinOnly": true,
+    "image": "https://i.ibb.co/8L1ChgQN/info-card.jpg",
+    "spinImage": "https://i.ibb.co/SwBJCYrM/per-spin.jpg",
+    "statBonuses": { "str": 48, "agi": 58, "int": 16, "def": 24, "lck": 20, "maxHp": 220, "maxMp": 130 },
+    "description": "Baryon Mode. He forced his own chakra and the Nine Tails together into something new and volatile, a fusion that eats through his life for every second it burns. He moves faster than the eye can follow and every blow lands like a collapsing star, but the fire he spends is his own, and the clock never stops running.",
+    "ability": {
+      "name": "Baryon Mode",
+      "flavor": "Call Kurama into the fight with .kurama, once per battle, no mana. Naruto spends his own lifespan to fuse with the Nine Tails and lands one overwhelming strike, and whatever it touches has its own lifespan torn away on top of the hit. The power is real and so is the price: the summon burns his health to fuel it, so it is a gamble as much as a finisher. Works in any dungeon, boss fight or duel."
+    }
   }
 ]

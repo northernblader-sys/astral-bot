@@ -138,6 +138,7 @@ const SPIN_ROUTES = {
   gojo:      'gojo-spin',
   alexa:     'alexa-spin',
   gogeta:    'gogeta-spin',
+  naruto:    'naruto-spin',
 }
 
 function spinRouteFor(characterId, pr) {
@@ -328,6 +329,7 @@ function renderInfo(character, player, pr, db, viewerJid) {
     (ascended ? `⚔️ *Command:* *${pr}unwritten* _(every turn, no MP, no stream. Erases a tenth of the enemy's maximum HP for good, and stops at the last tenth: that part has to be killed the ordinary way)_\n🚫 *${pr}live-blast* is retired and cannot be used again.\n\n` : '') +
     (character.id === 'gojo' ? `⚔️ *Passive:* *Infinity* blunts every incoming hit and nullifies small ones, no command needed.\n⚔️ *Commands:* *${pr}hollowpurple* _(Blue and Red into Hollow Purple, once per battle, no MP)_ · *${pr}domainexpansion* _(opens Unlimited Void and locks the enemy down, once per battle, no MP. *${pr}unlimitedvoid* does the same thing)_\n\n` : '') +
     (character.id === 'alexa' ? `⚔️ *Passive:* *Lovestruck* _(no command, any level)_\nThe enemy is weighed against you when the fight opens:\n  💗 it outclasses you: its hits lose *20%*\n  💞 you outclass it: its hits lose *70%*\n  💘 it was never close: its hits deal *nothing*\nIn duels, your rival's own character also stops working for their first *${ALEXA_AWE_TURNS}* turns.\nWorks on every monster, boss and character. Only *The End* is immune, and poison, burn and bleed still hurt you.\n\n` : '') +
+    (character.id === 'naruto' ? `⚔️ *Command:* *${pr}kurama* _(once per battle, no MP. Summon the Nine Tails for one overwhelming strike. Baryon Mode burns a slice of Naruto's own health to hold the fusion, and whatever it hits has its lifespan torn away on top of the blow. Works in dungeons, boss fights and duels. In a party fight use *${pr}pk*)_\n\n` : '') +
     status
 
   return caption

@@ -150,6 +150,9 @@ import {
   resolvePuppetSelfHit,
   buildPuppetStringsReveal,
   PUPPET_TANGLE_TURNS,
+  activateKurama,
+  resolveKuramaDrain,
+  sendKuramaSummonImage,
   armLovestruck,
   applyAweGate,
   hasGogeta,
@@ -931,7 +934,8 @@ export default {
     const SOULPUNISHER_ALIASES = new Set(['soulpunisher', 'soulpunish', 'soul-punisher', 'punisher', 'spunisher', 'kiblast'])
     const KAMEHAMEHA_ALIASES = new Set(['kamehameha', 'bbk', 'bigbang', 'bigbangkamehameha', 'kame', 'big-bang-kamehameha'])
     const PUPPET_ALIASES = new Set(['puppetstrings', 'puppet-strings', 'puppet', 'puppetry', 'strings', 'marionette'])
-    if (sub === 'attack' || sub === 'skill' || sub === 'defend' || sub === 'ability' || CINDER_ALIASES.has(sub) || ULTIMATE_ALIASES.has(sub) || WILDCARD_ALIASES.has(sub) || DOMAIN_ALIASES.has(sub) || THIEFSEYE_ALIASES.has(sub) || HOLLOW_ALIASES.has(sub) || HOLLOWPURPLE_ALIASES.has(sub) || UNLIMITEDVOID_ALIASES.has(sub) || SOULPUNISHER_ALIASES.has(sub) || KAMEHAMEHA_ALIASES.has(sub) || PUPPET_ALIASES.has(sub)) {
+    const KURAMA_ALIASES = new Set(['kurama', 'baryon', 'kuramamode', 'ninetails', 'bijuu', 'krm'])
+    if (sub === 'attack' || sub === 'skill' || sub === 'defend' || sub === 'ability' || CINDER_ALIASES.has(sub) || ULTIMATE_ALIASES.has(sub) || WILDCARD_ALIASES.has(sub) || DOMAIN_ALIASES.has(sub) || THIEFSEYE_ALIASES.has(sub) || HOLLOW_ALIASES.has(sub) || HOLLOWPURPLE_ALIASES.has(sub) || UNLIMITEDVOID_ALIASES.has(sub) || SOULPUNISHER_ALIASES.has(sub) || KAMEHAMEHA_ALIASES.has(sub) || PUPPET_ALIASES.has(sub) || KURAMA_ALIASES.has(sub)) {
       if (!inPvp(player)) {
         return ctx.reply(`❌ You're not in a duel. Challenge someone: *${pr}pvp @target*`)
       }
@@ -966,7 +970,9 @@ export default {
                           ? 'kamehameha'
                           : PUPPET_ALIASES.has(sub)
                             ? 'puppetstrings'
-                            : sub
+                            : KURAMA_ALIASES.has(sub)
+                              ? 'kurama'
+                              : sub
       return runPvpTurn(ctx, resolvedAction, args.slice(1).join(' '))
     }
 
@@ -1477,6 +1483,19 @@ async function runPvpTurn(ctx, action, skillQuery) {
   let catFormAnswers = false // Yoriichi holds this turn — she resolves it, not the owner
   let catFormOwnDefeat = false // her own pool ran out to a DOT before she could swing
   let cinderMult = 0 // set when action === 'cinderverdict', once the charge is burned
+  // ── Naruto's Baryon Mode (action === 'kurama') ──────────────────────────
+  // Same shape as cinderMult: the gate burns the once-per-battle charge (AND a
+  // slice of Naruto's own health, the Baryon self-cost) in the actor's own
+  // updatePlayer below and hands back two numbers. kuramaMult flows through the
+  // shared opponent-hit phase exactly like cinderMult, so DEF, the accuracy
+  // roll, and the defender's dodge / Wheel / beast / shield all still apply.
+  // kuramaDrainPct is applied there as a true-damage rider AFTER the strike,
+  // a flat share of the opponent's max HP that no armour softens.
+  let kuramaMult = 0
+  let kuramaDrainPct = 0
+  // Carries "send the Nine Tails summon splash" out past the mutations, the same
+  // way domainSplash / kamehamehaSplash do (no network I/O inside updatePlayer).
+  let kuramaSplash = false
   // ── Gojo's Hollow Purple (action === 'hollowpurple') ────────────────────
   // Same shape as cinderMult: the gate burns the once-per-battle charge in the
   // actor's own updatePlayer below and hands back the 18x multiplier, which the
@@ -1852,6 +1871,28 @@ async function runPvpTurn(ctx, action, skillQuery) {
       }
     }
 
+    // Naruto's Baryon Mode — once-per-battle, no MP, but it costs NARUTO his own
+    // health. activateKurama burns the charge (battleState.kuramaUsed) AND spends
+    // a slice of his max HP to hold the fusion (floored, never self-lethal), then
+    // hands back the strike multiplier and the lifespan-drain share. The strike
+    // itself resolves through the shared opponent-hit phase below via kuramaMult
+    // (so DEF, accuracy and the defender's dodge / Wheel / beast / shield all
+    // still apply); the drain rider is added there as true damage. A failed gate
+    // does NOT consume the turn. The self-cost is paid the moment it goes off, so
+    // its line is shown here whether the strike then lands or misses.
+    if (action === 'kurama') {
+      const gate = activateKurama(actor, actor.battleState)
+      if (!gate.ok) {
+        if (gate.message) msg += gate.message + '\n'
+        turnEnded = true
+        return
+      }
+      kuramaMult = gate.multiplier
+      kuramaDrainPct = gate.drainPct
+      kuramaSplash = true
+      if (gate.selfCostLine) msg += gate.selfCostLine + '\n'
+    }
+
     // The dragon's ultimate — Nisha's spin-exclusive standalone companion
     // (lib/dragon-engine.js). PvP-only, once-per-battle, gated to turn 4+.
     // True-damage kill applied in the opponent-hit phase below, NOT a
@@ -1917,7 +1958,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
       // applyIncomingDamage() reads them when the opponent swings back.
     }
 
-    if (action === 'defend' || action === 'ability' || action === 'cinderverdict' || action === 'ultimate' || action === 'wildcard' || action === 'domain' || action === 'thiefseye' || action === 'hollowexchange' || action === 'hollowpurple' || action === 'unlimitedvoid' || action === 'puppetstrings' || action === 'soulpunisher' || action === 'kamehameha') {
+    if (action === 'defend' || action === 'ability' || action === 'cinderverdict' || action === 'ultimate' || action === 'wildcard' || action === 'domain' || action === 'thiefseye' || action === 'hollowexchange' || action === 'hollowpurple' || action === 'unlimitedvoid' || action === 'puppetstrings' || action === 'kurama' || action === 'soulpunisher' || action === 'kamehameha') {
       if (action === 'defend') {
         const mpRegen = Math.floor(actor.maxMp * 0.05)
         actor.mp = Math.min(actor.maxMp, actor.mp + mpRegen)
@@ -2493,6 +2534,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
         : action === 'hollowpurple' ? 'HOLLOW PURPLE'
         : action === 'soulpunisher' ? 'SOUL PUNISHER'
         : action === 'kamehameha' ? 'BIG BANG KAMEHAMEHA'
+        : action === 'kurama' ? 'BARYON RASENGAN'
         : action === 'thiefseye' ? (thiefsEyeMove?.name ?? "THIEF'S EYE")
         : action === 'wildcard' ? wildCardMoveName : (skill ? skill.name : 'ATTACK')
       const hitChance = calcPlayerHitChance(actorForCalc, opp)
@@ -2528,6 +2570,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
         : action === 'hollowpurple' ? hollowPurpleMult
         : action === 'soulpunisher' ? soulPunisherMult
         : action === 'kamehameha' ? kamehamehaMult
+        : action === 'kurama' ? kuramaMult
         : action === 'thiefseye' ? thiefsEyeMult
         : action === 'wildcard' ? wildCardMult : 1
       const dmgMult = moveMult * catFormAttackDamage(actorForCalc) * danceMult
@@ -2625,6 +2668,8 @@ async function runPvpTurn(ctx, action, skillQuery) {
           ? `🔵 puts a *Soul Punisher* through`
           : action === 'kamehameha'
           ? `🔵💥 fires the *BIG BANG KAMEHAMEHA* into`
+          : action === 'kurama'
+          ? `🦊🌀 folds the Nine Tails into a strike on`
           : action === 'thiefseye'
           ? `👁️🗝️ turns *${thiefsEyeMove?.name ?? "their own move"}* back on`
           : action === 'wildcard'
@@ -2714,6 +2759,24 @@ async function runPvpTurn(ctx, action, skillQuery) {
           msg += catMsg
         } else {
           opponentDefeated = true
+        }
+      }
+
+      // 🦊 Baryon Mode's lifespan drain — a flat share of the opponent's MAX HP
+      // as true damage no armour touches, landed AFTER the strike so the two
+      // together can finish someone the strike alone left standing. Skipped when
+      // the strike already downed them (isOpponentLive false), so it never
+      // double-credits a kill, and it runs its own Yoriichi-aware defeat check.
+      if (action === 'kurama' && isOpponentLive(opp)) {
+        const drainRes = resolveKuramaDrain(opp, kuramaDrainPct)
+        opp.hp = drainRes.newHp
+        if (drainRes.drain > 0) {
+          msg += `🦊 _The fox's touch drags the lifespan out of *${opp.name}*: *${drainRes.drain}* more, and no armour in the world softens it._\n`
+        }
+        if (opp.hp <= 0) {
+          pvpDefenderCanReact = false
+          const catMsg = checkYoriichiCatForm(opp)
+          if (catMsg) { msg += catMsg } else { opponentDefeated = true }
         }
       }
 
@@ -2846,6 +2909,12 @@ async function runPvpTurn(ctx, action, skillQuery) {
   }
   if (wheelSpinCaption) {
     await sendWheelSpin(ctx, wheelSpinCaption, ctx.sender)
+  }
+  // The Nine Tails summon splash, sent only on the turn the gate passed. Same
+  // "own message" treatment as the Domain and beam art: the charge (and Naruto's
+  // self-cost) are already spent, so media must never block the turn text.
+  if (kuramaSplash) {
+    await sendKuramaSummonImage(ctx, `🦊🌀 *${actorForCalc.name} tears the seal open. KURAMA answers.*`, ctx.sender)
   }
 
   if (opponentDefeated) {
@@ -2997,6 +3066,22 @@ export async function pvpCinderVerdict(ctx) {
     return ctx.reply(`❌ You're not in a duel.`)
   }
   return runPvpTurn(ctx, 'cinderverdict', '')
+}
+
+/**
+ * pvpKurama(ctx) — entry point for the top-level `.kurama` command
+ * (plugins/kurama.js) when the caller is in a duel rather than a PvE fight.
+ * plugins/kurama.js only knows the PvE battleState shape (bs.enemy), so it
+ * delegates here when battleState.type === 'pvp'. This just routes into the
+ * normal PvP turn engine as the 'kurama' action, which gates on Naruto being
+ * equipped and burns the once-per-battle charge plus his Baryon self-cost.
+ */
+export async function pvpKurama(ctx) {
+  const player = getPlayer(ctx.db, ctx.from)
+  if (!inPvp(player)) {
+    return ctx.reply(`❌ You're not in a duel.`)
+  }
+  return runPvpTurn(ctx, 'kurama', '')
 }
 
 /**

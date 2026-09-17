@@ -1,6 +1,13 @@
 import { config } from '../config.js'
 import { updatePlayer } from '../lib/player-repo.js'
-import { resolveSwarmAttack } from '../lib/swarm-combat.js'
+import { swarmAttackNudge } from '../lib/swarm-combat.js'
+import {
+  playerHitLine,
+  playerMissLine,
+  playerAbsorbedLine,
+  enemyHitLine,
+  enemyMissLine,
+} from '../lib/battle-flavor.js'
 import {
   calcPlayerDamage,
   applyDefense,
@@ -109,9 +116,11 @@ export default {
   async run(ctx) {
     const p = config.prefix
     await updatePlayer(ctx.db, ctx.from, async (player) => {
-      // Entry Tower swarm floors run the multi-monster engine (swarm-combat.js);
-      // the 1v1 pipeline below is byte-identical for every other fight.
-      if (player.battleState?.mode === 'swarm') return resolveSwarmAttack(player, ctx)
+      // Swarm floors run the multi-monster engine (swarm-combat.js), where the
+      // basic attack is DIRECTIONAL: a plain .a no longer swings, it points the
+      // player at .al / .ar and reprints the field (no turn spent). The 1v1
+      // pipeline below is byte-identical for every floor-100 master fight.
+      if (player.battleState?.mode === 'swarm') return swarmAttackNudge(player, ctx)
       if (player.battleState?.type === 'pvp') {
         await ctx.reply(`⚔️ *You're in a duel* — use *${p}pvp attack* instead.`)
         return player
@@ -292,7 +301,11 @@ export default {
         msg += `💫 *${player.name}* is unable to act this turn!\n`
       } else if (Math.random() > calcPlayerHitChance(player, e)) {
         // ── MISS ─────────────────────────────────────────────────────────────
-        msg += `💨 *${player.name}* attacks *${e.name}*... and *MISSES!*\n`
+        // Boss misses keep the plain line (their cinematic voice follows below);
+        // a generic monster miss draws from the flavor pool instead.
+        msg += boss
+          ? `💨 *${player.name}* attacks *${e.name}*... and *MISSES!*\n`
+          : playerMissLine(player.name, e) + '\n'
         if (boss) {
           const missResult = applyBossSpecial(player, EVENT.PLAYER_MISS, {
             isMiss: true,
@@ -400,11 +413,17 @@ export default {
         // Apply damage to enemy
         e.hp = Math.max(0, e.hp - finalDmg)
 
-        msg += `⚔️ *${player.name}* attacks *${e.name}*!${isCrit ? ' ⚡ *CRIT!*' : ''}\n`
-        if (finalDmg > 0) {
-          msg += `💥 *${finalDmg}* damage!\n`
+        // Boss hits keep the terse two-line stamp so the cinematic wrapper reads
+        // clean; a generic monster hit gets a rotating flavor line instead.
+        if (boss) {
+          msg += `⚔️ *${player.name}* attacks *${e.name}*!${isCrit ? ' ⚡ *CRIT!*' : ''}\n`
+          msg += finalDmg > 0
+            ? `💥 *${finalDmg}* damage!\n`
+            : `🛡️ _Attack absorbed, no damage dealt!_\n`
         } else {
-          msg += `🛡️ _Attack absorbed — no damage dealt!_\n`
+          msg += (finalDmg > 0
+            ? playerHitLine(player.name, e, finalDmg, isCrit)
+            : playerAbsorbedLine(player.name, e)) + '\n'
         }
         msg += buildDanceOfTheRainMessage(bs, player)
 
@@ -705,7 +724,7 @@ export default {
         }
       } else if (Math.random() > calcMonsterHitChance(e, player)) {
         // ── Regular enemy misses ──────────────────────────────────────────────
-        msg += `\n${e.emoji ?? '👾'} *${e.name}* strikes back... and *MISSES!*`
+        msg += '\n' + enemyMissLine(e)
       } else {
         // ── Regular enemy hits ────────────────────────────────────────────────
         let enemyDmg = calcMonsterDamage(
@@ -769,7 +788,7 @@ export default {
         if (appliedEnemy.catFormDefeated) {
           return resolveCatFormDefeat(player, ctx, { boss })
         }
-        msg += `\n${e.emoji ?? '👾'} *${e.name}* strikes back!\n🩸 *${appliedEnemy.damage}* damage!${dmgNamedLines}`
+        msg += '\n' + enemyHitLine(e, appliedEnemy.damage) + dmgNamedLines
         if (shieldBlockedEnemy > 0) msg += `\n🛡️ Shield absorbed *${shieldBlockedEnemy}* damage!`
         if (player.hp <= 0) {
           const res = await resolvePlayerHpZero(player, ctx, msg, {})

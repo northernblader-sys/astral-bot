@@ -8,6 +8,7 @@
  *   .pdefend / .pd   → .dparty defend
  *   .pflee           → .dparty flee
  *   .pcv / .pcinder  → .dparty cinderverdict   (Wither)
+ *   .pk / .pkurama   → .dparty kurama          (Naruto)
  *   .php             → .dparty hollowpurple    (Gojo)
  *   .puv / .pvoid    → .dparty unlimitedvoid   (Gojo)
  *
@@ -17,11 +18,11 @@
  * router, which would otherwise read ctx.args[0] as a subcommand.
  */
 import { config } from '../config.js'
-import { battleAttack, battleDefend, battleFlee, battleCinderVerdict, battleHollowPurple, battleUnlimitedVoid } from './party.js'
+import { battleAttack, battleDefend, battleFlee, battleCinderVerdict, battleKurama, battleHollowPurple, battleUnlimitedVoid } from './party.js'
 
 export default {
   name: 'pattack',
-  aliases: ['pa', 'pdefend', 'pd', 'pflee', 'pcv', 'pcinder', 'php', 'phollowpurple', 'puv', 'pvoid', 'punlimitedvoid'],
+  aliases: ['pa', 'pdefend', 'pd', 'pflee', 'pcv', 'pcinder', 'pk', 'pkurama', 'php', 'phollowpurple', 'puv', 'pvoid', 'punlimitedvoid'],
   category: 'party',
   requiresPlayer: true,
   description: 'Shortcuts for dungeon-party combat — see .dparty',
@@ -36,6 +37,9 @@ export default {
       case 'pcv':
       case 'pcinder':
         return battleCinderVerdict(ctx)
+      case 'pk':
+      case 'pkurama':
+        return battleKurama(ctx)
       case 'php':
       case 'phollowpurple':
         return battleHollowPurple(ctx)
