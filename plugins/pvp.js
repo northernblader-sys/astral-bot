@@ -150,6 +150,10 @@ import {
   resolvePuppetSelfHit,
   buildPuppetStringsReveal,
   PUPPET_TANGLE_TURNS,
+  activateTimeStop,
+  hasMontana,
+  resolveMontanaCounter,
+  TIME_STOP_TURNS,
   activateKurama,
   resolveKuramaDrain,
   sendKuramaSummonImage,
@@ -935,7 +939,8 @@ export default {
     const KAMEHAMEHA_ALIASES = new Set(['kamehameha', 'bbk', 'bigbang', 'bigbangkamehameha', 'kame', 'big-bang-kamehameha'])
     const PUPPET_ALIASES = new Set(['puppetstrings', 'puppet-strings', 'puppet', 'puppetry', 'strings', 'marionette'])
     const KURAMA_ALIASES = new Set(['kurama', 'baryon', 'kuramamode', 'ninetails', 'bijuu', 'krm'])
-    if (sub === 'attack' || sub === 'skill' || sub === 'defend' || sub === 'ability' || CINDER_ALIASES.has(sub) || ULTIMATE_ALIASES.has(sub) || WILDCARD_ALIASES.has(sub) || DOMAIN_ALIASES.has(sub) || THIEFSEYE_ALIASES.has(sub) || HOLLOW_ALIASES.has(sub) || HOLLOWPURPLE_ALIASES.has(sub) || UNLIMITEDVOID_ALIASES.has(sub) || SOULPUNISHER_ALIASES.has(sub) || KAMEHAMEHA_ALIASES.has(sub) || PUPPET_ALIASES.has(sub) || KURAMA_ALIASES.has(sub)) {
+    const TIMESTOP_ALIASES = new Set(['timestop', 'time-stop', 'tms', 'stoptime'])
+    if (sub === 'attack' || sub === 'skill' || sub === 'defend' || sub === 'ability' || CINDER_ALIASES.has(sub) || ULTIMATE_ALIASES.has(sub) || WILDCARD_ALIASES.has(sub) || DOMAIN_ALIASES.has(sub) || THIEFSEYE_ALIASES.has(sub) || HOLLOW_ALIASES.has(sub) || HOLLOWPURPLE_ALIASES.has(sub) || UNLIMITEDVOID_ALIASES.has(sub) || SOULPUNISHER_ALIASES.has(sub) || KAMEHAMEHA_ALIASES.has(sub) || PUPPET_ALIASES.has(sub) || KURAMA_ALIASES.has(sub) || TIMESTOP_ALIASES.has(sub)) {
       if (!inPvp(player)) {
         return ctx.reply(`❌ You're not in a duel. Challenge someone: *${pr}pvp @target*`)
       }
@@ -972,7 +977,9 @@ export default {
                             ? 'puppetstrings'
                             : KURAMA_ALIASES.has(sub)
                               ? 'kurama'
-                              : sub
+                              : TIMESTOP_ALIASES.has(sub)
+                                ? 'timestop'
+                                : sub
       return runPvpTurn(ctx, resolvedAction, args.slice(1).join(' '))
     }
 
@@ -1557,6 +1564,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
   // the charge — the same opponent-then-actor pattern the dragon ultimate uses
   // for markDragonAsleep().
   let hollowRes = null
+  let montanaCounter = null // Montana negated a .tms and struck back; applied to the caster below
   let turnEnded = false // set once we know the whole turn (incl. beast follow-ups) is resolved
 
   // ── Actor's own status tick + move resolution ───────────────────────────
@@ -1871,6 +1879,21 @@ async function runPvpTurn(ctx, action, skillQuery) {
       }
     }
 
+    // Reverie's Time Stop — once-per-battle, no MP. Burns the charge here
+    // (activateTimeStop sets battleState.timeStopUsed); the opponent-hit phase
+    // below freezes them for TIME_STOP_TURNS so their next moves are skipped by
+    // the shared incapacitation branch — UNLESS they have Montana equipped, in
+    // which case she negates the stop and answers with a counter (see the
+    // 'timestop' branch further down). A failed gate does NOT consume the turn.
+    if (action === 'timestop') {
+      const gate = activateTimeStop(actor, actor.battleState)
+      if (!gate.ok) {
+        if (gate.message) msg += gate.message + '\n'
+        turnEnded = true
+        return
+      }
+    }
+
     // Naruto's Baryon Mode — once-per-battle, no MP, but it costs NARUTO his own
     // health. activateKurama burns the charge (battleState.kuramaUsed) AND spends
     // a slice of his max HP to hold the fusion (floored, never self-lethal), then
@@ -1958,7 +1981,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
       // applyIncomingDamage() reads them when the opponent swings back.
     }
 
-    if (action === 'defend' || action === 'ability' || action === 'cinderverdict' || action === 'ultimate' || action === 'wildcard' || action === 'domain' || action === 'thiefseye' || action === 'hollowexchange' || action === 'hollowpurple' || action === 'unlimitedvoid' || action === 'puppetstrings' || action === 'kurama' || action === 'soulpunisher' || action === 'kamehameha') {
+    if (action === 'defend' || action === 'ability' || action === 'cinderverdict' || action === 'ultimate' || action === 'wildcard' || action === 'domain' || action === 'thiefseye' || action === 'hollowexchange' || action === 'hollowpurple' || action === 'unlimitedvoid' || action === 'puppetstrings' || action === 'timestop' || action === 'kurama' || action === 'soulpunisher' || action === 'kamehameha') {
       if (action === 'defend') {
         const mpRegen = Math.floor(actor.maxMp * 0.05)
         actor.mp = Math.min(actor.maxMp, actor.mp + mpRegen)
@@ -2511,6 +2534,63 @@ async function runPvpTurn(ctx, action, skillQuery) {
         immune: !!tangle?.immune,
       }) + '\n'
     })
+  } else if (action === 'timestop') {
+    // Reverie's Time Stop — pure control, no strike of her own. The opponent
+    // FREEZES for TIME_STOP_TURNS and the actor-phase incapacitation branch skips
+    // their moves until it lifts, the same shape as Unlimited Void's stun.
+    //
+    // The one exception is Montana: if the opponent has her equipped, she moves
+    // faster than the stopped moment, so NO freeze lands — instead she answers
+    // with a counter built from her summoner's own offence (resolveMontanaCounter,
+    // floored non-lethal like Puppet Strings' redirect). Her HP write is on the
+    // opponent record here; the caster's HP loss is deferred to the actor write
+    // below, the exact opponent-then-actor split hollowexchange uses.
+    await updatePlayer(db, opponentJid, (opp) => {
+      const oppStatus = processStatusTurn(opp)
+      if (oppStatus.lines.length) msg += oppStatus.lines.join('\n') + '\n'
+      if (opp.hp <= 0) {
+        const catMsg = checkYoriichiCatForm(opp)
+        if (catMsg) { msg += catMsg } else { opponentDefeated = true; return }
+      }
+
+      if (hasMontana(opp)) {
+        // Negated. Compute her counter against the caster snapshot (persisted on
+        // the real actor record below) — never lethal, so no defeat branch.
+        montanaCounter = resolveMontanaCounter(opp, actorForCalc)
+        msg += `🕰️ *${opp.name}* has *Montana* — she moves before time can close on her!\n`
+        msg += `⛔ _${actorForCalc.name}'s Time Stop finds no hold. The stillness never reaches her._\n`
+        msg += montanaCounter.dealt > 0
+          ? (montanaCounter.floored
+              ? `🗡️ _Faster than the frozen moment, she strikes back for *${montanaCounter.dealt}* — pulling the blow before it can finish anyone._\n`
+              : `🗡️ _Faster than the frozen moment, she strikes back for *${montanaCounter.dealt}*, matching ${opp.name} blow for blow._\n`)
+          : `🗡️ _She strikes back, but there is almost nothing left of ${actorForCalc.name} to take._\n`
+        return
+      }
+
+      msg += `⏱️ *${actorForCalc.name}* stops time on *${opp.name}*!\n`
+      // A status-immune opponent (a Shunya owner) stands outside the stopped
+      // moment; addStatusEffect no-sells the freeze and reports immune, as in PvE.
+      const res = addStatusEffect(opp, {
+        type: 'freeze',
+        duration: TIME_STOP_TURNS,
+        sourceId: 'time_stop',
+      })
+      if (res?.immune) {
+        msg += `⭕ _${opp.name} stands outside the stopped moment. Time finds no hold on them._\n`
+      } else {
+        msg += `❄️ _${opp.name} freezes mid-motion, caught between one instant and the next._\n`
+        msg += `🕛 _Frozen for the next *${TIME_STOP_TURNS}* turns while ${actorForCalc.name} acts alone._\n`
+      }
+    })
+
+    // Montana's counter half — the caster's HP loss, written on the real actor
+    // record (montanaCounter was computed against a snapshot above). Floored
+    // non-lethal in resolveMontanaCounter, so this can never end the duel.
+    if (montanaCounter) {
+      await updatePlayer(db, actorJid, (actor) => {
+        actor.hp = montanaCounter.newHp
+      })
+    }
   } else if (!skipsOpponentHit) {
     await updatePlayer(db, opponentJid, (opp) => {
       const bs = opp.battleState
@@ -3248,6 +3328,23 @@ export async function pvpPuppetStrings(ctx) {
     return ctx.reply(`❌ You're not in a duel.`)
   }
   return runPvpTurn(ctx, 'puppetstrings', '')
+}
+
+/**
+ * pvpTimeStop(ctx) — entry point for the top-level `.tms` command
+ * (plugins/timestop.js) when the caller is in a duel. Same delegation shape as
+ * pvpPuppetStrings() above: the PvE plugin only knows the PvE battleState shape
+ * (bs.enemy), so it hands off here on battleState.type === 'pvp'. Routes in as
+ * the 'timestop' action, which gates on Reverie being equipped and the
+ * once-per-battle latch, then freezes the opponent — unless they own Montana,
+ * who negates it and counters (see the 'timestop' resolution branch above).
+ */
+export async function pvpTimeStop(ctx) {
+  const player = getPlayer(ctx.db, ctx.from)
+  if (!inPvp(player)) {
+    return ctx.reply(`❌ You're not in a duel.`)
+  }
+  return runPvpTurn(ctx, 'timestop', '')
 }
 
 /**

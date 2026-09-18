@@ -13,6 +13,8 @@
 //   safe. Two numbers are just two sockets sharing that one queue.
 //
 
+import { seedRuntimeData, IS_PERSISTENT } from './lib/runtime-paths.js'
+import './lib/fonts.js' // registers bundled fonts before any canvas draw — see lib/fonts.js
 import makeWASocket, {
   useMultiFileAuthState,
   fetchLatestBaileysVersion,
@@ -187,6 +189,21 @@ async function initDb() {
   // players. The read()/write() contract is identical in both cases, so the
   // shared write queue in lib/player-repo.js, and every plugin above it, is
   // untouched.
+  // Move/keep mutable state on the persistent volume BEFORE anything reads
+  // it. On Railway the container is rebuilt from GitHub each deploy, so any
+  // state written back into the repo's ./data (group settings, moderation,
+  // spawn lists) and ./db.json reverts on the next push unless it lives on a
+  // mounted volume. seedRuntimeData() copies the existing files across once,
+  // then leaves the volume authoritative forever after. No volume mounted =
+  // no-op, identical to the old behaviour. See lib/runtime-paths.js.
+  seedRuntimeData(globalLog)
+  if (!IS_PERSISTENT) {
+    globalLog(
+      '⚠️ State is stored inside the deployment (./data, ./db.json). On Railway this ' +
+      'resets on every redeploy — mount a volume and set RUNTIME_DATA_DIR=/data to keep it.',
+    )
+  }
+
   const adapter = createDbAdapter(config.dbPath, { log: globalLog, warn: globalErrorLog })
   // Default structure — expand when RPG features are added
   const db = new Low(adapter, { users: {}, sessions: {}, bans: {}, mods: [] })
@@ -600,18 +617,25 @@ async function runPokeBattleTimeoutSweep(instances, db) {
 // lib/moderation-state.js's storySlots + plugins/story.js's claimStorySlot
 // call in .story enter/start). If the holder goes STORY_SLOT_TIMEOUT_MS
 // without running a story command (enter/start, or answering a pending
-// choice — both bump lastActivityAt), they're removed from the group,
-// tagged in the removal message, and the slot is freed so the next person
+// choice — both bump lastActivityAt), the SLOT is freed so the next person
 // isn't stuck waiting on someone who walked away.
+//
+// ── It no longer removes anyone from the group (2026-09 fix) ─────────────
+// This used to call groupParticipantsUpdate(..., 'remove'): going quiet for
+// five minutes mid-story got you thrown out of the entire WhatsApp group.
+// That was never the intent — the scarce thing is the story slot, not
+// membership — and it was punishing people for a slow reply, a dropped
+// connection, or simply reading. Freeing the slot achieves everything the
+// sweep is for. Removing someone from a group stays where it belongs: a
+// deliberate admin action via `.kick`.
 //
 // Poll-based like every other sweep in this file rather than a per-user
 // setTimeout, so a PM2 restart mid-wait doesn't lose the timeout — the next
 // tick just checks lastActivityAt against the clock same as always.
 //
-// Never kicks the bot owner (mirrors runPremiumSweep's same guard) — if the
-// owner is testing Story Mode and walks away, the slot times out and frees
-// itself for others, but nobody removes the owner from their own group.
-const STORY_SLOT_TIMEOUT_MS = 5 * 60_000 // 5 minutes
+// The timeout is generous on purpose: a chapter is something you read, and
+// the old 5 minutes treated a normal reading pace as "walked away".
+const STORY_SLOT_TIMEOUT_MS = 15 * 60_000 // 15 minutes
 const STORY_SLOT_SWEEP_INTERVAL_MS = 30_000 // check every 30s
 
 async function runStorySlotTimeoutSweep(instances, db) {
@@ -623,17 +647,9 @@ async function runStorySlotTimeoutSweep(instances, db) {
     if (now - rec.lastActivityAt < STORY_SLOT_TIMEOUT_MS) continue
 
     const userJid = rec.userJid
-
-    // Free the slot first — if the kick below fails (bot not admin, group
-    // gone, etc.) the group still isn't left permanently stuck waiting on
-    // an idle player just because the removal itself didn't go through.
     await releaseStorySlot(groupJid)
 
-    if (isOwnerJid(userJid)) continue
-
-    // Use whichever bot instance is actually in this group, same lookup
-    // runPremiumSweep uses below — a removal call fails outright if issued
-    // from a socket that was never added to that group.
+    // Announce in the group that the slot is open — never touch membership.
     let sock = null
     for (const inst of instances) {
       if (!inst.activeSock) continue
@@ -648,18 +664,24 @@ async function runStorySlotTimeoutSweep(instances, db) {
     if (!sock) continue
 
     const bareTag = userJid.replace(/@.*$/, '')
+    const idleMin = Math.round(STORY_SLOT_TIMEOUT_MS / 60_000)
     try {
-      await sock.groupParticipantsUpdate(groupJid, [userJid], 'remove')
       await sock.sendMessage(groupJid, {
-        text: `📖 @${bareTag} was removed from Story Mode for going quiet too long. The slot is free — run *${config.prefix}story start* to jump in.`,
+        text:
+          `📖 *Story slot released*\n` +
+          `─────────────────────\n` +
+          `@${bareTag} was idle for ${idleMin} minutes, so the slot is now free ` +
+          `for someone else.\n\n` +
+          `_Nobody was removed from the group — your progress is saved exactly ` +
+          `where you left it._\n\n` +
+          `▸ *${config.prefix}story start* — @${bareTag}, pick your chapter straight back up\n` +
+          `▸ *${config.prefix}story enter <volume>* — anyone else, the slot is yours\n` +
+          `▸ *${config.prefix}story* — volume list and how it all works`,
         mentions: [userJid],
       }, {})
-      globalLog(`📖 Story slot timeout: removed ${userJid} from ${groupJid}`)
+      globalLog(`📖 Story slot timeout: released ${userJid}'s slot in ${groupJid} (no removal)`)
     } catch (err) {
-      // Same "not admin / lacks permission" failure mode kick.js documents —
-      // the slot is already freed above regardless, so this only affects
-      // whether the idle player is actually removed from the group.
-      globalLog(`⚠️ Story slot timeout: failed to remove ${userJid} from ${groupJid}:`, err.message)
+      globalLog(`⚠️ Story slot timeout: released the slot but couldn't post in ${groupJid}:`, err.message)
     }
   }
 }
@@ -885,9 +907,7 @@ async function runSeasonSweep(db) {
 // cheap, keeps the auth files, and is rate-limited by the cooldown below —
 // a pointless reconnect every 20 minutes is a much smaller problem than
 // hours of unanswered commands.
-const INBOUND_STALL_MS = 15 * 60_000
 const STALL_CHECK_INTERVAL_MS = 60_000
-const FORCED_RECONNECT_COOLDOWN_MS = 20 * 60_000
 
 // A reply that has been waiting this long means the outbound queue — not the
 // inbound path — is what's making the bot look frozen. Different cause, so
@@ -912,34 +932,20 @@ function runStallWatchdog(instances, db) {
       )
     }
 
-    // Inbound side: silence past the threshold means force a reconnect.
-    const openFor = now - (inst.openedAt || 0)
-    if (!inst.openedAt || openFor < INBOUND_STALL_MS) continue
-
-    const quietFor = now - (inst.lastInboundAt || inst.openedAt)
-    if (quietFor < INBOUND_STALL_MS) continue
-    if (now - (inst.lastForcedReconnectAt || 0) < FORCED_RECONNECT_COOLDOWN_MS) continue
-
-    inst.lastForcedReconnectAt = now
-    inst.forcedReconnect = true
-    globalErrorLog(
-      `🚑 [${inst.botName}] no inbound message for ${Math.round(quietFor / 60_000)} min while the socket is open — ` +
-      `assuming inbound delivery has stalled and forcing a reconnect. ` +
-      `(Total messages seen this session: ${inst.inboundCount}.)`,
-    )
-
-    try {
-      // Baileys' own end() emits connection.update {connection:'close'},
-      // which lands in the handler below and reconnects. Doing it this way
-      // rather than calling connect() directly means exactly one socket is
-      // ever alive per instance.
-      sock.end(new Boom('inbound stall watchdog', { statusCode: DisconnectReason.connectionLost }))
-    } catch (err) {
-      inst.log?.(`⚠️ Watchdog could not close the socket cleanly: ${err.message}`)
-      // end() failing would leave nothing to trigger the close handler, so
-      // reconnect by hand.
-      inst.scheduleReconnect?.(db, 5_000, 'watchdog: socket end failed')
-    }
+    // Inbound side: REMOVED (2026-09).
+    //
+    // This used to force a reconnect after 15 minutes without an inbound
+    // message, on the theory that silence meant Baileys had stopped
+    // delivering. In practice a quiet group is just a quiet group: the
+    // watchdog fired on healthy sockets in the small hours, and every
+    // forced reconnect renegotiates sessions, drops whatever was in the
+    // send queue, and risks the connection it was supposed to be
+    // protecting. The "🚑 no inbound message for 15 min" line was noise.
+    //
+    // Genuine disconnects still reconnect on their own: Baileys emits
+    // connection.update {connection:'close'} and the handler below owns
+    // that path. If inbound delivery really does wedge again, bring this
+    // back behind an env flag rather than on by default.
   }
 }
 
@@ -1371,9 +1377,10 @@ function createBotInstance(botCfg) {
         log('⚠️ Connection closed. statusCode:', statusCode)
 
         if (inst.forcedReconnect) {
-          // The stall watchdog closed this socket on purpose because inbound
-          // delivery had stopped. Come back quickly — every second here is a
-          // second of unanswered commands.
+          // Nothing sets this any more — the inbound-stall watchdog that used
+          // to was removed (see runStallWatchdog). Kept so a deliberate
+          // in-process reconnect (`inst.forcedReconnect = true; sock.end()`)
+          // still comes back fast if one is ever added again.
           inst.forcedReconnect = false
           inst.scheduleReconnect(db, 5_000, 'watchdog forced reconnect')
           return
@@ -1560,7 +1567,7 @@ async function main() {
     try { runStallWatchdog(instances, db) }
     catch (err) { globalErrorLog('⚠️ Stall watchdog crashed:', err?.message ?? err) }
   }, STALL_CHECK_INTERVAL_MS)
-  globalLog(`⏱️ Inbound-stall watchdog active (forces a reconnect after ${INBOUND_STALL_MS / 60_000} min of inbound silence)`)
+  globalLog('⏱️ Outbound backlog watchdog active (reports a stuck send queue; never forces a reconnect)')
 
   setInterval(() => {
     runSeasonSweep(db).catch(err => globalLog('⚠️ Season sweep crashed:', err.message))

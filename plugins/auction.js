@@ -2,21 +2,24 @@
  * auction.js — Astral Auction House (single global auction model).
  *
  * ONE auction runs realm-wide at a time. The owner starts it from any group
- * chat by picking an item id from the fixed catalog (data/auction.json —
- * mythic gear that exists ONLY here, never in the shop, never craftable),
- * a starting bid, and a duration. Anyone, from ANY group chat the bot is
+ * chat by naming ANYTHING the game has an id for — mythic auction gear,
+ * ordinary equipment, a character, a pet, or a summon (beast) — plus a
+ * starting bid and a duration. What can be sold and how each kind reaches
+ * the winner lives in lib/auction-lots.js; this file only runs the auction. Anyone, from ANY group chat the bot is
  * in, can then bid — bidding is global, not tied to where the auction was
  * started. When the timer runs out, the bot returns to the ORIGINAL
  * starting group and @tags the winner there to announce them.
  *
  * Usage:
- *   .auction start <item_id> <startbid> <duration>  — owner only, opens
- *                                                       the auction and
- *                                                       posts the item's
- *                                                       image + price.
- *                                                       duration is a
- *                                                       number + unit,
- *                                                       e.g. 30m or 2h.
+ *   .auction start <id> <startbid> <duration>       — owner only. <id> is
+ *                                                       an item, character,
+ *                                                       pet or beast id, or
+ *                                                       a name. Prefix with
+ *                                                       a kind to
+ *                                                       disambiguate:
+ *                                                       pet:shadow_cat.
+ *                                                       Duration is a number
+ *                                                       + unit, e.g. 30m/2h.
  *   .auction <amount>                                — bid, from any group.
  *   .auction                                         — show current auction.
  *   .auction history                                 — last few items sold.
@@ -31,8 +34,7 @@
  */
 import { config } from '../config.js'
 import { updatePlayer } from '../lib/player-repo.js'
-import { auctionItems } from '../lib/game-data.js'
-import { hasInventoryRoom } from '../lib/inventory-limits.js'
+import { resolveAuctionLot, describeLot, kindLabel, exampleIds } from '../lib/auction-lots.js'
 import { pushTxLog, genRef } from '../lib/astralpay.js'
 import { isOwnerJid } from '../lib/group-helpers.js'
 import { sendImageTo } from '../lib/image.js'
@@ -45,15 +47,6 @@ const soldHistory = [] // { itemName, buyerName, price, at }
 // The single global auction, or null if none is running.
 // { item, bid, bidderId, bidderName, endsAt, startJid, _timeout }
 let auction = null
-
-function slotLabel(item) {
-  const map = { weapon: '⚔️ Weapon', offhand: '🛡️ Offhand', helmet: '⛑️ Helmet', chestplate: '👕 Chestplate', boots: '👢 Boots', relic: '💠 Relic' }
-  return map[item.slot] ?? item.slot
-}
-
-function findItem(itemId) {
-  return auctionItems.find(i => i.id === itemId) ?? null
-}
 
 /**
  * Parses a duration string like "30m", "2h", "90" (bare number = minutes)
@@ -85,27 +78,31 @@ function formatAuction() {
   if (!auction) {
     return (
       `🏛️ *ASTRAL AUCTION HOUSE*\n` +
-      `─────────────────────\n` +
-      `_No auction is currently running._\n\n` +
-      `_Check back later, or use *${p}auction history* to see recent sales._`
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `_Nothing under the hammer right now._\n\n` +
+      `*How it works*\n` +
+      `  ▸ One auction runs at a time, realm-wide.\n` +
+      `  ▸ Anyone can bid from any group the bot is in.\n` +
+      `  ▸ Gear, characters, pets and summons all go up here.\n\n` +
+      `  ▸ *${p}auction* — see the current lot\n` +
+      `  ▸ *${p}auction <amount>* — bid\n` +
+      `  ▸ *${p}auction history* — recent sales`
     )
   }
 
-  const item = auction.item
-  const bonusLines = Object.entries(item.statBonuses ?? {})
-    .filter(([, v]) => v !== 0)
-    .map(([k, v]) => `${k.toUpperCase()} +${v}`)
-    .join(' · ')
-
+  const lot = auction.lot
   return (
     `🏛️ *ASTRAL AUCTION HOUSE*\n` +
-    `─────────────────────\n` +
-    `🟥 *${item.name}* _(Mythic)_\n` +
-    `${slotLabel(item)} · 🔒 Lvl ${item.levelReq} · ${bonusLines}\n\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n` +
+    `${describeLot(lot)}\n` +
+    (lot.description ? `_${lot.description}_\n` : '') +
+    `\n` +
     `💰 Current bid: *${auction.bid.toLocaleString()} ☀️*` +
-    (auction.bidderName ? ` — *${auction.bidderName}*` : ' — no bids yet') + `\n` +
+    (auction.bidderName ? `\n🥇 Top bidder: *${auction.bidderName}*` : `\n🥇 No bids yet — the floor is open`) + `\n` +
     `⏱️ Time left: *${humanRemaining(auction.endsAt - Date.now())}*\n\n` +
-    `_Use *${p}auction <amount>* to bid, from any group — e.g. ${p}auction 25000_`
+    `*To bid:* *${p}auction <amount>* — e.g. *${p}auction ${(auction.bid + 1000).toLocaleString('en-US').replace(/,/g, '')}*\n` +
+    `_Your bid is held from your wallet and refunded the moment someone outbids you. ` +
+    `You only pay if you win. A bid in the last minute adds another minute._`
   )
 }
 
@@ -114,36 +111,46 @@ async function closeAuction(ctx) {
   if (!closing) return
   auction = null // free the slot immediately so a new one can start
 
+  const lot = closing.lot
+
   if (!closing.bidderId) {
-    soldHistory.unshift({ itemId: closing.item.id, itemName: closing.item.name, buyerName: null, price: 0, at: Date.now() })
-    if (soldHistory.length > 20) soldHistory.length = 20
+    remember({ lot, buyerName: null, price: 0 })
     try {
       await ctx.sock.sendMessage(closing.startJid, {
-        text: `🏛️ *AUCTION CLOSED*\n\n*${closing.item.name}* went unsold — no bids were placed.`,
+        text:
+          `🏛️ *AUCTION CLOSED — NO SALE*\n` +
+          `━━━━━━━━━━━━━━━━━━━━\n` +
+          `*${lot.name}* went unsold. Nobody bid.\n\n` +
+          `_Better luck to the next lot — watch for *${config.prefix}auction*._`,
       })
     } catch {}
     return
   }
 
-  // The winning bid was already escrowed from the bidder's wallet when they
-  // bid. At settlement we only grant the item. If inventory is full, refund
-  // the escrowed bid instead — the bidder keeps their solars, sale fails.
+  // The winning bid was escrowed when it was placed, so settlement only has
+  // to hand the thing over. Each kind knows where it goes (lib/auction-lots.js);
+  // if it can't be delivered — full bag, duplicate character — the bid is
+  // refunded in the same mutation and the lot goes unsold.
   let outcome = 'pending'
+  let failReason = ''
+  let note = ''
   await updatePlayer(ctx.db, closing.bidderId, player => {
     player.wallet = player.wallet ?? {}
-    if (!hasInventoryRoom(player, 1)) {
+    const result = lot.grant(player)
+    if (!result.ok) {
       player.wallet.solars = (player.wallet.solars ?? 0) + closing.bid
       pushTxLog(player, {
         ref: genRef(), type: 'auction_refund', amount: closing.bid,
-        note: `${closing.item.name} — inventory full at settlement`,
+        note: `${lot.name} — ${result.reason}`,
       })
-      outcome = 'inventory_full'
+      outcome = 'undeliverable'
+      failReason = result.reason
       return player
     }
-    if (!player.inventory.includes(closing.item.id)) player.inventory.push(closing.item.id)
+    note = result.note ?? ''
     pushTxLog(player, {
       ref: genRef(), type: 'auction_win', amount: closing.bid,
-      note: closing.item.name,
+      note: lot.name,
     })
     outcome = 'sold'
     return player
@@ -151,16 +158,16 @@ async function closeAuction(ctx) {
 
   const bareWinner = String(closing.bidderId).replace(/@.*$/, '')
 
-  if (outcome === 'inventory_full') {
-    soldHistory.unshift({ itemId: closing.item.id, itemName: closing.item.name, buyerName: null, price: 0, at: Date.now() })
-    if (soldHistory.length > 20) soldHistory.length = 20
+  if (outcome === 'undeliverable') {
+    remember({ lot, buyerName: null, price: 0 })
     try {
       await ctx.sock.sendMessage(closing.startJid, {
         text:
-`🏛️ *AUCTION CLOSED — SALE FAILED*
-
-*${closing.item.name}* would have sold to @${bareWinner} for *${closing.bid.toLocaleString()} ☀️*, but their inventory is full.
-☀️ *${closing.bid.toLocaleString()} solars* refunded — item goes unsold.`,
+          `🏛️ *AUCTION CLOSED — SALE FAILED*\n` +
+          `━━━━━━━━━━━━━━━━━━━━\n` +
+          `*${lot.name}* would have gone to @${bareWinner} for *${closing.bid.toLocaleString()} ☀️*, ` +
+          `but ${failReason}.\n` +
+          `☀️ *${closing.bid.toLocaleString()}* refunded in full — the lot goes unsold.`,
         mentions: [closing.bidderId],
       })
     } catch {}
@@ -168,18 +175,44 @@ async function closeAuction(ctx) {
   }
 
   if (outcome === 'sold') {
-    soldHistory.unshift({ itemId: closing.item.id, itemName: closing.item.name, buyerName: closing.bidderName, price: closing.bid, at: Date.now() })
-    if (soldHistory.length > 20) soldHistory.length = 20
+    remember({ lot, buyerName: closing.bidderName, price: closing.bid })
     try {
       await ctx.sock.sendMessage(closing.startJid, {
         text:
-`🏛️ *AUCTION CLOSED — SOLD!* 🎉
-
-Congratulations @${bareWinner}! You won *${closing.item.name}* for *${closing.bid.toLocaleString()} ☀️*!`,
+          `🏛️ *SOLD!* 🎉\n` +
+          `━━━━━━━━━━━━━━━━━━━━\n` +
+          `${describeLot(lot)}\n\n` +
+          `🥇 Winner: @${bareWinner}\n` +
+          `💰 Hammer price: *${closing.bid.toLocaleString()} ☀️*\n\n` +
+          `${claimHint(lot)}` +
+          (note ? `\n_${note}_` : ''),
         mentions: [closing.bidderId],
       })
     } catch {}
   }
+}
+
+/** Where the winner will find what they just bought. */
+function claimHint(lot) {
+  const p = config.prefix
+  switch (lot.kind) {
+    case 'character': return `_It's in your collection — equip it with *${p}character equip ${lot.id}*._`
+    case 'pet':       return `_It's yours — bring it out with *${p}pet equip ${lot.id}*._`
+    case 'beast':     return `_Added to your summons — check *${p}summon*._`
+    default:          return `_It's in your bag — see *${p}inventory*, equip with *${p}equip ${lot.id}*._`
+  }
+}
+
+function remember(entry) {
+  soldHistory.unshift({
+    itemId: entry.lot.id,
+    itemName: entry.lot.name,
+    kind: entry.lot.kind,
+    buyerName: entry.buyerName,
+    price: entry.price,
+    at: Date.now(),
+  })
+  if (soldHistory.length > 20) soldHistory.length = 20
 }
 
 export default {
@@ -187,12 +220,13 @@ export default {
   aliases:        ['ah', 'auctionhouse'],
   category:       'economy',
   requiresPlayer: true,
-  description:    'One global auction at a time on mythic gear that only ever appears here. Owner starts it, anyone can bid from any group.',
+  description:    'One global auction at a time — gear, characters, pets or summons. Owner starts it, anyone bids from any group.',
   subcommands: [
-    { cmd: 'start <item_id> <startbid> <duration>', desc: 'owner only — open a new auction, e.g. .auction start solaris_reaver 18000 2h' },
-    { cmd: '<amount>', desc: 'bid on the running auction from any group, e.g. .auction 25000' },
-    { cmd: 'history', desc: 'see recently sold items' },
-    { cmd: 'cancel', desc: 'owner only — cancel the running auction' },
+    { cmd: '(no args)', desc: 'show the current lot, the top bid and how bidding works' },
+    { cmd: '<amount>', desc: 'bid on the running lot from any group, e.g. .auction 25000' },
+    { cmd: 'history', desc: 'the last few lots and what they sold for' },
+    { cmd: 'start <id> <startbid> <duration>', desc: 'owner — open a lot. <id> is any item, character, pet or beast, e.g. .auction start mei 40000 2h' },
+    { cmd: 'cancel', desc: 'owner — cancel the running lot and refund the top bid' },
   ],
 
   async run(ctx) {
@@ -213,6 +247,7 @@ export default {
 async function startAuction(ctx) {
   const { args, reply, from } = ctx
   const p = config.prefix
+  const ex = exampleIds()
 
   if (!from || !isOwnerJid(from)) {
     return reply('❌ Owner only.')
@@ -220,53 +255,66 @@ async function startAuction(ctx) {
 
   if (auction) {
     return reply(
-      `❌ An auction is already running — *${auction.item.name}* at *${auction.bid.toLocaleString()} ☀️*.\n` +
+      `❌ An auction is already running — *${auction.lot.name}* at *${auction.bid.toLocaleString()} ☀️*.\n` +
       `_Wait for it to close, or use *${p}auction cancel* first._`,
     )
   }
 
-  const itemId       = args[1]
-  const startBid     = Math.floor(Number(args[2]))
-  const durationMs   = parseDuration(args[3])
+  // The id can contain no spaces, so everything between the id and the last
+  // two args is treated as part of a quoted-free name: `.auction start
+  // ember hatchling 5000 1h` works as well as `.auction start ember_hatchling
+  // 5000 1h`.
+  const rest = args.slice(1)
+  const durationMs = parseDuration(rest[rest.length - 1])
+  const startBid   = Math.floor(Number(rest[rest.length - 2]))
+  const query      = rest.slice(0, -2).join(' ')
 
-  if (!itemId || !startBid || startBid <= 0 || !durationMs) {
+  const usage =
+    `❌ *Usage:* *${p}auction start <id> <startbid> <duration>*\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n` +
+    `Anything with an id can go up: equipment, characters, pets, summons.\n\n` +
+    `  ▸ *${p}auction start ${ex.item} 18000 2h* — gear\n` +
+    `  ▸ *${p}auction start ${ex.character} 40000 3h* — character\n` +
+    `  ▸ *${p}auction start ${ex.pet} 5000 30m* — pet\n` +
+    `  ▸ *${p}auction start ${ex.beast} 9000 1h* — summon\n\n` +
+    `_Duration is m or h, 1m to 24h. If two things share a name, force the ` +
+    `kind: *pet:${ex.pet}*, *character:${ex.character}*, *beast:${ex.beast}*._`
+
+  if (!query || !startBid || startBid <= 0 || !durationMs) return reply(usage)
+
+  const lot = resolveAuctionLot(query)
+  if (!lot) {
     return reply(
-      `❌ Usage: *${p}auction start <item_id> <startbid> <duration>*\n` +
-      `_Duration uses m for minutes or h for hours — e.g. ${p}auction start solaris_reaver 18000 2h_`,
+      `❌ Nothing called *"${query}"* in any catalog — checked auction gear, ` +
+      `equipment, characters, pets and summons.\n\n${usage}`,
     )
   }
 
-  const item = findItem(itemId)
-  if (!item) {
-    return reply(`❌ No auction-catalog item with id *"${itemId}"*. Check data/auction.json for valid ids.`)
-  }
-
   auction = {
-    item,
+    lot,
     bid: startBid,
     bidderId: null,
     bidderName: null,
     endsAt: Date.now() + durationMs,
-    startJid: ctx.sender, // the group where the auction was started — winner is announced back here
+    startJid: ctx.sender, // the group where it started — the winner is announced back here
     _timeout: null,
   }
   auction._timeout = setTimeout(() => closeAuction(ctx), durationMs)
 
-  const bonusLines = Object.entries(item.statBonuses ?? {})
-    .filter(([, v]) => v !== 0)
-    .map(([k, v]) => `${k.toUpperCase()} +${v}`)
-    .join(' · ')
-
   const caption =
-    `🏛️ *AUCTION STARTED!*\n\n` +
-    `🟥 *${item.name}* _(Mythic)_\n` +
-    `${slotLabel(item)} · 🔒 Lvl ${item.levelReq} · ${bonusLines}\n\n` +
-    `💰 Starting bid: *${startBid.toLocaleString()} ☀️*\n` +
-    `⏱️ Ends in: *${humanRemaining(durationMs)}*\n\n` +
-    `_Use *${p}auction <amount>* to bid — from any group chat!_`
+    `🏛️ *AUCTION OPEN* — ${kindLabel(lot.kind)}\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n` +
+    `${describeLot(lot)}\n` +
+    (lot.description ? `_${lot.description}_\n` : '') +
+    `\n` +
+    `💰 Opening bid: *${startBid.toLocaleString()} ☀️*\n` +
+    `⏱️ Closes in: *${humanRemaining(durationMs)}*\n\n` +
+    `*Bid from any group:* *${p}auction <amount>*\n` +
+    `_Bids are held from your wallet and refunded instantly if you're outbid. ` +
+    `You only pay if you win. A bid in the final minute extends the clock by one._`
 
-  if (item.image) {
-    return sendImageTo(ctx, item.image, caption, ctx.sender)
+  if (lot.image) {
+    return sendImageTo(ctx, lot.image, caption, ctx.sender)
   }
   return reply(caption)
 }
@@ -292,14 +340,14 @@ async function cancelAuction(ctx) {
       p.wallet.solars = (p.wallet.solars ?? 0) + cancelled.bid
       pushTxLog(p, {
         ref: genRef(), type: 'auction_refund', amount: cancelled.bid,
-        note: `${cancelled.item.name} — auction cancelled`,
+        note: `${cancelled.lot.name} — auction cancelled`,
       })
       return p
     }).catch(() => {})
   }
 
   return reply(
-    `🏛️ *Auction cancelled.*\n*${cancelled.item.name}* — no sale.` +
+    `🏛️ *Auction cancelled.*\n*${cancelled.lot.name}* — no sale.` +
     (cancelled.bidderName ? `\n*${cancelled.bidderName}*'s bid of *${cancelled.bid.toLocaleString()} ☀️* has been refunded.` : ''),
   )
 }
@@ -309,7 +357,10 @@ async function placeBid(ctx) {
   const p = config.prefix
 
   if (!auction) {
-    return reply(`❌ No auction is currently running. Check *${p}auction* for updates.`)
+    return reply(
+      `❌ No auction is running right now.\n` +
+      `_Run *${p}auction* to see the house, or *${p}auction history* for recent sales._`,
+    )
   }
 
   const amount = Math.floor(Number(args[0]))
@@ -319,8 +370,10 @@ async function placeBid(ctx) {
   if (amount <= auction.bid) {
     return reply(`❌ Your bid must beat the current bid of *${auction.bid.toLocaleString()} ☀️*.`)
   }
-  if (player.level < auction.item.levelReq) {
-    return reply(`❌ *${auction.item.name}* requires Level *${auction.item.levelReq}* to bid on.`)
+  if (player.level < (auction.lot.levelReq ?? 1)) {
+    return reply(
+      `❌ *${auction.lot.name}* is for Level *${auction.lot.levelReq}* and up. _You're Level ${player.level}._`,
+    )
   }
   if ((player.wallet?.solars ?? 0) < amount) {
     return reply(`❌ You don't have *${amount.toLocaleString()} ☀️*. You have: ${(player.wallet?.solars ?? 0).toLocaleString()} ☀️.`)
@@ -348,7 +401,7 @@ async function placeBid(ctx) {
     p2.wallet.solars = Math.max(0, fresh - amount)
     pushTxLog(p2, {
       ref: genRef(), type: 'auction_bid', amount,
-      note: `Bid on ${auction.item.name}`,
+      note: `Bid on ${auction.lot.name}`,
     })
     escrowed = true
     return p2
@@ -369,9 +422,18 @@ async function placeBid(ctx) {
       prev.wallet.solars = (prev.wallet.solars ?? 0) + prevBid
       pushTxLog(prev, {
         ref: genRef(), type: 'auction_outbid', amount: prevBid,
-        note: `Outbid on ${auction.item.name} — refunded`,
+        note: `Outbid on ${auction.lot.name} — refunded`,
       })
       return prev
+    }).catch(() => {})
+
+    ctx.sock.sendMessage(prevBidderId, {
+      text:
+        `🏛️ *Outbid on ${auction.lot.name}*\n` +
+        `*${player.name}* went to *${amount.toLocaleString()} ☀️*.\n` +
+        `☀️ Your *${prevBid.toLocaleString()}* is already back in your wallet.\n\n` +
+        `_Take it back with *${config.prefix}auction <higher amount>* — ` +
+        `${humanRemaining(auction.endsAt - Date.now())} left._`,
     }).catch(() => {})
   }
 
@@ -384,24 +446,36 @@ async function placeBid(ctx) {
   }
 
   return reply(
-    `✅ *Bid placed!*\n\n` +
-    `🟥 *${auction.item.name}*\n` +
-    `💰 New top bid: *${amount.toLocaleString()} ☀️* _(escrowed from your wallet)_\n` +
-    `⏱️ Time left: *${humanRemaining(auction.endsAt - Date.now())}*\n\n` +
-    `_If you're outbid your solars are refunded instantly. You pay only if you win._` +
-    (prevBidderName ? `\n_${prevBidderName} has been refunded their bid._` : '')
+    `✅ *Bid placed — you're top bidder.*\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n` +
+    `${describeLot(auction.lot)}\n\n` +
+    `💰 Your bid: *${amount.toLocaleString()} ☀️* _(held from your wallet)_\n` +
+    `⏱️ Closes in: *${humanRemaining(auction.endsAt - Date.now())}*\n\n` +
+    `_Refunded in full the second someone outbids you. ${claimHint(auction.lot)}_` +
+    (prevBidderName ? `\n_${prevBidderName} has been refunded._` : '')
   )
 }
 
 async function showHistory(ctx) {
   const { reply } = ctx
+  const p = config.prefix
   if (!soldHistory.length) {
-    return reply(`🏛️ *AUCTION HISTORY*\n\n_Nothing has sold yet._`)
+    return reply(
+      `🏛️ *AUCTION HISTORY*\n` +
+      `━━━━━━━━━━━━━━━━━━━━\n` +
+      `_Nothing has come under the hammer yet._`,
+    )
   }
-  const lines = soldHistory.slice(0, 10).map(h =>
-    h.buyerName
-      ? `• *${h.itemName}* → *${h.buyerName}* for ${h.price.toLocaleString()} ☀️`
-      : `• *${h.itemName}* — unsold`
+  const lines = soldHistory.slice(0, 10).map(h => {
+    const tag = kindLabel(h.kind ?? 'item').split(' ')[0]
+    return h.buyerName
+      ? `${tag} *${h.itemName}* → *${h.buyerName}* · ${h.price.toLocaleString()} ☀️`
+      : `${tag} *${h.itemName}* · unsold`
+  })
+  return reply(
+    `🏛️ *AUCTION HISTORY*\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n` +
+    `${lines.join('\n')}\n\n` +
+    `_Last ${lines.length} lot${lines.length === 1 ? '' : 's'}. Current lot: *${p}auction*._`
   )
-  return reply(`🏛️ *AUCTION HISTORY*\n─────────────────────\n${lines.join('\n')}`)
 }

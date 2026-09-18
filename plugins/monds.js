@@ -11,9 +11,14 @@
  * drop, no daily, no Solar or Gem exchange rate anywhere. If a way to earn one
  * is ever added, `.character buy` stops being the paid route it exists to be.
  *
- * Usage:
+ * DM ONLY. Every subcommand except the owner's confirm/reject is refused in
+ * a group with a "message me privately" pointer — payment details, balances
+ * and pending purchases are nobody else's business, and posting bank details
+ * into a group chat is how people get scammed by copycats.
+ *
+ * Usage (all in DM):
  *   .monds                       pack list and your balance
- *   .monds buy <pack>            DM only; shows payment details
+ *   .monds buy <pack>            shows payment details
  *   .monds confirm <name>        owner-only, credits the Monds
  *   .monds reject <name>         owner-only, clears a pending purchase
  */
@@ -25,6 +30,26 @@ import {
   findMondPack, mondPackLines,
 } from '../lib/monds.js'
 
+/**
+ * Builds the "come to my DM" reply, with a tappable link to the bot's own
+ * chat so nobody has to go hunting for the number.
+ */
+function dmOnlyNotice(ctx) {
+  const pr = config.prefix
+  const botJid = ctx.sock?.user?.id ?? ''
+  const botNumber = String(botJid).split(':')[0].replace(/@.*$/, '').replace(/\D/g, '')
+  const link = botNumber ? `\n🔗 wa.me/${botNumber}` : ''
+  return (
+    `${MOND} *Monds are DM only.*\n` +
+    `─────────────────────\n` +
+    `Payment details and balances don't belong in a group chat.${link}\n\n` +
+    `Message me privately and run:\n` +
+    `  ▸ *${pr}monds* — packs and your balance\n` +
+    `  ▸ *${pr}monds buy <pack>* — payment details\n\n` +
+    `_${CHARACTER_MOND_PRICE} Monds buys any spin character outright with *${pr}character buy <name>*._`
+  )
+}
+
 function findPlayerByName(allUsers, query) {
   const q = query.toLowerCase()
   return allUsers.find(u => u.name?.toLowerCase() === q)
@@ -34,7 +59,7 @@ function findPlayerByName(allUsers, query) {
 function packList(pr) {
   return (
     `${mondPackLines().join('\n')}\n\n` +
-    `Buy with *${pr}monds buy <pack>* _(DM only)_.`
+    `Buy with *${pr}monds buy <pack>*.`
   )
 }
 
@@ -61,9 +86,6 @@ async function handleList(ctx) {
 
 async function handleBuy(ctx) {
   const pr = config.prefix
-  if (ctx.isGroup) {
-    return ctx.reply(`💬 DM me *${pr}monds buy <pack>* to see payment details.`)
-  }
   if (!ctx.player) return ctx.reply(`⚠️ Register first with *${pr}register*.`)
 
   const query = ctx.args.slice(1).join(' ')
@@ -154,10 +176,21 @@ export default {
   name: 'monds',
   aliases: ['mond', 'buymonds', 'mondshop'],
   category: 'economy',
-  description: `${config.prefix}monds · buy Monds with Naira. ${CHARACTER_MOND_PRICE} Monds buys any spin character`,
+  description: `${config.prefix}monds · DM only · buy Monds with Naira. ${CHARACTER_MOND_PRICE} Monds buys any spin character`,
 
   async run(ctx) {
     const sub = (ctx.args[0] ?? '').toLowerCase()
+
+    // Owner moderation works anywhere — the owner confirming a payment from
+    // the mod group shouldn't have to switch chats.
+    const ownerOnlySub = sub === 'confirm' || sub === 'reject'
+
+    // Everything else is DM only. One gate for the whole command, so `.monds`,
+    // `.mond`, `.buymonds` and `.mondshop` all behave the same way instead of
+    // only `buy` being private.
+    if (ctx.isGroup && !(ownerOnlySub && isOwnerJid(ctx.from))) {
+      return ctx.reply(dmOnlyNotice(ctx))
+    }
 
     if (sub === 'buy')     return handleBuy(ctx)
     if (sub === 'confirm') return handleConfirm(ctx)

@@ -16,7 +16,7 @@
  *   .story-mode           — lists available volumes
  *   .story clear           — owner or mod only. Force-frees this group's
  *                            story slot regardless of who holds it — the
- *                            safety valve for when the 5-minute idle-kick
+ *                            safety valve for when the 15-minute idle
  *                            sweep hasn't fired yet or shouldn't kick
  *                            anyone. Does not remove anyone from the group.
  *   .story enter <volume>  — enters a volume; plays the appreciation/credits
@@ -40,6 +40,9 @@
  * off, never hijacks a plain "1"/"2"/"3" typed anywhere else.
  */
 import { config } from '../config.js'
+
+/** Mirrors STORY_SLOT_TIMEOUT_MS in main.js — shown to players in storyGuide(). */
+const STORY_IDLE_MINUTES = 15
 import { updatePlayer, getPlayer } from '../lib/player-repo.js'
 import { storyVolumes } from '../lib/game-data.js'
 import {
@@ -546,17 +549,48 @@ export async function handleStoryChoiceReply(ctx, player, rawText) {
   return true
 }
 
+/**
+ * One place that explains Story Mode, used by the volume list and by the
+ * "someone else is playing" reply. Players kept asking what the slot was,
+ * whether they'd been kicked, and how to get back in — so the answer is
+ * written down here instead of being folklore.
+ */
+function storyGuide(volumeLines = []) {
+  const p = config.prefix
+  return (
+    `📖 *STORY MODE*\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n` +
+    `_Interactive fiction, played in a group. One person plays at a time; ` +
+    `everyone else reads along._\n\n` +
+    (volumeLines.length ? `*Volumes*\n${volumeLines.join('\n')}\n\n` : '') +
+    `*How to play*\n` +
+    `  ▸ *${p}story enter <volume>* — take the slot and open a volume\n` +
+    `  ▸ *${p}story start* — begin, or pick up where you stopped\n` +
+    `  ▸ reply with the option number when a choice appears\n` +
+    `  ▸ *${p}story* — this menu\n\n` +
+    `*The slot*\n` +
+    `  ▸ Only one player can be in a story at a time per group.\n` +
+    `  ▸ Go quiet for ${STORY_IDLE_MINUTES} minutes and the slot frees itself for ` +
+    `the next person. *You are never removed from the group*, and your chapter ` +
+    `is saved exactly where you left it — *${p}story start* picks it straight back up.\n` +
+    `  ▸ Admins can free a stuck slot with *${p}story clear*.\n\n` +
+    `*Admins*\n` +
+    `  ▸ *${p}story on* / *${p}story off* — enable or disable Story Mode here`
+  )
+}
+
 export default {
   name: 'story',
   aliases: ['story-mode'],
   category: 'story',
   requiresPlayer: true,
-  description: 'Interactive fiction volumes, group only.',
+  description: 'Interactive fiction volumes, group only. One player at a time — the slot frees itself after 15 idle minutes, nobody is ever removed from the group.',
   subcommands: [
     { cmd: 'on / off', desc: 'owner/mod: turn Story Mode on or off in this group' },
     { cmd: 'clear', desc: 'owner/mod: force-free the story slot in this group' },
     { cmd: 'enter <volume>', desc: 'enter a story volume (plays the intro once)' },
     { cmd: 'start', desc: 'begin or resume the current chapter' },
+    { cmd: '(no args)', desc: 'volume list, how to play, and how the one-player slot works' },
   ],
 
   async run(ctx) {
@@ -580,7 +614,7 @@ export default {
 
       const stored = res.settings.storyEnabled === true
       // Turning it off frees whoever currently holds the slot — otherwise
-      // it'd sit claimed until the 5-minute timeout sweep got to it, even
+      // it'd sit claimed until the 15-minute timeout sweep got to it, even
       // though nothing they do can advance the story while it's off.
       if (!stored) await releaseStorySlot(ctx.sender)
       return ctx.reply(
@@ -593,9 +627,9 @@ export default {
 
     // ── CLEAR (owner or bot mod only) ───────────────────────────────────
     // Safety valve: force-frees this group's story slot regardless of who
-    // holds it or how long they've been idle, for when the 5-minute
+    // holds it or how long they've been idle, for when the 15-minute
     // timeout sweep (main.js) hasn't fired yet — or shouldn't (someone got
-    // disconnected, the bot lost admin and couldn't auto-kick, etc). Same
+    // disconnected, they went quiet before the sweep ran, etc). Same
     // owner-or-mod credential as `.story on/off` above. Unlike the sweep,
     // this never removes the holder from the group — it only releases the
     // slot so someone else can claim it; a real admin kick is a separate,
@@ -620,11 +654,8 @@ export default {
       if (!storyVolumes.length) {
         return ctx.reply(`📖 No story volumes are available yet.`)
       }
-      const lines = storyVolumes.map(v => `📖 *${v.volumeTitle}*: _${v.title}_ (Book ${v.book})`)
-      return ctx.reply(
-        `*Story Mode*\n\n${lines.join('\n')}\n\n` +
-        `Use *${config.prefix}story enter <volume name>* to begin. Group only.`,
-      )
+      const lines = storyVolumes.map(v => `  📖 *${v.volumeTitle}* — _${v.title}_ (Book ${v.book})`)
+      return ctx.reply(storyGuide(lines))
     }
 
     if (!ctx.isGroup) {
@@ -664,7 +695,11 @@ export default {
       if (!claim.ok) {
         const holderTag = claim.holderJid.replace(/@.*$/, '')
         await ctx.sock.sendMessage(ctx.sender, {
-          text: `📖 Someone's already playing. Let @${holderTag} finish before you can enter.`,
+          text:
+            `📖 *The story slot is taken.*\n` +
+            `@${holderTag} is playing right now — one player at a time per group.\n\n` +
+            `_It frees up on its own after ${STORY_IDLE_MINUTES} minutes of inactivity, ` +
+            `or an admin can run *${config.prefix}story clear*._`,
           mentions: [claim.holderJid],
         }, { quoted: ctx.msg }).catch(() => {})
         return

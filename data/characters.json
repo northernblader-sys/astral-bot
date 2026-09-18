@@ -352,5 +352,39 @@
       "name": "Baryon Mode",
       "flavor": "Call Kurama into the fight with .kurama, once per battle, no mana. Naruto spends his own lifespan to fuse with the Nine Tails and lands one overwhelming strike, and whatever it touches has its own lifespan torn away on top of the hit. The power is real and so is the price: the summon burns his health to fuel it, so it is a gamble as much as a finisher. Works in any dungeon, boss fight or duel."
     }
+  },
+  {
+    "id": "reverie",
+    "stars": 4,
+    "name": "Reverie",
+    "emoji": "⏱️",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "spinOnly": true,
+    "exclusive": true,
+    "image": "https://i.ibb.co/twwNDjxb/Revierie-Witch-of-Time.jpg",
+    "spinImage": "https://i.ibb.co/twwNDjxb/Revierie-Witch-of-Time.jpg",
+    "description": "She and her sister were born human, two girls with no more claim on forever than anyone else. Then one of them was offered the role of a god, and Reverie is the one who said yes. She stands a half second ahead of every room she walks into, already knowing how the moment ends. When a fight turns against the one she guards, she simply decides that it will not, and the whole world waits on her word before it is allowed to move again.",
+    "ability": {
+      "name": "Time Stop",
+      "flavor": "Once per battle, no mana: she stops time with .tms. The enemy freezes where it stands and she acts alone in the stillness while the clock holds its breath, then lets it run again when she is done. Works in any dungeon, boss fight or duel."
+    }
+  },
+  {
+    "id": "montana",
+    "stars": 4,
+    "name": "Montana",
+    "emoji": "🕰️",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "spinOnly": true,
+    "exclusive": true,
+    "image": "https://i.ibb.co/G4KQW1yW/Ahl-Pi-el-Pa-ion-ahl9-on-X.jpg",
+    "spinImage": "https://i.ibb.co/G4KQW1yW/Ahl-Pi-el-Pa-ion-ahl9-on-X.jpg",
+    "description": "Reverie's sister, and her opposite number. The two of them were born human, and when the role of a god was offered there was only ever one seat: Reverie took it, and Montana set out to be an adventurer instead, chasing the far edges of the world on her own two feet. Where Reverie stops the world, Montana is the one thing left in it that never stops. She fights on her own, matches whoever she stands beside step for step, and refuses to be held by anything at all.",
+    "ability": {
+      "name": "Faster Than Time",
+      "flavor": "Automatic, no command needed: equip her and she fights on her own. She carries the same strength as the one she guards, so she strikes for exactly what they would. The instant a freeze, a burn, a stun or any hold at all lands on her summoner she tears them straight back out of it before it can settle. And when anyone stops time, she moves faster than the frozen moment and strikes them back for daring to."
+    }
   }
 ]

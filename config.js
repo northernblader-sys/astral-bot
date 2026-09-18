@@ -1,3 +1,4 @@
+import { defaultDbPath, defaultAuthFolder, runtimePath } from './lib/runtime-paths.js'
 import 'dotenv/config'
 import pino from 'pino'
 
@@ -106,7 +107,10 @@ export const config = {
   // command handling, ctx.botName (the name of whichever number the message
   // came in on) always takes priority over this. Defaults to bot #1's name.
   botName: env('BOT_NAME', 'Astral of the Sun'),
-  dbPath: env('DB_PATH', './db.json'),
+  // Defaults to the persistent volume when one is mounted (RUNTIME_DATA_DIR
+  // or /data on Railway) — otherwise ./db.json as before. A deploy that wipes
+  // the container must not wipe every player. See lib/runtime-paths.js.
+  dbPath: env('DB_PATH', defaultDbPath()),
 
   // ── Backing the database up off this machine ────────────────────────────
   // dbPath above is always the live database. Set MONGO_URI and every save is
@@ -185,21 +189,27 @@ export const config = {
   },
 
   // ── API server ────────────────────────────────────────────────────────
-  // The port the Express server listens on INSIDE the VPS. This is the
-  // exact port you point Cloudflare's Origin Rule at — see
-  // README-API-DEPLOY.md. 5786 is the port the Origin Rule on
-  // animeastral.qzz.io ("Forward to backend port" → rewrite port) is set
-  // to. Override with API_PORT in .env if you ever change it — change it
-  // in Cloudflare at the same time or the domain stops resolving to this.
-  apiPort: parseInt(env('API_PORT', '7002'), 10),
+  // The port the Express server listens on.
+  // PORT first: Railway (and most PaaS) assign the port and expect the app to
+  // listen on it — hardcoding 7002 there means the health check never passes
+  // and the public domain 502s. API_PORT still wins on a VPS where you pick
+  // the port yourself; 7002 is the last resort.
+  apiPort: parseInt(env('PORT', env('API_PORT', '7002')), 10),
 
-  // The public HTTPS origin this API is reachable at from the internet
-  // (i.e. animeastral.qzz.io, via the Cloudflare Origin Rule described
-  // above) — NOT the internal apiPort. Used to build absolute image URLs
+  // The public HTTPS origin this API is reachable at from the internet —
+  // NOT the internal apiPort. On Railway this fills itself in from
+  // RAILWAY_PUBLIC_DOMAIN (the xxx.up.railway.app name, or your custom
+  // domain once you attach one), so no Cloudflare and no manual value is
+  // needed. Used to build absolute image URLs
   // (avatarUrl/bannerUrl) for <img> tags on the site, since those don't
   // go through the frontend's API client base-URL rewriting. Override
   // with PUBLIC_API_URL in .env if the domain ever changes.
-  publicApiUrl: env('PUBLIC_API_URL', 'https://animeastral.qzz.io'),
+  publicApiUrl: env(
+    'PUBLIC_API_URL',
+    process.env.RAILWAY_PUBLIC_DOMAIN
+      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
+      : 'https://animeastral.qzz.io',
+  ).replace(/\/+$/, ''),
 
   // The player-facing WEBSITE origin — where people sign up, log in and read
   // their notification bell. This is the frontend, NOT publicApiUrl above
@@ -239,6 +249,15 @@ export const config = {
     'https://astral-play.vercel.app',
   ]).map(s => s.replace(/\/+$/, '')),
   // e.g. in .env: ALLOWED_ORIGINS=https://astral-web.vercel.app,https://astral.yourdomain.com
+
+  // Vercel gives every branch and every commit its own URL
+  // (astral-play-git-main-you.vercel.app, astral-play-a1b2c3.vercel.app…).
+  // Listing them is impossible, so previews of the SAME project are matched
+  // by pattern instead: the project names are taken from whatever
+  // *.vercel.app entries are in allowedOrigins above, and nothing else on
+  // vercel.app is allowed. Set ALLOW_VERCEL_PREVIEWS=false to require exact
+  // matches only.
+  allowVercelPreviews: env('ALLOW_VERCEL_PREVIEWS', 'true') !== 'false',
 
   // The bot's own WhatsApp number (digits only, no +, no @s.whatsapp.net),
   // used to build the wa.me premium-purchase deep link the frontend calls.
@@ -298,8 +317,8 @@ export const config = {
 export const bots = [
   {
     botName: env('BOT_NAME', 'Astral of the Sun'),
-    authFolder: env('AUTH_FOLDER', './auth_info'),
-    phoneFile: env('PHONE_FILE', './paired_number.txt'),
+    authFolder: env('AUTH_FOLDER', defaultAuthFolder()),
+    phoneFile: env('PHONE_FILE', runtimePath('paired_number.txt')),
     rateLimit: {
       minGapMs: parseInt(env('RATE_LIMIT_MIN_GAP_MS', '1200'), 10),
       maxPerMinute: parseInt(env('RATE_LIMIT_MAX_PER_MINUTE', '40'), 10),

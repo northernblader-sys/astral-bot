@@ -5,6 +5,10 @@
  *   .enter <dungeonId>     — enter or resume a dungeon
  *   .dungeon               — advance to next floor / show status
  *   .dungeon leave|exit    — save progress and exit
+ *
+ * Daily cap: entering a dungeon spends one of a limited number of daily runs
+ * (lib/dungeon-limits.js) — premium accounts get more. Floors within a run are
+ * free; leaving and re-entering costs another run.
  *   .dungeon on|off        — group admins: enable/disable dungeons here
  *
  * NOTE: 'fight' was removed as an alias for this plugin — it read like a
@@ -13,6 +17,7 @@
  * locations, and .enter or .dungeon to work a dungeon you're unlocked for.
  */
 import { config } from '../config.js'
+import { consumeDungeonRun, runsRemaining, runLimitMessage, runsLine } from '../lib/dungeon-limits.js'
 import { buildSwarmFloor, renderSwarmFrame } from '../lib/swarm-combat.js'
 import { updatePlayer } from '../lib/player-repo.js'
 import {
@@ -20,6 +25,7 @@ import {
 } from '../lib/game-data.js'
 import {
   pickMonsterForFloor, refreshStamina, hpBar, getNewlyUnlockedSkills,
+  enemyPowerRatio, scaleEnemyToPlayer, scaleBossToPlayer,
 } from '../lib/combat-engine.js'
 import { initBossFight } from '../lib/boss-engine.js'
 import { regulateBossXp } from '../lib/xp-regulator.js'
@@ -42,6 +48,18 @@ import {
 const SWARM_DUNGEONS = new Set([
   'entry_tower', 'gambits_dungeon', 'centurions_dungeon', 'astral_tower', 'eternal_dungeon',
 ])
+
+// Player-power scaling (see scaleBossToPlayer / scaleEnemyToPlayer in
+// combat-engine.js). Bosses are sized to a HIT COUNT against the actual player:
+// a whale who bursts the floor-100 master in three hits instead meets a wall
+// tuned to BOSS_TARGET_HITS of their own strong hits, with a capped armor/attack
+// bump so it reads as the wall the strongest accounts asked for. An on-curve
+// climber (or a boss already hard for this player) is left untouched.
+// MONSTER_SCALE / MONSTER_SCALE_1V1 keep the squishier exponent profile for the
+// many-small-monsters swarm and the handful of 1v1 non-boss floors: enough HP to
+// survive a couple of hits and close in from both flanks, gentle capped ATK.
+const BOSS_TUNING       = { baseHits: 12, hitsRatioExp: 0.16, maxHits: 20, defExp: 0.14, atkExp: 0.2, atkCapMult: 1.75 }
+const MONSTER_SCALE_1V1 = { hpExp: 0.85, atkExp: 0.4, defExp: 0.2 }
 
 // ── helpers ───────────────────────────────────────────────────────────
 
@@ -85,7 +103,21 @@ function isBossFloor(locId, floor) {
  * only present for anime bosses (used to drive special mechanics and the
  * spawn narration).
  */
-function spawnBoss(locId, floor) {
+function spawnBoss(locId, floor, player = null) {
+  // Player-power scaling: a whale who has outgrown the floor curve meets a boss
+  // sized to outlast a 3-hit blitz (BOSS_TUNING.baseHits of their own strong
+  // hits, creeping up with the power gap) with a capped armor/attack bump; an
+  // on-curve climber, or a boss already hard for this player, fights it exactly
+  // as authored (never nerfed). scaleBossToPlayer reads the real player, so it
+  // tells the weak masters (Syclila 18k HP) apart from the tanky ones (Esteria
+  // 55k) instead of blindly multiplying both.
+  const ratio     = player ? enemyPowerRatio(player, locId, floor) : 1
+  const scaleBoss = (e) => {
+    if (e && player && ratio > 1) {
+      scaleBossToPlayer(e, player, ratio, BOSS_TUNING)
+    }
+    return e
+  }
   const animeDef = getAnimeBossForSlot(locId, floor)
   if (animeDef) {
     const init = initBossFight({}, animeDef.id, floor)
@@ -108,6 +140,7 @@ function spawnBoss(locId, floor) {
         drops:         (animeDef.drops ?? []).map(itemId => ({ itemId, chance: 0.15 })),
         conquestTitle: animeDef.conquestTitle ?? `${animeDef.name}'s Equal`,
       }
+      scaleBoss(enemy)
       return { enemy, bossState: init.bossState, entranceLine: init.entranceLine }
     }
   }
@@ -117,14 +150,22 @@ function spawnBoss(locId, floor) {
   const boss = bossByLocFloor[locId]?.[floor]
   if (!boss) return { enemy: null, bossState: null, entranceLine: null }
   const enemy = { ...boss, hp: boss.stats.hp, maxHp: boss.stats.hp, def: boss.stats.def, atk: boss.stats.atk, isBoss: true }
+  scaleBoss(enemy)
   return { enemy, bossState: null, entranceLine: null }
 }
 
-function spawnEnemy(locId, floor) {
+function spawnEnemy(locId, floor, player = null) {
   if (isBossFloor(locId, floor)) {
-    return spawnBoss(locId, floor)
+    return spawnBoss(locId, floor, player)
   }
-  return { enemy: pickMonsterForFloor(locId, floor, regularByLoc), bossState: null, entranceLine: null }
+  const enemy = pickMonsterForFloor(locId, floor, regularByLoc)
+  // Same player-power scaling as the swarm path (lib/swarm-combat.js), for the
+  // 1v1 floors that still spawn a single monster. Squishier profile than a boss.
+  if (enemy && player) {
+    const ratio = enemyPowerRatio(player, locId, floor)
+    if (ratio > 1) scaleEnemyToPlayer(enemy, ratio, MONSTER_SCALE_1V1)
+  }
+  return { enemy, bossState: null, entranceLine: null }
 }
 
 /** Floor progress bar: e.g. "████░░░░░░  40/100" */
@@ -351,6 +392,17 @@ export async function handleEnter(ctx) {
       return player
     }
 
+    // Daily run cap — see lib/dungeon-limits.js. Stamina potions made stamina
+    // effectively unlimited, which let a few players occupy the shared dungeon
+    // groups all day; this caps how many runs anyone can START per day, with a
+    // bigger allowance for premium. Checked after every other gate so a run is
+    // only ever spent on an entry that actually happens.
+    if (runsRemaining(player) < 1) {
+      ctx.reply(runLimitMessage(player, p)).catch(() => {})
+      return player
+    }
+    consumeDungeonRun(player)
+
     const progress   = player.dungeonProgress?.[locId] ?? { highestFloor: 0, conquered: false }
     const checkpoint = progress.highestFloor ?? 0
     const season = getActiveSeason(ctx.db)
@@ -393,7 +445,8 @@ export async function handleEnter(ctx) {
       `🎯 Level Range: *${loc.levelRange[0]} to ${loc.levelRange[1]}*  ·  Your Level: *${player.level}*\n` +
       `${shapeLine}${travelLine}\n\n` +
       `📍 ${resuming ? `*Resuming from Floor ${startFloor}* ✅` : `*Starting at Floor 1*`}\n` +
-      `⚡ Stamina: *${player.stamina.current}/${player.stamina.max}*\n\n` +
+      `⚡ Stamina: *${player.stamina.current}/${player.stamina.max}*\n` +
+      `${runsLine(player, p)}\n\n` +
       `_The floors are not empty. Monsters close from more than one side, then the master holds the top._\n` +
       `_Type *${p}dungeon* to begin, *${p}dungeon leave* to exit._`,
     ).catch(() => {})
@@ -461,7 +514,7 @@ async function handleAdvance(ctx) {
     // (lib/swarm-combat.js) on floors 1 to 99 instead of a 1v1 spawn. The
     // floor-100 master fight falls through to the classic 1v1 path below.
     if (SWARM_DUNGEONS.has(locId) && !isBossFloor(locId, floor)) {
-      const built = buildSwarmFloor(locId, floor)
+      const built = buildSwarmFloor(locId, floor, player)
       if (!built) {
         await reply(`❌ No monsters found for Floor ${floor}. Report this bug.`)
         return player
@@ -517,7 +570,7 @@ async function handleAdvance(ctx) {
     }
 
     // Spawn enemy
-    const { enemy, bossState, entranceLine } = spawnEnemy(locId, floor)
+    const { enemy, bossState, entranceLine } = spawnEnemy(locId, floor, player)
     if (!enemy) {
       await reply(`❌ No monsters found for Floor ${floor}. Report this bug.`)
       return player

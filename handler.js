@@ -321,6 +321,11 @@ const BATTLE_ALLOWED_COMMANDS = new Set([
   // was rejected mid-fight in every dungeon, swarm floor and boss fight, the only
   // places it exists for. Every alias is listed.
   'puppet', 'puppetry', 'puppetstrings', 'puppet-strings', 'strings', 'marionette',
+  // Reverie's Time Stop (plugins/timestop.js) — her once-per-battle freeze that
+  // stops the enemy for three of its own moves. Same list requirement as every
+  // active above: unlisted means silently rejected mid-PvE. Every alias is listed
+  // (Montana needs no entry — she is automatic and has no active command).
+  'tms', 'timestop', 'time-stop', 'stoptime', 'reverie-tms',
   // Willow's in-battle advisory (plugins/willow.js). It hard-requires
   // `player.inBattle && battleState.enemy` and does nothing else, so leaving it
   // off this list didn't merely restrict it — it made the command unreachable in
