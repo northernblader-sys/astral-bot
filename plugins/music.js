@@ -15,14 +15,9 @@
 import axios from 'axios'
 import WebSocket from 'ws'
 import { createRequire } from 'node:module'
-<<<<<<< HEAD
-import { createWriteStream } from 'node:fs'
-import { mkdir, readFile, rm } from 'node:fs/promises'
-=======
 import { createWriteStream, existsSync } from 'node:fs'
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { randomUUID } from 'node:crypto'
->>>>>>> main
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -30,39 +25,6 @@ const require = createRequire(import.meta.url)
 const ffmpeg = require('fluent-ffmpeg')
 const ffmpegBinary = require('ffmpeg-static')
 
-<<<<<<< HEAD
-if (ffmpegBinary) ffmpeg.setFfmpegPath(ffmpegBinary)
-
-const SPOTIFY_BACKEND =
-  'https://right-annmaria-lev-8a3a4814.koyeb.app'
-
-const Y2MATE_BASE = 'https://yt1d.io'
-const Y2MATE_AJAX = `${Y2MATE_BASE}/wp-admin/admin-ajax.php`
-const Y2MATE_RENDER_HOST =
-  'https://fpa-balancer.flashydl.space/get-server'
-const BROWSER_UA =
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
-  '(KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36'
-
-const TEMP_DIR = join(tmpdir(), 'levanter-music')
-const YOUTUBE_ID_RE =
-  /(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/)([-_0-9A-Za-z]{11})/
-
-const y2mateCache = new Map()
-let youtubeModulePromise
-const youtubeClients = new Map()
-
-function extractVideoId(input) {
-  const value = String(input || '').trim()
-  if (/^[-_0-9A-Za-z]{11}$/.test(value)) return value
-  return value.match(YOUTUBE_ID_RE)?.[1] || value
-}
-
-function isYoutubeInput(input) {
-  return /(?:youtube\.com|youtu\.be)/i.test(String(input || ''))
-}
-
-=======
 if (ffmpegBinary && existsSync(ffmpegBinary)) {
   ffmpeg.setFfmpegPath(ffmpegBinary)
 }
@@ -96,7 +58,6 @@ function isYoutubeInput(input) {
   return /(?:youtube\.com|youtu\.be)/i.test(String(input || ''))
 }
 
->>>>>>> main
 function directYoutubeVideo(input) {
   const value = String(input || '').trim()
   const id = extractVideoId(value)
@@ -191,8 +152,6 @@ function convertWithFfmpeg(input, output, type = 'audio') {
   })
 }
 
-<<<<<<< HEAD
-=======
 function isMp3Buffer(buffer) {
   return (
     Buffer.isBuffer(buffer) &&
@@ -216,7 +175,6 @@ async function convertBufferToMp3(buffer) {
   }
 }
 
->>>>>>> main
 async function loadYoutubeModule() {
   if (!youtubeModulePromise) {
     youtubeModulePromise = import('youtubei.js').then(async (youtube) => {
@@ -723,22 +681,15 @@ function commandName(ctx) {
 
 async function sendAudio(ctx, buffer, title) {
   const { sock, sender, msg } = ctx
-<<<<<<< HEAD
-=======
   // Some download services return AAC/M4A bytes while labeling the response
   // as MP3. WhatsApp is stricter than the HTTP headers, so normalize anything
   // that is not actually an MP3 before sending it.
   const mp3 = isMp3Buffer(buffer) ? buffer : await convertBufferToMp3(buffer)
->>>>>>> main
   const fileName = safeFilename(title, 'track').replace(/\.mp3$/i, '') + '.mp3'
   return sock.sendMessage(
     sender,
     {
-<<<<<<< HEAD
-      audio: buffer,
-=======
       audio: mp3,
->>>>>>> main
       mimetype: 'audio/mpeg',
       fileName,
       ptt: false,
