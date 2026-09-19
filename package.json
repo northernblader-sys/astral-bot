@@ -8,7 +8,9 @@
     "dev": "node --watch main.js",
     "start:whatsapp": "node main.js",
     "pm2:start": "pm2 start ecosystem.config.cjs",
-    "pm2:logs": "pm2 logs rpg-bot"
+    "pm2:logs": "pm2 logs rpg-bot",
+    "test": "node test/react-no-delay.test.mjs && node test/phase2-cluster.test.mjs",
+    "test:integration": "node test/phase2-integration.mjs"
   },
   "dependencies": {
     "@consumet/extensions": "^1.2.9",
