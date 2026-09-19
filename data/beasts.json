@@ -147,5 +147,17 @@
     "interveneChance": 0.65,
     "evolvedFrom": "tide_slimeling",
     "description": "The slime, grown into its own silhouette. It no longer guards out of instinct — it chooses to."
+  },
+  {
+    "id": "the_sorter",
+    "name": "The Sorter",
+    "emoji": "🤖",
+    "rarity": "mythical",
+    "image": "https://i.ibb.co/23PV6Q5X/JAEGER-SIXTH.jpg",
+    "baseStats": { "atk": 18, "def": 26, "maxHp": 340 },
+    "startingCp": 1500,
+    "levelReq": 1,
+    "interveneChance": 0.5,
+    "description": "A war-logistics jaeger left running its final standing order: ready the operator for battle. It reads every store you own at once, tucks your valuables where death cannot reach them, and racks your kit where your hand will fall. Equip it, then use .sort before a fight."
   }
 ]

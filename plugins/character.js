@@ -139,6 +139,7 @@ const SPIN_ROUTES = {
   alexa:     'alexa-spin',
   gogeta:    'gogeta-spin',
   naruto:    'naruto-spin',
+  witch_of_envy: 'envy-spin',
 }
 
 function spinRouteFor(characterId, pr) {
@@ -330,6 +331,7 @@ function renderInfo(character, player, pr, db, viewerJid) {
     (character.id === 'gojo' ? `⚔️ *Passive:* *Infinity* blunts every incoming hit and nullifies small ones, no command needed.\n⚔️ *Commands:* *${pr}hollowpurple* _(Blue and Red into Hollow Purple, once per battle, no MP)_ · *${pr}domainexpansion* _(opens Unlimited Void and locks the enemy down, once per battle, no MP. *${pr}unlimitedvoid* does the same thing)_\n\n` : '') +
     (character.id === 'alexa' ? `⚔️ *Passive:* *Lovestruck* _(no command, any level)_\nThe enemy is weighed against you when the fight opens:\n  💗 it outclasses you: its hits lose *20%*\n  💞 you outclass it: its hits lose *70%*\n  💘 it was never close: its hits deal *nothing*\nIn duels, your rival's own character also stops working for their first *${ALEXA_AWE_TURNS}* turns.\nWorks on every monster, boss and character. Only *The End* is immune, and poison, burn and bleed still hurt you.\n\n` : '') +
     (character.id === 'naruto' ? `⚔️ *Command:* *${pr}kurama* _(once per battle, no MP. Summon the Nine Tails for one overwhelming strike. Baryon Mode burns a slice of Naruto's own health to hold the fusion, and whatever it hits has its lifespan torn away on top of the blow. Works in dungeons, boss fights and duels. In a party fight use *${pr}pk*)_\n\n` : '') +
+    (character.id === 'witch_of_envy' ? `⚔️ *Passive:* *Wonders of You* _(no command, any level)_\nShe stands beside you and does not mind at first. The longer a fight drags on, the less patient she grows:\n  🖤 past *7* of your turns: she halves the enemy's current HP and warns them once\n  🖤 they stand down and defend for *3* turns: she looks away and the fight goes on\n  🖤 they refuse: she takes her final form, drains you to *1* HP, and a forsaken spell simply ends the battle in your favour\nHer curse lingers past a duel, taking *5%* of a beaten rival's total HP that never heals back. Works on every monster and boss. Only *The End* and *The Last Prayer* are immune.\n\n` : '') +
     status
 
   return caption

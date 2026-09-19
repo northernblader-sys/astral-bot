@@ -12,6 +12,10 @@
  *
  * Usage:
  *   .auction start <id> <startbid> <duration>       — owner only. <id> is
+ *   .auction-start <id> <startbid> <duration>        — the same thing, as a
+ *                                                       single hyphenated
+ *                                                       command (no "start"
+ *                                                       token). Owner only.
  *                                                       an item, character,
  *                                                       pet or beast id, or
  *                                                       a name. Prefix with
@@ -217,20 +221,30 @@ function remember(entry) {
 
 export default {
   name:           'auction',
-  aliases:        ['ah', 'auctionhouse'],
+  aliases:        ['ah', 'auctionhouse', 'auction-start', 'auctionstart'],
   category:       'economy',
   requiresPlayer: true,
-  description:    'One global auction at a time — gear, characters, pets or summons. Owner starts it, anyone bids from any group.',
+  description:    'One global auction at a time: gear, characters, pets or summons. Owner opens a lot with .auction start (or .auction-start), anyone bids from any group.',
   subcommands: [
     { cmd: '(no args)', desc: 'show the current lot, the top bid and how bidding works' },
     { cmd: '<amount>', desc: 'bid on the running lot from any group, e.g. .auction 25000' },
     { cmd: 'history', desc: 'the last few lots and what they sold for' },
-    { cmd: 'start <id> <startbid> <duration>', desc: 'owner — open a lot. <id> is any item, character, pet or beast, e.g. .auction start mei 40000 2h' },
+    { cmd: 'start <id> <startbid> <duration>', desc: 'owner: open a lot. <id> is any item, character, pet or beast. Shortcut: .auction-start mei 40000 2h' },
     { cmd: 'cancel', desc: 'owner — cancel the running lot and refund the top bid' },
   ],
 
   async run(ctx) {
     const { args, reply } = ctx
+
+    // `.auction-start <id> <startbid> <duration>` (also `.auctionstart`) is a
+    // hyphenated shortcut for `.auction start ...`. The router hands us the
+    // command in ctx.cmd, so we can tell the two forms apart: the alias carries
+    // no leading "start" token, so startAuction is told to read the lot/bid/
+    // duration from the front of args.
+    if (ctx.cmd === 'auction-start' || ctx.cmd === 'auctionstart') {
+      return startAuction(ctx, { fromAlias: true })
+    }
+
     const sub = args[0]?.toLowerCase()
 
     if (sub === 'start')   return startAuction(ctx)
@@ -244,10 +258,14 @@ export default {
   },
 }
 
-async function startAuction(ctx) {
+async function startAuction(ctx, { fromAlias = false } = {}) {
   const { args, reply, from } = ctx
   const p = config.prefix
   const ex = exampleIds()
+  // How the owner invoked us, echoed back in usage/errors so the examples match
+  // what they typed: `.auction-start ...` via the alias, `.auction start ...`
+  // via the subcommand.
+  const startCmd = fromAlias ? `${p}auction-start` : `${p}auction start`
 
   if (!from || !isOwnerJid(from)) {
     return reply('❌ Owner only.')
@@ -263,20 +281,20 @@ async function startAuction(ctx) {
   // The id can contain no spaces, so everything between the id and the last
   // two args is treated as part of a quoted-free name: `.auction start
   // ember hatchling 5000 1h` works as well as `.auction start ember_hatchling
-  // 5000 1h`.
-  const rest = args.slice(1)
+  // 5000 1h`. Via the alias the "start" token is absent, so read from the front.
+  const rest = fromAlias ? args.slice(0) : args.slice(1)
   const durationMs = parseDuration(rest[rest.length - 1])
   const startBid   = Math.floor(Number(rest[rest.length - 2]))
   const query      = rest.slice(0, -2).join(' ')
 
   const usage =
-    `❌ *Usage:* *${p}auction start <id> <startbid> <duration>*\n` +
+    `❌ *Usage:* *${startCmd} <id> <startbid> <duration>*\n` +
     `━━━━━━━━━━━━━━━━━━━━\n` +
     `Anything with an id can go up: equipment, characters, pets, summons.\n\n` +
-    `  ▸ *${p}auction start ${ex.item} 18000 2h* — gear\n` +
-    `  ▸ *${p}auction start ${ex.character} 40000 3h* — character\n` +
-    `  ▸ *${p}auction start ${ex.pet} 5000 30m* — pet\n` +
-    `  ▸ *${p}auction start ${ex.beast} 9000 1h* — summon\n\n` +
+    `  ▸ *${startCmd} ${ex.item} 18000 2h* : gear\n` +
+    `  ▸ *${startCmd} ${ex.character} 40000 3h* : character\n` +
+    `  ▸ *${startCmd} ${ex.pet} 5000 30m* : pet\n` +
+    `  ▸ *${startCmd} ${ex.beast} 9000 1h* : summon\n\n` +
     `_Duration is m or h, 1m to 24h. If two things share a name, force the ` +
     `kind: *pet:${ex.pet}*, *character:${ex.character}*, *beast:${ex.beast}*._`
 

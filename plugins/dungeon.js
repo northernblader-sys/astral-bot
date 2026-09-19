@@ -30,7 +30,7 @@ import {
 import { initBossFight } from '../lib/boss-engine.js'
 import { regulateBossXp } from '../lib/xp-regulator.js'
 import { applyPassiveAbilities } from '../lib/ability-engine.js'
-import { armHypnosis, armLovestruck, armFusion } from '../lib/character-abilities.js'
+import { armHypnosis, armLovestruck, armFusion, armWondersOfEnvy } from '../lib/character-abilities.js'
 import { sendBattleTurnReply } from '../lib/battle-frame-render.mjs'
 import { sendImage } from '../lib/image.js'
 import { getGroupSettings, saveGroupSettings, saveFailedMessage, isGroupOrBotOwner } from '../lib/group-settings.js'
@@ -346,6 +346,9 @@ export async function handleEnter(ctx) {
       // against the player once, right here, and the tier it lands on is what
       // applyIncomingDamage() reads for the rest of the fight.
       armLovestruck(player, enemy)
+      // Tella — Wonders of You. Armed on the same terms as the two above, so
+      // her clock starts fresh at the opening bell. No-op unless she is equipped.
+      armWondersOfEnvy(player)
       // Gogeta — Fusion of Equals. Same placement rule: after battleState and
       // after the passives, because the buff is a share of the stats that are
       // actually up at the opening bell. The clock starts counting from here.
@@ -543,6 +546,7 @@ async function handleAdvance(ctx) {
       applyPassiveAbilities(player)
       armHypnosis(player)
       armLovestruck(player, player.battleState.enemy)
+      armWondersOfEnvy(player)
       const fusionLine = armFusion(player)
 
       const totalFloors = loc.floors ?? 0
@@ -604,6 +608,7 @@ async function handleAdvance(ctx) {
     // comes out lives on battleState for the rest of the fight. No-op unless
     // she is equipped and the player is past her level gate.
     armLovestruck(player, enemy)
+    armWondersOfEnvy(player)
 
     // Gogeta — Fusion of Equals. Same placement rule as the two above: the buff
     // is a share of the stats that are up at the opening bell, and the fusion

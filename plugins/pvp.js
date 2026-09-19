@@ -167,6 +167,11 @@ import {
   activateBigBangKamehameha,
   gogetaCooldowns,
   sendKamehamehaImage,
+  hasWitchOfEnvy,
+  advanceWondersOfEnvy,
+  bypassesWondersOfEnvy,
+  armWondersOfEnvy,
+  applyWondersCurseOnWin,
 } from '../lib/character-abilities.js'
 import {
   activateDragonUltimate,
@@ -495,6 +500,7 @@ async function pvpConclude(db, winnerJid, loserJid, ctx, reasonLine, { allowRewi
   let loserName = ''
   let transferred = 0
   let severLine = ''
+  let wondersLine = ''
 
   // Need the winner's equippedCharacter before the loser's activeEffects
   // gets wiped below — applyPermanentSeverOnWin() must run before that
@@ -541,6 +547,16 @@ async function pvpConclude(db, winnerJid, loserJid, ctx, reasonLine, { allowRewi
     if (winnerSnapshot) {
       const line = applyPermanentSeverOnWin(winnerSnapshot, loser)
       if (line) severLine = line
+    }
+
+    // Tella — the "even after the battle" half of Wonders of You. Keyed off
+    // loser.wondersCursePending (stamped when her final form forced the loss),
+    // so it fires ONLY when she actually forsook them, never on an ordinary KO.
+    // Runs after the full heal above so the 5% it removes reads as a wound that
+    // did not close, and sits beside the sever it mirrors.
+    {
+      const line = applyWondersCurseOnWin(winnerSnapshot, loser)
+      if (line) wondersLine = line
     }
 
     loser.activeEffects = []
@@ -623,6 +639,7 @@ async function pvpConclude(db, winnerJid, loserJid, ctx, reasonLine, { allowRewi
     `${loserBand.emoji} *${loserName}*: ${ratingOf(loserAfter)} _(-${delta})_  ·  streak ${streakLabel(loserAfter)}\n\n` +
     `❤️‍🩹 Both duelists are fully healed. No gear was lost.` +
     (severLine ? `\n\n${severLine}` : '') +
+    (wondersLine ? `\n\n${wondersLine}` : '') +
     (beastCpMsg ? `\n\n${beastCpMsg}` : '') + seasonMsg + levelUpMsg +
     `\n\n_Rematch: *${config.prefix}pvp rematch* · Ladder: *${config.prefix}pvptop*_`,
   )
@@ -641,6 +658,7 @@ async function pvpConcludeTourneyMatch(db, winnerJid, loserJid, ctx, reasonLine,
   let winnerName = ''
   let loserName = ''
   let severLine = ''
+  let wondersLine = ''
   const winnerSnapshot = getPlayer(db, winnerJid)
   const loserSnapshot = getPlayer(db, loserJid)
 
@@ -661,6 +679,12 @@ async function pvpConcludeTourneyMatch(db, winnerJid, loserJid, ctx, reasonLine,
     if (winnerSnapshot) {
       const line = applyPermanentSeverOnWin(winnerSnapshot, loser)
       if (line) severLine = line
+    }
+    // Tella — Wonders of You's lingering curse also carries into a bracket
+    // match. Same placement and reasoning as in pvpConclude() above.
+    {
+      const line = applyWondersCurseOnWin(winnerSnapshot, loser)
+      if (line) wondersLine = line
     }
     loser.activeEffects = []
   })
@@ -715,6 +739,7 @@ async function pvpConcludeTourneyMatch(db, winnerJid, loserJid, ctx, reasonLine,
     `➡️ *${winnerName}* advances to the next round!\n\n` +
     `❤️‍🩹 Both duelists are fully healed. No gear or currency was lost.` +
     (severLine ? `\n\n${severLine}` : '') +
+    (wondersLine ? `\n\n${wondersLine}` : '') +
     (beastCpMsg ? `\n\n${beastCpMsg}` : '') + seasonMsg + levelUpMsg +
     `\n\n_Check the bracket anytime: *${config.prefix}tourney bracket*_`,
   )
@@ -843,6 +868,9 @@ export default {
         // opponent has to be passed in because the tier is a comparison, and
         // this is the only moment in a duel where both records are in hand.
         armLovestruck(c, player)
+        // Tella — Wonders of You. Armed here beside Lovestruck so a stale
+        // envy phase from an earlier duel can never ride into this one.
+        armWondersOfEnvy(c)
         // Gogeta — Fusion of Equals. Armed on the same terms, and the clock
         // starts on turn 1 for whichever side holds him.
         armFusion(c)
@@ -859,6 +887,8 @@ export default {
         armHypnosis(p, { force: duelHasAnastasia })
         // Alexa — the accepter's half of the same arming, mirrored.
         armLovestruck(p, challenger)
+        // Tella — the accepter's half of the Wonders of You arming, mirrored.
+        armWondersOfEnvy(p)
         // Gogeta — the accepter's half of the fusion arming, mirrored.
         armFusion(p)
       })
@@ -1571,6 +1601,12 @@ async function runPvpTurn(ctx, action, skillQuery) {
   await updatePlayer(db, actorJid, (actor) => {
     hpBeforeTurn = actor.hp
 
+    // Tella — Wonders of You reads whether the rival stood down (defended) on
+    // their OWN last turn to decide the reprieve. Stamp it here at the top of
+    // every actor turn, where `action` is unambiguously what they chose, so the
+    // opponent can read it on their next turn (see the ambient hook below).
+    if (actor.battleState) actor.battleState.lastActionWasDefend = (action === 'defend')
+
     // Urahara's permanent Tear — action-triggered tick, fires on every PvP
     // action same as PvE (see lib/character-abilities.js doc comment).
     const permaSeverLine = tickPermanentSever(actor)
@@ -2085,6 +2121,57 @@ async function runPvpTurn(ctx, action, skillQuery) {
 
   const eHpBeforeTurn = getPlayer(db, opponentJid)?.hp ?? 0
   const actorForCalc = getPlayer(db, actorJid) // re-read post-mutation (mp spend, etc.)
+
+  // ── Tella's Wonders of You — ambient, once per the actor's own turn, same
+  // slot and the same two-call discipline as Frostbind / Absolute One below
+  // (this file never nests updatePlayer). She lives on the ACTOR's battleState,
+  // so her clock is advanced inside an actorJid mutator (the phase MUST persist)
+  // and the plan it returns is applied to the OPPONENT in separate calls. She
+  // reads whether the opponent stood down on their own last turn
+  // (lastActionWasDefend, stamped at the top of every actor turn) to decide the
+  // reprieve. The two world-enders are immune; nothing else in a duel is. She
+  // ticks first among the ambient auras, so a forced loss concludes before the
+  // rest run; skipped entirely if the opponent is already down this turn.
+  const envyOppSnap = hasWitchOfEnvy(actorForCalc) ? getPlayer(db, opponentJid) : null
+  if (envyOppSnap && isOpponentLive(envyOppSnap)) {
+    const envyOppDefended = envyOppSnap?.battleState?.lastActionWasDefend === true
+    let envyPlan = null
+    await updatePlayer(db, actorJid, (actor) => {
+      if (!actor.battleState) return
+      envyPlan = advanceWondersOfEnvy(actor.battleState, {
+        context: 'pvp',
+        foeName: envyOppSnap?.name ?? 'your rival',
+        ownerName: actor.name ?? 'you',
+        immune: bypassesWondersOfEnvy(envyOppSnap),
+        oppDefendedLast: envyOppDefended,
+      })
+    })
+    if (envyPlan) {
+      if (envyPlan.lines) msg += envyPlan.lines + '\n'
+      if (envyPlan.art) {
+        await sendImageTo(ctx, envyPlan.art, `🖤 ${actorForCalc?.name ?? 'The Witch of Envy'} takes her final form.`, ctx.sender)
+      }
+      if (envyPlan.halveFraction) {
+        await updatePlayer(db, opponentJid, (opp) => {
+          if (!isOpponentLive(opp)) return
+          opp.hp = Math.max(1, Math.floor(opp.hp * envyPlan.halveFraction))
+        })
+      }
+      if (envyPlan.forcedLoss) {
+        await updatePlayer(db, opponentJid, (opp) => {
+          opp.hp = 0
+          // The "even after the battle" curse: consumed in pvpConclude AFTER the
+          // loser is healed, so the 5% it removes reads as a wound that did not
+          // close. Stamped only here, so it can never fire on an ordinary KO.
+          opp.wondersCursePending = envyPlan.cursePct ?? 0.05
+        })
+        opponentDefeated = true
+      }
+    }
+    if (opponentDefeated) {
+      return pvpConclude(db, actorJid, opponentJid, ctx, msg)
+    }
+  }
 
   // ── Miyashi's Frostbind / Nisha's Absolute One — ambient, once per the
   // equipped side's own turn, independent of what action they chose. Both

@@ -30,12 +30,14 @@ import { runModerationScans, handleRevocation } from './lib/moderation-scan.js'
 import { runAfkScan } from './lib/afk-scan.js'
 
 // Commands still reachable in a locked DM even though the sender isn't the
-// owner — buying Premium/gems and checking status must work for everyone,
-// not just people the owner has already DM'd first. Story Mode is a DM-only
-// feature by design (see plugins/story.js), so it needs the same exemption,
-// as does the unban appeal (plugins/unban-me.js) — a banned user has nowhere
-// else to start one.
-const DM_ALLOWED_COMMANDS = new Set(['premium', 'vip', 'topup', 'gems', 'buygems', 'code', 'mycode', 'linkcode', 'connectcode', 'season', 'seasons', 'seasoninfo', 'gm', 'gameshop', 'unban-me', 'unbanme', 'appeal'])
+// owner — buying Premium/gems/Monds and checking status must work for everyone,
+// not just people the owner has already DM'd first. The Mond commands and
+// `.character` are here so the whole buy-a-character-with-Monds flow works in a
+// DM: `.monds buy` for the currency (the plugin is DM-only by design anyway),
+// `.character buy` to spend it. Story Mode is a DM-only feature by design (see
+// plugins/story.js), so it needs the same exemption, as does the unban appeal
+// (plugins/unban-me.js) — a banned user has nowhere else to start one.
+const DM_ALLOWED_COMMANDS = new Set(['premium', 'vip', 'topup', 'gems', 'buygems', 'code', 'mycode', 'linkcode', 'connectcode', 'season', 'seasons', 'seasoninfo', 'gm', 'gameshop', 'unban-me', 'unbanme', 'appeal', 'monds', 'mond', 'buymonds', 'mondshop', 'character', 'characters', 'char'])
 
 // Commands that survive EVERY lockout gate below (ban, jail, inn sleep,
 // mid-battle). `unban` so an admin/owner near a banned user can always reverse

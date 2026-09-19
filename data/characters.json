@@ -305,6 +305,23 @@
     "exclusive": true
   },
   {
+    "id": "witch_of_envy",
+    "stars": 5,
+    "name": "Tella, the Witch of Envy",
+    "emoji": "🖤",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "exclusive": true,
+    "mondPrice": 5,
+    "image": "https://i.ibb.co/6cD7218p/Tella.jpg",
+    "finalForm": { "image": "https://i.ibb.co/FL0bvjKL/witch-of-envy-final-form.jpg" },
+    "description": "The first of all witches, and the one every witch since has only been an echo of. She does not hate you. At first she does not even see you. But linger too close to the one she has chosen, take too much of what should be theirs, and something older and quieter than rage opens its eyes behind her own. Everyone she has ever envied is gone. Not beaten. Gone.",
+    "ability": {
+      "name": "Wonders of You",
+      "flavor": "She envies every soul that dares stand near her chosen one. For a while she lets it pass. The longer the fight drags on the thinner her patience wears, until she halves what you are and warns you once, softly. Stand down and be still and she may look away. Refuse, and she takes her final form, draws her chosen down to a single breath, and spends it on a forsaken spell that simply removes you from the battle. The wound it leaves does not close when the fighting stops."
+    }
+  },
+  {
     "id": "gogeta",
     "stars": 5,
     "name": "Gogeta",

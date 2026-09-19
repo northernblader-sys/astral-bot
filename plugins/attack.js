@@ -69,9 +69,13 @@ import {
   danceOfTheRainMultiplier,
   buildDanceOfTheRainMessage,
   hasSecondTranscendance,
+  hasWitchOfEnvy,
+  advanceWondersOfEnvy,
+  bypassesWondersOfEnvy,
 } from '../lib/character-abilities.js'
 import { isStreaming, rampStreamViewers } from './stream.js'
 import { applyStruckReactions, applyPackLifestealOnDeal } from '../lib/premium-abilities.js'
+import { sendImage } from '../lib/image.js'
 
 /** True when the current fight is against an anime boss with active bossState. */
 function isBossFight(player) {
@@ -283,6 +287,34 @@ export default {
         if (e.hp <= 0) {
           if (boss) cleanupBossFight(player)
           return handleVictory(player, e, ctx)
+        }
+      }
+
+      // ── Tella's Wonders of You — the Witch of Envy escalates on a fixed
+      // clock (see advanceWondersOfEnvy). Same turn-start slot as the passives
+      // above, so she ticks in monster fights, dungeons and boss fights alike.
+      // The two world-enders (The End, The Last Prayer) are immune; everything
+      // else, bosses included, is fair game, which is the whole point of her.
+      if (hasWitchOfEnvy(player)) {
+        const envy = advanceWondersOfEnvy(bs, {
+          context: boss ? 'boss' : 'dungeon',
+          foeName: e?.name ?? 'the enemy',
+          ownerName: player?.name ?? 'you',
+          immune: bypassesWondersOfEnvy(e),
+          oppDefendedLast: false, // a PvE foe has no defend action to read
+        })
+        if (envy) {
+          if (envy.art) {
+            void sendImage(ctx, envy.art, `🖤 ${player.name}'s Witch of Envy takes her final form.`).catch(() => {})
+          }
+          if (envy.halveFraction) e.hp = Math.max(1, Math.floor(e.hp * envy.halveFraction))
+          if (envy.lines) msg += envy.lines + '\n'
+          if (envy.forcedLoss) {
+            if (envy.drainOwner) player.hp = 1
+            e.hp = 0
+            if (boss) cleanupBossFight(player)
+            return handleVictory(player, e, ctx)
+          }
         }
       }
 
