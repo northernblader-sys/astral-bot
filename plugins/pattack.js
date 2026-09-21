@@ -18,7 +18,7 @@
  * router, which would otherwise read ctx.args[0] as a subcommand.
  */
 import { config } from '../config.js'
-import { battleAttack, battleDefend, battleFlee, battleCinderVerdict, battleKurama, battleHollowPurple, battleUnlimitedVoid } from './party.js'
+import { battleAttack, battleDefend, battleFlee, battleCinderVerdict, battleKurama, battleHollowPurple, battleUnlimitedVoid, repairPartyState, findPartyForPlayer } from './party.js'
 
 export default {
   name: 'pattack',
@@ -28,6 +28,12 @@ export default {
   description: 'Shortcuts for dungeon-party combat — see .dparty',
 
   async run(ctx) {
+    // Self-heal stale party state first (won-but-unsettled battle, orphaned
+    // inBattle flags), same as the .dparty dispatcher — a shortcut must never
+    // answer "your party is already in a battle" for a fight that is over.
+    const party = findPartyForPlayer(ctx.db, ctx.from)
+    if (party) await repairPartyState(ctx, party)
+
     switch (ctx.cmd?.toLowerCase()) {
       case 'pdefend':
       case 'pd':
