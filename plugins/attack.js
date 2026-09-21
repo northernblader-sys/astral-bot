@@ -337,7 +337,7 @@ export default {
         // a generic monster miss draws from the flavor pool instead.
         msg += boss
           ? `💨 *${player.name}* attacks *${e.name}*... and *MISSES!*\n`
-          : playerMissLine(player.name, e) + '\n'
+          : playerMissLine(player.name, e, player.equippedCharacter) + '\n'
         if (boss) {
           const missResult = applyBossSpecial(player, EVENT.PLAYER_MISS, {
             isMiss: true,
@@ -454,8 +454,8 @@ export default {
             : `🛡️ _Attack absorbed, no damage dealt!_\n`
         } else {
           msg += (finalDmg > 0
-            ? playerHitLine(player.name, e, finalDmg, isCrit)
-            : playerAbsorbedLine(player.name, e)) + '\n'
+            ? playerHitLine(player.name, e, finalDmg, isCrit, player.equippedCharacter)
+            : playerAbsorbedLine(player.name, e, player.equippedCharacter)) + '\n'
         }
         msg += buildDanceOfTheRainMessage(bs, player)
 
@@ -756,7 +756,7 @@ export default {
         }
       } else if (Math.random() > calcMonsterHitChance(e, player)) {
         // ── Regular enemy misses ──────────────────────────────────────────────
-        msg += '\n' + enemyMissLine(e)
+        msg += '\n' + enemyMissLine(e, player.equippedCharacter)
       } else {
         // ── Regular enemy hits ────────────────────────────────────────────────
         let enemyDmg = calcMonsterDamage(
@@ -820,7 +820,7 @@ export default {
         if (appliedEnemy.catFormDefeated) {
           return resolveCatFormDefeat(player, ctx, { boss })
         }
-        msg += '\n' + enemyHitLine(e, appliedEnemy.damage) + dmgNamedLines
+        msg += '\n' + enemyHitLine(e, appliedEnemy.damage, player.equippedCharacter) + dmgNamedLines
         if (shieldBlockedEnemy > 0) msg += `\n🛡️ Shield absorbed *${shieldBlockedEnemy}* damage!`
         if (player.hp <= 0) {
           const res = await resolvePlayerHpZero(player, ctx, msg, {})

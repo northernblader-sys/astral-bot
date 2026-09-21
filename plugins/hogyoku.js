@@ -46,6 +46,7 @@ import {
   tickPermanentSever,
   applyIncomingDamage,
 } from '../lib/character-abilities.js'
+import { resolveSwarmAbility } from '../lib/swarm-combat.js'
 import { pvpHogyoku } from './pvp.js'
 
 function isBossFight(player) {
@@ -92,6 +93,17 @@ export async function runHogyoku(ctx) {
     if (!gate.ok) {
       if (gate.message) await ctx.reply(gate.message)
       return player
+    }
+
+    // Swarm floors: the Hōgyoku spends its turn evolving, folded into one
+    // swarm turn exactly like kurohitsugi's swarm branch. It deals no damage
+    // and freezes nothing: the pack still closes and re-aims at whatever he
+    // has become. No kill can happen from the evolution itself, so no
+    // floor-clear branch is needed (resolveSwarmAbility's shared kill routing
+    // is still in place if that ever changes).
+    if (player.battleState?.mode === 'swarm') {
+      const reveal = gate.message
+      return resolveSwarmAbility(player, ctx, () => ({ lines: [reveal] }))
     }
 
     const bs   = player.battleState
