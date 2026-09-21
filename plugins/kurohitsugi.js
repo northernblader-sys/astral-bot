@@ -59,6 +59,10 @@ import {
   aizenSenses,
   AIZEN_MAX_SENSES,
 } from '../lib/character-abilities.js'
+import { resolveSwarmAbility } from '../lib/swarm-combat.js'
+import {
+  kurohitsugiCastLine, kurohitsugiImpactLine,
+} from '../lib/aizen-flavor.js'
 import { pvpKurohitsugi } from './pvp.js'
 
 function isBossFight(player) {
@@ -111,6 +115,37 @@ export default {
         return player
       }
 
+      // Swarm floors: fold the coffin into one swarm turn against the nearest
+      // threat, the same shape kurama.js/puppetry.js/timestop.js use. The
+      // coffin crushes THAT one monster RAW (no armour softens Hadō #90) and
+      // the rest of the pack still closes and re-aims, so he swings a floor
+      // without wrongly clearing it: kills route through resolveSwarmAbility's
+      // shared branch, where only the floor-clearing blow hands off to
+      // handleVictory. Without this branch the1v1 turn below ran against
+      // bs.enemy and a kill called handleVictory while other monsters were
+      // still alive, wiping the pack for free.
+      if (player.battleState?.mode === 'swarm') {
+        return resolveSwarmAbility(player, ctx, (target) => {
+          const senses = aizenSenses(player)
+          const executeTier = (target.maxHp ?? 0) > 0 && (target.hp / target.maxHp) < 0.35
+          const mult = kurohitsugiMultiplier(player, target)
+          const { rawDmg, isCrit } = calcPlayerDamage(player, null, mult)
+          const dmg = Math.max(1, Math.round(rawDmg))
+          target.hp = Math.max(0, target.hp - dmg)
+          const lines = [
+            `⬛ *KUROHITSUGI* ⬛`,
+            `─────────────`,
+            kurohitsugiCastLine(senses),
+          ]
+          if (senses > 0) {
+            lines.push(`_He already owns ${senses}/${AIZEN_MAX_SENSES} of their senses. The seal tightens around what remains._`)
+          }
+          lines.push(`⬛ *${dmg.toLocaleString()}* damage! _(ignores DEF)_${isCrit ? ' 💥 *CRITICAL!*' : ''}`)
+          lines.push(kurohitsugiImpactLine({ execute: executeTier, kill: target.hp <= 0 }))
+          return { lines }
+        })
+      }
+
       const bs   = player.battleState
       const e    = bs.enemy
       const boss = isBossFight(player)
@@ -146,7 +181,7 @@ export default {
       msg +=
         `⬛ *KUROHITSUGI* ⬛\n` +
         `─────────────\n` +
-        `_Hadō #90. The coffin closes over *${e.name}*, and time inside it stops agreeing with time outside._\n` +
+        `${kurohitsugiCastLine(senses)}\n` +
         (senses > 0 ? `_He already owns ${senses}/${AIZEN_MAX_SENSES} of their senses. The seal tightens around what remains._\n` : '') +
         `\n`
 
@@ -157,13 +192,14 @@ export default {
         // enemy already is), applied RAW: Kurohitsugi never misses and no
         // armour softens it, so there is no accuracy roll and no
         // applyDefense(). Crit still comes out of calcPlayerDamage.
+        const executeTier = (e.maxHp ?? 0) > 0 && (e.hp / e.maxHp) < 0.35
         const mult = kurohitsugiMultiplier(player, e)
         const { rawDmg, isCrit } = calcPlayerDamage(player, null, mult)
         const dmg = Math.max(1, Math.round(rawDmg))
         e.hp = Math.max(0, e.hp - dmg)
 
         msg += `⬛ *${dmg.toLocaleString()}* damage! _(ignores DEF)_${isCrit ? ' 💥 *CRITICAL!*' : ''}\n`
-        msg += `_What was already breaking inside is finished by the distortion._\n`
+        msg += `${kurohitsugiImpactLine({ execute: executeTier, kill: e.hp <= 0 })}\n`
 
         if (e.hp > 0) {
           const tearLine = applyTearOnHit(player, e, ctx)

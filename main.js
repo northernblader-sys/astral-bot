@@ -1107,7 +1107,18 @@ function createBotInstance(botCfg) {
       generateHighQualityLinkPreview: true,
       syncFullHistory: false,
       markOnlineOnConnect: true,
-      keepAliveIntervalMs: 25_000,
+      // 60s (default 30s), raised deliberately. Baileys runs its keepalive on
+      // an interval and kills the socket when no frame has been RECEIVED in
+      // keepAliveIntervalMs + 5s (see @whiskeysockets/baileys Socket/socket.js:
+      // `end(new Boom('Connection was lost'))`). "No frame processed in N
+      // seconds" is not "the network died": it is exactly what a processing
+      // pile-up during message overspam looks like from inside the interval,
+      // and at 25s the watchdog was tripping over busy minutes and forcing
+      // the brief disconnects reported from group spam. 60s tolerates a busy
+      // minute (65s of lag before the self-kill) at the cost of slower
+      // detection for a silently dead network path — a real disconnect still
+      // closes the socket from WhatsApp's side either way.
+      keepAliveIntervalMs: 60_000,
       connectTimeoutMs: 60_000,
       // Silence Baileys' internal logger unless you need deep debug
       logger: silentLogger,
@@ -1168,14 +1179,29 @@ function createBotInstance(botCfg) {
     // asks is "is WhatsApp still delivering anything at all to this socket",
     // not "did anyone run a command".
     const handleMessages = makeHandler(sock, db, inst.botName)
+    // Inbound batches are processed ONE AT A TIME per socket, FIFO, via this
+    // chain (2026-09: the overspam disconnect). Before, every messages.upsert
+    // event ran handleMessages() concurrently with every other one: a flood
+    // turned into dozens of interleaved handleOne() pipelines, each doing its
+    // own updatePlayer cycles, moderation scans and reply sends, all
+    // contending for the same write queue and the same event loop. The socket
+    // then falls behind WhatsApp's frame stream until Baileys' keepalive
+    // watchdog (socket.js: "diff > keepAliveIntervalMs + 5000" →
+    // `Connection was lost`) kills it — which is the brief disconnect on
+    // overspam. Serializing the batches keeps one steady pipeline: a flood
+    // becomes a backlog of cheap sequential work instead of a CPU pile-up,
+    // and messages are handled in the order they arrived.
+    let inboundChain = Promise.resolve()
     sock.ev.on('messages.upsert', (arg) => {
       inst.lastInboundAt = Date.now()
       inst.inboundCount++
       // The handler already try/catches each message, but a throw in its own
       // outer scope would otherwise surface as an unhandled rejection with no
-      // instance name attached to it.
-      Promise.resolve(handleMessages(arg)).catch(err =>
-        log('⚠️ Message handler threw:', err?.message ?? err))
+      // instance name attached to it. The .catch on the chain keeps one bad
+      // batch from wedging every later one.
+      inboundChain = inboundChain
+        .then(() => handleMessages(arg))
+        .catch(err => log('⚠️ Message handler threw:', err?.message ?? err))
     })
 
     // ── Welcome / goodbye announcements ───────────────────────────────────

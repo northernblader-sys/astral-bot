@@ -149,6 +149,8 @@ import {
   UNLIMITED_VOID_STUN_TURNS,
   activateKurohitsugi,
   kurohitsugiMultiplier,
+  aizenSenses,
+  AIZEN_MAX_SENSES,
   activateHogyoku,
   activatePuppetStrings,
   resolvePuppetSelfHit,
@@ -177,6 +179,9 @@ import {
   armWondersOfEnvy,
   applyWondersCurseOnWin,
 } from '../lib/character-abilities.js'
+import {
+  kurohitsugiCastLine, kurohitsugiImpactLine,
+} from '../lib/aizen-flavor.js'
 import {
   activateDragonUltimate,
   resolveDragonUltimateDamage,
@@ -2070,7 +2075,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
       // applyIncomingDamage() reads them when the opponent swings back.
     }
 
-    if (action === 'defend' || action === 'ability' || action === 'cinderverdict' || action === 'ultimate' || action === 'wildcard' || action === 'domain' || action === 'thiefseye' || action === 'hollowexchange' || action === 'hollowpurple' || action === 'unlimitedvoid' || action === 'puppetstrings' || action === 'timestop' || action === 'kurama' || action === 'soulpunisher' || action === 'kamehameha') {
+    if (action === 'defend' || action === 'ability' || action === 'cinderverdict' || action === 'ultimate' || action === 'wildcard' || action === 'domain' || action === 'thiefseye' || action === 'hollowexchange' || action === 'hollowpurple' || action === 'unlimitedvoid' || action === 'puppetstrings' || action === 'timestop' || action === 'kurama' || action === 'soulpunisher' || action === 'kamehameha' || action === 'kurohitsugi' || action === 'hougyoku') {
       if (action === 'defend') {
         const mpRegen = Math.floor(actor.maxMp * 0.05)
         actor.mp = Math.min(actor.maxMp, actor.mp + mpRegen)
@@ -2082,7 +2087,9 @@ async function runPvpTurn(ctx, action, skillQuery) {
       // 'thiefseye' and 'hollowexchange' are here for the same reason: Xiao
       // throws a technique she took, and Minna does not swing at anyone.
       // Gogeta's two moves are both ki thrown from a distance, so nothing in
-      // his hand touches anything either.
+      // his hand touches anything either. Aizen's two are the same shape:
+      // Kurohitsugi is Hadō #90, a coffin dropped from a distance, and the
+      // Hōgyoku is a transformation that holds no weapon at all.
     } else {
       const wWear = wearWeaponOnTurn(actor)
       msg += breakMessage(wWear)
@@ -2886,6 +2893,8 @@ async function runPvpTurn(ctx, action, skillQuery) {
           ? `🌑 floods the *Chimera Shadow Garden* over`
           : action === 'hollowpurple'
           ? `🟦🟥 brings *Hollow Purple* down on`
+          : action === 'kurohitsugi'
+          ? `⬛ seals a *KUROHITSUGI* over`
           : action === 'soulpunisher'
           ? `🔵 puts a *Soul Punisher* through`
           : action === 'kamehameha'
@@ -2899,6 +2908,18 @@ async function runPvpTurn(ctx, action, skillQuery) {
           : skill ? `unleashes *${skill.name}*` : 'attacks'
       msg += `${isCrit ? '💥🔥 *CRITICAL HIT!!* 🔥💥\n' : '⚔️ '}*${actorForCalc.name}* ${actionVerb} 👉 *${applied.damage} DMG* to *${opp.name}*! 💢\n`
       if (action === 'hollowpurple') msg += `🟪 _The clash of Blue and Red erases the space between. No armour softens it._\n`
+      if (action === 'kurohitsugi') {
+        // Hadō #90 in the duel: the coffin's cast and impact read from the same
+        // pools the PvE turn uses (lib/aizen-flavor.js), so a duel's Kurohitsugi
+        // sounds like the fight it is, with the enemy's reaction to being sealed
+        // inside time that no longer agrees with them.
+        const senses = aizenSenses(actorForCalc, actorForCalc.battleState)
+        msg += `${kurohitsugiCastLine(senses)}\n`
+        if (senses > 0) {
+          msg += `_He already owns ${senses}/${AIZEN_MAX_SENSES} of their senses. The seal tightens around what remains._\n`
+        }
+        msg += `${kurohitsugiImpactLine({ execute: opp.hp > 0 && (opp.hp / (opp.maxHp || 1)) < 0.35, kill: opp.hp <= 0 })}\n`
+      }
       if (action === 'soulpunisher') msg += `💠 _A point of ki the size of a fist, across the gap before the sound of it._\n`
       if (action === 'kamehameha') {
         msg += `🌀 _Hands together, elbows locked, and then there is no longer a between._ _(ignores DEF)_\n`
