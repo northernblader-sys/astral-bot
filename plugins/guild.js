@@ -47,6 +47,7 @@ import {
   totalFloorsConquered,
   ensureGuildsInitialized,
   getGuildRecord,
+  getGuildTag,
 } from '../lib/guild-repo.js'
 import {
   guildTier,
@@ -62,6 +63,13 @@ import {
   MERIT_PER_FLOOR,
 } from '../lib/guild-engine.js'
 import { sendImageTo } from '../lib/image.js'
+
+import {
+  WAR_FORMATS,
+  GUILD_AURAS,
+  createWarSession,
+  resolveWarTurn,
+} from '../lib/guild-war-engine.js'
 
 /**
  * Official guild art (2026-09-21 owner-provided drop, keyed by guild id).
@@ -118,6 +126,7 @@ export default {
     if (sub === 'perks' || sub === 'tier' || sub === 'tiers')    return showPerks(ctx, allUsers, args.slice(1).join(' '))
     if (sub === 'top' || sub === 'rank' || sub === 'ranking' || sub === 'leaderboard') return guildTop(ctx, allUsers)
     if (sub === 'motd' || sub === 'notice')     return setMotd(ctx, allUsers, args.slice(1).join(' '))
+    if (sub === 'war' || sub === 'wars' || sub === 'clash') return guildWarDispatch(ctx, allUsers, args.slice(1))
 
     return reply(
       `❓ Unknown guild command.\n\n` +
@@ -129,6 +138,7 @@ export default {
       `*${p}guild treasury* — vault and tier progress\n` +
       `*${p}guild perks* — what your tier grants\n` +
       `*${p}guild top* — rank all five guilds\n` +
+      `*${p}guild war* — intense 1v1 / 2v2 guild clashes with format kits & teammate auras\n` +
       `*${p}guild motd <text>* — (leader) set the notice\n` +
       `*${p}guild kick <player>* — (leader) remove a member\n` +
       `*${p}guild banner* / *${p}guild pfp* — (leader) attach an image`,
@@ -206,9 +216,10 @@ async function showGuildInfo(ctx, allUsers, query, membersOnly = false) {
   const ranked = rankMembers(guildRecord, members)
     .map((entry, i) => {
       const m = entry.player
+      const tag = getGuildTag(guild.id)
       const crown = leader?.id === m.id ? ' 👑' : ''
       return (
-        `  ${i + 1}. ${entry.role.emoji} *${m.name}*${crown}  _(Lv.${m.level})_\n` +
+        `  ${i + 1}. ${entry.role.emoji} ${tag} *${m.name}*${crown}  _(Lv.${m.level})_\n` +
         `      ${entry.role.name} · ${conquestSinceJoining(m)} floor(s) · ☀️ ${shortSolars(entry.donated)} donated`
       )
     })
@@ -669,3 +680,261 @@ async function uploadImage(ctx, allUsers, kind) {
     return ctx.reply(`❌ Couldn't download that image — try again.`)
   }
 }
+
+// ── Guild Wars (1v1 & 2v2 with Format Kits & Teammate Aura) ─────────────────
+
+async function guildWarDispatch(ctx, allUsers, warArgs) {
+  const p = config.prefix
+  const sub = warArgs[0]?.toLowerCase()
+
+  if (!ctx.player) return ctx.reply(`⚠️ Register with *${p}register* first.`)
+  if (!ctx.player.guildId) return ctx.reply(`❌ You're not in a guild. Join one with *${p}guild join <name>*.`)
+
+  if (!ctx.db.data.guildWars) ctx.db.data.guildWars = {}
+
+  if (sub === 'challenge' || sub === 'declare') {
+    return handleWarChallenge(ctx, allUsers, warArgs.slice(1))
+  }
+  if (sub === 'accept') {
+    return handleWarAccept(ctx, allUsers, warArgs.slice(1))
+  }
+  if (sub === 'decline' || sub === 'cancel') {
+    return handleWarCancel(ctx, allUsers)
+  }
+  if (sub === 'status' || sub === 'view') {
+    return handleWarStatus(ctx, allUsers)
+  }
+  if (sub === 'attack' || sub === 'atk' || sub === 'skill' || sub === 'defend' || sub === 'drink') {
+    return handleWarAction(ctx, allUsers, sub, warArgs.slice(1))
+  }
+
+  // Help menu
+  const formatList = Object.values(WAR_FORMATS)
+    .filter((f, idx, arr) => arr.findIndex(x => x.id === f.id) === idx)
+    .map(f => `  • ${f.emoji} *${f.name}* (${f.id}): ${f.description}`)
+    .join('\n')
+
+  const auraList = Object.entries(GUILD_AURAS)
+    .map(([gid, a]) => {
+      const g = getGuildDef(gid)
+      return `  • ${a.emoji} *${g?.name ?? gid}* [${a.name}]: ${a.description}`
+    })
+    .join('\n')
+
+  return ctx.reply(
+    `⚔️ *INTENSE GUILD WARS (1v1 & 2v2)*\n\n` +
+    `Battle rival guilds for supremacy, treasury bounties, and guild pride!\n\n` +
+    `*Commands:*\n` +
+    `• *${p}guild war challenge <guild> [1v1|2v2] [format]* — issue war challenge\n` +
+    `• *${p}guild war accept* — accept pending war challenge\n` +
+    `• *${p}guild war decline* — decline / cancel challenge\n` +
+    `• *${p}guild war status* — inspect current war board\n` +
+    `• *${p}guild war attack* — basic strike\n` +
+    `• *${p}guild war skill* — high-tier skill strike\n` +
+    `• *${p}guild war defend* — defensive stance (+MP, 50% dmg cut)\n` +
+    `• *${p}guild war drink* — quick recovery potion\n\n` +
+    `*Battle Formats & Custom Kits:*\n${formatList}\n\n` +
+    `*Teammate Aura Synergy (2v2 Mode):*\n${auraList}`,
+  )
+}
+
+async function handleWarChallenge(ctx, allUsers, args) {
+  const p = config.prefix
+  const myGuildId = ctx.player.guildId
+  const myGuild = getGuildDef(myGuildId)
+
+  const targetQuery = args[0]
+  if (!targetQuery) {
+    return ctx.reply(`❌ Specify a target guild to challenge.\nUsage: *${p}guild war challenge <targetGuild> [1v1|2v2] [standard|mcpvp|unrestricted]*`)
+  }
+
+  const targetGuild = findGuildByQuery(targetQuery)
+  if (!targetGuild) {
+    return ctx.reply(`❌ No guild matching *${targetQuery}*.`)
+  }
+  if (targetGuild.id === myGuildId) {
+    return ctx.reply(`❌ You cannot wage war against your own guild!`)
+  }
+
+  const matchType = args[1]?.toLowerCase() === '2v2' ? '2v2' : '1v1'
+  const rawFormat = args[2]?.toLowerCase() || 'standard'
+  const format = WAR_FORMATS[rawFormat] || WAR_FORMATS.standard
+
+  // Check if either guild is already in an active war
+  const activeWars = Object.values(ctx.db.data.guildWars || {})
+  const ongoing = activeWars.find(w => w.status === 'active' && (w.guildAId === myGuildId || w.guildBId === myGuildId || w.guildAId === targetGuild.id || w.guildBId === targetGuild.id))
+  if (ongoing) {
+    return ctx.reply(`⚔️ A guild war involving one of these guilds is already raging! Use *${p}guild war status*.`)
+  }
+
+  // Create pending challenge
+  const warId = `war_${Date.now()}`
+  ctx.db.data.guildWars[warId] = {
+    id: warId,
+    status: 'pending',
+    challengerId: ctx.player.id,
+    guildAId: myGuildId,
+    guildBId: targetGuild.id,
+    matchType,
+    formatId: format.id,
+    createdAt: Date.now(),
+  }
+  await ctx.db.write()
+
+  return ctx.reply(
+    `⚔️ *GUILD WAR CHALLENGE ISSUED!*\n\n` +
+    `${myGuild.emoji} *${myGuild.name}* has declared war upon ${targetGuild.emoji} *${targetGuild.name}*!\n\n` +
+    `🥊 Mode: *${matchType}*\n` +
+    `📜 Format / Kit: ${format.emoji} *${format.name}*\n` +
+    `_${format.description}_\n\n` +
+    `Any warrior of *${targetGuild.name}* can accept with:\n` +
+    `> *${p}guild war accept*`,
+  )
+}
+
+async function handleWarAccept(ctx, allUsers, args) {
+  const p = config.prefix
+  const myGuildId = ctx.player.guildId
+  const myGuild = getGuildDef(myGuildId)
+
+  const activeWars = ctx.db.data.guildWars || {}
+  const pendingEntry = Object.entries(activeWars).find(([, w]) => w.status === 'pending' && w.guildBId === myGuildId)
+
+  if (!pendingEntry) {
+    return ctx.reply(`❌ No pending war challenge waiting for ${myGuild.emoji} *${myGuild.name}*.`)
+  }
+
+  const [warId, pending] = pendingEntry
+  const opponentGuild = getGuildDef(pending.guildAId)
+
+  // Assemble teams
+  const challengerPlayer = allUsers.find(u => u.id === pending.challengerId) || ctx.player
+  const teamAPlayers = [challengerPlayer]
+  const teamBPlayers = [ctx.player]
+
+  if (pending.matchType === '2v2') {
+    // Pick highest active teammates
+    const guildAMembers = getGuildMembers(pending.guildAId, allUsers).filter(u => u.id !== challengerPlayer.id)
+    if (guildAMembers.length) teamAPlayers.push(guildAMembers[0])
+    else teamAPlayers.push({ ...challengerPlayer, id: `${challengerPlayer.id}_ally`, name: `${challengerPlayer.name} [Shadow]` })
+
+    const guildBMembers = getGuildMembers(myGuildId, allUsers).filter(u => u.id !== ctx.player.id)
+    if (guildBMembers.length) teamBPlayers.push(guildBMembers[0])
+    else teamBPlayers.push({ ...ctx.player, id: `${ctx.player.id}_ally`, name: `${ctx.player.name} [Vanguard]` })
+  }
+
+  const session = createWarSession({
+    id: warId,
+    guildAId: pending.guildAId,
+    guildBId: myGuildId,
+    formatId: pending.formatId,
+    matchType: pending.matchType,
+    teamA: teamAPlayers,
+    teamB: teamBPlayers,
+  })
+
+  ctx.db.data.guildWars[warId] = session
+  await ctx.db.write()
+
+  const auraA = GUILD_AURAS[session.guildAId]
+  const auraB = GUILD_AURAS[session.guildBId]
+  const auraNote = session.matchType === '2v2'
+    ? `\n✨ *Teammate Auras Activated!*\n` +
+      `• ${opponentGuild.emoji} ${opponentGuild.name}: *${auraA?.name}*\n` +
+      `• ${myGuild.emoji} ${myGuild.name}: *${auraB?.name}*\n`
+    : ''
+
+  return ctx.reply(
+    `🔥 *THE BATTLE LINES ARE DRAWN!*\n\n` +
+    `${opponentGuild.emoji} *${opponentGuild.name}*  ⚔️  ${myGuild.emoji} *${myGuild.name}*\n\n` +
+    `Mode: *${session.matchType}*  |  Format: *${WAR_FORMATS[session.formatId]?.name}*\n` +
+    auraNote + `\n` +
+    `Strike with *${p}guild war attack* or *${p}guild war skill*!`
+  )
+}
+
+async function handleWarCancel(ctx, allUsers) {
+  const myGuildId = ctx.player.guildId
+  const activeWars = ctx.db.data.guildWars || {}
+  const pending = Object.entries(activeWars).find(([, w]) => w.status === 'pending' && (w.guildAId === myGuildId || w.guildBId === myGuildId))
+
+  if (!pending) return ctx.reply(`❌ No pending war challenge to cancel.`)
+  delete ctx.db.data.guildWars[pending[0]]
+  await ctx.db.write()
+  return ctx.reply(`🏳️ The pending guild war challenge has been withdrawn.`)
+}
+
+async function handleWarStatus(ctx, allUsers) {
+  const p = config.prefix
+  const activeWars = ctx.db.data.guildWars || {}
+  const liveWar = Object.values(activeWars).find(w => w.status === 'active')
+
+  if (!liveWar) {
+    return ctx.reply(`🛡️ No active guild war currently in progress. Issue one with *${p}guild war challenge*.`)
+  }
+
+  const guildA = getGuildDef(liveWar.guildAId)
+  const guildB = getGuildDef(liveWar.guildBId)
+  const format = WAR_FORMATS[liveWar.formatId] || WAR_FORMATS.standard
+
+  const formatTeam = (team) => team.map(f => {
+    const status = f.alive ? `❤️ ${f.hp}/${f.maxHp} HP  💧 ${f.mp}/${f.maxMp} MP` : `💀 _Fallen_`
+    return `  • *${f.name}*: ${status}`
+  }).join('\n')
+
+  const lastLogs = liveWar.combatLog.slice(-5).join('\n') || '_Battle commencing..._'
+
+  return ctx.reply(
+    `⚔️ *GUILD WAR ARENA — LIVE CLASH*\n\n` +
+    `${guildA.emoji} *${guildA.name}* vs ${guildB.emoji} *${guildB.name}*\n` +
+    `Mode: *${liveWar.matchType}* | Format: *${format.name}*\n\n` +
+    `*${guildA.name} Lineup:*\n${formatTeam(liveWar.teamA)}\n\n` +
+    `*${guildB.name} Lineup:*\n${formatTeam(liveWar.teamB)}\n\n` +
+    `📜 *Recent Clashes:*\n${lastLogs}\n\n` +
+    `*Commands:* *${p}guild war attack* · *${p}guild war skill* · *${p}guild war defend* · *${p}guild war drink*`,
+  )
+}
+
+async function handleWarAction(ctx, allUsers, action, extraArgs) {
+  const p = config.prefix
+  const activeWars = ctx.db.data.guildWars || {}
+  const liveEntry = Object.entries(activeWars).find(([, w]) => w.status === 'active')
+
+  if (!liveEntry) {
+    return ctx.reply(`❌ No active guild war in progress. Start one with *${p}guild war challenge*.`)
+  }
+
+  const [warId, session] = liveEntry
+  const isTeamA = session.teamA.some(f => f.id === ctx.player.id)
+  const isTeamB = session.teamB.some(f => f.id === ctx.player.id)
+
+  if (!isTeamA && !isTeamB) {
+    return ctx.reply(`❌ You are not a combatant in this active guild war! Spectate with *${p}guild war status*.`)
+  }
+
+  const res = resolveWarTurn(session, ctx.player.id, action)
+  if (!res.ok) {
+    return ctx.reply(res.msg)
+  }
+
+  if (res.finished) {
+    const winningGuild = getGuildDef(res.winnerGuildId)
+    // Reward winning guild treasury with 50,000 solars
+    const guildRec = getGuildRecord(ctx.db, res.winnerGuildId)
+    guildRec.treasury += 50000
+    delete ctx.db.data.guildWars[warId]
+    await ctx.db.write()
+
+    return ctx.reply(
+      `${res.logs.join('\n')}\n\n` +
+      `🏆━━━━━━━━━━━━━━━━━━━━🏆\n` +
+      `👑 *VICTORY TO ${winningGuild.emoji} ${winningGuild.name.toUpperCase()}!*\n` +
+      `Through sheer grit, tactics, and unbreakable teammate aura, they have triumphed!\n` +
+      `💰 Treasury Award: +50,000 Solars added to *${winningGuild.name}*'s vault!`
+    )
+  }
+
+  await ctx.db.write()
+  return ctx.reply(`${res.logs.join('\n')}\n\n_Next warrior may take their move: *${p}guild war attack|skill|defend|drink*._`)
+}
+

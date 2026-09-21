@@ -16,6 +16,7 @@ import { getWaifu } from '../lib/card-engine.js'
 import { renderProfileCard } from '../lib/profile-card-render.mjs'
 import { playerLevelCap } from '../lib/reborn-engine.js'
 import { isTitled, ensurePrestige, getTierForXp } from '../lib/title-engine.js'
+import { getGuildTag } from '../lib/guild-repo.js'
 
 export default {
   name: 'me',
@@ -31,6 +32,8 @@ export default {
     const w = p.wallet ?? {}
     const waifuCard = getWaifu(p)
     const waifuLine = waifuCard ? `${waifuCard.title} (${waifuCard.series})` : 'none set'
+    const guildTag = getGuildTag(p)
+    const displayName = guildTag ? `${guildTag} ${p.name}` : p.name
 
     // Level-200 prestige titles (Ⓟⓡⓞ/Ⓐ🅜/Ⓖ🅜/Ⓛ🅜 — lib/title-engine.js) are a
     // separate system from p.title above: p.title is the free-text cosmetic
@@ -46,7 +49,7 @@ export default {
       : `★ Level: ${p.level}`
 
     const lines = [
-      `★ Name: ${p.name}`,
+      `★ Name: ${displayName}`,
       `★ Title: ${p.title ?? 'none earned'}`,
       `★ Bio: ${p.bio ?? 'no bio set'}`,
       `★ Rank: ${rank.emoji} ${rank.title}`,

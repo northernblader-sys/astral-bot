@@ -31,6 +31,7 @@ import { getWaifu, tierStars } from '../lib/card-engine.js'
 import { ensureStatPoints, statPointCap } from '../lib/stat-progression.js'
 import { isReborn, playerLevelCap } from '../lib/reborn-engine.js'
 import { endStatusBadge } from '../lib/end-event.js'
+import { getGuildTag } from '../lib/guild-repo.js'
 
 /**
  * Sends a player's OWN profile picture, never the composited profile card.
@@ -69,9 +70,11 @@ async function replyShortProfile(ctx, targetId) {
 
   const rank = getRankForLevel(target.level)
   const bioLine = target.bio ? `📝 _${target.bio}_` : `📝 _(no bio set)_`
+  const targetTag = getGuildTag(target)
+  const targetName = targetTag ? `${targetTag} ${target.name}` : target.name
 
   const shortText =
-    `👤 *${target.name}*\n` +
+    `👤 *${targetName}*\n` +
     `🏅 Level ${target.level}  •  ${rank.emoji} ${rank.title}\n` +
     bioLine
 
@@ -194,8 +197,11 @@ export default {
       ? `${tierStars(waifuCard.tier)} *${waifuCard.title}* _(${waifuCard.series})_`
       : `— none set — _(${config.prefix}waifu)_`
 
+    const pTag = getGuildTag(p)
+    const pDisplayName = pTag ? `${pTag} ${p.name}` : p.name
+
     const fullText =
-      `👤 *${p.name}*` + (isPremiumActive(p) ? `  👑 *PREMIUM*` : '') + (isReborn(p) ? `  🌟 *REBORN*` : '') + (hasMod(p, 'cosmetic_badge') ? `  🧩` : '') + (p.title ? `  [${p.title}]` : '') + `\n` +
+      `👤 *${pDisplayName}*` + (isPremiumActive(p) ? `  👑 *PREMIUM*` : '') + (isReborn(p) ? `  🌟 *REBORN*` : '') + (hasMod(p, 'cosmetic_badge') ? `  🧩` : '') + (p.title ? `  [${p.title}]` : '') + `\n` +
       `⚔️ ${className}  |  🧬 ${raceName}\n\n` +
       bioLine +
 
