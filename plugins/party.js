@@ -16,26 +16,43 @@
  *   .dparty                           — show your party status
  *   .dparty enter <dungeonId>         — leader starts a co-op climb of a dungeon
  *   .dparty next / .descend           — leader descends the party to the next floor
- *   .dparty attack / .pattack         — attack the shared enemy (free-for-all)
+ *   .dparty attack / .pattack         — attack the shared enemy (fixed turn order)
  *   .dparty cinderverdict / .pcv      — Wither's once-per-battle ember sentence
  *   .dparty defend                    — brace, reduces damage taken this round
  *   .dparty flee                      — leave the party battle (forfeits your cut)
  *
- * How party combat works ("battle royale" style):
+ * How party combat works (fixed turn order):
  *   The leader starts a climb (.dparty enter) and one enemy spawns for the
  *   whole party, with HP scaled up per extra member so it isn't trivial
- *   (regular floors only — bosses aren't scaled). Every member currently in
- *   the party (not just the leader) can freely send .party attack / .pattack
- *   whenever they like — there's no fixed turn order, whoever acts, acts. The
- *   enemy strikes back at a random party member (favoring whoever has drawn
- *   the most aggro by hitting hardest) after every action. When the enemy
- *   falls, XP/Solars/drops are split among everyone who landed at least one
- *   hit, weighted by damage share — and each cleared floor is banked into
- *   every present member's SOLO dungeonProgress, so co-op progress carries
- *   across modes. The leader then runs .dparty next to descend one floor
- *   deeper (1 stamina per member), repeating until the dungeon is conquered,
- *   the party wipes, or everyone runs out of stamina. The run starts at the
- *   LOWEST member's checkpoint, so a fresh member is never dropped deep.
+ *   (regular floors only — bosses aren't scaled). Turn order is FIXED: it is
+ *   captured from the members present when a floor spawns, and only the
+ *   member at turnOrder[turnIndex] can act — attack, defend, flee, and every
+ *   character active all gate on notYourTurn(). After each action the cursor
+ *   advances to the next member still standing (advancePartyTurn), so play
+ *   rotates in a known order instead of a free-for-all. The enemy strikes
+ *   back at the actor (bosses) or a member weighted by aggro (regular
+ *   enemies) after each action. When the enemy falls, XP/Solars/drops are
+ *   split among everyone who landed at least one hit, weighted by damage
+ *   share — and each cleared floor is banked into every present member's
+ *   SOLO dungeonProgress (and now quest credit too), so co-op progress
+ *   carries across modes. The leader then runs .dparty next to descend one
+ *   floor deeper (1 stamina per member), repeating until the dungeon is
+ *   conquered, the party wipes, or everyone runs out of stamina. The run
+ *   starts at the LOWEST member's checkpoint, so a fresh member is never
+ *   dropped deep.
+ *
+ * Party mode is CO-OP ONLY and rate-limited: at least MIN_PARTY_TO_ENTER
+ * members are required to enter, and each member gets PARTY_DAILY_LIMIT
+ * runs per day (PARTY_DAILY_LIMIT_PREMIUM for premium), counted at
+ * .dparty enter — the whole climb after that is free.
+ *
+ * Crash-proofing: no command ever answers "already in a battle" for a fight
+ * that is actually over. Victory/down resolution runs OUTSIDE the write-lane
+ * mutator (no nested updatePlayer — the old deadlock that left battles stuck
+ * forever), the teardown that frees members and clears party.battle runs
+ * before the victory message is sent, and repairPartyState() — called at the
+ * top of every .dparty/.pattack command — settles any won-but-unsettled
+ * battle it finds, clears orphaned inBattle flags, and ends overrun runs.
  *
  * Climb state lives on party.run = { locationId, floor, startedAt } — the
  * cursor for the next floor to fight — while party.battle is the live fight
@@ -85,10 +102,11 @@ import { hasInventoryRoom } from '../lib/inventory-limits.js'
 import { getModValue, applyHighDefenseCatchup } from '../lib/mods.js'
 import { getActiveSeason, ensurePlayerSeasonState, applySeasonLevel } from '../lib/season-engine.js'
 import { applyMeiSustainHeal, applyInfinity, activateFinalForm, applyTearOnHit, tickPermanentSever, activateCinderVerdict, activateHollowPurple, activateUnlimitedVoid, UNLIMITED_VOID_STUN_TURNS, sendFinalFormVideo, hasSecondTranscendance, activateKurama, resolveKuramaDrain, narutoBattleLine, sendKuramaSummonImage } from '../lib/character-abilities.js'
-import { checkPearlSave, processStatusTurn } from '../lib/combat-handlers.js'
+import { checkPearlSave, checkTotemRevive, processStatusTurn } from '../lib/combat-handlers.js'
 import { addStatusEffect } from '../lib/effects.js'
 import { isPremiumActive } from '../lib/premium.js'
 import { startOfDay } from '../lib/sleep-engine.js'
+import { recordQuestEvent } from '../lib/quest-engine.js'
 
 const MAX_PARTY_SIZE = 3
 const MIN_PARTY_TO_ENTER = 2            // party mode is co-op only — no solo XP grinding
@@ -107,8 +125,9 @@ function getPartyByLeader(db, leaderId) {
   return ensurePartyStore(db)[leaderId] ?? null
 }
 
-/** Find the party a given player belongs to (as leader or member), or null. */
-function findPartyForPlayer(db, jid) {
+/** Find the party a given player belongs to (as leader or member), or null.
+ *  Exported for plugins/pattack.js's pre-action self-heal. */
+export function findPartyForPlayer(db, jid) {
   const parties = ensurePartyStore(db)
   if (parties[jid]) return parties[jid]
   for (const party of Object.values(parties)) {
@@ -149,7 +168,7 @@ function memberListText(db, party) {
 // order is captured when a floor spawns (spawnAndAnnounceFloor). A battle from
 // before this feature shipped has no turnOrder, so partyTurnHolder returns null
 // and the turn gate is skipped (graceful fallback to the old free-for-all).
-function partyTurnHolder(party) {
+export function partyTurnHolder(party) {
   const b = party?.battle
   if (!b || !Array.isArray(b.turnOrder) || b.turnOrder.length === 0) return null
   const idx = ((b.turnIndex ?? 0) % b.turnOrder.length + b.turnOrder.length) % b.turnOrder.length
@@ -159,7 +178,7 @@ function partyTurnHolder(party) {
 // Advance the cursor to the next member who is still standing (inBattle). If
 // nobody else is fighting, it lands back on whoever is left. Safe to call even
 // when there is no turnOrder.
-function advancePartyTurn(db, party) {
+export function advancePartyTurn(db, party) {
   const b = party?.battle
   if (!b || !Array.isArray(b.turnOrder) || b.turnOrder.length === 0) return
   const n = b.turnOrder.length
@@ -190,6 +209,66 @@ function notYourTurn(ctx, party) {
   return null
 }
 
+// ── Stale-state repair (self-healing) ──────────────────────────────────────
+// Run at the top of every .dparty / .pattack command. This is the safety net
+// that makes the historical stuck states IMPOSSIBLE to sit on, whatever crash
+// or lost write produced them — including parties stranded by the old
+// victory-in-mutator deadlock on the live bot:
+//
+//   1. battle set but enemy already dead  → the victory never finished
+//     resolving. Re-run resolvePartyVictory: it pays out by contributions
+//     (this battle was never resolved — battle is still set — so nothing is
+//     double-paid), banks floor progress, frees every member and advances or
+//     ends the climb. The idempotency guard inside makes a racing double
+//     call a no-op.
+//   2. no battle but members still flagged inBattle → clear the stale flags
+//     (only for members NOT in a solo fight — solo battles set battleState,
+//     party fights don't, so that's the discriminator).
+//   3. run cursor pointing past the last floor → the dungeon is done; end
+//     the run cleanly as conquered.
+//
+// Exported so plugins/cb.js (owner-only) can run it against a tagged
+// player's party too.
+async function repairPartyState(ctx, party) {
+  if (!party) return false
+
+  // Case 1 — a won battle whose results never got settled. A battle that is
+  // mid-resolution (resolving flag) is skipped: its payout is already running.
+  if (party.battle && !party.battle.resolving && (party.battle.enemy?.hp ?? 1) <= 0) {
+    await ctx.reply(
+      `🧹 _Finishing a battle that was already won — settling the results now._`,
+    ).catch(() => {})
+    await resolvePartyVictory(ctx, party)
+    return true
+  }
+
+  // Case 2 — stale inBattle flags with no live party battle.
+  if (!party.battle) {
+    for (const jid of party.members) {
+      const m = getPlayer(ctx.db, jid)
+      // A solo fight sets player.battleState; a party fight never does. If
+      // battleState is set this flag belongs to a live solo battle — hands off.
+      if (m?.inBattle && !m.battleState) {
+        try {
+          await updatePlayer(ctx.db, jid, async pl => { pl.inBattle = false; return pl })
+        } catch {}
+      }
+    }
+  }
+
+  // Case 3 — run cursor past the end of the dungeon.
+  if (party.run && !party.battle) {
+    const totalFloors = locationsMap[party.run.locationId]?.floors ?? 0
+    if (totalFloors > 0 && party.run.floor > totalFloors) {
+      party.run = null
+      await ctx.reply(`🏆 _The climb was already past the last floor — dungeon conquered._`).catch(() => {})
+      return true
+    }
+  }
+
+  return false
+}
+
 // ── .party (status) ────────────────────────────────────────────────────
 async function showStatus(ctx) {
   const p = config.prefix
@@ -212,7 +291,13 @@ async function showStatus(ctx) {
     msg += `📨 Pending invites: ${party.pendingInvites.map(j => nameFor(ctx.db, j)).join(', ')}\n\n`
   }
   msg += inBattle
-    ? `⚔️ *Currently in battle at ${locationsMap[party.battle.locationId]?.name ?? party.battle.locationId}!*\nUse *${p}dparty attack* to join in.`
+    ? `⚔️ *Currently in battle at ${locationsMap[party.battle.locationId]?.name ?? party.battle.locationId}!*\nUse *${p}dparty attack* to join in.` +
+      // Fixed turn order: show whose move it is so "it's not my turn" is
+      // never a surprise.
+      (() => {
+        const holder = partyTurnHolder(party)
+        return holder ? `\n🎯 It's *${nameFor(ctx.db, holder)}*'s turn.` : ''
+      })()
     : party.run
       ? `🧗 *Climbing ${locationsMap[party.run.locationId]?.name ?? party.run.locationId}* — next up: *Floor ${party.run.floor}*.\nLeader: *${p}dparty next* to descend.`
       : `📍 Status: *Idle*\nUse *${p}dparty enter <dungeonId>* to head into a dungeon together.`
@@ -312,6 +397,13 @@ async function respondInvite(ctx, accept) {
   if (findPartyForPlayer(ctx.db, ctx.from)) {
     return ctx.reply(`❌ You're already in a party.`)
   }
+  if (foundParty.battle || foundParty.run) {
+    // Joining mid-climb would dodge everything entry enforces per member —
+    // the stamina charge, the daily-run limit, the lowest-checkpoint start
+    // floor — and drop the joiner onto floors they never earned. Wait for
+    // the climb to end, then join.
+    return ctx.reply(`⏳ That party is mid-dungeon right now. Ask them to finish the run, then accept the invite again.`)
+  }
 
   await updatePlayer(ctx.db, ctx.from, async player => {
     foundParty.members.push(ctx.from)
@@ -341,7 +433,14 @@ async function leave(ctx) {
       const parties = ensurePartyStore(ctx.db)
       for (const m of party.members) {
         if (m === ctx.from) continue
-        await updatePlayer(ctx.db, m, async mp => { mp.partyId = null; return mp })
+        await updatePlayer(ctx.db, m, async mp => {
+          mp.partyId = null
+          // A disband ends any climb between floors — clear a stale party
+          // inBattle flag so nobody is left "in" a fight that no longer
+          // exists. A solo fight sets battleState, so hands off those.
+          if (mp.inBattle && !mp.battleState) mp.inBattle = false
+          return mp
+        })
       }
       delete parties[party.leaderId]
       await ctx.reply(`🚪 *${player.name}* (leader) left — the party has disbanded.`)
@@ -377,7 +476,12 @@ async function disband(ctx) {
 
   const parties = ensurePartyStore(ctx.db)
   for (const m of party.members) {
-    await updatePlayer(ctx.db, m, async mp => { mp.partyId = null; return mp })
+    await updatePlayer(ctx.db, m, async mp => {
+      mp.partyId = null
+      // Same stale-flag sweep as leader-leave above.
+      if (mp.inBattle && !mp.battleState) mp.inBattle = false
+      return mp
+    })
   }
   delete parties[party.leaderId]
   await ctx.reply(`💥 *Party disbanded.*`)
@@ -647,7 +751,14 @@ async function spawnAndAnnounceFloor(ctx, party, { first = false } = {}) {
   const p = config.prefix
   const { locationId: locId, floor } = party.run
   const loc = locationsMap[locId]
-  const present = party.members.filter(m => getPlayer(ctx.db, m)?.inBattle)
+  // "Present" = standing in the party fight AND not mid-solo-fight. inBattle
+  // is shared between solo and party combat, so a member's solo battleState
+  // is the discriminator: their true inBattle flag belongs to the solo fight
+  // and must not size the party enemy, join the turn order, or bank floors.
+  const present = party.members.filter(m => {
+    const pl = getPlayer(ctx.db, m)
+    return pl?.inBattle && !pl.battleState
+  })
   const memberCount = present.length || 1
 
   const enemy = spawnPartyEnemy(locId, floor, memberCount)
@@ -749,6 +860,13 @@ async function handleNext(ctx) {
     await updatePlayer(ctx.db, jid, async member => {
       member.stamina = refreshStamina(member.stamina)
       if (member.stamina.current < 1) { member.inBattle = false; return member }
+      // A member mid-SOLO-fight (battleState set) must not be conscripted:
+      // inBattle is shared between solo and party combat, so their true flag
+      // belongs to the solo fight — leave it exactly as it is and don't
+      // charge stamina. spawnAndAnnounceFloor/resolvePartyVictory exclude
+      // battleState members from the floor, so they sit this one out and
+      // rejoin when their solo fight is done.
+      if (member.battleState) return member
       member.stamina.current -= 1
       member.inBattle = true
       return member
@@ -792,6 +910,23 @@ async function battleAttack(ctx) {
   if (!party) return ctx.reply(`❌ You're not in a party.`)
   if (!party.battle) return ctx.reply(`❌ Your party isn't in a battle. Use *${p}dparty enter <dungeon>*.`)
 
+  // Fixed turn order: only the member at the cursor may act this round.
+  const notTurn = notYourTurn(ctx, party)
+  if (notTurn) return ctx.reply(notTurn)
+
+  // The mutator below only mutates state and records the outcome — no network
+  // I/O and no nested updatePlayer run inside it (both hold this player's
+  // write lane open; a nested updatePlayer for the SAME player deadlocks the
+  // lane outright). Sends are queued in `outbox` and flushed once
+  // updatePlayer settles, and victory / member-down resolution happens there
+  // too — the same discipline battleDefend already followed. This is also
+  // THE fix for the "your party is already in a battle even though the battle
+  // is over" reports: the old code resolved victory INSIDE the mutator, the
+  // nested write deadlocked the lane, and party.battle was never cleared.
+  let outbox = []
+  let victoryPending = false
+  let downJid = null
+
   await updatePlayer(ctx.db, ctx.from, async player => {
     const battle = party.battle
     const e = battle.enemy
@@ -812,8 +947,8 @@ async function battleAttack(ctx) {
     const permaSeverLine = tickPermanentSever(player)
     if (permaSeverLine) pre += permaSeverLine + '\n'
     if (player.hp <= 0) {
-      if (pre) await ctx.reply(pre)
-      await handlePartyMemberDown(ctx, party, ctx.from)
+      if (pre) outbox.push({ text: pre })
+      downJid = ctx.from
       return player
     }
 
@@ -829,8 +964,8 @@ async function battleAttack(ctx) {
     const enemyStatus = processStatusTurn(e)
     if (enemyStatus.lines.length) pre += enemyStatus.lines.join('\n') + '\n'
     if (e.hp <= 0) {
-      await ctx.reply(pre + `\n${e.emoji ?? '👾'} *${e.name}* succumbs to its wounds!`)
-      await resolvePartyVictory(ctx, party)
+      outbox.push({ text: pre + `\n${e.emoji ?? '👾'} *${e.name}* succumbs to its wounds!` })
+      victoryPending = true
       return player
     }
 
@@ -845,8 +980,8 @@ async function battleAttack(ctx) {
         if (tsResult.narrativeLine) pre += `_${tsResult.narrativeLine}_\n`
       })
       if (e.hp <= 0) {
-        await ctx.reply(pre)
-        await resolvePartyVictory(ctx, party)
+        outbox.push({ text: pre })
+        victoryPending = true
         return player
       }
     }
@@ -860,10 +995,10 @@ async function battleAttack(ctx) {
           if (missResult.narrativeLine) missMsg += `\n_${missResult.narrativeLine}_`
         })
       }
-      await sendBattleTurnReply(ctx, {
+      outbox.push({ turn: {
         player, e, msg: missMsg,
         hpBeforeTurn: player.hp, eHpBeforeTurn, boss,
-      })
+      } })
       return player
     }
 
@@ -908,8 +1043,8 @@ async function battleAttack(ctx) {
     msg += `❤️ ${e.name}: ${hpBar(e.hp, e.maxHp)}\n`
 
     if (player.hp <= 0) {
-      await ctx.reply(msg)
-      await handlePartyMemberDown(ctx, party, ctx.from)
+      outbox.push({ text: msg })
+      downJid = ctx.from
       return player
     }
 
@@ -920,8 +1055,8 @@ async function battleAttack(ctx) {
     }
 
     if (e.hp <= 0) {
-      await ctx.reply(msg)
-      await resolvePartyVictory(ctx, party)
+      outbox.push({ text: msg })
+      victoryPending = true
       return player
     }
 
@@ -936,8 +1071,8 @@ async function battleAttack(ctx) {
       })
 
       if (e.hp <= 0) {
-        await ctx.reply(msg)
-        await resolvePartyVictory(ctx, party)
+        outbox.push({ text: msg })
+        victoryPending = true
         return player
       }
 
@@ -951,8 +1086,8 @@ async function battleAttack(ctx) {
     }
 
     if (e.hp <= 0) {
-      await ctx.reply(msg)
-      await resolvePartyVictory(ctx, party)
+      outbox.push({ text: msg })
+      victoryPending = true
       return player
     }
 
@@ -984,8 +1119,8 @@ async function battleAttack(ctx) {
         msg += `❤️ ${e.name}: ${hpBar(e.hp, e.maxHp)}\n`
       }
       if (e.hp <= 0) {
-        await ctx.reply(msg)
-        await resolvePartyVictory(ctx, party)
+        outbox.push({ text: msg })
+        victoryPending = true
         return player
       }
     }
@@ -996,10 +1131,10 @@ async function battleAttack(ctx) {
     // party action and the enemy stays silent until it lifts.
     if (enemyStatus.incapacitated) {
       msg += `\n${e.emoji ?? '👾'} *${e.name}* is locked down and cannot act.`
-      await sendBattleTurnReply(ctx, {
+      outbox.push({ turn: {
         player, e, msg: msg + `\n\n*${p}dparty attack* · *${p}dparty defend* · *${p}dparty flee*`,
         hpBeforeTurn: player.hp, eHpBeforeTurn, boss,
-      })
+      } })
       return player
     }
 
@@ -1071,11 +1206,11 @@ async function battleAttack(ctx) {
       if (taunt) msg += `\n💬 _"${taunt}"_\n`
       msg += `❤️ ${player.name}: ${hpBar(player.hp, player.maxHp)}`
 
-      await sendBattleTurnReply(ctx, {
+      outbox.push({ turn: {
         player, e, msg: msg + `\n\n*${p}dparty attack* · *${p}dparty defend* · *${p}dparty flee*`,
         hpBeforeTurn, eHpBeforeTurn, boss,
-      })
-      if (player.hp <= 0) await handlePartyMemberDown(ctx, party, ctx.from)
+      } })
+      if (player.hp <= 0) downJid = ctx.from
       return player
     }
 
@@ -1096,10 +1231,10 @@ async function battleAttack(ctx) {
       // Simple case: resolve inline against the attacker.
       if (Math.random() > calcMonsterHitChance(e, player)) {
         msg += `\n${e.emoji ?? '👾'} *${e.name}* lunges at *${player.name}*... *MISSES!*`
-        await sendBattleTurnReply(ctx, {
+        outbox.push({ turn: {
           player, e, msg: msg + `\n\n*${p}dparty attack* · *${p}dparty defend* · *${p}dparty flee*`,
           hpBeforeTurn, eHpBeforeTurn, boss,
-        })
+        } })
         return player
       }
       const dmg = calcMonsterDamage(e.atk, player.stats.def, false)
@@ -1108,11 +1243,11 @@ async function battleAttack(ctx) {
       if (sustain.message) msg += sustain.message + '\n'
       msg += `\n${e.emoji ?? '👾'} *${e.name}* strikes *${player.name}* for *${sustain.damage}* damage!\n`
       msg += `❤️ ${player.name}: ${hpBar(player.hp, player.maxHp)}`
-      await sendBattleTurnReply(ctx, {
+      outbox.push({ turn: {
         player, e, msg: msg + `\n\n*${p}dparty attack* · *${p}dparty defend* · *${p}dparty flee*`,
         hpBeforeTurn, eHpBeforeTurn, boss,
-      })
-      if (player.hp <= 0) await handlePartyMemberDown(ctx, party, ctx.from)
+      } })
+      if (player.hp <= 0) downJid = ctx.from
       return player
     } else {
       // Target is a different party member — resolve their side out-of-band.
@@ -1133,15 +1268,30 @@ async function battleAttack(ctx) {
         hitMsg += `\n${e.emoji ?? '👾'} *${e.name}* strikes *${targetName}* for *${sustain.damage}* damage!\n❤️ ${targetName}: ${hpBar(target.hp, target.maxHp)}`
         return target
       })
-      await sendBattleTurnReply(ctx, {
+      outbox.push({ turn: {
         player, e, msg: msg + hitMsg + `\n\n*${p}dparty attack* · *${p}dparty defend* · *${p}dparty flee*`,
         hpBeforeTurn, eHpBeforeTurn, boss,
-      })
+      } })
       const targetAfter = getPlayer(ctx.db, targetJid)
-      if (targetAfter.hp <= 0) await handlePartyMemberDown(ctx, party, targetJid)
+      if (targetAfter.hp <= 0) downJid = targetJid
       return player
     }
   })
+
+  // Flush the queued sends — a failed send must never block the state
+  // resolution below (a stuck battle flag is worse than a lost message).
+  for (const item of outbox) {
+    try {
+      if (item.turn) await sendBattleTurnReply(ctx, item.turn)
+      else if (item.thunk) await item.thunk()
+      else if (item.text != null) await ctx.reply(item.text)
+    } catch {}
+  }
+  if (victoryPending) return resolvePartyVictory(ctx, party)
+  if (downJid) await handlePartyMemberDown(ctx, party, downJid)
+  // A completed action passes the turn to the next member — unless the
+  // battle just ended (resolvePartyVictory cleared party.battle).
+  if (party.battle) advancePartyTurn(ctx.db, party)
 }
 
 // ── Party battle: defend ──────────────────────────────────────────────────
@@ -1316,18 +1466,21 @@ async function battleFlee(ctx) {
 
   const e = party.battle.enemy
   let hpZero = false
+  // Sends are queued and flushed after updatePlayer settles — no I/O inside
+  // the write lane (same discipline as battleDefend).
+  const outbox = []
 
   await updatePlayer(ctx.db, ctx.from, async player => {
     const chance = 0.35 + (player.stats?.lck ?? 0) * 0.003
     if (Math.random() < chance) {
       player.inBattle = false
-      await ctx.reply(`💨 *${player.name}* escapes the fight! _(forfeits any reward share)_`)
+      outbox.push({ text: `💨 *${player.name}* escapes the fight! _(forfeits any reward share)_` })
 
       const stillFighting = party.members.some(m => m !== ctx.from && getPlayer(ctx.db, m)?.inBattle)
       if (!stillFighting) {
         party.battle = null
         party.run = null
-        await ctx.reply(`🏳️ Everyone has left the fight — the party retreats. _(Cleared floors are kept.)_`)
+        outbox.push({ text: `🏳️ Everyone has left the fight — the party retreats. _(Cleared floors are kept.)_` })
       }
       return player
     }
@@ -1343,16 +1496,19 @@ async function battleFlee(ctx) {
     hpZero = player.hp <= 0
 
     if (!hpZero) {
-      await ctx.reply(
+      outbox.push({ text:
         (sustain.message ?? '') +
         `❌ *Escape failed!*\n${e.emoji ?? '👾'} *${e.name}* catches you!\n🩸 *${sustain.damage}* damage!\n\n` +
         `❤️ ${hpBar(player.hp, player.maxHp)}\n\n` +
         `*${p}dparty attack* · *${p}dparty defend* · *${p}dparty flee*`,
-      )
+      })
     }
     return player
   })
 
+  for (const item of outbox) {
+    try { if (item.text != null) await ctx.reply(item.text) } catch {}
+  }
   // Dying on a failed flee attempt routes through the same party-down
   // handler (respawn at half HP, pull from the fight, pearl-checkpoint
   // check) as a failed attack/defend — kept outside updatePlayer's mutator
@@ -1375,6 +1531,18 @@ async function battleCinderVerdict(ctx) {
   if (!party) return ctx.reply(`❌ You're not in a party.`)
   if (!party.battle) return ctx.reply(`❌ Your party isn't in a battle. Use *${p}dparty enter <dungeon>*.`)
 
+  // Fixed turn order: only the member at the cursor may act this round.
+  const notTurn = notYourTurn(ctx, party)
+  if (notTurn) return ctx.reply(notTurn)
+
+  // Mutator records the outcome only — sends are queued in `outbox` and
+  // flushed after updatePlayer settles, and victory / member-down resolution
+  // happens there too. No I/O and no nested updatePlayer inside the lane
+  // (the nested same-player write deadlocks it — the old stuck-battle bug).
+  let outbox = []
+  let victoryPending = false
+  let downJid = null
+
   await updatePlayer(ctx.db, ctx.from, async player => {
     const battle = party.battle
     const e = battle.enemy
@@ -1386,7 +1554,7 @@ async function battleCinderVerdict(ctx) {
 
     const gate = activateCinderVerdict(player, cs)
     if (!gate.ok) {
-      if (gate.message) await ctx.reply(gate.message)
+      if (gate.message) outbox.push({ text: gate.message })
       return player
     }
 
@@ -1394,8 +1562,8 @@ async function battleCinderVerdict(ctx) {
     const permaSeverLine = tickPermanentSever(player)
     if (permaSeverLine) pre += permaSeverLine + '\n'
     if (player.hp <= 0) {
-      if (pre) await ctx.reply(pre)
-      await handlePartyMemberDown(ctx, party, ctx.from)
+      if (pre) outbox.push({ text: pre })
+      downJid = ctx.from
       return player
     }
 
@@ -1405,10 +1573,10 @@ async function battleCinderVerdict(ctx) {
 
     if (Math.random() > calcPlayerHitChance(player, e)) {
       msg += `💨 The sentence gutters out — *MISSED!*\n`
-      await sendBattleTurnReply(ctx, {
+      outbox.push({ turn: {
         player, e, msg: msg + `\n*${p}dparty attack* · *${p}dparty defend* · *${p}dparty flee*`,
         hpBeforeTurn: player.hp, eHpBeforeTurn, boss,
-      })
+      } })
       return player
     }
 
@@ -1447,14 +1615,14 @@ async function battleCinderVerdict(ctx) {
     msg += `❤️ ${e.name}: ${hpBar(e.hp, e.maxHp)}\n`
 
     if (player.hp <= 0) {
-      await ctx.reply(msg)
-      await handlePartyMemberDown(ctx, party, ctx.from)
+      outbox.push({ text: msg })
+      downJid = ctx.from
       return player
     }
 
     if (e.hp <= 0) {
-      await ctx.reply(msg)
-      await resolvePartyVictory(ctx, party)
+      outbox.push({ text: msg })
+      victoryPending = true
       return player
     }
 
@@ -1468,8 +1636,8 @@ async function battleCinderVerdict(ctx) {
       })
 
       if (e.hp <= 0) {
-        await ctx.reply(msg)
-        await resolvePartyVictory(ctx, party)
+        outbox.push({ text: msg })
+        victoryPending = true
         return player
       }
 
@@ -1482,8 +1650,8 @@ async function battleCinderVerdict(ctx) {
     }
 
     if (e.hp <= 0) {
-      await ctx.reply(msg)
-      await resolvePartyVictory(ctx, party)
+      outbox.push({ text: msg })
+      victoryPending = true
       return player
     }
 
@@ -1558,13 +1726,28 @@ async function battleCinderVerdict(ctx) {
       msg += `❤️ ${player.name}: ${hpBar(player.hp, player.maxHp)}`
     }
 
-    await sendBattleTurnReply(ctx, {
+    outbox.push({ turn: {
       player, e, msg: msg + `\n\n*${p}dparty attack* · *${p}dparty defend* · *${p}dparty flee*`,
       hpBeforeTurn, eHpBeforeTurn, boss,
-    })
-    if (player.hp <= 0) await handlePartyMemberDown(ctx, party, ctx.from)
+    } })
+    if (player.hp <= 0) downJid = ctx.from
     return player
   })
+
+  // Flush the queued sends — a failed send must never block the state
+  // resolution below (a stuck battle flag is worse than a lost message).
+  for (const item of outbox) {
+    try {
+      if (item.turn) await sendBattleTurnReply(ctx, item.turn)
+      else if (item.thunk) await item.thunk()
+      else if (item.text != null) await ctx.reply(item.text)
+    } catch {}
+  }
+  if (victoryPending) return resolvePartyVictory(ctx, party)
+  if (downJid) await handlePartyMemberDown(ctx, party, downJid)
+  // A completed action passes the turn to the next member — unless the
+  // battle just ended (resolvePartyVictory cleared party.battle).
+  if (party.battle) advancePartyTurn(ctx.db, party)
 }
 
 // ── Party battle: Baryon Mode / Kurama (Naruto) ─────────────────────────────
@@ -1584,6 +1767,18 @@ async function battleKurama(ctx) {
   if (!party) return ctx.reply(`❌ You're not in a party.`)
   if (!party.battle) return ctx.reply(`❌ Your party isn't in a battle. Use *${p}dparty enter <dungeon>*.`)
 
+  // Fixed turn order: only the member at the cursor may act this round.
+  const notTurn = notYourTurn(ctx, party)
+  if (notTurn) return ctx.reply(notTurn)
+
+  // Mutator records the outcome only — sends are queued in `outbox` and
+  // flushed after updatePlayer settles, and victory / member-down resolution
+  // happens there too. No I/O and no nested updatePlayer inside the lane
+  // (the nested same-player write deadlocks it — the old stuck-battle bug).
+  let outbox = []
+  let victoryPending = false
+  let downJid = null
+
   await updatePlayer(ctx.db, ctx.from, async player => {
     const battle = party.battle
     const e = battle.enemy
@@ -1595,13 +1790,13 @@ async function battleKurama(ctx) {
 
     const gate = activateKurama(player, cs)
     if (!gate.ok) {
-      if (gate.message) await ctx.reply(gate.message)
+      if (gate.message) outbox.push({ text: gate.message })
       return player
     }
 
     // Summon splash, its own message the moment the fusion commits, before the
     // party turn text. Never blocks the turn (media failure is swallowed).
-    await sendKuramaSummonImage(ctx, `🦊🌀 *${player.name} tears the seal open. KURAMA answers.*`, ctx.from)
+    outbox.push({ thunk: () => sendKuramaSummonImage(ctx, `🦊🌀 *${player.name} tears the seal open. KURAMA answers.*`, ctx.from) })
 
     let pre = ''
     const permaSeverLine = tickPermanentSever(player)
@@ -1611,8 +1806,8 @@ async function battleKurama(ctx) {
     // handled by the hp check below, same as Cinder Verdict's permaSever tick.
     if (gate.selfCostLine) pre += gate.selfCostLine + '\n'
     if (player.hp <= 0) {
-      if (pre) await ctx.reply(pre)
-      await handlePartyMemberDown(ctx, party, ctx.from)
+      if (pre) outbox.push({ text: pre })
+      downJid = ctx.from
       return player
     }
 
@@ -1623,10 +1818,10 @@ async function battleKurama(ctx) {
 
     if (Math.random() > calcPlayerHitChance(player, e)) {
       msg += `💨 _The fusion overshoots by a hair and *MISSES!*_\n`
-      await sendBattleTurnReply(ctx, {
+      outbox.push({ turn: {
         player, e, msg: msg + `\n*${p}dparty attack* · *${p}dparty defend* · *${p}dparty flee*`,
         hpBeforeTurn: player.hp, eHpBeforeTurn, boss,
-      })
+      } })
       return player
     }
 
@@ -1674,14 +1869,14 @@ async function battleKurama(ctx) {
     msg += `❤️ ${e.name}: ${hpBar(e.hp, e.maxHp)}\n`
 
     if (player.hp <= 0) {
-      await ctx.reply(msg)
-      await handlePartyMemberDown(ctx, party, ctx.from)
+      outbox.push({ text: msg })
+      downJid = ctx.from
       return player
     }
 
     if (e.hp <= 0) {
-      await ctx.reply(msg)
-      await resolvePartyVictory(ctx, party)
+      outbox.push({ text: msg })
+      victoryPending = true
       return player
     }
 
@@ -1695,8 +1890,8 @@ async function battleKurama(ctx) {
       })
 
       if (e.hp <= 0) {
-        await ctx.reply(msg)
-        await resolvePartyVictory(ctx, party)
+        outbox.push({ text: msg })
+        victoryPending = true
         return player
       }
 
@@ -1709,8 +1904,8 @@ async function battleKurama(ctx) {
     }
 
     if (e.hp <= 0) {
-      await ctx.reply(msg)
-      await resolvePartyVictory(ctx, party)
+      outbox.push({ text: msg })
+      victoryPending = true
       return player
     }
 
@@ -1784,13 +1979,28 @@ async function battleKurama(ctx) {
       msg += `❤️ ${player.name}: ${hpBar(player.hp, player.maxHp)}`
     }
 
-    await sendBattleTurnReply(ctx, {
+    outbox.push({ turn: {
       player, e, msg: msg + `\n\n*${p}dparty attack* · *${p}dparty defend* · *${p}dparty flee*`,
       hpBeforeTurn, eHpBeforeTurn, boss,
-    })
-    if (player.hp <= 0) await handlePartyMemberDown(ctx, party, ctx.from)
+    } })
+    if (player.hp <= 0) downJid = ctx.from
     return player
   })
+
+  // Flush the queued sends — a failed send must never block the state
+  // resolution below (a stuck battle flag is worse than a lost message).
+  for (const item of outbox) {
+    try {
+      if (item.turn) await sendBattleTurnReply(ctx, item.turn)
+      else if (item.thunk) await item.thunk()
+      else if (item.text != null) await ctx.reply(item.text)
+    } catch {}
+  }
+  if (victoryPending) return resolvePartyVictory(ctx, party)
+  if (downJid) await handlePartyMemberDown(ctx, party, downJid)
+  // A completed action passes the turn to the next member — unless the
+  // battle just ended (resolvePartyVictory cleared party.battle).
+  if (party.battle) advancePartyTurn(ctx.db, party)
 }
 
 // ── Party battle: Hollow Purple (Gojo) ──────────────────────────────────────
@@ -1808,6 +2018,18 @@ async function battleHollowPurple(ctx) {
   if (!party) return ctx.reply(`❌ You're not in a party.`)
   if (!party.battle) return ctx.reply(`❌ Your party isn't in a battle. Use *${p}dparty enter <dungeon>*.`)
 
+  // Fixed turn order: only the member at the cursor may act this round.
+  const notTurn = notYourTurn(ctx, party)
+  if (notTurn) return ctx.reply(notTurn)
+
+  // Mutator records the outcome only — sends are queued in `outbox` and
+  // flushed after updatePlayer settles, and victory / member-down resolution
+  // happens there too. No I/O and no nested updatePlayer inside the lane
+  // (the nested same-player write deadlocks it — the old stuck-battle bug).
+  let outbox = []
+  let victoryPending = false
+  let downJid = null
+
   await updatePlayer(ctx.db, ctx.from, async player => {
     const battle = party.battle
     const e = battle.enemy
@@ -1819,7 +2041,7 @@ async function battleHollowPurple(ctx) {
 
     const gate = activateHollowPurple(player, cs)
     if (!gate.ok) {
-      if (gate.message) await ctx.reply(gate.message)
+      if (gate.message) outbox.push({ text: gate.message })
       return player
     }
 
@@ -1827,8 +2049,8 @@ async function battleHollowPurple(ctx) {
     const permaSeverLine = tickPermanentSever(player)
     if (permaSeverLine) pre += permaSeverLine + '\n'
     if (player.hp <= 0) {
-      if (pre) await ctx.reply(pre)
-      await handlePartyMemberDown(ctx, party, ctx.from)
+      if (pre) outbox.push({ text: pre })
+      downJid = ctx.from
       return player
     }
 
@@ -1870,13 +2092,13 @@ async function battleHollowPurple(ctx) {
     msg += `❤️ ${e.name}: ${hpBar(e.hp, e.maxHp)}\n`
 
     if (player.hp <= 0) {
-      await ctx.reply(msg)
-      await handlePartyMemberDown(ctx, party, ctx.from)
+      outbox.push({ text: msg })
+      downJid = ctx.from
       return player
     }
     if (e.hp <= 0) {
-      await ctx.reply(msg)
-      await resolvePartyVictory(ctx, party)
+      outbox.push({ text: msg })
+      victoryPending = true
       return player
     }
 
@@ -1889,8 +2111,8 @@ async function battleHollowPurple(ctx) {
         if (finalDmg > 0) msg += `💬 _"${getBossHitLine(bp)}"_\n`
       })
       if (e.hp <= 0) {
-        await ctx.reply(msg)
-        await resolvePartyVictory(ctx, party)
+        outbox.push({ text: msg })
+        victoryPending = true
         return player
       }
       withBossBattleState(player, e, bp => {
@@ -1900,8 +2122,8 @@ async function battleHollowPurple(ctx) {
         }
       })
       if (e.hp <= 0) {
-        await ctx.reply(msg)
-        await resolvePartyVictory(ctx, party)
+        outbox.push({ text: msg })
+        victoryPending = true
         return player
       }
     }
@@ -1912,8 +2134,8 @@ async function battleHollowPurple(ctx) {
     const enemyStatus = processStatusTurn(e)
     if (enemyStatus.lines.length) msg += enemyStatus.lines.join('\n') + '\n'
     if (e.hp <= 0) {
-      await ctx.reply(msg)
-      await resolvePartyVictory(ctx, party)
+      outbox.push({ text: msg })
+      victoryPending = true
       return player
     }
 
@@ -1989,13 +2211,28 @@ async function battleHollowPurple(ctx) {
       msg += `❤️ ${player.name}: ${hpBar(player.hp, player.maxHp)}`
     }
 
-    await sendBattleTurnReply(ctx, {
+    outbox.push({ turn: {
       player, e, msg: msg + `\n\n*${p}dparty attack* · *${p}dparty defend* · *${p}dparty flee*`,
       hpBeforeTurn, eHpBeforeTurn, boss,
-    })
-    if (player.hp <= 0) await handlePartyMemberDown(ctx, party, ctx.from)
+    } })
+    if (player.hp <= 0) downJid = ctx.from
     return player
   })
+
+  // Flush the queued sends — a failed send must never block the state
+  // resolution below (a stuck battle flag is worse than a lost message).
+  for (const item of outbox) {
+    try {
+      if (item.turn) await sendBattleTurnReply(ctx, item.turn)
+      else if (item.thunk) await item.thunk()
+      else if (item.text != null) await ctx.reply(item.text)
+    } catch {}
+  }
+  if (victoryPending) return resolvePartyVictory(ctx, party)
+  if (downJid) await handlePartyMemberDown(ctx, party, downJid)
+  // A completed action passes the turn to the next member — unless the
+  // battle just ended (resolvePartyVictory cleared party.battle).
+  if (party.battle) advancePartyTurn(ctx.db, party)
 }
 
 // ── Party battle: Unlimited Void (Gojo) ─────────────────────────────────────
@@ -2014,6 +2251,18 @@ async function battleUnlimitedVoid(ctx) {
   if (!party) return ctx.reply(`❌ You're not in a party.`)
   if (!party.battle) return ctx.reply(`❌ Your party isn't in a battle. Use *${p}dparty enter <dungeon>*.`)
 
+  // Fixed turn order: only the member at the cursor may act this round.
+  const notTurn = notYourTurn(ctx, party)
+  if (notTurn) return ctx.reply(notTurn)
+
+  // Mutator records the outcome only — sends are queued in `outbox` and
+  // flushed after updatePlayer settles, and victory / member-down resolution
+  // happens there too. No I/O and no nested updatePlayer inside the lane
+  // (the nested same-player write deadlocks it — the old stuck-battle bug).
+  let outbox = []
+  let victoryPending = false
+  let downJid = null
+
   await updatePlayer(ctx.db, ctx.from, async player => {
     const battle = party.battle
     const e = battle.enemy
@@ -2025,7 +2274,7 @@ async function battleUnlimitedVoid(ctx) {
 
     const gate = activateUnlimitedVoid(player, cs)
     if (!gate.ok) {
-      if (gate.message) await ctx.reply(gate.message)
+      if (gate.message) outbox.push({ text: gate.message })
       return player
     }
 
@@ -2033,8 +2282,8 @@ async function battleUnlimitedVoid(ctx) {
     const permaSeverLine = tickPermanentSever(player)
     if (permaSeverLine) msg += permaSeverLine + '\n'
     if (player.hp <= 0) {
-      if (msg) await ctx.reply(msg)
-      await handlePartyMemberDown(ctx, party, ctx.from)
+      if (msg) outbox.push({ text: msg })
+      downJid = ctx.from
       return player
     }
 
@@ -2076,19 +2325,48 @@ async function battleUnlimitedVoid(ctx) {
     // action for it, same as the solo domain.
     msg += `\n❤️ ${player.name}: ${hpBar(player.hp, player.maxHp)}`
 
-    await sendBattleTurnReply(ctx, {
+    outbox.push({ turn: {
       player, e, msg: msg + `\n\n*${p}dparty attack* · *${p}dparty defend* · *${p}dparty flee*`,
       hpBeforeTurn: player.hp, eHpBeforeTurn, boss,
-    })
+    } })
     return player
   })
+
+  // Flush the queued sends — a failed send must never block the state
+  // resolution below (a stuck battle flag is worse than a lost message).
+  for (const item of outbox) {
+    try {
+      if (item.turn) await sendBattleTurnReply(ctx, item.turn)
+      else if (item.thunk) await item.thunk()
+      else if (item.text != null) await ctx.reply(item.text)
+    } catch {}
+  }
+  if (victoryPending) return resolvePartyVictory(ctx, party)
+  if (downJid) await handlePartyMemberDown(ctx, party, downJid)
+  // A completed action passes the turn to the next member — unless the
+  // battle just ended (resolvePartyVictory cleared party.battle).
+  if (party.battle) advancePartyTurn(ctx.db, party)
 }
 
 async function handlePartyMemberDown(ctx, party, jid) {
   await updatePlayer(ctx.db, jid, async player => {
-    // Ender Pearl checkpoint is checked before the normal party-down
-    // penalty, same as every other lethal-hit site — see
-    // lib/combat-handlers.js's checkPearlSave().
+    // Death-save chain, same doctrine as solo resolvePlayerHpZero: the Totem
+    // of Undying is checked FIRST — it keeps the member IN the fight at 40%
+    // HP/MP (consumes itself) — then the Ender Pearl checkpoint, which pulls
+    // them out with no penalty at all. Only when neither fires does the
+    // normal party-down penalty (half HP, pulled from the fight) apply.
+    // Party fights never strip gear on a member down — but before this fix a
+    // member's totem sat unused through the soft respawn, which players with
+    // one equipped rightly read as "my totem didn't save me".
+    const totemMsg = checkTotemRevive(player)
+    if (totemMsg) {
+      const name = player.name
+      ctx.sock.sendMessage(ctx.sender, {
+        text: `💀 *${name} has fallen!*${totemMsg}\n⚔️ _The battle continues — it's still your side's fight._`,
+      }).catch(() => {})
+      return player
+    }
+
     const pearlMsg = checkPearlSave(player)
     if (pearlMsg) {
       const name = player.name
@@ -2122,6 +2400,13 @@ async function handlePartyMemberDown(ctx, party, jid) {
 async function resolvePartyVictory(ctx, party) {
   const p = config.prefix
   const battle = party.battle
+  // Idempotency guard: a battle already resolved (or already cleared by the
+  // stale-state repair) has nothing left to pay out — never double-reward.
+  // `resolving` also closes the race where a second command lands while the
+  // (necessarily async) payout loop below is still running: repairPartyState
+  // checks this flag and skips, and the guard here makes a re-entry no-op.
+  if (!battle || battle.resolving) return
+  battle.resolving = true
   const season = getActiveSeason(ctx.db)
   const enemy = battle.enemy
   const locId = battle.locationId
@@ -2140,7 +2425,10 @@ async function resolvePartyVictory(ctx, party) {
   // SOLO progress; participants (dealt damage) get the XP/Solars split. A
   // member is almost always both — but a fled/downed member banks nothing
   // further, and a present non-attacker still banks the floor they survived.
-  const presentMembers = party.members.filter(m => getPlayer(ctx.db, m)?.inBattle)
+  const presentMembers = party.members.filter(m => {
+    const pl = getPlayer(ctx.db, m)
+    return pl?.inBattle && !pl.battleState
+  })
   const participants = Object.keys(contributions)
   const relevant = [...new Set([...participants, ...presentMembers])]
 
@@ -2154,7 +2442,10 @@ async function resolvePartyVictory(ctx, party) {
     const xpShare = isParticipant ? Math.max(1, Math.round(xpTotal * share)) : 0
     const solarsShare = isParticipant ? Math.max(1, Math.round(solarsTotal * share)) : 0
 
-    await updatePlayer(ctx.db, jid, async player => {
+    // One member failing to update must never strand the whole party in a
+    // stuck battle — catch, log, and keep the rest of the resolution going.
+    try {
+      await updatePlayer(ctx.db, jid, async player => {
       if (isParticipant) {
         player.xp = (player.xp ?? 0) + xpShare
         player.wallet = player.wallet ?? {}
@@ -2164,8 +2455,15 @@ async function resolvePartyVictory(ctx, party) {
         // victories use (lib/combat-handlers.js handleVictory), so climbing
         // actually grows characters. applyLevelUps full-heals on each level.
         const { msgs: lvlMsgs } = applyLevelUps(player, levelsData, classes, races, getTotalStats)
+        if (lvlMsgs.length) recordQuestEvent(player, 'level', lvlMsgs.length)
         const newSkills = getNewlyUnlockedSkills(player, allSkills)
         for (const s of newSkills) player.skills.push(s.id)
+
+        // Quest credit — party kills and cleared floors now advance the daily
+        // kill/floor quests and kill milestones exactly like solo victories
+        // do (recordQuestEvent is a pure in-mutator mutation). Before this,
+        // party grinders' quests never moved, and .quest claim came up empty.
+        recordQuestEvent(player, 'kill', 1)
 
         let line = `  ${nameFor(ctx.db, jid)}: +${xpShare} XP, +${solarsShare} ☀️ _(${Math.round(share * 100)}% dmg)_`
         if (lvlMsgs.length) line += `  · 🎉 *Lv ${player.level}!*`
@@ -2188,6 +2486,9 @@ async function resolvePartyVictory(ctx, party) {
         }
         player.dungeonProgress[locId] = prog
 
+        // Cleared-floor quest credit for everyone who was standing at the win.
+        recordQuestEvent(player, 'floor', 1)
+
         if (season && locId === season.dungeon && clearedFloor >= (season.partyBossFloor ?? locationsMap[locId]?.floors ?? 100)) {
           // Season End boss keeps its own reward hook (unchanged behaviour).
           const result = applySeasonLevel(player, season, 1)
@@ -2205,7 +2506,12 @@ async function resolvePartyVictory(ctx, party) {
         }
       }
       return player
-    })
+      })
+    } catch (err) {
+      process.stderr.write(
+        `[${new Date().toISOString()}] ⚠️ party victory: reward update failed for ${jid}, continuing — ${err?.message ?? err}\n`,
+      )
+    }
   }
 
   // Drops go to a random participant. Combat loot — a full inventory shouldn't
@@ -2234,12 +2540,27 @@ async function resolvePartyVictory(ctx, party) {
     }
   }
 
-  // Free everyone from the fight, then advance the cursor or end the climb.
-  for (const jid of party.members) {
-    const member = getPlayer(ctx.db, jid)
-    if (member?.inBattle) await updatePlayer(ctx.db, jid, async pl => { pl.inBattle = false; return pl })
-  }
+  // ── Teardown: ALWAYS runs, whatever happened above ──────────────────────
+  // Freeing the members and clearing party.battle happens BEFORE the victory
+  // message is composed or sent. This ordering is the anti-stuck guarantee:
+  // even if every reward update and even ctx.reply itself fail, no member is
+  // left flagged inBattle and no party left flagged mid-battle — the exact
+  // "already in a battle / finish the current floor first" lock the players
+  // reported. party.battle is nulled synchronously the moment the free loop
+  // starts, so a concurrent command can never re-enter the finished fight.
   party.battle = null
+  for (const jid of party.members) {
+    try {
+      const member = getPlayer(ctx.db, jid)
+      // A member mid-solo-fight keeps their inBattle flag — it belongs to the
+      // solo fight, not to this party battle.
+      if (member?.inBattle && !member.battleState) await updatePlayer(ctx.db, jid, async pl => { pl.inBattle = false; return pl })
+    } catch (err) {
+      process.stderr.write(
+        `[${new Date().toISOString()}] ⚠️ party victory: freeing ${jid} failed — ${err?.message ?? err}\n`,
+      )
+    }
+  }
 
   let conquestMsg = ''
   if (isFinalFloor) {
@@ -2261,7 +2582,7 @@ async function resolvePartyVictory(ctx, party) {
   if (!isFinalFloor && party.run) {
     msg += `\n\n⬇️ _Leader: *${p}dparty next* to descend to Floor ${party.run.floor}._`
   }
-  await ctx.reply(msg)
+  await ctx.reply(msg).catch(() => {})
 }
 
 // ── Plugin export ─────────────────────────────────────────────────────────
@@ -2281,6 +2602,12 @@ export default {
   async run(ctx) {
     const sub = ctx.args[0]?.toLowerCase()
     const p = config.prefix
+
+    // Self-heal any stale party state (won-but-unsettled battle, orphaned
+    // inBattle flags, overrun run cursor) BEFORE acting, so no command ever
+    // answers "already in a battle" for a fight that is actually over.
+    const partyBefore = findPartyForPlayer(ctx.db, ctx.from)
+    if (partyBefore) await repairPartyState(ctx, partyBefore)
 
     switch (sub) {
       case 'create':  return createParty(ctx)
@@ -2308,5 +2635,6 @@ export default {
   },
 }
 
-// Exported so plugins/pattack.js can offer shorter top-level aliases.
-export { battleAttack, battleDefend, battleFlee, battleCinderVerdict, battleKurama, battleHollowPurple, battleUnlimitedVoid }
+// Exported so plugins/pattack.js can offer shorter top-level aliases, and so
+// plugins/cb.js (owner-only) can settle a tagged player's stuck party battle.
+export { battleAttack, battleDefend, battleFlee, battleCinderVerdict, battleKurama, battleHollowPurple, battleUnlimitedVoid, repairPartyState }

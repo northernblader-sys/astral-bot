@@ -644,7 +644,16 @@ async function buildCmd(ctx) {
     if (!rec) { outcome = { reason: 'missing' }; return player }
     const tier = tierOf(rec)
     if (def.minRank > tier.rank) { outcome = { reason: 'locked', tierName: tierNameForRank(def.minRank) }; return player }
-    if (findBuilding(rec, def.type)) { outcome = { reason: 'exists' }; return player }
+    // HOUSING RULE: every type is one-per-empire EXCEPT the House — you can
+    // build as many Houses as your tier's building slots and region space
+    // allow. Housing gates NPC immigration (popCap sums EVERY house), so the
+    // single-House cap walled the population below what townsfolk arrivals
+    // and quests expect; legacy empires that predate the uniqueness rule
+    // already stack Houses, which made the cap look like a bug rather than a
+    // design (the "he has more than one house and I can't build one" report).
+    // Yield buildings stay unique — duplicating Solar Mines would just
+    // multiply income per slot, which is what upgrading levels are for.
+    if (def.type !== 'house' && findBuilding(rec, def.type)) { outcome = { reason: 'exists' }; return player }
     if (buildingSlotsLeft(rec) <= 0) { outcome = { reason: 'noslots', cap: tier.buildingCap }; return player }
     // Region: use what was typed if it has room, otherwise auto-pick the
     // first open region in compass order. Only when EVERY region is already
@@ -760,7 +769,14 @@ async function upgradeBuilding(ctx) {
     ensureEmpirePlayer(player)
     const rec = ctx.db.data.empires?.[owned.id]
     if (!rec) { outcome = { reason: 'missing' }; return player }
-    const b = findBuilding(rec, def.type)
+    // Multiple Houses are legal (see the build rule) — upgrade the LOWEST-
+    // level one so repeated `.empire upgrade house` raises the stack evenly
+    // instead of hammering the same first entry forever. Every other type is
+    // one-per-empire, so first-match == only-match for them.
+    const all = (rec.buildings ?? []).filter(b => b.type === def.type)
+    const b = all.length > 1
+      ? all.reduce((lo, b) => (b.level < lo.level ? b : lo), all[0])
+      : all[0] ?? null
     if (!b) { outcome = { reason: 'notbuilt' }; return player }
     if (b.level >= def.maxLevel) { outcome = { reason: 'max', level: b.level }; return player }
     // Settle production at the CURRENT level first, so the higher level can't
