@@ -29,7 +29,8 @@ export default {
         `📜 *HUNTER RANK TABLE — Lv 1 to 100*\n` +
         `─────────────────────\n` +
         `${formatRankTable()}\n\n` +
-        `_Ranks rise automatically with level — check yours with *${p}rank*._`,
+        `_Ranks rise automatically with level — check yours with *${p}rank*._\n` +
+        `🏆 _The FULL ladder — post-cap prestige titles (GM/LM) included — is* *${p}ranks*._`,
       )
     }
 

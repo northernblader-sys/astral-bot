@@ -14,7 +14,7 @@ import { config } from '../config.js'
 import { fmtGems } from '../lib/format.js'
 import { fmtMonds } from '../lib/monds.js'
 import { rarityStars } from '../lib/rarity.js'
-import { classes, races, levelsData, locationsMap, allItems, abilities as abilityDefs } from '../lib/game-data.js'
+import { classes, races, levelsData, locationsMap, allItems, abilities as abilityDefs, premiumAbilityMap } from '../lib/game-data.js'
 import { hpBar } from '../lib/combat-engine.js'
 import { getRankForLevel } from '../lib/rank-engine.js'
 import { isAsleep } from '../lib/sleep-engine.js'
@@ -128,8 +128,12 @@ export default {
       return `  ${slotEmoji(slot)} ${padSlot(slot)} ${name}${rar}`
     }).join('\n')
 
-    // Abilities — slot display only; data/abilities.json is currently empty
-    // (see plugins/register.js's schema comment for why).
+    // Abilities — slot display. equippedAbilities resolves against
+    // data/abilities.json (now includes Crown's Favor, the standard premium
+    // grant). The one-of-one premium ability lives in player.premiumAbility
+    // (its own engine, lib/premium-abilities.js) rather than the slot list, so
+    // it gets its own line under the slots — spin winners used to look at
+    // "Abilities (0/1)" and think their purchase never granted the ability.
     const abilitySlots      = p.abilitySlots ?? 1
     const equippedAbilities = p.equippedAbilities ?? []
     const abilityLines = Array.from({ length: abilitySlots }, (_, i) => {
@@ -140,6 +144,10 @@ export default {
       const cd  = ab.type === 'active' ? `, ${ab.cooldownTurns}-turn CD` : ''
       return `  ${rar} *${ab.name}* [${ab.rarity}, ${ab.type}${cd}]`
     }).join('\n')
+    const premiumAbilityDef = p.premiumAbility ? premiumAbilityMap[p.premiumAbility] : null
+    const premiumAbilityLine = premiumAbilityDef
+      ? `\n  👑 *${premiumAbilityDef.name}* _[premium one-of-one]_`
+      : ''
 
     // Location / dungeon status
     let locationLine = `📍 *Location:* ${locationsMap[p.location]?.name ?? p.location ?? 'Astral Town'}`
@@ -215,7 +223,7 @@ export default {
 
       `🗡️ *Equipped*\n${eqLines}\n\n` +
 
-      `✨ *Abilities (${equippedAbilities.length}/${abilitySlots} slots)*\n${abilityLines}\n\n` +
+      `✨ *Abilities (${equippedAbilities.length}/${abilitySlots} slots)*\n${abilityLines}${premiumAbilityLine}\n\n` +
 
       `🎒 Inventory: ${p.inventory?.length ?? 0}/${getInventoryCap(p)}\n` +
       `✨ Skills: ${skillCount} learned\n\n` +

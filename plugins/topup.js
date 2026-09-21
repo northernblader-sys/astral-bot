@@ -16,6 +16,13 @@ import { isOwnerJid } from '../lib/group-helpers.js'
 import { updatePlayer, getPlayer } from '../lib/player-repo.js'
 import { roundGems, fmtGems } from '../lib/format.js'
 import { topupPackages as pkgData } from '../lib/game-data.js'
+import { sendImage, sendImageTo } from '../lib/image.js'
+
+// Shared top-up art: every package-list view (gems, monds, season offers) and
+// every "you got what you paid for" confirmation DM uses these (2026-09-21
+// drop, resolved via lib/image.js's remote map).
+const TOPUP_PLANS_IMAGE = 'top-up.jpg'
+const PAYMENT_DONE_IMAGE = 'payment_done.jpg'
 
 function findPlayerByName(allUsers, query) {
   const q = query.toLowerCase()
@@ -73,9 +80,11 @@ async function handleConfirm(ctx) {
   })
 
   const fresh = getPlayer(ctx.db, target.id)
-  await ctx.sock.sendMessage(target.id, {
-    text: `🎉 *Top-up confirmed!* 💎${gems} gems credited (package: *${packageId}*).\nYour balance: 💎${fmtGems(fresh.wallet.gems)}.`,
-  }).catch(() => {})
+  // Payment-completion image on the confirmation DM (degrades to text).
+  await sendImageTo(ctx, PAYMENT_DONE_IMAGE,
+    `🎉 *Top-up confirmed!* 💎${gems} gems credited (package: *${packageId}*).\nYour balance: 💎${fmtGems(fresh.wallet.gems)}.`,
+    target.id,
+  ).catch(() => {})
 
   return ctx.reply(`✅ Credited 💎${gems} to *${target.name}* (package: *${packageId}*).`)
 }
@@ -114,6 +123,6 @@ export default {
     if (sub === 'confirm') return handleConfirm(ctx)
     if (sub === 'reject')  return handleReject(ctx)
 
-    return ctx.reply(`📦 *Gem Packages:*\n${packageList(pr)}`)
+    return sendImage(ctx, TOPUP_PLANS_IMAGE, `📦 *Gem Packages:*\n${packageList(pr)}`)
   },
 }

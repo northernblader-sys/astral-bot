@@ -61,6 +61,23 @@ import {
   MIN_DONATION,
   MERIT_PER_FLOOR,
 } from '../lib/guild-engine.js'
+import { sendImageTo } from '../lib/image.js'
+
+/**
+ * Official guild art (2026-09-21 owner-provided drop, keyed by guild id).
+ * Shown on `.guild info` in PREFERENCE to any leader-uploaded banner: the
+ * owner's art is the fixed branding for each of the five guilds. A guild
+ * without an entry here still falls back to the leader's uploaded banner
+ * (the `.guild banner` upload feature is preserved for that case).
+ * Filenames resolve through lib/image.js's remote map.
+ */
+const GUILD_INFO_IMAGES = {
+  astral_vanguard: 'guild-astral-vanguard.jpg',
+  shadow_covenant: 'guild-shadow-covenant.jpg',
+  gilded_order:    'guild-gilded-order.jpg',
+  stormbreakers:   'guild-stormbreakers.jpg',
+  emberwake:       'guild-emberwake.jpg',
+}
 
 export default {
   name:           'guild',
@@ -224,6 +241,15 @@ async function showGuildInfo(ctx, allUsers, query, membersOnly = false) {
   // from the banner, since WhatsApp only lets one caption per image.
   if (guildRecord?.pfpPath && await imageIsSendable(guildRecord.pfpPath)) {
     await ctx.replyImage(guildRecord.pfpPath, `${guild.emoji} *${guild.name}* — guild badge`).catch(() => {})
+  }
+
+  // Official art first (see GUILD_INFO_IMAGES). sendImageTo degrades to the
+  // plain caption if the image can't be fetched, so the info text always
+  // lands — the same "never the only delivery attempt" rule as the banner
+  // path below.
+  const officialImage = GUILD_INFO_IMAGES[guild.id]
+  if (officialImage) {
+    return sendImageTo(ctx, officialImage, caption)
   }
 
   // The banner carries the caption, so it must NEVER be the only delivery

@@ -19,8 +19,8 @@ import { saveGroupSettings, saveFailedMessage } from '../lib/group-settings.js'
 import { addPremiumGroup, removePremiumGroup } from '../lib/premium-groups.js'
 import { isPremiumActive, grantPremium } from '../lib/premium.js'
 import { premiumPlans as plansData } from '../lib/game-data.js'
-import { sendImage } from '../lib/image.js'
-import { attemptWeeklyAbilitySpin } from '../lib/premium-abilities.js'
+import { sendImage, sendImageTo } from '../lib/image.js'
+import { attemptWeeklyAbilitySpin, grantPremiumAbility } from '../lib/premium-abilities.js'
 
 const PLAN_KEYS = Object.keys(plansData.plans)
 
@@ -137,6 +137,7 @@ async function handleConfirm(ctx) {
   if (!target) return ctx.reply(`❌ No player found matching *"${name}"*.`)
 
   let spinResult = null
+  let abilityResult = null
   await updatePlayer(ctx.db, target.id, p => {
     grantPremium(p, planKey, plansData)
     p.premiumPending = null
@@ -146,18 +147,38 @@ async function handleConfirm(ctx) {
     if (planKey === 'weekly') {
       spinResult = attemptWeeklyAbilitySpin(ctx.db, target.id, p)
     }
+    // Every buyer — weekly (win or miss) or monthly/yearly — leaves with an
+    // ability in their equipped slot (see grantPremiumAbility). Same mutator,
+    // so the grant can never persist without the ability and vice versa.
+    abilityResult = grantPremiumAbility(p, spinResult)
   })
 
   const fresh = getPlayer(ctx.db, target.id)
   const spinBlock = spinResult ? `\n\n${abilitySpinLine(spinResult)}` : ''
-  await ctx.sock.sendMessage(target.id, {
-    text:
-      `🎉 *Premium activated!*\n` +
-      `Plan: *${planKey}* — expires *${new Date(fresh.premium.expiresAt).toLocaleDateString()}*\n\n` +
-      `Perks: ✨ 1.25× XP/Solars on kill · 💫 1 free auto-revive/day` +
-      spinBlock +
-      `\n\nThank you for supporting the game!`,
-  }).catch(() => {})
+
+  let abilityBlock = ''
+  if (abilityResult?.granted === 'spin') {
+    abilityBlock = `\n\n✨ *Ability slot:* your one-of-one ability is equipped — see it on *${config.prefix}profile*.`
+  } else if (abilityResult?.granted === 'new') {
+    const equippedLine = abilityResult.equipped
+      ? `It's equipped in your ability slot already.`
+      : `All your ability slots are full — it's in your inventory, ready to equip.`
+    abilityBlock = `\n\n✨ *Ability slot:* you received *Crown's Favor* (epic passive, +3 to every stat in battle). ${equippedLine} See it on *${config.prefix}profile*.`
+  } else if (abilityResult?.granted === 'already') {
+    abilityBlock = `\n\n✨ *Ability slot:* *Crown's Favor* is already yours from a previous purchase.`
+  }
+
+  // Payment-completion image: this DM is the moment the buyer learns they got
+  // what they paid for, so it carries the done-card (sendImageTo degrades to
+  // plain text if the image can't be fetched — the caption is never lost).
+  await sendImageTo(ctx, 'payment_done.jpg',
+    `🎉 *Premium activated!*\n` +
+    `Plan: *${planKey}* — expires *${new Date(fresh.premium.expiresAt).toLocaleDateString()}*\n\n` +
+    `Perks: ✨ 1.25× XP/Solars on kill · 💫 1 free auto-revive/day` +
+    spinBlock + abilityBlock +
+    `\n\nThank you for supporting the game!`,
+    target.id,
+  ).catch(() => {})
 
   const ownerNote = spinResult ? ` ${spinOutcomeShort(spinResult)}` : ''
   return ctx.reply(`✅ Granted *${planKey}* Premium to *${target.name}*.${ownerNote}`)
@@ -242,6 +263,6 @@ export default {
     const bodyLine = isPremiumActive(ctx.player)
       ? `Active plan: ${ctx.player.premium.plan}`
       : 'Weekly, monthly, and yearly plans available'
-    return sendImage(ctx, 'premium_card.jpg', `*👑 Astral Premium*\n${bodyLine}\n\n${caption}`)
+    return sendImage(ctx, 'premium.jpg', `*👑 Astral Premium*\n${bodyLine}\n\n${caption}`)
   },
 }

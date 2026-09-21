@@ -25,15 +25,16 @@ import {
 import { locationsMap, seasonOffers as offerData, levelsData, classes, races, getTotalStats } from '../lib/game-data.js'
 import { applyLevelUps } from '../lib/combat-engine.js'
 
-// Banner shown on `.season offer` and `.season offer buy <id>` — purely
-// cosmetic, swap freely without touching offer logic.
-const SEASON_OFFER_BANNER = 'https://i.ibb.co/2YLqdknQ/download-1.jpg'
+// Banner shown on `.season offer` — purely cosmetic, swap freely without
+// touching offer logic. Now the shared top-up plans art (2026-09-21 drop):
+// season offers are a top-up format, same visual family as .topup/.monds.
+const SEASON_OFFER_BANNER = 'https://i.ibb.co/rG4dKqLS/top-up.jpg'
 import { updatePlayer, getPlayer } from '../lib/player-repo.js'
 import { roundGems, fmtGems } from '../lib/format.js'
 import { hasInventoryRoom, inventoryFullMessage } from '../lib/inventory-limits.js'
 import { BEAST_MAX_OWNED } from '../lib/beast-engine.js'
 import { fetchPokemonById } from '../lib/pokemon-engine.js'
-import { sendImage } from '../lib/image.js'
+import { sendImage, sendImageTo } from '../lib/image.js'
 import { renderSeasonShopPage } from '../lib/season-shop-render.mjs'
 import { renderSeasonPass } from '../lib/season-pass-render.mjs'
 
@@ -367,9 +368,11 @@ async function handleOfferConfirm(ctx) {
 
   const fresh = getPlayer(ctx.db, target.id)
   const rewardText = gems ? `💎${gems} gems` : `☀️${solars.toLocaleString()} solars`
-  await ctx.sock.sendMessage(target.id, {
-    text: `🎉 *Season offer confirmed!* ${rewardText} credited (offer: *${packageId}*).\nBalance: 💎${fmtGems(fresh.wallet.gems)} · ☀️${fresh.wallet.solars ?? 0}.`,
-  }).catch(() => {})
+  // Payment-completion image on the confirmation DM (degrades to text).
+  await sendImageTo(ctx, 'payment_done.jpg',
+    `🎉 *Season offer confirmed!* ${rewardText} credited (offer: *${packageId}*).\nBalance: 💎${fmtGems(fresh.wallet.gems)} · ☀️${fresh.wallet.solars ?? 0}.`,
+    target.id,
+  ).catch(() => {})
 
   return ctx.reply(`✅ Credited ${rewardText} to *${target.name}* (offer: *${packageId}*).`)
 }

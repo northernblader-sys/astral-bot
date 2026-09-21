@@ -16,6 +16,7 @@ import { config } from '../config.js'
 import { updatePlayer } from '../lib/player-repo.js'
 import { levelsData, classes, races, getTotalStats } from '../lib/game-data.js'
 import { applyLevelUps } from '../lib/combat-engine.js'
+import { sendRankUp } from '../lib/rank-up.js'
 import {
   getQuestBoard, claimQuest, ensureQuestState, DAILY_COUNT,
 } from '../lib/quest-engine.js'
@@ -120,15 +121,7 @@ export default {
       )
 
       if (rankChange) {
-        const { from, to } = rankChange
-        await reply(
-          `⚔️ *RANK UP!*\n` +
-          `━━━━━━━━━━━━━━━━━━━━━\n` +
-          `${to.emoji} *${to.title}*\n` +
-          `_"${to.epithet}"_\n` +
-          `━━━━━━━━━━━━━━━━━━━━━\n` +
-          `*${ctx.player?.name ?? 'Hunter'}* has ascended beyond *${from.title}*.`,
-        )
+        await sendRankUp(ctx, ctx.player?.name ?? 'Hunter', rankChange.from, rankChange.to)
       }
       return
     }

@@ -29,6 +29,12 @@ import {
   MOND, CHARACTER_MOND_PRICE, fmtMonds, getMonds, roundMonds,
   findMondPack, mondPackLines,
 } from '../lib/monds.js'
+import { sendImage, sendImageTo } from '../lib/image.js'
+
+// Same shared top-up art as plugins/topup.js (2026-09-21 drop): the pack-list
+// view uses the plans image, the confirmation DM uses the done-card.
+const TOPUP_PLANS_IMAGE = 'top-up.jpg'
+const PAYMENT_DONE_IMAGE = 'payment_done.jpg'
 
 /**
  * Builds the "come to my DM" reply, with a tappable link to the bot's own
@@ -75,7 +81,7 @@ function whatMondsDo(pr) {
 async function handleList(ctx) {
   const pr = config.prefix
   const held = ctx.player ? getMonds(ctx.player) : 0
-  return ctx.reply(
+  return sendImage(ctx, TOPUP_PLANS_IMAGE,
     `${MOND} *MOND PACKS*\n` +
     `━━━━━━━━━━━━━━━━━━━━\n` +
     `${whatMondsDo(pr)}\n\n` +
@@ -136,15 +142,16 @@ async function handleConfirm(ctx) {
   const fresh = getPlayer(ctx.db, target.id)
   const balance = getMonds(fresh)
   const affords = Math.floor(balance / CHARACTER_MOND_PRICE)
-  await ctx.sock.sendMessage(target.id, {
-    text:
-      `🎉 *Mond purchase confirmed!*\n` +
-      `${MOND}*${monds}* credited _(pack: ${packageId})_.\n` +
-      `👛 Balance: ${MOND}*${fmtMonds(balance)}*\n\n` +
-      (affords > 0
-        ? `_That is ${affords} character${affords === 1 ? '' : 's'}. Spend it with *${pr}character buy <name>*._`
-        : `_${CHARACTER_MOND_PRICE} Monds buys a character. You are ${CHARACTER_MOND_PRICE - balance} short._`),
-  }).catch(() => {})
+  // Payment-completion image on the confirmation DM (degrades to text).
+  await sendImageTo(ctx, PAYMENT_DONE_IMAGE,
+    `🎉 *Mond purchase confirmed!*\n` +
+    `${MOND}*${monds}* credited _(pack: ${packageId})_.\n` +
+    `👛 Balance: ${MOND}*${fmtMonds(balance)}*\n\n` +
+    (affords > 0
+      ? `_That is ${affords} character${affords === 1 ? '' : 's'}. Spend it with *${pr}character buy <name>*._`
+      : `_${CHARACTER_MOND_PRICE} Monds buys a character. You are ${CHARACTER_MOND_PRICE - balance} short._`),
+    target.id,
+  ).catch(() => {})
 
   return ctx.reply(`✅ Credited ${MOND}*${monds}* to *${target.name}* _(pack: ${packageId})_.`)
 }

@@ -62,6 +62,7 @@
  * slot, only initiating one does.
  */
 import { config } from '../config.js'
+import { sendRankUp } from '../lib/rank-up.js'
 import { sendBattleTurnReply } from '../lib/battle-frame-render.mjs'
 import { sendTotemReviveAnimation } from '../lib/item-art-render.mjs'
 import { updatePlayer, getPlayer, playerExists } from '../lib/player-repo.js'
@@ -498,6 +499,7 @@ async function pvpConclude(db, winnerJid, loserJid, ctx, reasonLine, { allowRewi
 
   let winnerName = ''
   let loserName = ''
+  let pvpRankUp = null
   let transferred = 0
   let severLine = ''
   let wondersLine = ''
@@ -616,6 +618,7 @@ async function pvpConclude(db, winnerJid, loserJid, ctx, reasonLine, { allowRewi
     if (lvl.msgs.length) { levelUpMsg = `\n\n${lvl.msgs.join('\n')}`; recordQuestEvent(winner, 'level', lvl.msgs.length) }
     if (lvl.rankChange) {
       levelUpMsg += `\n\n⚔️ *RANK UP!* ${lvl.rankChange.to.emoji} *${lvl.rankChange.to.title}*\n_"${lvl.rankChange.to.epithet}"_`
+      pvpRankUp = { from: lvl.rankChange.from, to: lvl.rankChange.to }
     }
   })
 
@@ -643,6 +646,9 @@ async function pvpConclude(db, winnerJid, loserJid, ctx, reasonLine, { allowRewi
     (beastCpMsg ? `\n\n${beastCpMsg}` : '') + seasonMsg + levelUpMsg +
     `\n\n_Rematch: *${config.prefix}pvp rematch* · Ladder: *${config.prefix}pvptop*_`,
   )
+
+  // Rank promotion — the dedicated rank-up card, after the duel summary.
+  if (pvpRankUp) await sendRankUp(ctx, winnerName, pvpRankUp.from, pvpRankUp.to)
 }
 
 /**
@@ -657,6 +663,7 @@ async function pvpConclude(db, winnerJid, loserJid, ctx, reasonLine, { allowRewi
 async function pvpConcludeTourneyMatch(db, winnerJid, loserJid, ctx, reasonLine, tourneyMatch) {
   let winnerName = ''
   let loserName = ''
+  let pvpRankUp = null
   let severLine = ''
   let wondersLine = ''
   const winnerSnapshot = getPlayer(db, winnerJid)
@@ -719,6 +726,7 @@ async function pvpConcludeTourneyMatch(db, winnerJid, loserJid, ctx, reasonLine,
     if (lvl.msgs.length) levelUpMsg = `\n\n${lvl.msgs.join('\n')}`
     if (lvl.rankChange) {
       levelUpMsg += `\n\n⚔️ *RANK UP!* ${lvl.rankChange.to.emoji} *${lvl.rankChange.to.title}*\n_"${lvl.rankChange.to.epithet}"_`
+      pvpRankUp = { from: lvl.rankChange.from, to: lvl.rankChange.to }
     }
   })
 
@@ -743,6 +751,9 @@ async function pvpConcludeTourneyMatch(db, winnerJid, loserJid, ctx, reasonLine,
     (beastCpMsg ? `\n\n${beastCpMsg}` : '') + seasonMsg + levelUpMsg +
     `\n\n_Check the bracket anytime: *${config.prefix}tourney bracket*_`,
   )
+
+  // Rank promotion — the dedicated rank-up card, after the bracket summary.
+  if (pvpRankUp) await sendRankUp(ctx, winnerName, pvpRankUp.from, pvpRankUp.to)
 }
 
 export default {

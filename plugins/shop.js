@@ -40,6 +40,9 @@ import {
 // Banner shown behind every .shop reply — direct URL now (previously a
 // filename resolved via lib/image.js's map).
 const SHOP_BANNER = 'https://i.ibb.co/CpS1wXM9/astral-shop.jpg'
+// Dedicated art for the ARMOR shelf — `.shop armor` is the one category that
+// gets its own image (see the 2026-09-21 art drop, lib/image.js).
+const ARMOR_SHOP_BANNER = 'https://i.ibb.co/6RgWqj7f/armor-shop.jpg'
 
 // ── Rarity display ────────────────────────────────────────────────────
 
@@ -781,7 +784,7 @@ export default {
 
     if (!sub)                                    return sendImage(ctx, SHOP_BANNER, mainMenu(player))
     if (sub === 'weapons' || sub === 'weapon')   return sendImage(ctx, SHOP_BANNER, handleWeapons(player, args))
-    if (sub === 'armor'   || sub === 'armour')   return sendImage(ctx, SHOP_BANNER, handleArmor(player, args))
+    if (sub === 'armor'   || sub === 'armour')   return sendImage(ctx, ARMOR_SHOP_BANNER, handleArmor(player, args))
     if (sub === 'relics'  || sub === 'relic')    return sendImage(ctx, SHOP_BANNER, handleRelics(player, args))
     if (sub === 'tools'   || sub === 'tool')     return sendImage(ctx, SHOP_BANNER, handleTools(player, args))
     if (sub === 'potions' || sub === 'potion')   return sendImage(ctx, SHOP_BANNER, handlePotions(args))

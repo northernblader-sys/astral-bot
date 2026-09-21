@@ -12,6 +12,7 @@ import { updatePlayer } from '../lib/player-repo.js'
 import { levelsData, classes, races, getTotalStats } from '../lib/game-data.js'
 import { applyLevelUps } from '../lib/combat-engine.js'
 import { hasMod } from '../lib/mods.js'
+import { sendRankUp } from '../lib/rank-up.js'
 
 const BASE_SOLARS        = 50
 const PER_LEVEL_SOLARS   = 3
@@ -125,18 +126,9 @@ export default {
 
     await ctx.reply(`🎁 *Daily Reward Claimed!*\n\n${caption}`)
 
-    // Rank promotion — separate message so it stands out
+    // Rank promotion — separate message so it stands out (dedicated rank-up card)
     if (outcome.rankChange) {
-      const { from, to } = outcome.rankChange
-      const promoCaption =
-        `⚔️ *RANK UP!*\n` +
-        `━━━━━━━━━━━━━━━━━━━━━\n` +
-        `${to.emoji} *${to.title}*\n` +
-        `_"${to.epithet}"_\n` +
-        `━━━━━━━━━━━━━━━━━━━━━\n` +
-        `*${outcome.playerName ?? 'Hunter'}* has ascended beyond *${from.title}*.\n` +
-        `_The System acknowledges your growth. A new tier of power awaits._`
-      await ctx.reply(promoCaption)
+      await sendRankUp(ctx, outcome.playerName ?? 'Hunter', outcome.rankChange.from, outcome.rankChange.to)
     }
   },
 }
