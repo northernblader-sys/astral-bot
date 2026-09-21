@@ -141,6 +141,7 @@ const SPIN_ROUTES = {
   gogeta:    'gogeta-spin',
   naruto:    'naruto-spin',
   witch_of_envy: 'envy-spin',
+  echidna: 'echidna-spin',
 }
 
 function spinRouteFor(characterId, pr) {

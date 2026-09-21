@@ -508,7 +508,7 @@ await test('the duel wires both actives and spares their weapons', () => {
   const src = readFileSync(new URL('../plugins/pvp.js', import.meta.url), 'utf8')
   assert.ok(src.includes("action === 'kurohitsugi'"), 'kurohitsugi action routed')
   assert.ok(src.includes("action === 'hougyoku'"), 'hougyoku action routed')
-  assert.ok(src.includes("|| action === 'kurohitsugi' || action === 'hougyoku')"), 'neither wears the weapon')
+  assert.ok(src.includes("|| action === 'kurohitsugi' || action === 'hougyoku' || action === 'greedtithe')"), 'neither wears the weapon (Echidna\'s tithe added to the same wear-free list)')
   assert.ok(src.includes('kurohitsugiCastLine'), 'duel narration reads the flavor pools')
 })
 
