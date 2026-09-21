@@ -322,6 +322,22 @@
     }
   },
   {
+    "id": "echidna",
+    "stars": 5,
+    "name": "Echidna, the Witch of Greed",
+    "emoji": "🍵",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "exclusive": true,
+    "image": "https://media0.giphy.com/media/v1.Y2ljPTc5MGI3NjExZjI3Njlwc2p4N3hoZThrOXIwbzN5ZndzcGl0c2l0N251dDY4eHk3ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/5i69ZK9DkkblfZkvEL/giphy.gif",
+    "spinImage": "https://i.ibb.co/bj9T43q4/Echidna-Spin-2026-09-21-21-36-18-743136.webp",
+    "description": "She has read every page of the world except one, and that page is you. The Witch of Greed does not want your life, your throne or your heart - she wants everything you have, and most of the things you don't. When she smiles and pours you tea, count your pockets. When she looks away, count them again. Somewhere between the first sip and the second, half of what was yours quietly decided it was hers all along. Yet for the one she accepted - the one who burned through her refusals and kept reaching - the witch keeps a second cup warm at all times, and would sooner swallow the Gospel than ever admit it.",
+    "ability": {
+      "name": "Book of Wisdom",
+      "flavor": "The Tome of Wisdom, an infinite book that transcribes the world's own memory - every past, every present, every future - and lets her read it at the tea table without breaking a sweat, where an ordinary mind would fry just opening the cover. In battle her forbidden art takes a greedier shape: once per fight, with .greed, she slips into the enemy's pockets - even into their body for a heartbeat - and walks out carrying half their money, and sometimes their gems too, all of it handed straight to the one she chose. What she takes depends entirely on her mood. Speak to her anytime with .echidna - she is fond of her owner, and denies it furiously. A holder who pleases her may even be granted one child through her sanctuary rite, a little heir of greed who grows up in their house and steals beside her in battle."
+    }
+  },
+  {
     "id": "gogeta",
     "stars": 5,
     "name": "Gogeta",

@@ -22,7 +22,7 @@ const CONFIG_SOURCES = new Map()
 /** Keys whose VALUE must never be printed to a log. Presence only. */
 const SECRET_KEYS = new Set([
   'JWT_SECRET', 'DISCORD_TOKEN', 'TELEGRAM_TOKEN',
-  'OMDB_API_KEY', 'IMGBB_API_KEY',
+  'OMDB_API_KEY', 'IMGBB_API_KEY', 'GEMINI_API_KEY',
   'BANK_ACCOUNT', 'BANK_ACCOUNT_NAME',
   // Holds the database username and password. Anyone with this string owns
   // every player's data.
@@ -165,6 +165,17 @@ export const config = {
   // there is no shared key to fall back to, and the command already prints a
   // "set PIXELCUT_API_KEY in .env" message when it's missing.
   pixelcutApiKey: env('PIXELCUT_API_KEY', ''),
+  // Gemini API key - powers Echidna's voice (plugins/echidna.js talks to her
+  // via plugins -> lib/gemini.js). Same rule as MONGO_URI: a real key lives
+  // in .env (gitignored) or the deploy's environment variables, NEVER in
+  // this file - committing it would publish it to every clone of the repo.
+  // With no key set, .echidna chat says so in character and everything else
+  // about Echidna (spin, .greed, the child) works unchanged.
+  geminiApiKey: env('GEMINI_API_KEY', ''),
+  // Which Gemini model speaks as her. lib/gemini.js falls back down a small
+  // ladder (gemini-2.5-flash -> 2.0-flash -> 1.5-flash) if a name 404s for
+  // the key's tier, so this rarely needs touching.
+  geminiModel: env('GEMINI_MODEL', 'gemini-2.5-flash'),
   // WhatsApp group invite link for player support — shown via .support.
   supportGroupLink: env('SUPPORT_GROUP_LINK', 'https://chat.whatsapp.com/KwYfA8cxD6N9q2d4mQfliT'),
   // Community invite links, one per platform — shown via .whatsapp / .telegram

@@ -178,10 +178,15 @@ import {
   bypassesWondersOfEnvy,
   armWondersOfEnvy,
   applyWondersCurseOnWin,
+  activateGreedTithe,
+  echidnaPvpTithe,
+  buildGreedTitheReveal,
+  GREED_TANGLE_TURNS,
 } from '../lib/character-abilities.js'
 import {
   kurohitsugiCastLine, kurohitsugiImpactLine,
 } from '../lib/aizen-flavor.js'
+import { roundGems } from '../lib/format.js'
 import {
   activateDragonUltimate,
   resolveDragonUltimateDamage,
@@ -991,7 +996,8 @@ export default {
     const TIMESTOP_ALIASES = new Set(['timestop', 'time-stop', 'tms', 'stoptime'])
     const KUROHITSUGI_ALIASES = new Set(['kurohitsugi', 'kuro', 'blackcoffin', 'black-coffin', 'coffin', 'hado90'])
     const HOUGYOKU_ALIASES = new Set(['hougyoku', 'hogyoku', 'transcend', 'transcendence', 'the-one-above-all'])
-    if (sub === 'attack' || sub === 'skill' || sub === 'defend' || sub === 'ability' || CINDER_ALIASES.has(sub) || ULTIMATE_ALIASES.has(sub) || WILDCARD_ALIASES.has(sub) || DOMAIN_ALIASES.has(sub) || THIEFSEYE_ALIASES.has(sub) || HOLLOW_ALIASES.has(sub) || HOLLOWPURPLE_ALIASES.has(sub) || UNLIMITEDVOID_ALIASES.has(sub) || SOULPUNISHER_ALIASES.has(sub) || KAMEHAMEHA_ALIASES.has(sub) || PUPPET_ALIASES.has(sub) || KURAMA_ALIASES.has(sub) || TIMESTOP_ALIASES.has(sub) || KUROHITSUGI_ALIASES.has(sub) || HOUGYOKU_ALIASES.has(sub)) {
+    const GREED_ALIASES = new Set(['greed', 'tithe', 'greedgrab', 'gospel', 'gospelofgreed', 'witchs-grasp', 'stealgreed'])
+    if (sub === 'attack' || sub === 'skill' || sub === 'defend' || sub === 'ability' || CINDER_ALIASES.has(sub) || ULTIMATE_ALIASES.has(sub) || WILDCARD_ALIASES.has(sub) || DOMAIN_ALIASES.has(sub) || THIEFSEYE_ALIASES.has(sub) || HOLLOW_ALIASES.has(sub) || HOLLOWPURPLE_ALIASES.has(sub) || UNLIMITEDVOID_ALIASES.has(sub) || SOULPUNISHER_ALIASES.has(sub) || KAMEHAMEHA_ALIASES.has(sub) || PUPPET_ALIASES.has(sub) || KURAMA_ALIASES.has(sub) || TIMESTOP_ALIASES.has(sub) || KUROHITSUGI_ALIASES.has(sub) || HOUGYOKU_ALIASES.has(sub) || GREED_ALIASES.has(sub)) {
       if (!inPvp(player)) {
         return ctx.reply(`❌ You're not in a duel. Challenge someone: *${pr}pvp @target*`)
       }
@@ -1034,7 +1040,9 @@ export default {
                                   ? 'kurohitsugi'
                                   : HOUGYOKU_ALIASES.has(sub)
                                     ? 'hougyoku'
-                                    : sub
+                                    : GREED_ALIASES.has(sub)
+                                      ? 'greedtithe'
+                                      : sub
       return runPvpTurn(ctx, resolvedAction, args.slice(1).join(' '))
     }
 
@@ -1555,6 +1563,14 @@ async function runPvpTurn(ctx, action, skillQuery) {
   // a flat share of the opponent's max HP that no armour softens.
   let kuramaMult = 0
   let kuramaDrainPct = 0
+  // ── Echidna's Gospel of Greed (action === 'greedtithe') ──────────────────
+  // Same shape as kuramaMult: the gate burns the once-per-battle charge in
+  // the actor's own updatePlayer below and rolls her MOOD; the theft itself
+  // resolves in the opponent write (it has to come off their REAL wallet),
+  // and the holder's credit lands in a second actor write after, the exact
+  // opponent-then-actor split hollowexchange uses.
+  let greedMood = null
+  let greedTaken = null // { solarsTaken, gemsTaken, child } once the opp write lands
   // Carries "send the Nine Tails summon splash" out past the mutations, the same
   // way domainSplash / kamehamehaSplash do (no network I/O inside updatePlayer).
   let kuramaSplash = false
@@ -1957,6 +1973,22 @@ async function runPvpTurn(ctx, action, skillQuery) {
       if (gate.message) msg += gate.message + '\n'
     }
 
+    // Echidna's Gospel of Greed - once per battle, no MP. Burns the charge
+    // here (activateGreedTithe sets battleState.greedTitheUsed) and rolls her
+    // mood; the opponent-hit phase lifts the money and gems straight off the
+    // opponent's wallet (mood-shaped) and hangs them distracted for a turn,
+    // then a second actor write credits the holder - same opponent-then-actor
+    // split hollowexchange uses. A failed gate does NOT consume the turn.
+    if (action === 'greedtithe') {
+      const gate = activateGreedTithe(actor, actor.battleState)
+      if (!gate.ok) {
+        if (gate.message) msg += gate.message + '\n'
+        turnEnded = true
+        return
+      }
+      greedMood = gate.mood
+    }
+
     // Red Rose's Puppet Strings — once-per-battle, no MP. Burns the charge here
     // (activatePuppetStrings sets battleState.puppetStringsUsed); the
     // opponent-hit phase turns the opponent's own attack on themselves (floored,
@@ -2075,7 +2107,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
       // applyIncomingDamage() reads them when the opponent swings back.
     }
 
-    if (action === 'defend' || action === 'ability' || action === 'cinderverdict' || action === 'ultimate' || action === 'wildcard' || action === 'domain' || action === 'thiefseye' || action === 'hollowexchange' || action === 'hollowpurple' || action === 'unlimitedvoid' || action === 'puppetstrings' || action === 'timestop' || action === 'kurama' || action === 'soulpunisher' || action === 'kamehameha' || action === 'kurohitsugi' || action === 'hougyoku') {
+    if (action === 'defend' || action === 'ability' || action === 'cinderverdict' || action === 'ultimate' || action === 'wildcard' || action === 'domain' || action === 'thiefseye' || action === 'hollowexchange' || action === 'hollowpurple' || action === 'unlimitedvoid' || action === 'puppetstrings' || action === 'timestop' || action === 'kurama' || action === 'soulpunisher' || action === 'kamehameha' || action === 'kurohitsugi' || action === 'hougyoku' || action === 'greedtithe') {
       if (action === 'defend') {
         const mpRegen = Math.floor(actor.maxMp * 0.05)
         actor.mp = Math.min(actor.maxMp, actor.mp + mpRegen)
@@ -2737,6 +2769,64 @@ async function runPvpTurn(ctx, action, skillQuery) {
       await updatePlayer(db, actorJid, (actor) => {
         actor.hp = montanaCounter.newHp
       })
+    }
+  } else if (action === 'greedtithe') {
+    // Echidna's Gospel of Greed - NOT A STRIKE: no accuracy roll, no crit, no
+    // DEF, no fight-length damage cap, no on-damage hooks. She reaches through
+    // the opponent's pockets - mood decides how much comes out (half their
+    // money when amused/capricious, a quarter when displeased; gems stolen
+    // from their own wallet on a mood-shaped chance, her holder's granted
+    // child adding its stage-scaled cut). Both amounts are floored at zero and
+    // capped at what exists - she can never push a wallet negative - so there
+    // is no defeat branch for the theft itself, only for the opponent's own
+    // lingering statuses. The distraction (a plain stun for
+    // GREED_TANGLE_TURNS) skips their next turn, same shape as Puppet
+    // Strings' tangle. The holder's credit lands on the actor record below,
+    // the exact opponent-then-actor split hollowexchange uses.
+    await updatePlayer(db, opponentJid, (opp) => {
+      const oppStatus = processStatusTurn(opp)
+      if (oppStatus.lines.length) msg += oppStatus.lines.join('\n') + '\n'
+      if (opp.hp <= 0) {
+        const catMsg = checkYoriichiCatForm(opp)
+        if (catMsg) { msg += catMsg } else { opponentDefeated = true; return }
+      }
+
+      opp.wallet = opp.wallet ?? { solars: 0, gems: 0 }
+      const res = echidnaPvpTithe(opp.wallet, greedMood, { child: actorForCalc.echidnaChild })
+      opp.wallet.solars = Math.max(0, (opp.wallet.solars ?? 0) - res.solarsTaken)
+      opp.wallet.gems = roundGems(Math.max(0, (opp.wallet.gems ?? 0) - res.gemsTaken))
+      greedTaken = res
+
+      const distract = addStatusEffect(opp, {
+        type: 'stun',
+        duration: GREED_TANGLE_TURNS,
+        sourceId: 'gospel_of_greed',
+      })
+
+      msg += buildGreedTitheReveal({
+        ownerName: actorForCalc.name,
+        enemyName: opp.name,
+        mood: greedMood,
+        solars: res.solarsTaken,
+        gems: res.gemsTaken,
+        context: 'pvp',
+        childRec: res.child,
+        immune: !!distract?.immune,
+      }) + '\n'
+    })
+
+    // The holder's half of the theft - credited on the real actor record, the
+    // same second-write pattern hollowexchange uses. Only when the opp write
+    // actually landed (greedTaken set); an opponent already down to lingering
+    // damage keeps every coin, and the charge burn above is the only cost.
+    if (greedTaken && !opponentDefeated && (greedTaken.solarsTaken > 0 || greedTaken.gemsTaken > 0)) {
+      const tookBoth = greedTaken.solarsTaken > 0 && greedTaken.gemsTaken > 0
+      await updatePlayer(db, actorJid, (actor) => {
+        actor.wallet = actor.wallet ?? { solars: 0, gems: 0 }
+        actor.wallet.solars = (actor.wallet.solars ?? 0) + greedTaken.solarsTaken
+        actor.wallet.gems = roundGems((actor.wallet.gems ?? 0) + greedTaken.gemsTaken)
+      })
+      msg += `🍵 _${tookBoth ? 'Gems and coin' : 'The coin'} settle into ${actorForCalc.name}'s purse. She never looks at what she hands over._\n`
     }
   } else if (!skipsOpponentHit) {
     await updatePlayer(db, opponentJid, (opp) => {
@@ -3528,6 +3618,26 @@ export async function pvpPuppetStrings(ctx) {
     return ctx.reply(`❌ You're not in a duel.`)
   }
   return runPvpTurn(ctx, 'puppetstrings', '')
+}
+
+/**
+ * pvpGreedTithe(ctx) - entry point for the top-level `.greed` command
+ * (plugins/greed.js) when the caller is in a duel rather than a PvE fight.
+ * Same delegation shape as pvpPuppetStrings() above: plugins/greed.js only
+ * knows the PvE battleState shape (bs.enemy), so it hands off here when
+ * battleState.type === 'pvp'. Routes into the PvP turn engine as the
+ * 'greedtithe' action, which gates on Echidna being equipped and the
+ * once-per-battle charge, then lifts a mood-shaped share of the OPPONENT'S
+ * wallet (half when amused/capricious, a quarter when displeased - plus
+ * gems stolen from them on a mood chance) into the caller's purse, and hangs
+ * the opponent distracted for GREED_TANGLE_TURNS.
+ */
+export async function pvpGreedTithe(ctx) {
+  const player = getPlayer(ctx.db, ctx.from)
+  if (!inPvp(player)) {
+    return ctx.reply(`❌ You're not in a duel.`)
+  }
+  return runPvpTurn(ctx, 'greedtithe', '')
 }
 
 /**
