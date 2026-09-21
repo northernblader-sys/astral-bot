@@ -40,6 +40,7 @@ import { runValidation } from './plugins/validate.js'
 import { getGroupSettings } from './lib/group-settings.js'
 import { getPremiumGroups, removePremiumGroup } from './lib/premium-groups.js'
 import { isPremiumActive, expirePremiumIfDue } from './lib/premium.js'
+import { stripPremiumAbilities } from './lib/premium-abilities.js'
 import { inventoryOverflow, checkOverflowGrace, planOverflowShed, applyOverflowShed, summarizeItemIds, OVERFLOW_GRACE_MS } from './lib/inventory-limits.js'
 import { storageCap } from './lib/housing-engine.js'
 import { allItems } from './lib/game-data.js'
@@ -804,7 +805,15 @@ async function runPremiumSweep(db, instances) {
   await updateAllPlayers(db, (users) => {
     let anyExpired = false
     for (const player of Object.values(users)) {
-      if (expirePremiumIfDue(player)) anyExpired = true
+      if (expirePremiumIfDue(player)) {
+        // Premium abilities live and die with the plan: the one-of-one goes
+        // back on the shelf (registry claim released for the next monthly
+        // buyer) and Crown's Favor leaves the inventory/equips. Must run
+        // inside this mutator — the claim/release helpers are write-queue
+        // serialized, same as grantMonthlyExclusiveAbility's claim.
+        stripPremiumAbilities(player, db)
+        anyExpired = true
+      }
     }
     return anyExpired
   })

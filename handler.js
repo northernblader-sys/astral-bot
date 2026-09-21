@@ -328,6 +328,13 @@ const BATTLE_ALLOWED_COMMANDS = new Set([
   // active above: unlisted means silently rejected mid-PvE. Every alias is listed
   // (Montana needs no entry — she is automatic and has no active command).
   'tms', 'timestop', 'time-stop', 'stoptime', 'reverie-tms',
+  // Aizen's two actives (plugins/kurohitsugi.js, plugins/hogyoku.js) — the
+  // same recurring shape as the character actives above: each is a real
+  // once-per-battle battle action, and PvE (dungeon/boss/swarm) plus duels are
+  // exactly the fights they exist for. Every alias is listed because cmd is
+  // the raw token (no alias resolution).
+  'kurohitsugi', 'kuro', 'blackcoffin', 'black-coffin', 'coffin', 'hado90',
+  'hougyoku', 'hogyoku', 'transcend', 'transcendence', 'the-one-above-all',
   // Willow's in-battle advisory (plugins/willow.js). It hard-requires
   // `player.inBattle && battleState.enemy` and does nothing else, so leaving it
   // off this list didn't merely restrict it — it made the command unreachable in
@@ -351,7 +358,7 @@ const BATTLE_ALLOWED_COMMANDS = new Set([
   // could touch the shared boss. Kept in lockstep with pattack.js's alias list.
   'pk', 'pkurama', 'php', 'phollowpurple', 'puv', 'pvoid', 'punlimitedvoid',
   // Premium-only ability actives (plugins/freezeup.js, heatwave.js, nighteyes.js,
-  // daylight.js — granted by the weekly premium spin, see data/premium-abilities.json).
+  // daylight.js — gifted with a monthly Premium, see data/premium-abilities.json).
   // Same recurring shape as the character actives above: each is a real once-per-battle
   // battle action, and PvE (dungeon/boss/swarm) is the only thing that sets
   // player.inBattle, so without this line they'd be unreachable in exactly the fights

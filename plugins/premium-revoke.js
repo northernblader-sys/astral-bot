@@ -8,6 +8,7 @@
 import { config } from '../config.js'
 import { extractTarget, isOwnerJid } from '../lib/group-helpers.js'
 import { getPlayer, updatePlayer } from '../lib/player-repo.js'
+import { stripPremiumAbilities } from '../lib/premium-abilities.js'
 
 function playersMatchingName(db, query) {
   const normalized = query.trim().toLowerCase()
@@ -85,6 +86,7 @@ export default {
       return ctx.reply(`ℹ️ *${target.name}* is already a normal player with no Premium state.`)
     }
 
+    let stripped = { removedOneOfOne: null, removedCrown: false }
     await updatePlayer(ctx.db, target.id, player => {
       if (player.premium) {
         player.premium.active = false
@@ -94,13 +96,27 @@ export default {
         player.premium.autoReviveDate = null
       }
       player.premiumPending = null
+      // Premium abilities live and die with the plan: the one-of-one goes back
+      // on the shelf (its bot-wide registry claim is released, so the next
+      // monthly buyer can be gifted it) and Crown's Favor leaves the
+      // inventory/equips. Same rule as the expiry sweep in main.js.
+      stripped = stripPremiumAbilities(player, ctx.db)
     })
+
+    const abilityNote = stripped.removedOneOfOne
+      ? `\n\n✨ Their one-of-one ability *${stripped.removedOneOfOne}* left with the plan and is back on the shelf for the next monthly buyer.`
+      : stripped.removedCrown
+        ? `\n\n✨ *Crown's Favor* left with the plan.`
+        : ''
 
     await ctx.sock.sendMessage(target.id, {
       text:
         `🔓 *Your Premium plan has been removed.*\n\n` +
         `Your account is now a normal player account. Your level, inventory, ` +
-        `currency, and other progress were not changed.`,
+        `currency, and other progress were not changed.` +
+        (stripped.removedOneOfOne || stripped.removedCrown
+          ? ` Any Premium ability left with the plan — Premium abilities only live while Premium does.`
+          : ''),
     }).catch(() => {})
 
     const cleared = [
@@ -108,6 +124,6 @@ export default {
       hadPendingPurchase ? 'pending Premium purchase' : null,
     ].filter(Boolean).join(' and ')
 
-    return ctx.reply(`✅ Removed *${cleared}* from *${target.name}*. They are now a normal player.`)
+    return ctx.reply(`✅ Removed *${cleared}* from *${target.name}*. They are now a normal player.${abilityNote}`)
   },
 }

@@ -330,7 +330,15 @@
     "gemPrice": null,
     "exclusive": true,
     "image": "https://i.ibb.co/20J4NGM7/Una-vittoria-stellata.jpg",
-    "statBonuses": { "str": 34, "agi": 40, "int": 18, "def": 22, "lck": 18, "maxHp": 175, "maxMp": 140 },
+    "statBonuses": {
+      "str": 34,
+      "agi": 40,
+      "int": 18,
+      "def": 22,
+      "lck": 18,
+      "maxHp": 175,
+      "maxMp": 140
+    },
     "description": "Two rivals who spent their whole lives refusing to lose to each other, folded into one body for a handful of minutes. Fusion of Equals hands him strength and speed neither half could reach alone, and a clock to spend them against: when the fusion times out the boost leaves, and Big Bang Kamehameha leaves with it. Instant Transmission means the blow aimed at him arrives at empty air, and now and then he is already standing somewhere else with the next move charged. Soul Punisher is a ki blast he can throw nearly every turn. Big Bang Kamehameha needs a full energy bar, spends all of it, and erases the space between him and whatever he pointed it at.",
     "ability": {
       "name": "Fusion of Equals",
@@ -363,7 +371,15 @@
     "spinOnly": true,
     "image": "https://i.ibb.co/8L1ChgQN/info-card.jpg",
     "spinImage": "https://i.ibb.co/SwBJCYrM/per-spin.jpg",
-    "statBonuses": { "str": 48, "agi": 58, "int": 16, "def": 24, "lck": 20, "maxHp": 220, "maxMp": 130 },
+    "statBonuses": {
+      "str": 48,
+      "agi": 58,
+      "int": 16,
+      "def": 24,
+      "lck": 20,
+      "maxHp": 220,
+      "maxMp": 130
+    },
     "description": "Baryon Mode. He forced his own chakra and the Nine Tails together into something new and volatile, a fusion that eats through his life for every second it burns. He moves faster than the eye can follow and every blow lands like a collapsing star, but the fire he spends is his own, and the clock never stops running.",
     "ability": {
       "name": "Baryon Mode",
@@ -402,6 +418,22 @@
     "ability": {
       "name": "Faster Than Time",
       "flavor": "Automatic, no command needed: equip her and she fights on her own. She carries the same strength as the one she guards, so she strikes for exactly what they would. The instant a freeze, a burn, a stun or any hold at all lands on her summoner she tears them straight back out of it before it can settle. And when anyone stops time, she moves faster than the frozen moment and strikes them back for daring to."
+    }
+  },
+  {
+    "id": "aizen",
+    "stars": 5,
+    "name": "Aizen Sosuke",
+    "emoji": "🔮",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "exclusive": true,
+    "image": "https://i.ibb.co/jvwH2Qfj/Aizen-Sosuke-The-One-Above-All.jpg",
+    "statBonuses": { "str": 32, "agi": 36, "int": 42, "def": 24, "lck": 22, "maxHp": 180, "maxMp": 150 },
+    "description": "The chair was always meant for someone, and he grew past every one of them. Aizen does not scheme against the world — he edits it, and the world agrees. What you see of him is only what he has already decided you will see, and the fight was over before the first swing: the moment you looked at him and believed you knew where he was standing.",
+    "ability": {
+      "name": "Kyōka Suigetsu",
+      "flavor": "Complete Hypnosis. From the first breath of the fight, everything the enemy perceives already belongs to him: every blow aimed at Aizen is aimed at a phantom instead, and every blow that lands on nothing teaches him one more of their five senses. Sight, hearing, touch, smell, taste — steal all five and the hypnosis is complete, and every blow for the rest of the fight is misplaced without fail. Once per battle he closes Kurohitsugi, a coffin of distorted time that crushes what is already breaking: the closer to death it lands, the tighter it seals, and no armour has any part in what happens inside. And once per battle the Hōgyoku answers — his body reforges itself, the five senses fall at once, and whatever he becomes, it is out of the enemy's reach entirely."
     }
   }
 ]
