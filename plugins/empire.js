@@ -1903,6 +1903,86 @@ async function bankCmd(ctx) {
   )
 }
 
+// ── Vault & Tax Policy (dividend distribution & treasury tax policy) ─────────
+
+async function vaultPolicyCmd(ctx) {
+  const p = config.prefix
+  const owned = getOwnedEmpire(ctx.db, ctx.from)
+  if (!owned) return ctx.reply(noEmpire(p))
+
+  const action = ctx.args[1]?.toLowerCase()
+  const rawArg = ctx.args[2]?.toLowerCase()
+
+  if (!action) {
+    const currentTax = owned.taxRatePct ?? 5
+    const treasury = owned.treasury ?? 0
+    const citizens = Object.values(ctx.db.data.users ?? {}).filter(u => u.empireId === owned.id && u.empireRole === 'citizen')
+
+    return ctx.reply(
+      `🏛️ *EMPIRE VAULT & TAX POLICY · ${owned.name}*\n${RULE}\n` +
+      `☀️ Treasury: *${treasury.toLocaleString()} solars*\n` +
+      `📊 Commercial Sales Tax: *${currentTax}%*\n` +
+      `👥 Sworn Citizens: *${citizens.length}*\n\n` +
+      `*Commands (Ruler only):*\n` +
+      `• *${p}empire vault tax <1-20>%* — adjust sales & trade tax rate\n` +
+      `• *${p}empire vault dividend <amount>* — distribute treasury solars equally to all citizens!`,
+    )
+  }
+
+  if (action === 'tax') {
+    const rate = parseInt(rawArg, 10)
+    if (isNaN(rate) || rate < 1 || rate > 20) {
+      return ctx.reply(`❌ Tax rate must be between 1% and 20%. Example: *${p}empire vault tax 8*`)
+    }
+    await updatePlayer(ctx.db, ctx.from, player => {
+      const rec = ctx.db.data.empires?.[owned.id]
+      if (rec) rec.taxRatePct = rate
+    })
+    return ctx.reply(`✅ *${owned.name}* commercial tax policy updated to *${rate}%*.`)
+  }
+
+  if (action === 'dividend') {
+    const amount = parseInt(rawArg, 10)
+    if (isNaN(amount) || amount <= 0) {
+      return ctx.reply(`❌ Specify a dividend pool to distribute from the treasury: *${p}empire vault dividend 50000*`)
+    }
+    const treasury = owned.treasury ?? 0
+    if (treasury < amount) {
+      return ctx.reply(`❌ Insufficient treasury. *${owned.name}* holds *${treasury.toLocaleString()}* solars.`)
+    }
+
+    const citizens = Object.values(ctx.db.data.users ?? {}).filter(u => u.empireId === owned.id && u.empireRole === 'citizen')
+    if (!citizens.length) {
+      return ctx.reply(`❌ *${owned.name}* has no citizens yet to receive dividends. Invite citizens first!`)
+    }
+
+    const perCitizen = Math.floor(amount / citizens.length)
+    if (perCitizen <= 0) return ctx.reply(`❌ Amount too small to divide amongst ${citizens.length} citizens.`)
+
+    const actualDistributed = perCitizen * citizens.length
+
+    await updatePlayer(ctx.db, ctx.from, player => {
+      const rec = ctx.db.data.empires?.[owned.id]
+      if (rec) rec.treasury = (rec.treasury || 0) - actualDistributed
+    })
+
+    for (const c of citizens) {
+      await updatePlayer(ctx.db, c.id, player => {
+        const w = player.wallet ?? (player.wallet = {})
+        w.solars = (w.solars || 0) + perCitizen
+      })
+    }
+
+    return ctx.reply(
+      `🎉 *EMPIRE DIVIDENDS PAID!*\n\n` +
+      `Ruler *${ctx.player.name}* paid out *${actualDistributed.toLocaleString()} solars* from the treasury!\n` +
+      `Each of the *${citizens.length}* citizens received ☀️ *+${perCitizen.toLocaleString()} Solars* in their wallets!`,
+    )
+  }
+
+  return ctx.reply(`Usage: *${p}empire vault tax <1-20>* or *${p}empire vault dividend <amount>*`)
+}
+
 // ── Stash (where NPC-gathered materials and crafted items collect) ───────────
 
 /**
@@ -2734,6 +2814,7 @@ export default {
     { cmd: 'deposit <amount>', desc: 'move solars from your wallet into the treasury' },
     { cmd: 'withdraw <amount>', desc: 'take treasury solars back to your wallet' },
     { cmd: 'bank [deposit|withdraw <amount>]', desc: 'store your own solars in the realm bank (small daily tax)' },
+    { cmd: 'vault [tax|dividend <amount>]', desc: 'set tax policy or distribute treasury dividends to citizens' },
     { cmd: 'stash', desc: 'see materials your workers gathered and gear forged' },
     { cmd: 'forge [item]', desc: 'have your blacksmith forge gear from the stash' },
     { cmd: 'drop <item> [n]', desc: 'put loot or materials from your bag into the stash' },
@@ -2801,6 +2882,7 @@ export default {
     if (sub === 'deposit')  return depositCmd(ctx)
     if (sub === 'withdraw') return withdrawCmd(ctx)
     if (sub === 'bank')     return bankCmd(ctx)
+    if (sub === 'vault' || sub === 'policy') return vaultPolicyCmd(ctx)
     if (sub === 'stash')    return stashView(ctx)
     if (sub === 'forge')    return forgeCmd(ctx)
     if (sub === 'drop')     return dropCmd(ctx)
