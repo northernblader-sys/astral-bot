@@ -10,7 +10,7 @@
  *      grantPremiumAbility() in lib/premium-abilities.js.
  *   2. The 5 one-of-one premium abilities (data/premium-abilities.json —
  *      Freeze Touch, Heat Blaze, …). Routed through the shared exclusive-spin
- *      claim registry, exactly like the weekly premium spin and the
+ *      claim registry, exactly like the monthly premium gift and the
  *      .givecharacter exclusive path: already claimed by ANOTHER player →
  *      refused (these are one-of-one bot-wide); target already holds one →
  *      refused (a player holds at most one).

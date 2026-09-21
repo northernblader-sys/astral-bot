@@ -20,7 +20,7 @@ import { addPremiumGroup, removePremiumGroup } from '../lib/premium-groups.js'
 import { isPremiumActive, grantPremium } from '../lib/premium.js'
 import { premiumPlans as plansData } from '../lib/game-data.js'
 import { sendImage, sendImageTo } from '../lib/image.js'
-import { attemptWeeklyAbilitySpin, grantPremiumAbility } from '../lib/premium-abilities.js'
+import { grantMonthlyExclusiveAbility, grantPremiumAbility } from '../lib/premium-abilities.js'
 
 const PLAN_KEYS = Object.keys(plansData.plans)
 
@@ -35,40 +35,43 @@ function daysLeft(expiresAt) {
 }
 
 /**
- * abilitySpinLine(spin) — the buyer-facing result of the weekly one-of-one
- * ability spin (attemptWeeklyAbilitySpin), shown in the confirmation DM.
- * Empty string when there was no spin (non-weekly plan).
+ * abilityGiftLine(gift) — the buyer-facing result of the monthly one-of-one
+ * gift (grantMonthlyExclusiveAbility), shown in the confirmation DM. Empty
+ * string for plans that don't take the gift (weekly/yearly).
+ *
+ * There is no losing outcome on purpose: 'won' is the gift, 'already' is a
+ * renewal keeping its gift, and 'sold_out' means every one-of-one is currently
+ * with another active Premium holder (they free up as those plans expire) and
+ * the buyer has Crown's Favor from grantPremiumAbility instead.
  */
-function abilitySpinLine(spin) {
-  switch (spin?.outcome) {
+function abilityGiftLine(gift) {
+  switch (gift?.outcome) {
     case 'won': {
-      const a = spin.ability
+      const a = gift.ability
       const move = a?.activeCommand ? `Active move: *${config.prefix}${a.activeCommand}*.\n` : `Passive only, no active move.\n`
       return (
-        `🎰 *ABILITY SPIN — JACKPOT!*\n` +
-        `You claimed ${a?.emoji ?? '✨'} *${a?.name ?? spin.abilityId}* — one of only *5* in the whole game, and now yours alone forever.\n` +
+        `✨ *MONTHLY ABILITY GIFT*\n` +
+        `Chosen for you: ${a?.emoji ?? '✨'} *${a?.name ?? gift.abilityId}* — one of only *5* in the whole game, held by a single player at a time. Gifted outright: no spin, no luck.\n` +
         move +
-        `${a?.passiveDesc ?? ''}`
+        `${a?.passiveDesc ?? ''}\n` +
+        `⏳ _It lives while your Premium lives: when the plan expires, the ability goes with it._`
       )
     }
-    case 'no_win':
-      return `🎰 *Ability Spin:* no ability this time. The 5 premium abilities are one-of-one — each weekly plan takes a single luck-based spin at whatever is still unclaimed.`
     case 'sold_out':
-      return `🎰 *Ability Spin:* all 5 one-of-one abilities have already been claimed bot-wide, so there was nothing left to spin for.`
+      return `✨ *Monthly gift:* all 5 one-of-one abilities are currently held by other active Premium holders — they free up as those plans expire, and yours will find you on a later monthly purchase. *Crown's Favor* stands in for now.`
     case 'already':
-      return `🎰 *Ability Spin:* you already hold *${spin.ability?.name ?? 'an ability'}* — a player can only ever hold one, so this weekly plan did not spin.`
+      return `✨ *Monthly gift:* ${gift.ability?.emoji ?? '✨'} *${gift.ability?.name ?? 'your one-of-one'}* is already yours and stays yours — a player holds exactly one, and renewals don't reroll it.`
     default:
       return ''
   }
 }
 
 /** Short owner-facing note appended to the confirm ack. */
-function spinOutcomeShort(spin) {
-  switch (spin?.outcome) {
-    case 'won':      return `🎰 Won *${spin.ability?.name ?? spin.abilityId}*!`
-    case 'no_win':   return `🎰 Spin: no ability.`
-    case 'sold_out': return `🎰 Spin: all 5 claimed.`
-    case 'already':  return `🎰 Spin: already holds one.`
+function giftOutcomeShort(gift) {
+  switch (gift?.outcome) {
+    case 'won':      return `✨ Gifted one-of-one *${gift.ability?.name ?? gift.abilityId}*!`
+    case 'sold_out': return `✨ All 5 held — Crown's Favor given.`
+    case 'already':  return `✨ Already holds *${gift.ability?.name ?? 'a one-of-one'}*.`
     default:         return ''
   }
 }
@@ -78,7 +81,7 @@ function planList(pr) {
     .map(([key, plan]) => `  • *${key}* — ${plan.label}, ₦${plan.priceNaira.toLocaleString()} / ${plan.durationDays}d`)
     .join('\n') +
     `\n\nBuy with *${pr}premium buy <plan>* _(DM only)_.` +
-    `\n\n🎰 The *weekly* plan takes one luck-based spin at a legendary one-of-one ability — only *5* exist in the entire game, and each can be won by a single player, once, ever.`
+    `\n\n✨ The *monthly* plan *gifts* a random one-of-one ability — only *5* exist in the entire game, each held by a single player at a time. Gifted outright: no spin, no luck roll. ⏳ Abilities live and die with the plan — when Premium expires, the ability goes with it.`
 }
 
 function statusText(player, pr) {
@@ -88,7 +91,7 @@ function statusText(player, pr) {
       `Plan: *${player.premium.plan}*\n` +
       `Expires in *${daysLeft(player.premium.expiresAt)} day(s)* _(${new Date(player.premium.expiresAt).toLocaleDateString()})_\n\n` +
       `Perks: ✨ 1.25× XP/Solars on kill · 💫 1 free auto-revive/day\n` +
-      `🎰 Weekly plan: one spin at a one-of-one ability (only 5 exist ever)`
+      `✨ Monthly plan: a random one-of-one ability, gifted outright (only 5 exist) — gone when Premium expires`
     )
   }
   return `🔓 *No active Premium.*\n\n📦 *Plans:*\n${planList(pr)}`
@@ -136,28 +139,35 @@ async function handleConfirm(ctx) {
   const target = findPlayerByName(allUsers, name)
   if (!target) return ctx.reply(`❌ No player found matching *"${name}"*.`)
 
-  let spinResult = null
+  let giftResult = null
   let abilityResult = null
   await updatePlayer(ctx.db, target.id, p => {
     grantPremium(p, planKey, plansData)
     p.premiumPending = null
-    // Weekly buyers get one luck-based spin at a one-of-one ability. Claimed
-    // through the shared exclusive-spin registry INSIDE this mutator so the
-    // claim persists atomically with the grant (see attemptWeeklyAbilitySpin).
-    if (planKey === 'weekly') {
-      spinResult = attemptWeeklyAbilitySpin(ctx.db, target.id, p)
+    // The MONTHLY plan's whole hook: one of the 5 one-of-one premium
+    // abilities, picked at random and gifted OUTRIGHT — no luck roll, no
+    // spin. Premium is not a gamble for an ability; a buyer always leaves
+    // with one. Claimed through the shared exclusive-spin registry INSIDE
+    // this mutator so the claim persists atomically with the grant (see
+    // grantMonthlyExclusiveAbility).
+    if (planKey === 'monthly') {
+      giftResult = grantMonthlyExclusiveAbility(ctx.db, target.id, p)
     }
-    // Every buyer — weekly (win or miss) or monthly/yearly — leaves with an
-    // ability in their equipped slot (see grantPremiumAbility). Same mutator,
-    // so the grant can never persist without the ability and vice versa.
-    abilityResult = grantPremiumAbility(p, spinResult)
+    // The floor under every buyer — weekly/yearly plans, renewals, and the
+    // rare monthly buyer who arrives while all 5 one-of-ones are held —
+    // leaves with Crown's Favor in their equipped slot (see
+    // grantPremiumAbility). Same mutator, so the grant can never persist
+    // without the premium and vice versa. NOTE: every ability granted here
+    // is stripped again when Premium expires (stripPremiumAbilities, run by
+    // the expiry sweep in main.js and by .premium-revoke).
+    abilityResult = grantPremiumAbility(p, giftResult)
   })
 
   const fresh = getPlayer(ctx.db, target.id)
-  const spinBlock = spinResult ? `\n\n${abilitySpinLine(spinResult)}` : ''
+  const giftBlock = giftResult ? `\n\n${abilityGiftLine(giftResult)}` : ''
 
   let abilityBlock = ''
-  if (abilityResult?.granted === 'spin') {
+  if (abilityResult?.granted === 'gift') {
     abilityBlock = `\n\n✨ *Ability slot:* your one-of-one ability is equipped — see it on *${config.prefix}profile*.`
   } else if (abilityResult?.granted === 'new') {
     const equippedLine = abilityResult.equipped
@@ -175,12 +185,12 @@ async function handleConfirm(ctx) {
     `🎉 *Premium activated!*\n` +
     `Plan: *${planKey}* — expires *${new Date(fresh.premium.expiresAt).toLocaleDateString()}*\n\n` +
     `Perks: ✨ 1.25× XP/Solars on kill · 💫 1 free auto-revive/day` +
-    spinBlock + abilityBlock +
+    giftBlock + abilityBlock +
     `\n\nThank you for supporting the game!`,
     target.id,
   ).catch(() => {})
 
-  const ownerNote = spinResult ? ` ${spinOutcomeShort(spinResult)}` : ''
+  const ownerNote = giftResult ? ` ${giftOutcomeShort(giftResult)}` : ''
   return ctx.reply(`✅ Granted *${planKey}* Premium to *${target.name}*.${ownerNote}`)
 }
 

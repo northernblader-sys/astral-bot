@@ -147,6 +147,9 @@ import {
   activateHollowPurple,
   activateUnlimitedVoid,
   UNLIMITED_VOID_STUN_TURNS,
+  activateKurohitsugi,
+  kurohitsugiMultiplier,
+  activateHogyoku,
   activatePuppetStrings,
   resolvePuppetSelfHit,
   buildPuppetStringsReveal,
@@ -981,7 +984,9 @@ export default {
     const PUPPET_ALIASES = new Set(['puppetstrings', 'puppet-strings', 'puppet', 'puppetry', 'strings', 'marionette'])
     const KURAMA_ALIASES = new Set(['kurama', 'baryon', 'kuramamode', 'ninetails', 'bijuu', 'krm'])
     const TIMESTOP_ALIASES = new Set(['timestop', 'time-stop', 'tms', 'stoptime'])
-    if (sub === 'attack' || sub === 'skill' || sub === 'defend' || sub === 'ability' || CINDER_ALIASES.has(sub) || ULTIMATE_ALIASES.has(sub) || WILDCARD_ALIASES.has(sub) || DOMAIN_ALIASES.has(sub) || THIEFSEYE_ALIASES.has(sub) || HOLLOW_ALIASES.has(sub) || HOLLOWPURPLE_ALIASES.has(sub) || UNLIMITEDVOID_ALIASES.has(sub) || SOULPUNISHER_ALIASES.has(sub) || KAMEHAMEHA_ALIASES.has(sub) || PUPPET_ALIASES.has(sub) || KURAMA_ALIASES.has(sub) || TIMESTOP_ALIASES.has(sub)) {
+    const KUROHITSUGI_ALIASES = new Set(['kurohitsugi', 'kuro', 'blackcoffin', 'black-coffin', 'coffin', 'hado90'])
+    const HOUGYOKU_ALIASES = new Set(['hougyoku', 'hogyoku', 'transcend', 'transcendence', 'the-one-above-all'])
+    if (sub === 'attack' || sub === 'skill' || sub === 'defend' || sub === 'ability' || CINDER_ALIASES.has(sub) || ULTIMATE_ALIASES.has(sub) || WILDCARD_ALIASES.has(sub) || DOMAIN_ALIASES.has(sub) || THIEFSEYE_ALIASES.has(sub) || HOLLOW_ALIASES.has(sub) || HOLLOWPURPLE_ALIASES.has(sub) || UNLIMITEDVOID_ALIASES.has(sub) || SOULPUNISHER_ALIASES.has(sub) || KAMEHAMEHA_ALIASES.has(sub) || PUPPET_ALIASES.has(sub) || KURAMA_ALIASES.has(sub) || TIMESTOP_ALIASES.has(sub) || KUROHITSUGI_ALIASES.has(sub) || HOUGYOKU_ALIASES.has(sub)) {
       if (!inPvp(player)) {
         return ctx.reply(`❌ You're not in a duel. Challenge someone: *${pr}pvp @target*`)
       }
@@ -1020,7 +1025,11 @@ export default {
                               ? 'kurama'
                               : TIMESTOP_ALIASES.has(sub)
                                 ? 'timestop'
-                                : sub
+                                : KUROHITSUGI_ALIASES.has(sub)
+                                  ? 'kurohitsugi'
+                                  : HOUGYOKU_ALIASES.has(sub)
+                                    ? 'hougyoku'
+                                    : sub
       return runPvpTurn(ctx, resolvedAction, args.slice(1).join(' '))
     }
 
@@ -1910,6 +1919,39 @@ async function runPvpTurn(ctx, action, skillQuery) {
       }
     }
 
+    // Aizen's Kurohitsugi — once-per-battle, no MP. Burns the charge here
+    // (activateKurohitsugi sets battleState.kurohitsugiUsed); the multiplier is
+    // NOT carried out as a constant because it scales with his stolen senses
+    // and how wounded the opponent already is — it is computed live in the
+    // opponent-hit phase via kurohitsugiMultiplier(). Lands RAW: it bypasses
+    // DEF and never misses, the same as its PvE turn in plugins/kurohitsugi.js.
+    // A failed gate (wrong character / already used) does NOT consume the turn.
+    if (action === 'kurohitsugi') {
+      const gate = activateKurohitsugi(actor, actor.battleState)
+      if (!gate.ok) {
+        if (gate.message) msg += gate.message + '\n'
+        turnEnded = true
+        return
+      }
+    }
+
+    // Aizen's Hōgyoku — once-per-battle, no MP, no damage. The whole evolution
+    // (heal, all five senses, rest-of-battle stat surge) resolves on the actor
+    // right here inside their own mutator — it touches nobody else — and the
+    // gate returns its own reveal copy. The opponent takes no hit this action
+    // (skipsOpponentHit below), same as a defend turn: their answer is simply
+    // their own turn against whatever he has become. A failed gate does NOT
+    // consume the turn.
+    if (action === 'hougyoku') {
+      const gate = activateHogyoku(actor, actor.battleState)
+      if (!gate.ok) {
+        if (gate.message) msg += gate.message + '\n'
+        turnEnded = true
+        return
+      }
+      if (gate.message) msg += gate.message + '\n'
+    }
+
     // Red Rose's Puppet Strings — once-per-battle, no MP. Burns the charge here
     // (activatePuppetStrings sets battleState.puppetStringsUsed); the
     // opponent-hit phase turns the opponent's own attack on themselves (floored,
@@ -2400,7 +2442,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
   // A turn that lands nothing on the opponent: 'defend', and a Wild Card that
   // came up one of the three defensive cards (wildCardMult stays 0 for those —
   // they arm her own battleState instead of hitting anyone).
-  const skipsOpponentHit = action === 'defend' || (action === 'wildcard' && wildCardMult <= 0)
+  const skipsOpponentHit = action === 'defend' || action === 'hougyoku' || (action === 'wildcard' && wildCardMult <= 0)
 
   let dragonUltimateSequence = null
   if (action === 'ultimate') {
@@ -2710,6 +2752,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
         ? 'CINDER VERDICT'
         : action === 'domain' ? 'CHIMERA SHADOW GARDEN'
         : action === 'hollowpurple' ? 'HOLLOW PURPLE'
+        : action === 'kurohitsugi' ? 'KUROHITSUGI'
         : action === 'soulpunisher' ? 'SOUL PUNISHER'
         : action === 'kamehameha' ? 'BIG BANG KAMEHAMEHA'
         : action === 'kurama' ? 'BARYON RASENGAN'
@@ -2726,7 +2769,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
       // bot rolls accuracy: the cooldown is already burned in the actor phase,
       // so a whiff would read as the command being broken.
       if (!wildCardGuaranteedHit &&
-          action !== 'hollowpurple' && action !== 'soulpunisher' && action !== 'kamehameha' &&
+          action !== 'hollowpurple' && action !== 'kurohitsugi' && action !== 'soulpunisher' && action !== 'kamehameha' &&
           Math.random() > hitChance) {
         msg += `💨❌ *${actorForCalc.name}'s ${moveName} MISSED ${opp.name}!*\n`
         // A whiffed theft still keeps the move. The charge was already burned in
@@ -2746,6 +2789,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
         ? cinderMult
         : action === 'domain' ? domainMult
         : action === 'hollowpurple' ? hollowPurpleMult
+        : action === 'kurohitsugi' ? kurohitsugiMultiplier(actorForCalc, opp)
         : action === 'soulpunisher' ? soulPunisherMult
         : action === 'kamehameha' ? kamehamehaMult
         : action === 'kurama' ? kuramaMult
@@ -2759,7 +2803,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
       // here for the same reason it is in PvE: armour is not a meaningful answer
       // to it. Soul Punisher is deliberately NOT — it is a normal hit, just a
       // strong one, so DEF applies to it.
-      let dmg = (wildCardIgnoreDefense || action === 'hollowpurple' || action === 'kamehameha') ? rawDmg : applyDefense(rawDmg, getEffectiveStat(opp, 'def'))
+      let dmg = (wildCardIgnoreDefense || action === 'hollowpurple' || action === 'kamehameha' || action === 'kurohitsugi') ? rawDmg : applyDefense(rawDmg, getEffectiveStat(opp, 'def'))
       // Thief's Eye floors the echo at THIEFS_EYE_ECHO_MULT times the hit it was
       // copied from. Placed after applyDefense but BEFORE the defend stance on
       // the same principle the Fool's Gambit comment above states: a stolen move
@@ -3022,8 +3066,9 @@ async function runPvpTurn(ctx, action, skillQuery) {
   } else if (action === 'defend') {
     await updatePlayer(db, opponentJid, (opp) => { opp.battleState.defending = true })
   }
-  // (the remaining skipsOpponentHit case — a defensive Wild Card — has nothing
-  // to do to the opponent at all: her cards resolve on THEIR swing, not hers.)
+  // (the remaining skipsOpponentHit cases — a defensive Wild Card and Aizen's
+  // Hōgyoku — have nothing to do to the opponent at all: her cards resolve on
+  // THEIR swing, and the Hōgyoku is a self-evolution that touches nobody.)
 
   // ── Premium ability passive + pack signatures (actor-side) ───────────────
   // Applied on the live actor now that the opponent mutator has closed (see the
@@ -3407,6 +3452,42 @@ export async function pvpUnlimitedVoid(ctx) {
     return ctx.reply(`❌ You're not in a duel.`)
   }
   return runPvpTurn(ctx, 'unlimitedvoid', '')
+}
+
+/**
+ * pvpKurohitsugi(ctx) — entry point for the top-level `.kurohitsugi` command
+ * (plugins/kurohitsugi.js) when the caller is in a duel rather than a PvE
+ * fight. Same delegation shape as pvpHollowPurple() above: plugins/kurohitsugi.js
+ * only knows the PvE battleState shape (bs.enemy), so it hands off here when
+ * battleState.type === 'pvp'. Routes into the PvP turn engine as the
+ * 'kurohitsugi' action, which gates on Aizen being equipped and the
+ * once-per-battle charge, then lands the coffin RAW: it bypasses DEF and never
+ * misses, with the multiplier computed at hit time from his stolen senses and
+ * how wounded the opponent already is (kurohitsugiMultiplier).
+ */
+export async function pvpKurohitsugi(ctx) {
+  const player = getPlayer(ctx.db, ctx.from)
+  if (!inPvp(player)) {
+    return ctx.reply(`❌ You're not in a duel.`)
+  }
+  return runPvpTurn(ctx, 'kurohitsugi', '')
+}
+
+/**
+ * pvpHogyoku(ctx) — entry point for the top-level `.hougyoku` command
+ * (plugins/hogyoku.js) when the caller is in a duel. Same delegation shape as
+ * pvpUnlimitedVoid() above: the PvE plugin only knows the PvE battleState shape
+ * (bs.enemy), so it hands off here on battleState.type === 'pvp'. Routes in as
+ * the 'hougyoku' action, which gates on Aizen being equipped and the
+ * once-per-battle latch, then evolves him on the spot — heal, all five senses,
+ * rest-of-battle stat surge. It deals no damage and the opponent takes no hit.
+ */
+export async function pvpHogyoku(ctx) {
+  const player = getPlayer(ctx.db, ctx.from)
+  if (!inPvp(player)) {
+    return ctx.reply(`❌ You're not in a duel.`)
+  }
+  return runPvpTurn(ctx, 'hougyoku', '')
 }
 
 /**

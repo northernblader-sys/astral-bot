@@ -2,11 +2,14 @@
  * new-features.test.mjs — regression tests for the 2026-09-21 batch:
  *
  *  1. PREMIUM ABILITY GRANT — every premium buyer must end up with an ability
- *     in their equipped ability slot: spin winners get their one-of-one
- *     (rendered from player.premiumAbility), everyone else gets Crown's Favor
+ *     in their equipped ability slot: monthly buyers are GIFTED a random
+ *     one-of-one outright (no spin, no luck roll — rendered from
+ *     player.premiumAbility), everyone else gets Crown's Favor
  *     (data/abilities.json, equipped when a slot is free). No duplicates on
- *     repeat purchases. The reported bug: buyers checked their slot and saw
- *     nothing.
+ *     repeat purchases. Everything granted is stripped when Premium expires
+ *     (stripPremiumAbilities). The reported bugs: buyers checked their slot
+ *     and saw nothing, and the old weekly luck-spin could leave a paying
+ *     buyer with "Spin: no ability.".
  *
  *  2. CROWN'S FAVOR IS REAL — it resolves in the generic ability engine and
  *     applyPassiveAbilities() applies its all-stat strengthen at battle start.
@@ -106,7 +109,7 @@ function makeCtx(db, from, args, { mention = null } = {}) {
 // 1. Premium ability grant
 // ══════════════════════════════════════════════════════════════════════════
 
-await test('monthly buyer (no spin) gets Crown\'s Favor equipped', () => {
+await test('standard buyer (no gift in play) gets Crown\'s Favor equipped', () => {
   const p = makePlayer(BUYER, 'Buyer')
   const res = grantPremiumAbility(p, null)
   assert.equal(res.granted, 'new')
@@ -116,18 +119,26 @@ await test('monthly buyer (no spin) gets Crown\'s Favor equipped', () => {
   assert.deepEqual(p.equippedAbilities, [PREMIUM_ABILITY_ID])
 })
 
-await test('weekly spin winner keeps the one-of-one, no standard grant on top', () => {
+await test('monthly gift winner keeps the one-of-one, no standard grant on top', () => {
   const p = makePlayer(BUYER, 'Buyer')
   const res = grantPremiumAbility(p, { outcome: 'won', abilityId: 'freeze_touch' })
-  assert.equal(res.granted, 'spin')
+  assert.equal(res.granted, 'gift')
   assert.equal(res.id, 'freeze_touch')
-  assert.equal(p.abilityInventory.length, 0, 'no duplicate standard ability for spin winners')
+  assert.equal(p.abilityInventory.length, 0, 'no duplicate standard ability for gift holders')
   assert.equal(p.equippedAbilities.length, 0)
 })
 
-await test('weekly spin loser still walks away with an ability', () => {
+await test('renewal keeping a one-of-one (gift already) gets no standard grant on top', () => {
+  const p = makePlayer(BUYER, 'Buyer', { premiumAbility: 'heat_blaze' })
+  const res = grantPremiumAbility(p, { outcome: 'already', abilityId: 'heat_blaze' })
+  assert.equal(res.granted, 'gift')
+  assert.equal(res.id, 'heat_blaze')
+  assert.equal(p.abilityInventory.length, 0)
+})
+
+await test('sold-out monthly buyer still walks away with an ability (Crown\'s Favor)', () => {
   const p = makePlayer(BUYER, 'Buyer')
-  const res = grantPremiumAbility(p, { outcome: 'no_win' })
+  const res = grantPremiumAbility(p, { outcome: 'sold_out' })
   assert.equal(res.granted, 'new')
   assert.equal(res.equipped, true)
   assert.ok(p.equippedAbilities.includes(PREMIUM_ABILITY_ID))
@@ -136,7 +147,7 @@ await test('weekly spin loser still walks away with an ability', () => {
 await test('repeat buyer does not get a second copy', () => {
   const p = makePlayer(BUYER, 'Buyer')
   grantPremiumAbility(p, null)
-  const res = grantPremiumAbility(p, { outcome: 'no_win' })
+  const res = grantPremiumAbility(p, { outcome: 'sold_out' })
   assert.equal(res.granted, 'already')
   assert.equal(p.abilityInventory.filter(id => id === PREMIUM_ABILITY_ID).length, 1)
   assert.equal(p.equippedAbilities.filter(id => id === PREMIUM_ABILITY_ID).length, 1)
