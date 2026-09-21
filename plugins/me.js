@@ -14,6 +14,8 @@ import { getRankForLevel } from '../lib/rank-engine.js'
 import { races } from '../lib/game-data.js'
 import { getWaifu } from '../lib/card-engine.js'
 import { renderProfileCard } from '../lib/profile-card-render.mjs'
+import { playerLevelCap } from '../lib/reborn-engine.js'
+import { isTitled, ensurePrestige, getTierForXp } from '../lib/title-engine.js'
 
 export default {
   name: 'me',
@@ -30,12 +32,25 @@ export default {
     const waifuCard = getWaifu(p)
     const waifuLine = waifuCard ? `${waifuCard.title} (${waifuCard.series})` : 'none set'
 
+    // Level-200 prestige titles (Ⓟⓡⓞ/Ⓐ🅜/Ⓖ🅜/Ⓛ🅜 — lib/title-engine.js) are a
+    // separate system from p.title above: p.title is the free-text cosmetic
+    // flex granted by season packs, tournament wins or boss conquest
+    // (plugins/pack.js, plugins/tourney.js, plugins/party.js), and stays
+    // exactly as it was. A titled player gets an ADDITIONAL line here, and
+    // their Level line grows the tier glyph rather than replacing the number
+    // — the level itself is still meaningful info even once it's capped.
+    const titled = isTitled(p, playerLevelCap(p))
+    const tier = titled ? getTierForXp(ensurePrestige(p).xp) : null
+    const levelLine = tier
+      ? `★ Level: ${p.level}  ${tier.glyph} *${tier.name}*`
+      : `★ Level: ${p.level}`
+
     const lines = [
       `★ Name: ${p.name}`,
       `★ Title: ${p.title ?? 'none earned'}`,
       `★ Bio: ${p.bio ?? 'no bio set'}`,
       `★ Rank: ${rank.emoji} ${rank.title}`,
-      `★ Level: ${p.level}`,
+      levelLine,
       `★ Wallet: ☀️ ${w.solars ?? 0}  💎 ${fmtGems(w.gems ?? 0)}  🪙 ${fmtMonds(w.monds ?? 0)}`,
       `★ Also: ✨ ${p.seasonPoints ?? 0} SP  🔒 ${w.vault ?? 0} vault`,
       `★ Waifu: ${waifuLine}`,

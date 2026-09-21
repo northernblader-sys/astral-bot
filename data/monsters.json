@@ -35708,6 +35708,306 @@
           "chance": 0.25
         }
       ]
+    },
+    {
+      "id": "caged_null_wraith",
+      "name": "Null Wraith",
+      "emoji": "\ud83d\udd77\ufe0f",
+      "locationId": "caged_dimension",
+      "tier": "regular",
+      "floorRange": [
+        1,
+        9999
+      ],
+      "baseStats": {
+        "hp": 600,
+        "def": 80,
+        "atk": 900
+      },
+      "scaling": {
+        "hpPerFloor": 0,
+        "defPerFloor": 0,
+        "atkPerFloor": 0
+      },
+      "rewards": {
+        "xpBase": 0,
+        "xpPerFloor": 0,
+        "solarsBase": 0,
+        "solarsPerFloor": 0
+      },
+      "drops": [
+        {
+          "itemId": "void_shard",
+          "chance": 0.12
+        },
+        {
+          "itemId": "astral_shard",
+          "chance": 0.08
+        }
+      ]
+    },
+    {
+      "id": "caged_fracture_beast",
+      "name": "Fracture Beast",
+      "emoji": "\ud83d\udc80",
+      "locationId": "caged_dimension",
+      "tier": "regular",
+      "floorRange": [
+        1,
+        9999
+      ],
+      "baseStats": {
+        "hp": 500,
+        "def": 60,
+        "atk": 1100
+      },
+      "scaling": {
+        "hpPerFloor": 0,
+        "defPerFloor": 0,
+        "atkPerFloor": 0
+      },
+      "rewards": {
+        "xpBase": 0,
+        "xpPerFloor": 0,
+        "solarsBase": 0,
+        "solarsPerFloor": 0
+      },
+      "drops": [
+        {
+          "itemId": "fracture_core",
+          "chance": 0.1
+        },
+        {
+          "itemId": "eternity_dust",
+          "chance": 0.07
+        }
+      ]
+    },
+    {
+      "id": "caged_sever_hound",
+      "name": "Sever Hound",
+      "emoji": "\ud83d\udc3a",
+      "locationId": "caged_dimension",
+      "tier": "regular",
+      "floorRange": [
+        1,
+        9999
+      ],
+      "baseStats": {
+        "hp": 400,
+        "def": 40,
+        "atk": 1400
+      },
+      "scaling": {
+        "hpPerFloor": 0,
+        "defPerFloor": 0,
+        "atkPerFloor": 0
+      },
+      "rewards": {
+        "xpBase": 0,
+        "xpPerFloor": 0,
+        "solarsBase": 0,
+        "solarsPerFloor": 0
+      },
+      "drops": [
+        {
+          "itemId": "fang_splinter",
+          "chance": 0.14
+        },
+        {
+          "itemId": "leather_scrap",
+          "chance": 0.06
+        }
+      ]
+    },
+    {
+      "id": "caged_hollow_tyrant",
+      "name": "Hollow Tyrant",
+      "emoji": "\ud83d\udc41\ufe0f",
+      "locationId": "caged_dimension",
+      "tier": "regular",
+      "floorRange": [
+        1,
+        9999
+      ],
+      "baseStats": {
+        "hp": 900,
+        "def": 120,
+        "atk": 800
+      },
+      "scaling": {
+        "hpPerFloor": 0,
+        "defPerFloor": 0,
+        "atkPerFloor": 0
+      },
+      "rewards": {
+        "xpBase": 0,
+        "xpPerFloor": 0,
+        "solarsBase": 0,
+        "solarsPerFloor": 0
+      },
+      "drops": [
+        {
+          "itemId": "hollow_eye",
+          "chance": 0.09
+        },
+        {
+          "itemId": "astral_shard",
+          "chance": 0.1
+        }
+      ]
+    },
+    {
+      "id": "caged_rift_stalker",
+      "name": "Rift Stalker",
+      "emoji": "\ud83c\udf11",
+      "locationId": "caged_dimension",
+      "tier": "regular",
+      "floorRange": [
+        1,
+        9999
+      ],
+      "baseStats": {
+        "hp": 450,
+        "def": 55,
+        "atk": 1250
+      },
+      "scaling": {
+        "hpPerFloor": 0,
+        "defPerFloor": 0,
+        "atkPerFloor": 0
+      },
+      "rewards": {
+        "xpBase": 0,
+        "xpPerFloor": 0,
+        "solarsBase": 0,
+        "solarsPerFloor": 0
+      },
+      "drops": [
+        {
+          "itemId": "rift_fragment",
+          "chance": 0.11
+        },
+        {
+          "itemId": "void_shard",
+          "chance": 0.09
+        }
+      ]
+    },
+    {
+      "id": "caged_shatter_golem",
+      "name": "Shatter Golem",
+      "emoji": "\u26cf\ufe0f",
+      "locationId": "caged_dimension",
+      "tier": "regular",
+      "floorRange": [
+        1,
+        9999
+      ],
+      "baseStats": {
+        "hp": 1200,
+        "def": 150,
+        "atk": 700
+      },
+      "scaling": {
+        "hpPerFloor": 0,
+        "defPerFloor": 0,
+        "atkPerFloor": 0
+      },
+      "rewards": {
+        "xpBase": 0,
+        "xpPerFloor": 0,
+        "solarsBase": 0,
+        "solarsPerFloor": 0
+      },
+      "drops": [
+        {
+          "itemId": "golem_core",
+          "chance": 0.08
+        },
+        {
+          "itemId": "iron_ore",
+          "chance": 0.12
+        }
+      ]
+    },
+    {
+      "id": "caged_void_serpent",
+      "name": "Void Serpent",
+      "emoji": "\ud83d\udc0d",
+      "locationId": "caged_dimension",
+      "tier": "regular",
+      "floorRange": [
+        1,
+        9999
+      ],
+      "baseStats": {
+        "hp": 350,
+        "def": 30,
+        "atk": 1600
+      },
+      "scaling": {
+        "hpPerFloor": 0,
+        "defPerFloor": 0,
+        "atkPerFloor": 0
+      },
+      "rewards": {
+        "xpBase": 0,
+        "xpPerFloor": 0,
+        "solarsBase": 0,
+        "solarsPerFloor": 0
+      },
+      "drops": [
+        {
+          "itemId": "serpent_scale",
+          "chance": 0.13
+        },
+        {
+          "itemId": "void_shard",
+          "chance": 0.1
+        }
+      ]
+    },
+    {
+      "id": "caged_ruin_shade",
+      "name": "Ruin Shade",
+      "emoji": "\ud83c\udf2b\ufe0f",
+      "locationId": "caged_dimension",
+      "tier": "elite",
+      "floorRange": [
+        1,
+        9999
+      ],
+      "baseStats": {
+        "hp": 700,
+        "def": 90,
+        "atk": 1300
+      },
+      "scaling": {
+        "hpPerFloor": 0,
+        "defPerFloor": 0,
+        "atkPerFloor": 0
+      },
+      "rewards": {
+        "xpBase": 0,
+        "xpPerFloor": 0,
+        "solarsBase": 0,
+        "solarsPerFloor": 0
+      },
+      "drops": [
+        {
+          "itemId": "ruin_essence",
+          "chance": 0.15
+        },
+        {
+          "itemId": "eternity_dust",
+          "chance": 0.12
+        },
+        {
+          "itemId": "astral_shard",
+          "chance": 0.1
+        }
+      ]
     }
   ],
   "bosses": [

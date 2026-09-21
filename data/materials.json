@@ -232,5 +232,77 @@
     "sellPrice": 95,
     "description": "Iron mastered by fire and carbon. The line between a fortress and a legend.",
     "image": "https://animeastral.qzz.io/assets/items/steel.png"
+  },
+  {
+    "id": "void_shard",
+    "name": "Void Shard",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 240,
+    "description": "A jagged fragment of collapsed space from the Caged Dimension. The edges do not reflect light.",
+    "image": "https://animeastral.qzz.io/assets/items/void_shard.png"
+  },
+  {
+    "id": "fracture_core",
+    "name": "Fracture Core",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 180,
+    "description": "The dense nucleus of a Fracture Beast. It pulses faintly, as though reality inside it is still breaking.",
+    "image": "https://animeastral.qzz.io/assets/items/fracture_core.png"
+  },
+  {
+    "id": "fang_splinter",
+    "name": "Fang Splinter",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 110,
+    "description": "A tooth fragment from a Sever Hound. Sharp enough to pierce most alloys cold.",
+    "image": "https://animeastral.qzz.io/assets/items/fang_splinter.png"
+  },
+  {
+    "id": "hollow_eye",
+    "name": "Hollow Eye",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 160,
+    "description": "The sightless eye socket of a Hollow Tyrant. Staring into it too long causes vertigo.",
+    "image": "https://animeastral.qzz.io/assets/items/hollow_eye.png"
+  },
+  {
+    "id": "rift_fragment",
+    "name": "Rift Fragment",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 120,
+    "description": "A sliver of torn dimensional fabric left behind by a Rift Stalker. Warm to the touch despite having no temperature.",
+    "image": "https://animeastral.qzz.io/assets/items/rift_fragment.png"
+  },
+  {
+    "id": "ruin_essence",
+    "name": "Ruin Essence",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 300,
+    "description": "Distilled from a Ruin Shade. It embodies entropy \u2014 things left near it decay slightly faster.",
+    "image": "https://animeastral.qzz.io/assets/items/ruin_essence.png"
+  },
+  {
+    "id": "serpent_scale",
+    "name": "Serpent Scale",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 100,
+    "description": "A scale from a Void Serpent. Its iridescence shifts between colours that should not exist.",
+    "image": "https://animeastral.qzz.io/assets/items/serpent_scale.png"
+  },
+  {
+    "id": "golem_core",
+    "name": "Golem Core",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 190,
+    "description": "The crystalline heart of a Shatter Golem. Still vibrating at a frequency that makes metal brittle nearby.",
+    "image": "https://animeastral.qzz.io/assets/items/golem_core.png"
   }
 ]

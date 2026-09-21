@@ -39,7 +39,7 @@ import {
 
 // Banner shown behind every .shop reply — direct URL now (previously a
 // filename resolved via lib/image.js's map).
-const SHOP_BANNER = 'https://i.ibb.co/7xd0q4TJ/shop.jpg'
+const SHOP_BANNER = 'https://i.ibb.co/CpS1wXM9/astral-shop.jpg'
 
 // ── Rarity display ────────────────────────────────────────────────────
 

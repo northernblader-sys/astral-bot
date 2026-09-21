@@ -87,8 +87,13 @@ import { getActiveSeason, ensurePlayerSeasonState, applySeasonLevel } from '../l
 import { applyMeiSustainHeal, applyInfinity, activateFinalForm, applyTearOnHit, tickPermanentSever, activateCinderVerdict, activateHollowPurple, activateUnlimitedVoid, UNLIMITED_VOID_STUN_TURNS, sendFinalFormVideo, hasSecondTranscendance, activateKurama, resolveKuramaDrain, narutoBattleLine, sendKuramaSummonImage } from '../lib/character-abilities.js'
 import { checkPearlSave, processStatusTurn } from '../lib/combat-handlers.js'
 import { addStatusEffect } from '../lib/effects.js'
+import { isPremiumActive } from '../lib/premium.js'
+import { startOfDay } from '../lib/sleep-engine.js'
 
 const MAX_PARTY_SIZE = 3
+const MIN_PARTY_TO_ENTER = 2            // party mode is co-op only — no solo XP grinding
+const PARTY_DAILY_LIMIT = 1             // regular players: one co-op run per day
+const PARTY_DAILY_LIMIT_PREMIUM = 5     // premium players: five co-op runs per day
 const INVITE_TIMEOUT_MS = 5 * 60 * 1000 // 5 minutes
 const HP_SCALE_PER_EXTRA_MEMBER = 0.6   // enemy gets +60% max HP per member beyond the first
 const BOSS_COMBAT_CAPS = { hp: 50_000, atk: 4_500, def: 1_800 }
@@ -137,6 +142,52 @@ function memberListText(db, party) {
   return party.members
     .map(m => `  ${m === party.leaderId ? '👑' : '⚔️'} ${nameFor(db, m)}`)
     .join('\n')
+}
+
+// ── Turn order (fixed round-robin) ─────────────────────────────────────────
+// Party combat takes turns in a fixed order instead of a free-for-all. The
+// order is captured when a floor spawns (spawnAndAnnounceFloor). A battle from
+// before this feature shipped has no turnOrder, so partyTurnHolder returns null
+// and the turn gate is skipped (graceful fallback to the old free-for-all).
+function partyTurnHolder(party) {
+  const b = party?.battle
+  if (!b || !Array.isArray(b.turnOrder) || b.turnOrder.length === 0) return null
+  const idx = ((b.turnIndex ?? 0) % b.turnOrder.length + b.turnOrder.length) % b.turnOrder.length
+  return b.turnOrder[idx] ?? null
+}
+
+// Advance the cursor to the next member who is still standing (inBattle). If
+// nobody else is fighting, it lands back on whoever is left. Safe to call even
+// when there is no turnOrder.
+function advancePartyTurn(db, party) {
+  const b = party?.battle
+  if (!b || !Array.isArray(b.turnOrder) || b.turnOrder.length === 0) return
+  const n = b.turnOrder.length
+  for (let step = 1; step <= n; step++) {
+    const cand = b.turnOrder[((b.turnIndex ?? 0) + step) % n]
+    if (getPlayer(db, cand)?.inBattle) {
+      b.turnIndex = ((b.turnIndex ?? 0) + step) % n
+      return
+    }
+  }
+  // Nobody standing found other than possibly the current holder — leave as is.
+  b.turnIndex = ((b.turnIndex ?? 0) + 1) % n
+}
+
+// Returns a reply string if it is NOT this player's turn, else null. Also
+// self-heals the cursor if it is pointing at a member who has fallen (inBattle
+// false) so the party never softlocks on a downed player's turn.
+function notYourTurn(ctx, party) {
+  let holder = partyTurnHolder(party)
+  if (!holder) return null // pre-feature battle: free-for-all fallback
+  if (holder !== ctx.from && !getPlayer(ctx.db, holder)?.inBattle) {
+    advancePartyTurn(ctx.db, party)
+    holder = partyTurnHolder(party)
+  }
+  if (holder && holder !== ctx.from) {
+    return `⏳ It's *${nameFor(ctx.db, holder)}*'s turn. Wait your turn, then act.`
+  }
+  return null
 }
 
 // ── .party (status) ────────────────────────────────────────────────────
@@ -474,6 +525,12 @@ async function enterDungeon(ctx, dungeonArg) {
   if (party.leaderId !== ctx.from) return ctx.reply(`❌ Only the party leader can lead the party into a dungeon.`)
   if (party.battle) return ctx.reply(`⚠️ Your party is already in a battle! Use *${p}dparty attack*.`)
   if (party.run) return ctx.reply(`🧗 Your party is already climbing *${locationsMap[party.run.locationId]?.name ?? party.run.locationId}*. Use *${p}dparty next* to descend, or *${p}dparty leave* to stop.`)
+  if (party.members.length < MIN_PARTY_TO_ENTER) {
+    return ctx.reply(
+      `❌ Party mode is co-op only. You need at least *${MIN_PARTY_TO_ENTER}* members to enter a dungeon together.\n\n` +
+      `_Invite someone with *${p}dparty invite @player*, then head in. Grinding solo? Use *${p}dungeon* instead._`,
+    )
+  }
   if (!dungeonArg) return ctx.reply(`❓ Usage: *${p}dparty enter <dungeonId>*\nExample: *${p}dparty enter entry_tower*`)
 
   const locId = dungeonArg.toLowerCase().replace(/\s+/g, '_')
@@ -538,6 +595,25 @@ async function enterDungeon(ctx, dungeonArg) {
     }
   }
 
+  // Pre-check the daily co-op limit for every member (all-or-nothing). Regular
+  // players get PARTY_DAILY_LIMIT runs/day, premium members get the higher cap.
+  // A "run" is one dungeon entry; the whole climb that follows is free.
+  const today = startOfDay(Date.now())
+  for (const jid of party.members) {
+    const member = getPlayer(ctx.db, jid)
+    if (!member) continue
+    const limit = isPremiumActive(member) ? PARTY_DAILY_LIMIT_PREMIUM : PARTY_DAILY_LIMIT
+    const usedToday = member.partyRunsDate === today ? (member.partyRunsToday ?? 0) : 0
+    if (usedToday >= limit) {
+      const isSelf = jid === ctx.from
+      const who = isSelf ? 'You have' : `*${member.name}* has`
+      const extra = isPremiumActive(member)
+        ? ''
+        : `\n_Premium members get ${PARTY_DAILY_LIMIT_PREMIUM} party runs a day._`
+      return ctx.reply(`❌ ${who} used up today's party runs (${limit}/day). Entry cancelled.${extra}`)
+    }
+  }
+
   // Commit: deduct 1 stamina + travel from each member and mark them present.
   for (const jid of party.members) {
     await updatePlayer(ctx.db, jid, async member => {
@@ -547,6 +623,12 @@ async function enterDungeon(ctx, dungeonArg) {
         member.wallet = member.wallet ?? {}
         member.wallet.solars = (member.wallet.solars ?? 0) - travelCost
       }
+      // Count this run against the member's daily co-op limit.
+      if (member.partyRunsDate !== today) {
+        member.partyRunsDate = today
+        member.partyRunsToday = 0
+      }
+      member.partyRunsToday = (member.partyRunsToday ?? 0) + 1
       member.inBattle = true
       return member
     })
@@ -587,6 +669,11 @@ async function spawnAndAnnounceFloor(ctx, party, { first = false } = {}) {
     // these stand in for it — discarded with each floor's battle object, so
     // they reset every floor for free, same as solo battleState flags.
     charState: {},
+    // Fixed round-robin turn order, captured from the members present on this
+    // floor. Actions are gated to turnOrder[turnIndex]; advancePartyTurn moves
+    // the cursor after each action, skipping members who've fallen.
+    turnOrder: present.slice(),
+    turnIndex: 0,
     startedAt: Date.now(),
   }
 
@@ -619,7 +706,15 @@ async function spawnAndAnnounceFloor(ctx, party, { first = false } = {}) {
     msg += `${enemy.emoji ?? '👾'} *${enemy.name}*${tierTag} appears!\n`
     msg += `❤️ ${hpBar(enemy.hp, enemy.maxHp)}\n`
     msg += `⚔️ ATK: *${enemy.atk}*  🛡️ DEF: *${enemy.def}*\n\n`
-    msg += `_It's a free-for-all — anyone in the party can act!_\n`
+  }
+  // Fixed turn order: show the queue and whose turn is first. If it's not your
+  // turn you can't act, so the party always knows who's up.
+  if (party.battle.turnOrder?.length) {
+    const order = party.battle.turnOrder
+      .map((m, i) => `${i === (party.battle.turnIndex ?? 0) ? '▶️' : `${i + 1}.`} ${nameFor(ctx.db, m)}`)
+      .join('  ')
+    msg += `🎯 *Turn order:* ${order}\n`
+    msg += `_Take turns. If it isn't your turn, you can't act._\n`
   }
   // battleFlee() rejects .dparty flee against ANY boss, so the footer only
   // advertises flee on regular (non-boss) floors.
@@ -1056,6 +1151,9 @@ async function battleDefend(ctx) {
   if (!party) return ctx.reply(`❌ You're not in a party.`)
   if (!party.battle) return ctx.reply(`❌ Your party isn't in a battle.`)
 
+  const notTurn = notYourTurn(ctx, party)
+  if (notTurn) return ctx.reply(notTurn)
+
   // Mutator only mutates and records the outcome — no network I/O (ctx.reply)
   // runs inside it. It executes on the shared global write queue (see
   // lib/player-repo.js's runExclusive); an awaited sendMessage call in here
@@ -1195,6 +1293,8 @@ async function battleDefend(ctx) {
     )
   }
   if (hpZero) await handlePartyMemberDown(ctx, party, ctx.from)
+  // A defend takes the defender's turn — whoever acted, the next member is up.
+  if (party.battle) advancePartyTurn(ctx.db, party)
 }
 
 // ── Party battle: flee ─────────────────────────────────────────────────────
@@ -1210,6 +1310,9 @@ async function battleFlee(ctx) {
   if (!party) return ctx.reply(`❌ You're not in a party.`)
   if (!party.battle) return ctx.reply(`❌ Your party isn't in a battle.`)
   if (party.battle.enemy.isBoss) return ctx.reply(`⚠️ Can't flee a boss fight!`)
+
+  const notTurn = notYourTurn(ctx, party)
+  if (notTurn) return ctx.reply(notTurn)
 
   const e = party.battle.enemy
   let hpZero = false
@@ -1255,6 +1358,10 @@ async function battleFlee(ctx) {
   // check) as a failed attack/defend — kept outside updatePlayer's mutator
   // since handlePartyMemberDown does its own updatePlayer call.
   if (hpZero) await handlePartyMemberDown(ctx, party, ctx.from)
+  // Fleeing takes the turn too (whether it worked or the escape failed). If the
+  // flee actually ended the battle (party.battle cleared inside the mutator),
+  // the guard skips the advance.
+  if (party.battle) advancePartyTurn(ctx.db, party)
 }
 
 // ── Party battle: Cinder Verdict (Wither) ───────────────────────────────────

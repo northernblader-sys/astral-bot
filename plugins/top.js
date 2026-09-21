@@ -15,6 +15,8 @@ import { config } from '../config.js'
 import { getRankForLevel } from '../lib/rank-engine.js'
 import { getFameTier } from '../lib/fame-engine.js'
 import { renderTopPodium } from '../lib/top-render.mjs'
+import { playerLevelCap } from '../lib/reborn-engine.js'
+import { isTitled, ensurePrestige, getTierForXp } from '../lib/title-engine.js'
 
 function medal(i) {
   return ['🥇', '🥈', '🥉'][i] ?? `*${i + 1}.*`
@@ -36,10 +38,22 @@ export default {
     if (!users.length) return reply('_No players registered yet._')
 
     // ── Top 3 by level ────────────────────────────────────────────────────
+    // Titled players (level 200, the cap) tiebreak on prestige.xp rather
+    // than raw xp — see plugins/leaderboard.js's identical fix for why
+    // cumulative xp stops meaning anything once a player is capped.
+    const levelSortKey = (u) => {
+      const cap = (() => { try { return playerLevelCap(u) } catch { return 200 } })()
+      return isTitled(u, cap) ? ensurePrestige(u).xp : u.xp
+    }
     const byLevel = [...users]
-      .sort((a, b) => b.level - a.level || b.xp - a.xp)
+      .sort((a, b) => b.level - a.level || levelSortKey(b) - levelSortKey(a))
       .slice(0, 3)
     const levelLines = byLevel.map((u, i) => {
+      const cap = (() => { try { return playerLevelCap(u) } catch { return 200 } })()
+      if (isTitled(u, cap)) {
+        const tier = getTierForXp(ensurePrestige(u).xp)
+        return `  ${medal(i)} *${u.name}* — Lv.*${u.level}* ${tier.glyph} _(${tier.name})_`
+      }
       const r = getRankForLevel(u.level)
       return `  ${medal(i)} *${u.name}* — Lv.*${u.level}* ${r.emoji} _(${r.title})_`
     })
@@ -70,13 +84,23 @@ export default {
 
     // ── Podium image (top 3 by level) — falls back to text on render error ──
     try {
-      const podiumEntries = byLevel.map(u => ({
-        name:      u.name,
-        level:     u.level ?? 1,
-        rankTitle: getRankForLevel(u.level).title,
-        idImage:   u.idImage ?? null,
-        pfp:       u.pfp ?? null,
-      }))
+      const podiumEntries = byLevel.map(u => {
+        const cap = (() => { try { return playerLevelCap(u) } catch { return 200 } })()
+        const titled = isTitled(u, cap)
+        const tier = titled ? getTierForXp(ensurePrestige(u).xp) : null
+        return {
+          name:       u.name,
+          level:      u.level ?? 1,
+          rankTitle:  tier ? tier.name : getRankForLevel(u.level).title,
+          // Only set for a titled player — see lib/top-render.mjs's
+          // drawColumn for why the glyph needs its own font segment
+          // (same @napi-rs/canvas fallback limitation as the profile card;
+          // see lib/title-glyphs.js's header for the full explanation).
+          titleGlyph: tier ? tier.glyph : null,
+          idImage:    u.idImage ?? null,
+          pfp:        u.pfp ?? null,
+        }
+      })
       const buf = await renderTopPodium(podiumEntries)
       return ctx.replyImage(buf, caption)
     } catch (err) {

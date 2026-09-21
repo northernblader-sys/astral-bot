@@ -38,6 +38,8 @@ import { NOT_GROUP, NOT_ALLOWED } from '../lib/group-helpers.js'
 import { getActiveSeason, ensurePlayerSeasonState } from '../lib/season-engine.js'
 import { resolvePlayerHpZero } from '../lib/combat-handlers.js'
 import { formatTimeLeft } from '../lib/time-format.js'
+import { playerLevelCap } from '../lib/reborn-engine.js'
+import { isTitled, ensurePrestige, getTierForXp } from '../lib/title-engine.js'
 import {
   endPhase, endOpensAt, isAsleepByEnd, isEventActive, getEndEvent,
   THE_END_LOCATION_ID, THE_END_BOSS_ID,
@@ -648,6 +650,16 @@ async function handleAdvance(ctx) {
       bossImageShown = true
     }
 
+    // Titled players (level 200, lib/title-engine.js) get their tier glyph
+    // alongside the level in the battle status line — plain text, so no
+    // canvas font concerns here (see lib/title-glyphs.js's header for why
+    // that matters on the image-rendered surfaces, but not this one).
+    const playerCap = playerLevelCap(player)
+    const playerTitled = isTitled(player, playerCap)
+    const playerBadge = playerTitled
+      ? `${getTierForXp(ensurePrestige(player).xp).glyph} (Lv ${player.level})`
+      : `(Lv ${player.level})`
+
     const msg =
       `${header}\n` +
       `📊 ${floorBar(floor, totalFloors)}${cpLine}\n` +
@@ -658,7 +670,7 @@ async function handleAdvance(ctx) {
       (bossImageShown ? '' : entranceMsg) +
       `❤️ ${hpBar(enemy.hp, enemy.maxHp)}\n` +
       `⚔️ ATK: *${enemy.atk}*  🛡️ DEF: *${enemy.def}*\n\n` +
-      `👤 *${player.name}* (Lv ${player.level})\n` +
+      `👤 *${player.name}* ${playerBadge}\n` +
       `❤️ ${hpBar(player.hp, player.maxHp)}\n` +
       `💧 MP: *${player.mp}/${player.maxMp}*\n\n` +
       (fusionLine ? `${fusionLine}\n\n` : '') +

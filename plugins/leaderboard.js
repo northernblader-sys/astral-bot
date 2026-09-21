@@ -9,6 +9,8 @@ import { config } from '../config.js'
 import { sendImage } from '../lib/image.js'
 import { locationsMap } from '../lib/game-data.js'
 import { getRankForLevel } from '../lib/rank-engine.js'
+import { playerLevelCap } from '../lib/reborn-engine.js'
+import { isTitled, ensurePrestige, getTierForXp } from '../lib/title-engine.js'
 
 export default {
   name:           'ranking',
@@ -31,10 +33,26 @@ export default {
 
     // Default (no args): top by level
     if (!sub || sub === 'level' || sub === 'lv') {
+      // Once a player is titled, level (200) can no longer distinguish
+      // standing among them, and neither can raw cumulative xp: it just
+      // keeps climbing after the cap with nothing to do with it (see
+      // lib/title-engine.js's header) rather than reflecting real
+      // post-cap progress the way prestige.xp does. Sort titled players by
+      // that instead, so the board actually orders them by who's closer to
+      // Ⓛ🅜 rather than by an incidental leftover number.
+      const sortKey = (u) => {
+        const cap = (() => { try { return playerLevelCap(u) } catch { return 200 } })()
+        return isTitled(u, cap) ? ensurePrestige(u).xp : u.xp
+      }
       const sorted = users
-        .sort((a, b) => b.level - a.level || b.xp - a.xp)
+        .sort((a, b) => b.level - a.level || sortKey(b) - sortKey(a))
         .slice(0, 10)
       const rows = sorted.map((u, i) => {
+        const cap = (() => { try { return playerLevelCap(u) } catch { return 200 } })()
+        if (isTitled(u, cap)) {
+          const tier = getTierForXp(ensurePrestige(u).xp)
+          return `${medal(i)} ${tier.glyph} *${u.name}* — Lv.*${u.level}* _(${tier.name})_  (${u.classId ?? '?'})`
+        }
         const r = getRankForLevel(u.level)
         return `${medal(i)} ${r.emoji} *${u.name}* — Lv.*${u.level}* _(${r.title})_  (${u.classId ?? '?'})`
       })

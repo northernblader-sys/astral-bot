@@ -3,7 +3,7 @@
  *
  * A god releases his Aura. The Aura chips 90 HP every 4 seconds. Survive 30
  * seconds (675 HP total) and he acknowledges you: your level ceiling rises
- * from 100 to 150, every stat gains +100, max HP gains +300, and you choose
+ * from 100 to 200, every stat gains +100, max HP gains +300, and you choose
  * one of three divine relics. Fail and you are rejected, and you lose 5
  * levels.
  *
@@ -297,7 +297,7 @@ export default {
   name: 'reborn',
   aliases: ['unbecoming'],
   category: 'account',
-  description: `${config.prefix}reborn - at Level ${REBORN_REQ_LEVEL}, survive a god's Aura for 30 seconds to raise your level ceiling to 150. Groups only.`,
+  description: `${config.prefix}reborn - at Level ${REBORN_REQ_LEVEL}, survive a god's Aura for 30 seconds to raise your level ceiling to 200. Groups only.`,
   requiresPlayer: true,
 
   async run(ctx) {

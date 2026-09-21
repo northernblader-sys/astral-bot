@@ -155,5 +155,22 @@
     "travelCost": 0,
     "services": [],
     "description": "A wound torn in the world where the magical air runs thickest. Beyond the veil the End waits, vast, patient, and so saturated with power that the air alone will stop a mortal heart. While its long sleep lies over Astral, to step through is to be unmade on contact. Only when the aura crests, two weeks in, does the way open to those who would end it."
+  },
+  {
+    "id": "caged_dimension",
+    "name": "The Caged Dimension",
+    "type": "dungeon",
+    "safe": false,
+    "floors": 9999,
+    "levelRange": [
+      152,
+      200
+    ],
+    "entryLevel": 152,
+    "bossFloors": [],
+    "checkpointInterval": 25,
+    "prerequisite": "eternal_dungeon",
+    "travelCost": 500,
+    "description": "A shattered pocket of reality with no exit and no ceiling. The creatures here were never meant to exist \u2014 sealed away because nothing else could contain them. Even the strongest titled hunters struggle to survive. There are no bosses to conquer, no final floor to clear. There is only the grind, the howl, and the impossible weight of something that should not be alive pressing down on you with every passing second."
   }
 ]

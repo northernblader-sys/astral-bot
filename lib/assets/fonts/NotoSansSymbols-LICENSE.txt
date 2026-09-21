@@ -1,0 +1,27 @@
+NotoSansSymbols-Regular.ttf
+────────────────────────────
+Source: Google Noto Fonts ("Noto Sans Symbols"), repackaged from the
+@fontsource/noto-sans-symbols npm distribution (the "symbols" subset,
+weight 400) and converted from WOFF2 to TTF for @napi-rs/canvas, which
+only loads TTF/OTF.
+
+License: SIL Open Font License, v1.1 (OFL-1.1).
+Full license text: https://openfontlicense.org/open-font-license-official-text/
+
+Why this font is bundled:
+lib/fonts.js already ships DejaVu Sans/Serif/Mono for regular text, but
+DejaVu has no glyphs for the Enclosed Alphanumeric Supplement block
+(U+1F100–U+1F1FF), which includes the "negative squared" letter glyphs
+(e.g. 🅜, U+1F15C) used by the level-200 prestige titles in
+lib/title-engine.js. Without this font those glyphs render as blank
+boxes on any canvas-drawn card (profile card, leaderboard, etc.),
+even though they display fine in ordinary Telegram text messages.
+
+Registered under the family name "Noto Sans Symbols" in lib/fonts.js.
+IMPORTANT: @napi-rs/canvas does not do automatic per-glyph font
+fallback within a single fillText() call — a string mixing a title
+glyph and a regular name must be drawn as two separate fillText() calls
+(title segment in "Noto Sans Symbols", name segment in the normal
+font), advancing x by the measured width of the first segment. See
+lib/title-glyphs.js's drawBadgedName() for the shared helper that does
+this correctly.
