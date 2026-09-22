@@ -48,6 +48,37 @@ const DM_ALLOWED_COMMANDS = new Set(['premium', 'vip', 'topup', 'gems', 'buygems
 // "you were banned while asleep at the inn" must not become a dead end either.
 const LOCKOUT_EXEMPT_COMMANDS = new Set(['unban', 'unban-me', 'unbanme', 'appeal'])
 
+// Commands that survive the NIGHT MODE gate but nothing else.
+//
+// A spawned card/series is a perishable, first-come prize sitting in the group
+// with a code already posted. `.night on` stops the spawn SWEEPS (main.js), but
+// it does not remove a spawn that is already live — so without this exemption a
+// card that appeared a minute before the realm closed becomes unclaimable for
+// the whole night, and the player who typed the code first is told to go back
+// to sleep while the prize sits there. Claiming is a single message, not a
+// session of play, so it stays reachable.
+//
+// Deliberately NOT added to LOCKOUT_EXEMPT_COMMANDS: a banned or jailed player
+// must still be locked out of claiming. This set only widens the night gate.
+//
+// Covers `.claim` (owner: plugins/daily.js's alias — see that file's header)
+// and `.collect`/`.grab` (plugins/collect.js). Both reach the same shared
+// claimActiveSpawn(), which handles cards, series and wild Pokémon.
+const SPAWN_CLAIM_COMMANDS = new Set(['claim', 'collect', 'grab'])
+
+/**
+ * True when `cmd` may still run while night mode is ON for a sender who is
+ * neither the bot owner nor a mod. Exported so the gate can be tested against
+ * the real command set instead of a regex over handler.js's source.
+ *
+ * The owner/mod short-circuit stays at the call site, alongside the other
+ * per-sender checks the gate needs (see the night lockout block below).
+ */
+export function isNightModeAllowed(cmd) {
+  if (LOCKOUT_EXEMPT_COMMANDS.has(cmd)) return true
+  return SPAWN_CLAIM_COMMANDS.has(cmd)
+}
+
 // How often the "your bag is over the limit" notice may repeat on a player's own
 // commands while their 48h grace runs. Long enough not to be spam, short enough
 // that nobody can claim they were never told before items moved.
@@ -775,12 +806,19 @@ export function makeHandler(sock, db, botName) {
       // the bot would be louder asleep than awake. Blocked-and-already-notified
       // commands are dropped silently.
       if (isNightMode() && !isOwnerJid(from) && !isMod(db, from)) {
-        // Ban appeals are exempt, exactly as they are from the ban and jail
-        // lockouts below. Someone banned at 2am must still be able to file an
-        // appeal for the mods to read in the morning — night mode is a
-        // "come back later" notice, not a reason to close the only route out
-        // of a punishment. See LOCKOUT_EXEMPT_COMMANDS.
-        if (!LOCKOUT_EXEMPT_COMMANDS.has(cmd)) {
+        // Two classes of command survive the night (isNightModeAllowed):
+        //   • ban appeals, exactly as they survive the ban and jail lockouts
+        //     below — someone banned at 2am must still be able to file an
+        //     appeal for the mods to read in the morning, because night mode is
+        //     a "come back later" notice, not a reason to close the only route
+        //     out of a punishment; and
+        //   • spawn claims (.claim / .collect / .grab) — a card or series that
+        //     spawned just before the realm closed is still sitting there with
+        //     its code posted, and locking the claim out strands it until
+        //     morning. See SPAWN_CLAIM_COMMANDS.
+        // Everything else is refused, and a ban/jail lockout below still
+        // applies to the commands that pass here.
+        if (!isNightModeAllowed(cmd)) {
           if (shouldNotifyNight(from)) {
             await sock.sendMessage(sender, { text: nightNotice(config.prefix) }, { quoted: msg })
               .catch(() => {})

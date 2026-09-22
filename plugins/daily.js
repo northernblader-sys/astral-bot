@@ -6,6 +6,15 @@
  * Resets at midnight (local server time). Consecutive-day claims build a
  * streak (bonus grows daily, caps at 7 days); missing a full day resets the
  * streak back to 1 on the next claim.
+ *
+ * ALSO the live owner of the `.claim` key: 'claim' is this plugin's alias, and
+ * the loader hands a same-platform alias collision to the LAST plugin
+ * registered (lib/plugin-manager.js resolvePlugin), which by file-load order is
+ * this one rather than plugins/claim.js. So `.claim` lands here. Since `.claim
+ * <code>` is how a spawned card/series gets grabbed, a typed claim code is
+ * routed on to the shared spawn-claim helper below instead of being ignored —
+ * otherwise a player's code silently buys them a daily reward and the spawn
+ * stays on the floor. A bare `.claim`/`.daily` is the daily reward, unchanged.
  */
 import { config } from '../config.js'
 import { updatePlayer } from '../lib/player-repo.js'
@@ -13,6 +22,7 @@ import { levelsData, classes, races, getTotalStats } from '../lib/game-data.js'
 import { applyLevelUps } from '../lib/combat-engine.js'
 import { hasMod } from '../lib/mods.js'
 import { sendRankUp } from '../lib/rank-up.js'
+import { claimActiveSpawn, looksLikeClaimCode } from './collect.js'
 
 const BASE_SOLARS        = 50
 const PER_LEVEL_SOLARS   = 3
@@ -37,6 +47,17 @@ export default {
 
   async run(ctx) {
     const p = config.prefix
+
+    // ── `.claim <code>` — a spawn claim, not a daily claim ──────────────
+    // Card and series spawns both print "type .collect <code>", and `.claim`
+    // is the obvious synonym, so this is the single most-typed variant of the
+    // command. Gated on the code SHAPE (6 chars of A–Z/2–9, see
+    // looksLikeClaimCode) rather than just "any argument", so `.daily extra`
+    // and other stray text still fall through to the daily reward instead of
+    // being answered with "no card is spawned here".
+    const codeArg = (ctx.args?.[0] ?? '').trim()
+    if (looksLikeClaimCode(codeArg)) return claimActiveSpawn(ctx, codeArg)
+
     let outcome = null
 
     await updatePlayer(ctx.db, ctx.from, player => {
