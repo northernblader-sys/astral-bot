@@ -26,6 +26,7 @@ import { locationsMap } from '../lib/game-data.js'
 import { getGroupSettings } from '../lib/group-settings.js'
 import { MARKET_CONFIG, tierOf } from '../lib/empire-engine.js'
 import { isDungeonUnlocked, handleEnter } from './dungeon.js'
+import { releaseDungeonSlot } from '../lib/dungeon-slots.js'
 import { isEventActive, endPhase, getEndEvent, THE_END_LOCATION_ID } from '../lib/end-event.js'
 
 const TOWN_ID = 'astral_town'
@@ -148,6 +149,7 @@ async function handleTravelToTown(ctx) {
     player.inDungeon    = false
     player.battleState  = null
     player.location     = TOWN_ID
+    releaseDungeonSlot(ctx.isGroup ? ctx.sender : null, player, ctx.from)
 
     ctx.reply(
       `🚪 *${player.name}* travels back to *${locationsMap[TOWN_ID].name}*.\n` +

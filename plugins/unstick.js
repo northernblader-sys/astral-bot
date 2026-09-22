@@ -29,6 +29,7 @@ import { config } from '../config.js'
 import { isOwnerJid } from '../lib/group-helpers.js'
 import { resolveTargetId } from './admin.js'
 import { getPlayer, updatePlayer } from '../lib/player-repo.js'
+import { releaseDungeonSlot } from '../lib/dungeon-slots.js'
 
 const TOWN_ID = 'astral_town'
 
@@ -107,6 +108,7 @@ export default {
         const floor = pl.dungeonFloor ?? 0
         pl.inDungeon   = false
         pl.dungeonFloor = 0
+        releaseDungeonSlot(null, pl, targetId)
         cleared.push(`cleared dungeon state${floor > 0 ? ` (was Floor ${floor})` : ''}`)
       }
 

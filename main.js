@@ -62,6 +62,7 @@ import { syncSeasonLifecycle } from './lib/season-engine.js'
 import { isNightMode, onNightModeOff } from './lib/night-mode.js'
 import { initAbsoluteSpawnTimer } from './lib/spawn-timer.js'
 import { listStorySlots, releaseStorySlot } from './lib/moderation-state.js'
+import { runDungeonIdleSweep, DUNGEON_SLOT_SWEEP_INTERVAL_MS, DUNGEON_IDLE_TIMEOUT_MS } from './lib/dungeon-slots.js'
 import {
   CARD_SPAWN_INTERVAL_MS,
   SERIES_SPAWN_INTERVAL_MS,
@@ -1691,6 +1692,11 @@ async function main() {
   setInterval(() => {
     runStorySlotTimeoutSweep(instances, db).catch(err => globalLog('⚠️ Story slot timeout sweep crashed:', err.message))
   }, STORY_SLOT_SWEEP_INTERVAL_MS)
+
+  setInterval(() => {
+    runDungeonIdleSweep(instances, db).catch(err => globalLog('⚠️ Dungeon idle sweep crashed:', err.message))
+  }, DUNGEON_SLOT_SWEEP_INTERVAL_MS)
+  globalLog(`⏱️ Dungeon idle slot sweep scheduled every ${DUNGEON_SLOT_SWEEP_INTERVAL_MS / 1000}s (${DUNGEON_IDLE_TIMEOUT_MS / 60_000} min idle limit)`)
   globalLog(`⏱️ Story Mode slot timeout sweep scheduled every ${STORY_SLOT_SWEEP_INTERVAL_MS / 1000}s (${STORY_SLOT_TIMEOUT_MS / 60_000} min idle limit)`)
 
   // Run once immediately on startup to clear any leftover files from a

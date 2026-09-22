@@ -18,6 +18,7 @@
 import { config } from '../config.js'
 import { isOwnerJid } from '../lib/group-helpers.js'
 import { updateAllPlayers } from '../lib/player-repo.js'
+import { clearDungeonSlots } from '../lib/dungeon-slots.js'
 
 export default {
   name:           'dungeon-reset',
@@ -60,6 +61,7 @@ export default {
       }
       return count > 0
     })
+    clearDungeonSlots()
 
     return ctx.reply(
       `✅ *Dungeon reset complete.*\n\n` +

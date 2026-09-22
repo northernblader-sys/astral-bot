@@ -22,7 +22,7 @@ const CONFIG_SOURCES = new Map()
 /** Keys whose VALUE must never be printed to a log. Presence only. */
 const SECRET_KEYS = new Set([
   'JWT_SECRET', 'DISCORD_TOKEN', 'TELEGRAM_TOKEN',
-  'OMDB_API_KEY', 'IMGBB_API_KEY', 'GEMINI_API_KEY',
+  'OMDB_API_KEY', 'IMGBB_API_KEY', 'GEMINI_API_KEY', 'GOOGLE_API_KEY',
   'BANK_ACCOUNT', 'BANK_ACCOUNT_NAME',
   // Holds the database username and password. Anyone with this string owns
   // every player's data.
@@ -171,7 +171,7 @@ export const config = {
   // this file - committing it would publish it to every clone of the repo.
   // With no key set, .echidna chat says so in character and everything else
   // about Echidna (spin, .greed, the child) works unchanged.
-  geminiApiKey: env('GEMINI_API_KEY', ''),
+  geminiApiKey: env('GEMINI_API_KEY', '') || env('GOOGLE_API_KEY', '').trim(),
   // Which Gemini model speaks as her. lib/gemini.js falls back down a small
   // ladder (gemini-2.5-flash -> 2.0-flash -> 1.5-flash) if a name 404s for
   // the key's tier, so this rarely needs touching.

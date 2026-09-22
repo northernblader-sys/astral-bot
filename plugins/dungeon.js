@@ -37,6 +37,7 @@ import { getGroupSettings, saveGroupSettings, saveFailedMessage, isGroupOrBotOwn
 import { NOT_GROUP, NOT_ALLOWED } from '../lib/group-helpers.js'
 import { getActiveSeason, ensurePlayerSeasonState } from '../lib/season-engine.js'
 import { resolvePlayerHpZero } from '../lib/combat-handlers.js'
+import { canEnterDungeon, recordDungeonEntry, touchDungeonActivity, releaseDungeonSlot } from '../lib/dungeon-slots.js'
 import { formatTimeLeft } from '../lib/time-format.js'
 import { playerLevelCap } from '../lib/reborn-engine.js'
 import { isTitled, ensurePrestige, getTierForXp } from '../lib/title-engine.js'
@@ -241,6 +242,15 @@ export async function handleEnter(ctx) {
       return player
     }
 
+    // ── Group dungeon slot occupancy check (max 2, bypassed by premium) ──
+    if (ctx.isGroup) {
+      const slotCheck = canEnterDungeon(ctx.sender, player, ctx.from, ctx.db)
+      if (!slotCheck.allowed) {
+        ctx.reply(slotCheck.reason).catch(() => {})
+        return player
+      }
+    }
+
     // ── The End (world-event finale) ───────────────────────────────────
     // Ahead of every generic gate on purpose: this place doesn't obey unlock,
     // level, or travel-cost rules. It obeys the event clock (lib/end-event.js).
@@ -427,6 +437,9 @@ export async function handleEnter(ctx) {
     }
 
     player.inDungeon         = true
+    if (ctx.isGroup) {
+      recordDungeonEntry(ctx.sender, player, ctx.from)
+    }
     player.location          = locId
     player.dungeonFloor      = startFloor
     player.dungeonCheckpoint = checkpoint
@@ -470,6 +483,15 @@ async function handleAdvance(ctx) {
       await reply(`❌ You're not in a dungeon.\nUse *${p}enter <id>* to enter one.\n\n${dungeonList(player, ctx.db)}`)
       return player
     }
+
+    if (ctx.isGroup) {
+      const slotCheck = canEnterDungeon(ctx.sender, player, ctx.from, ctx.db)
+      if (!slotCheck.allowed) {
+        await reply(slotCheck.reason)
+        return player
+      }
+      touchDungeonActivity(ctx.sender, player, ctx.from)
+    }
     if (player.inBattle && player.battleState) {
       const e = player.battleState.enemy
       await reply(
@@ -485,6 +507,7 @@ async function handleAdvance(ctx) {
       const exhaustFloor = player.dungeonFloor
       player.inDungeon = false
       player.battleState = null
+      releaseDungeonSlot(ctx.isGroup ? ctx.sender : null, player, ctx.from)
       await reply(
         `⚡ *Out of stamina!* *(0/${player.stamina.max})*\nYou rest and exit the dungeon.\n` +
         `📍 Progress saved at Floor ${exhaustFloor}.\nResets at midnight, ${resetDate.toLocaleTimeString()}.`,
@@ -498,6 +521,7 @@ async function handleAdvance(ctx) {
 
     if (!loc) {
       player.inDungeon = false
+      releaseDungeonSlot(ctx.isGroup ? ctx.sender : null, player, ctx.from)
       await reply(`❌ Location data missing. Exiting dungeon.`)
       return player
     }
@@ -712,6 +736,7 @@ async function handleLeave(ctx) {
     player.inDungeon   = false
     player.inBattle    = false
     player.battleState = null
+    releaseDungeonSlot(ctx.isGroup ? ctx.sender : null, player, ctx.from)
 
     await reply(
       `🚪 *${player.name}* exits the dungeon.\n\n` +
