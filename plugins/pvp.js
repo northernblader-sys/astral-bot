@@ -87,6 +87,13 @@ import { NOT_GROUP, NOT_ALLOWED } from '../lib/group-helpers.js'
 import { isPremiumActive } from '../lib/premium.js'
 import { startOfDay } from '../lib/sleep-engine.js'
 import { findActiveMatchFor, advanceMatch } from '../lib/tourney-repo.js'
+import {
+  findActiveWarMatchFor,
+  beginWarDuel,
+  pvpConcludeWar,
+  settleWalkover,
+} from '../lib/guild-war-repo.js'
+import { WAR_KIT_TIERS, hasWarKit, removeWarKit as removeWarKitPublic } from '../lib/war-kit.js'
 import { finishTourney } from './tourney.js'
 import { getActiveSeason, applySeasonPoints } from '../lib/season-engine.js'
 import { recordQuestEvent } from '../lib/quest-engine.js'
@@ -402,9 +409,27 @@ function inPvp(player) {
   return !!(player.inBattle && player.battleState?.type === 'pvp')
 }
 
+/**
+ * warDuelKitLine(warDuel) — the one-line banner prefix for a pairing that
+ * just went live: which kit tier loaded and the isolation promise. Shared by
+ * the normal and wager accept paths so a war duel always announces the same
+ * way however it was opened.
+ */
+function warDuelKitLine(warDuel) {
+  const tier = warDuel?.war?.kitTier
+  const kit = WAR_KIT_TIERS?.[tier]
+  const size = warDuel?.war?.matchType
+  const label = kit ? `${kit.emoji} *${kit.name}* (Preset 5 · Tier ${kit.tier})` : `Preset 5`
+  return `🎒 ${label} loaded on both champions — war *${size ?? 'duel'}*, pairing ${((warDuel?.match?.i ?? 0) + 1)}.`
+}
+
 /** Ends a duel with no winner (both just walk away) — used by the /timeout path. */
 async function clearBattle(db, jid) {
+  // Belt-and-braces: if this player was mid-PAIRING when their duel died
+  // without a conclusion, Preset 5 must never be left on them. removeWarKit
+  // is idempotent, so calling it for an ordinary duel is free.
   await updatePlayer(db, jid, (p) => {
+    if (hasWarKit(p)) removeWarKitPublic(p)
     p.inBattle = false
     p.battleState = null
   })
@@ -480,6 +505,20 @@ async function tryHypnosisRewindPvp(db, winnerJid, loserJid, ctx, reasonLine) {
  * time back into a duel their opponent had already abandoned.
  */
 async function pvpConclude(db, winnerJid, loserJid, ctx, reasonLine, { allowRewind = true } = {}) {
+  // ── Guild War pairing — settles FIRST, before everything else ─────────
+  // A live war pairing IS this duel. It has to run ahead of the wager branch
+  // (a wager war carries a real stake AND a war point — one branch must own
+  // both, or the war never scores), ahead of Hypnosis (a rewind would strand
+  // Preset 5 on both fighters and un-decide a pairing that is already over),
+  // and ahead of the tournament hook (a war pairing is never a bracket match).
+  // Returns false only when there was nothing war-shaped about this duel, in
+  // which case every older path below runs untouched.
+  const warMatch = findActiveWarMatchFor(db, winnerJid, loserJid)
+  if (warMatch) {
+    const handled = await pvpConcludeWar(db, winnerJid, loserJid, ctx, reasonLine, warMatch)
+    if (handled) return undefined
+  }
+
   // ── Wager duels settle differently, and settle FIRST ────────────────────
   // Ahead of the Hypnosis check on purpose: wager mode disables every character
   // power (spec §1), and Anastasia unwinding a duel that has real solars in
@@ -827,9 +866,19 @@ export default {
     if (KIT_ALIASES.has(sub))     return showKit(ctx)
 
     // ── Group gate ───────────────────────────────────────────────────────────
+    // One deliberate exemption: a GUILD WAR must never be blocked by this
+    // toggle. A war pairing is declared by two guild leaders, tracked by the
+    // bot, and announced in the group — if `.pvp off` could wedge it, one
+    // admin mute would park a live war until it voided on the sweep. The
+    // exemption is narrow: only an incoming war challenge (`.pvp accept`)
+    // and only while the sender is inside a war pairing.
     if (ctx.isGroup) {
       const settings = await getGroupSettings(ctx.sender)
-      if (!settings.pvpEnabled) {
+      const warPass = !!(
+        (player?.pvpChallenge?.warId)
+        || (player?.battleState?.warId && player?.inBattle)
+      )
+      if (!settings.pvpEnabled && !warPass) {
         return ctx.reply(
           `🚫 PvP is disabled in this group.\n` +
           `_A group admin can turn it back on with *${pr}pvp on*._`,
@@ -917,10 +966,24 @@ export default {
         armFusion(p)
       })
 
+      // ── GUILD WAR pairing? Isolate both fighters behind Preset 5 NOW, at
+      // the exact moment the duel starts, and stamp the battleStates with the
+      // war id (plugins/pvp.js's group gate above reads that stamp). No-op
+      // for an ordinary duel — beginWarDuel returns null when this pair is
+      // not the live war pairing.
+      const warDuel = await beginWarDuel(db, challengerJid, ctx.from)
+      const freshChallenger = warDuel ? getPlayer(db, challengerJid) : challenger
+      const freshMe = warDuel ? getPlayer(db, ctx.from) : player
+
       return ctx.reply(
+        (warDuel
+          ? `⚔️🔥 *GUILD WAR PAIRING — LIVE!* 🔥⚔️\n` +
+            `${warDuelKitLine(warDuel)}\n` +
+            `_Your real inventory is stored and comes back the moment this duel ends._\n\n`
+          : '') +
         `⚔️ *DUEL ACCEPTED!*\n\n` +
-        `🥊 *${challenger.name}* Lv.${challenger.level} vs *${player.name}* Lv.${player.level}\n` +
-        `❤️ ${challenger.name}: ${challenger.hp}/${challenger.maxHp}   ❤️ ${player.name}: ${player.hp}/${player.maxHp}\n\n` +
+        `🥊 *${freshChallenger.name}* Lv.${freshChallenger.level} vs *${freshMe.name}* Lv.${freshMe.level}\n` +
+        `❤️ ${freshChallenger.name}: ${freshChallenger.hp}/${freshChallenger.maxHp}   ❤️ ${freshMe.name}: ${freshMe.hp}/${freshMe.maxHp}\n\n` +
         (gogetaOpener
           ? `✨ _Instant Transmission: ${player.name} is already standing where the duel starts._\n` +
             `*${player.name}* goes first!\n`
@@ -1326,6 +1389,18 @@ async function claimStale(ctx) {
 
   // Opponent gone entirely — release this player rather than stranding them.
   if (!playerExists(db, opponentJid)) {
+    // ── GUILD WAR pairing: the absent champion's opponent takes the point.
+    // Settle the war FIRST — settleWalkover clears both fighters (Preset 5
+    // and all) and drives the bracket on — before any ordinary duel cleanup.
+    const warFound = findActiveWarMatchFor(db, ctx.from, opponentJid)
+    if (warFound) {
+      await settleWalkover(
+        db, warFound.war, warFound.matchIdx, ctx.from, ctx,
+        `_*The opposing champion is gone from the roster — the pairing is awarded on the spot.*_`,
+      )
+      return undefined
+    }
+
     // A wager duel has real solars sitting in escrow on this player's own
     // battleState. Clearing the state without paying that back would delete
     // them, so the refund happens here, before the state is dropped.
@@ -3903,31 +3978,44 @@ async function acceptWagerDuel(ctx, challengerJid, amount) {
     p.inBattle = true
     p.battleState = makeWagerState(challengerJid, amount)
   })
-  if (!mineOk) {
-    // Unwind the challenger's side. Their solars were taken a moment ago for a
-    // duel that is not happening, so they go straight back.
-    await updatePlayer(db, challengerJid, (c) => {
-      refundStake(c, amount)
-      clearWagerState(c)
-    })
-    return ctx.reply(`☀️ *Your stake couldn't be held.* Wager cancelled, nobody was charged.`)
-  }
+    if (!mineOk) {
+      // Unwind the challenger's side. Their solars were taken a moment ago for a
+      // duel that is not happening, so they go straight back.
+      await updatePlayer(db, challengerJid, (c) => {
+        refundStake(c, amount)
+        clearWagerState(c)
+      })
+      return ctx.reply(`☀️ *Your stake couldn't be held.* Wager cancelled, nobody was charged.`)
+    }
 
-  const me = getPlayer(db, ctx.from)
-  const them = getPlayer(db, challengerJid)
-  return ctx.reply(
-    `💰⚔️ *WAGER DUEL — LIVE!* ⚔️💰\n\n` +
-    `☀️ *${(amount * 2).toLocaleString()}* solars in the pot. Winner takes it all.\n\n` +
-    `🥊 *${them.name}* Lv.${them.level}  vs  *${me.name}* Lv.${me.level}\n` +
-    `❤️ ${them.name}: ${them.hp}/${them.maxHp}   ❤️ ${me.name}: ${me.hp}/${me.maxHp}\n\n` +
-    `⚡ *NO TURNS.* Swing the moment you can.\n` +
-    `⏱️ 2 second cooldown  ·  🚫 no same move twice in a row\n` +
-    `🎭 No character powers. Stats, skills and your kit only.\n\n` +
-    `⚔️ *${pr}pvp atk*  ·  ✨ *${pr}pvp sk <name>*  ·  🛡️ *${pr}pvp def*\n` +
-    `🧪 *${pr}pvp dr <potion>*  ·  🪬 *${pr}pvp tot*  ·  🔧 *${pr}pvp mnd wpn*\n` +
-    `_Free to check anytime: *${pr}pvp status* · *${pr}pvp moves* · *${pr}pvp inv*_\n\n` +
-    `🔔 *GO.*`,
-  )
+    // ── GUILD WAR pairing? Isolate both fighters behind Preset 5 NOW ──
+    // Same contract as the normal accept path: war id stamped onto both
+    // battleStates, real inventories stashed, the war kit loaded. Null for an
+    // ordinary wager between two random players.
+    const beforeChallenger = getPlayer(db, challengerJid)
+    const beforeMe = getPlayer(db, ctx.from)
+    const warDuel = await beginWarDuel(db, challengerJid, ctx.from)
+    const them = warDuel ? getPlayer(db, challengerJid) : beforeChallenger
+    const me = warDuel ? getPlayer(db, ctx.from) : beforeMe
+
+    return ctx.reply(
+      (warDuel
+        ? `⚔️🔥 *GUILD WAR PAIRING — WAGER RULES!* 🔥⚔️\n` +
+          `${warDuelKitLine(warDuel)}\n` +
+          `_Your real inventory is stored and returns intact the moment this duel ends._\n\n`
+        : '') +
+      `💰⚔️ *WAGER DUEL — LIVE!* ⚔️💰\n\n` +
+      `☀️ *${(amount * 2).toLocaleString()}* solars in the pot. Winner takes it all.\n\n` +
+      `🥊 *${them.name}* Lv.${them.level}  vs  *${me.name}* Lv.${me.level}\n` +
+      `❤️ ${them.name}: ${them.hp}/${them.maxHp}   ❤️ ${me.name}: ${me.hp}/${me.maxHp}\n\n` +
+      `⚡ *NO TURNS.* Swing the moment you can.\n` +
+      `⏱️ 2 second cooldown  ·  🚫 no same move twice in a row\n` +
+      `🎭 No character powers. Stats, skills and your kit only.\n\n` +
+      `⚔️ *${pr}pvp atk*  ·  ✨ *${pr}pvp sk <name>*  ·  🛡️ *${pr}pvp def*\n` +
+      `🧪 *${pr}pvp dr <potion>*  ·  🪬 *${pr}pvp tot*  ·  🔧 *${pr}pvp mnd wpn*\n` +
+      `_Free to check anytime: *${pr}pvp status* · *${pr}pvp moves* · *${pr}pvp inv*_\n\n` +
+      `🔔 *GO.*`,
+    )
 }
 
 /**
@@ -4242,6 +4330,10 @@ async function voidWagerDuel(db, ctx, aJid, bJid, headline, oppName) {
   await updatePlayer(db, aJid, (p) => {
     aBack = refundStake(p, stake)
     clearWagerState(p)
+    // A GUILD WAR pairing voids its duel here too — Preset 5 comes off and
+    // the real inventory returns. The pairing itself stays open (sweep or a
+    // fresh accept will settle it), so the war is never decided by silence.
+    if (hasWarKit(p)) removeWarKitPublic(p)
   })
 
   let bBack = 0
@@ -4249,6 +4341,7 @@ async function voidWagerDuel(db, ctx, aJid, bJid, headline, oppName) {
     await updatePlayer(db, bJid, (p) => {
       bBack = refundStake(p, stake)
       clearWagerState(p)
+      if (hasWarKit(p)) removeWarKitPublic(p)
     })
   }
 

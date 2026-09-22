@@ -59,7 +59,11 @@ export default {
       `*${p}loadout equip <name>* — quickly switch into that setup\n` +
       `*${p}loadout list* — view your saved presets\n` +
       `*${p}loadout view <name>* — inspect items inside a preset\n` +
-      `*${p}loadout delete <name>* — remove a preset`,
+      `*${p}loadout delete <name>* — remove a preset\n\n` +
+      `⚔️ *Guild War Preset 5:* save your war gear with *${p}loadout save war* ` +
+      `_(or_ *${p}loadout save 5*_) — it loads on top of the bot's war kit, slot by slot, ` +
+      `every pairing of a Guild War, and lifts the moment the duel ends. ` +
+      `_See the five kit tiers with *${p}guild war kits*._`,
     )
   },
 }
@@ -74,14 +78,16 @@ function listLoadouts(ctx) {
       `🎒 *No saved loadouts yet.*\n\n` +
       `Equip your favorite gear and type:\n` +
       `> *${p}loadout save pvp*\n` +
-      `> *${p}loadout save boss*`,
+      `> *${p}loadout save boss*\n` +
+      `> *${p}loadout save war*  ⚔️ _your Guild War Preset 5 — overrides the bot kit slot by slot_`,
     )
   }
 
   const list = names.map(name => {
     const l = loadouts[name]
     const count = Object.values(l.equipped || {}).filter(Boolean).length
-    return `• *${name}* — ${count} gear items equipped`
+    const isWar = ['war', '5', 'preset 5', 'preset5'].includes(name)
+    return `• *${name}* — ${count} gear items equipped${isWar ? '  ⚔️ _war preset (Preset 5)_' : ''}`
   }).join('\n')
 
   return ctx.reply(
