@@ -4,7 +4,7 @@
  */
 import { config } from '../config.js'
 import { updatePlayer } from '../lib/player-repo.js'
-import { setWaifu, tierStars } from '../lib/card-engine.js'
+import { setWaifu, tierStars, hasCardSeries } from '../lib/card-engine.js'
 
 export default {
   name: 'setwaifu',
@@ -33,8 +33,8 @@ export default {
     return reply(
       `💘 *Waifu set!*\n\n` +
       `${tierStars(chosen.tier)} *${chosen.title}*\n` +
-      `📺 _${chosen.series}_\n\n` +
-      `_Check her out anytime with *${config.prefix}waifu*._`
+      (hasCardSeries(chosen.series) ? `📺 _${chosen.series}_\n` : '') +
+      `\n_Check her out anytime with *${config.prefix}waifu*._`
     )
   },
 }

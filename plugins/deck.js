@@ -3,7 +3,7 @@
  * Usage: .deck
  */
 import { config } from '../config.js'
-import { tierStars, cardSellPrice } from '../lib/card-engine.js'
+import { tierStars, cardSellPrice, hasCardSeries } from '../lib/card-engine.js'
 
 const PAGE_SIZE = 10
 
@@ -36,7 +36,13 @@ export default {
 
     const lines = pageItems.map(c => {
       const waifuTag = player.waifuId === c.id ? ' 💘' : ''
-      return `${tierStars(c.tier)} *${c.title}*${waifuTag}\n     _${c.series} · ☀️${cardSellPrice(c.tier)}_`
+      // Hide the 'Unknown' series placeholder — show just the worth when the
+      // card has no real series name.
+      const meta = [
+        hasCardSeries(c.series) ? c.series : null,
+        `☀️${cardSellPrice(c.tier)}`,
+      ].filter(Boolean).join(' · ')
+      return `${tierStars(c.tier)} *${c.title}*${waifuTag}\n     _${meta}_`
     })
 
     const footer = totalPages > 1
