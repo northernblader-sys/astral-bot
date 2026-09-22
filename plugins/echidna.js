@@ -60,12 +60,19 @@ const STRANGER_LINES = [
 // a soul asked for out of the world's memory. Nothing in this scene is
 // explicit: it plays as a witch's ceremony, and the bot's content rules
 // (and hers, see data/echidna-personality.json) keep it that way.
+//
+// COPY RULE (2026-09-22): the rite carries no dash punctuation at all. Not an
+// em dash, not an en dash, not the spaced " - " the rest of the bot leans on
+// as its em-dash substitute. This is prose read aloud rather than a status
+// line, so the beats use commas, colons and full stops. Pinned by
+// test/echidna.test.mjs, because every other "just remove the dashes" cleanup
+// in this repo has quietly regressed back to " - " within a session or two.
 function ritualBeats(holderName) {
   return [
-    `🍵 _The candles burn blue. Echidna sets a second cup across from you at the tea table - and a third, smaller one, at its edge._\n\n_"So. You want a child of mine. Sit down, ${holderName}. This is not done the common way - I am no common woman." _`,
+    `🍵 _The candles burn blue. Echidna sets a second cup across from you at the tea table, then a third, smaller one, at its edge._\n\n_"So. You want a child of mine. Sit down, ${holderName}. This is not done the common way. I am no common woman." _`,
     `📖 _"The Gospel remembers every soul that ever was. I will ask it for one that has not been written yet." _\n\n_The Tome of Wisdom opens of its own accord. Pages turn like a storm settling, and somewhere in them a very small future holds its breath._`,
-    `🕯️ _"A soul needs a vessel. I have built vessels before - you will not ask me about the sanctuary." _\n\n_Her hands move over the porcelain cup. Steam rises, thickens, and quietly begins to breathe._`,
-    `🌙 _Hours pass. The tea goes cold. The candles burn to brass. And at last, cutting the sanctuary's silence - a thin, indignant, brand-new cry._`,
+    `🕯️ _"A soul needs a vessel. I have built vessels before, and you will not ask me about the sanctuary." _\n\n_Her hands move over the porcelain cup. Steam rises, thickens, and quietly begins to breathe._`,
+    `🌙 _Hours pass. The tea goes cold. The candles burn to brass. And at last, cutting the sanctuary's silence, a thin, indignant, brand-new cry._`,
   ]
 }
 
@@ -73,7 +80,7 @@ function ritualClosing(name) {
   return (
     `🍼 *A child has come into your house.*\n${RULE}\n` +
     `_Echidna looks everywhere except at you._\n` +
-    `_"One. That is all you get, ever - my generosity has ledgers. ...Name the child. And don't make it embarrassing." _\n\n` +
+    `_"One. That is all you get, ever. My generosity has ledgers. ...Name the child. And don't make it embarrassing." _\n\n` +
     `👶 *${name}* is a newborn, asleep in your house.\n` +
     `· Name them: *${config.prefix}echidna name <name>*\n` +
     `· Check on them: *${config.prefix}echidna child* _(they grow as you visit)_\n` +
@@ -90,7 +97,7 @@ async function runRitual(ctx) {
     return ctx.reply(
       `🍵 *ONE child.*\n${RULE}\n` +
       `_Her eyes narrow over the teacup._\n` +
-      `_"You already have one of mine - *${c.name}*, ${c.stage}. The rite happens once in a lifetime, and you have spent yours." _`,
+      `_"You already have one of mine: *${c.name}*, ${c.stage}. The rite happens once in a lifetime, and you have spent yours." _`,
     )
   }
 
@@ -130,7 +137,7 @@ async function runVisit(ctx) {
   if (!hasChild(ctx.player)) {
     return ctx.reply(
       `🍵 _"There is no child here. Yet." _\n${RULE}\n` +
-      `_Perform the sanctuary rite with *${config.prefix}echidna ritual* - one child, ever._`,
+      `_Perform the sanctuary rite with *${config.prefix}echidna ritual*. One child, ever._`,
     )
   }
 
@@ -172,7 +179,7 @@ async function runName(ctx) {
     res = nameChild(player, raw)
   })
   if (res?.reason === 'no_child') {
-    return ctx.reply(`🍵 _"Name what? Perform the rite first - *${config.prefix}echidna ritual*. One child, ever." _`)
+    return ctx.reply(`🍵 _"Name what? Perform the rite first: *${config.prefix}echidna ritual*. One child, ever." _`)
   }
   if (!res?.ok) {
     return ctx.reply(`❌ That name won't do${res?.reason === 'too_long' ? ' - 24 characters at most' : ''}. Try: *${config.prefix}echidna name <name>*`)

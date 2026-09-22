@@ -336,6 +336,25 @@ const BATTLE_ALLOWED_COMMANDS = new Set([
   // the raw token (no alias resolution).
   'kurohitsugi', 'kuro', 'blackcoffin', 'black-coffin', 'coffin', 'hado90',
   'hougyoku', 'hogyoku', 'transcend', 'transcendence', 'the-one-above-all',
+  // Echidna's two actives (plugins/greed.js, plugins/wisdom.js) — the same
+  // recurring shape as every character active above, and it made BOTH of her
+  // battle commands dead on arrival in PvE. `.greed` is her once-per-battle
+  // tithe: it spends the turn, resolves through the same battleState path as
+  // puppetry/wildcard, and tangles the enemy's next turn. `.wisdom` is her
+  // in-battle readout (plugins/wisdom.js's whole PvE branch reads
+  // battleState.enemy), so it is only ever useful mid-fight. Neither token was
+  // on this list, so the gate rejected them in every dungeon, swarm floor and
+  // boss fight before the plugin ran. Duels don't set player.inBattle and
+  // pvp.js routes `.greed` through its own 'greedtithe' action, which is why
+  // she appeared to work in PvP and nowhere else. Every alias is listed
+  // because cmd is the raw typed token (no alias resolution).
+  // NB: the `.echidna` hub command is deliberately NOT here. Its subcommands
+  // are `.echidna ritual` / `child` / `name`, none of which is a battle action,
+  // and running the rite mid-fight would mutate house/child state while a
+  // battleState is live. `.echidna <message>` is Gemini chat, same as out of
+  // battle. She is fought WITH, not managed DURING.
+  'greed', 'tithe', 'greedgrab', 'gospel', 'gospelofgreed', 'witchs-grasp', 'stealgreed',
+  'wisdom', 'bookofwisdom', 'tome', 'tomeofwisdom', 'read',
   // Willow's in-battle advisory (plugins/willow.js). It hard-requires
   // `player.inBattle && battleState.enemy` and does nothing else, so leaving it
   // off this list didn't merely restrict it — it made the command unreachable in

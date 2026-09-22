@@ -130,7 +130,8 @@ console.log('\n=== 6b. In-battle commands are reachable mid-battle ===')
     'ultimate',                                     // Nisha's dragon
     'domain-expansion', 'domain', 'chimera',        // Megumi
     'mahoraga',                                     // Megumi (status card)
-    'finalform', 'ff', 'transform',                 // Mei
+    'finalform', 'ff', 'transform',                // Mei
+    'greed', 'tithe', 'wisdom',                     // Echidna
     'willow', 'advise', 'advisor',                  // Willow
     'pvp', 'duel', 'dparty', 'pattack',             // PvP + party
     'cb', 'unstuck',                                // escape hatch
