@@ -220,7 +220,7 @@ async function runChat(ctx, text) {
   if (!config.geminiApiKey) {
     return ctx.reply(
       `🍵 _She frowns at the Gospel; the page comes back blank._\n` +
-      `_(Her voice needs a Gemini key - set *GEMINI_API_KEY* in the bot's environment/`.env`, then restart.)_`,
+      `_(Her voice needs a Gemini key - set *GEMINI_API_KEY* in the bot's environment (\`.env\`), then restart.)_`,
     )
   }
 

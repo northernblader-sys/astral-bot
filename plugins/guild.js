@@ -64,12 +64,37 @@ import {
 } from '../lib/guild-engine.js'
 import { sendImageTo } from '../lib/image.js'
 
+import { getGroupMetadata } from '../lib/group-helpers.js'
+import { pushNotification } from '../lib/notification-repo.js'
+
+import { WAR_FORMATS } from '../lib/guild-war-engine.js'
 import {
-  WAR_FORMATS,
-  GUILD_AURAS,
-  createWarSession,
-  resolveWarTurn,
-} from '../lib/guild-war-engine.js'
+  MATCH_TYPES,
+  MATCH_TYPE_IDS,
+  DOMINANCE_TIERS,
+  GUILD_WAR_TIERS,
+  WAR_KIT_TIERS,
+  createWarChallenge,
+  acceptWarChallenge,
+  cancelWar,
+  ensureWarState,
+  ensureDominance,
+  dominanceTierFor,
+  guildWarTierFor,
+  ensureGuildWarStats,
+  findWarByStatus,
+  findLiveWarBetween,
+  guildBusy,
+  warsForGuild,
+  getWar,
+  startNextPairing,
+  sweepGuildWars,
+  canClaimPairing,
+  settleWalkover,
+  warBoard,
+  warKitLabel,
+  formatName,
+} from '../lib/guild-war-repo.js'
 
 /**
  * Official guild art (2026-09-21 owner-provided drop, keyed by guild id).
@@ -102,6 +127,12 @@ export default {
     { cmd: 'top', desc: 'all five guilds ranked by standing' },
     { cmd: 'motd <text>', desc: 'leader only — set the message of the day' },
     { cmd: 'kick <player>', desc: 'leader only — remove a member' },
+    { cmd: 'war challenge <guild> <size> <format> @champs', desc: 'leader declares a real player-vs-player Guild War (1v1…4v4)' },
+    { cmd: 'war accept @champs', desc: 'rival leader names their champions and starts the pairings' },
+    { cmd: 'war status', desc: 'the live war board — scores, pairings, performance' },
+    { cmd: 'war claim / forfeit / decline', desc: 'walkover, throw a pairing, or refuse a challenge' },
+    { cmd: 'war leaderboard', desc: 'dominance score and the highest-tier players' },
+    { cmd: 'war kits / record', desc: 'the five Preset 5 tiers · your guild\'s war history' },
   ],
 
   async run(ctx) {
@@ -138,7 +169,7 @@ export default {
       `*${p}guild treasury* — vault and tier progress\n` +
       `*${p}guild perks* — what your tier grants\n` +
       `*${p}guild top* — rank all five guilds\n` +
-      `*${p}guild war* — intense 1v1 / 2v2 guild clashes with format kits & teammate auras\n` +
+      `*${p}guild war* — declare real player-vs-player wars (1v1 up to 4v4) with prize pools, Preset 5 kits & dominance ladders\n` +
       `*${p}guild motd <text>* — (leader) set the notice\n` +
       `*${p}guild kick <player>* — (leader) remove a member\n` +
       `*${p}guild banner* / *${p}guild pfp* — (leader) attach an image`,
@@ -681,260 +712,702 @@ async function uploadImage(ctx, allUsers, kind) {
   }
 }
 
-// ── Guild Wars (1v1 & 2v2 with Format Kits & Teammate Aura) ─────────────────
+// ── Guild Wars — real player-vs-player, leader-run, up to 4v4 ────────────────
+//
+// A war is a SERIES OF PAIRED 1v1 DUELS between champions the two guild
+// LEADERS name. Combat itself is the ordinary `.pvp` engine — two real
+// players, real turns, real abilities — so a war can never be fought by
+// proxies. Every pairing isolates both fighters behind Preset 5 (lib/war-kit.js),
+// every 1v1 win adds a point, and the bot stamps the 500k/1M prize pool.
+// See lib/guild-war-repo.js for the full state machine.
+
+const pfx = () => config.prefix
+
+/** Tokens that are options, never part of a guild name. */
+const WAR_OPTION_TOKENS = new Set([
+  ...MATCH_TYPE_IDS,
+  ...Object.keys(WAR_FORMATS),
+  'normal', 'wager', 'wagered', 'stake', 'stakes', 'standard',
+  'kit', 'preset', 'tier', 'kits', 'presets',
+])
+
+/** @mentions on this message, in the order they were typed. */
+function mentionedJids(ctx) {
+  const info = ctx.msg?.message?.extendedTextMessage?.contextInfo
+    ?? ctx.msg?.message?.imageMessage?.contextInfo
+    ?? ctx.msg?.message?.buttonsResponseMessage?.contextInfo
+  return [...(info?.mentionedJid ?? [])]
+}
+
+/**
+ * The @mentions from this message that are actually IN THIS GROUP. Tagging a
+ * guildmate who isn't in the chat renders as a raw number, so filter against
+ * group metadata when we can get it; if metadata is unavailable, fall back to
+ * mentioning at most the first few so the message still reads cleanly.
+ */
+async function mentionsInGroup(ctx, jids) {
+  const list = [...new Set((jids ?? []).filter(Boolean))]
+  if (!list.length) return []
+  if (!ctx.isGroup || typeof ctx.sock?.groupMetadata !== 'function') return list
+  try {
+    const meta = await getGroupMetadata(ctx.sock, ctx.sender)
+    const inside = new Set()
+    for (const p of meta?.participants ?? []) {
+      if (p?.id) inside.add(p.id)
+      if (p?.jid) inside.add(p.jid)
+      if (p?.lid) inside.add(p.lid)
+    }
+    const filtered = list.filter(j => inside.has(j))
+    return filtered.length ? filtered : list.slice(0, 8)
+  } catch {
+    return list.slice(0, 8)
+  }
+}
+
+/** Reply WITH @mentions — this is how both guilds get tagged for a war. */
+async function replyTagged(ctx, text, jids) {
+  const mentions = await mentionsInGroup(ctx, jids)
+  if (!mentions.length) return ctx.reply(text)
+  return ctx.sock.sendMessage(ctx.sender, { text: String(text), mentions }, { quoted: ctx.msg })
+    .catch(err => {
+      logger.error({ err: err.message }, 'guild war tagged reply failed — falling back to plain text')
+      return ctx.reply(text)
+    })
+}
+
+/** The guild leader, or a refusal message. Returns { leader, error }. */
+function requireLeader(ctx, allUsers) {
+  if (!ctx.player?.guildId) return { error: `❌ You're not in a guild.` }
+  const guild = getGuildDef(ctx.player.guildId)
+  const leader = getGuildLeader(ctx.player.guildId, allUsers)
+  if (leader?.id !== ctx.player.id) {
+    return {
+      error: `👑 Only *${guild?.name}'s* leader can do that. Current leader: *${leader?.name ?? 'none'}*.`,
+    }
+  }
+  return { leader, guild }
+}
+
+/**
+ * Parse a challenge query into options + the leftover guild name.
+ * Order-free: `.guild war challenge 2v2 emberwake kit 5 wager @a @b` and
+ * `.guild war challenge emberwake 2v2 standard @a` both work.
+ */
+function parseWarChallengeArgs(args, mentioned) {
+  const tokens = [...(args ?? [])]
+  const opts = { matchType: null, formatId: null, stakes: null, kitTier: null, guildTokens: [] }
+
+  for (let i = 0; i < tokens.length; i++) {
+    const raw = tokens[i]
+    const t = String(raw ?? '').toLowerCase().replace(/[^\w|]/g, '')
+
+    if (MATCH_TYPE_IDS.includes(t)) { opts.matchType = t; continue }
+    if (Object.keys(WAR_FORMATS).includes(t)) { opts.formatId = t; continue }
+    if (t === 'normal') { opts.stakes = 'normal'; continue }
+    if (t === 'wager' || t === 'wagered' || t === 'stake' || t === 'stakes') { opts.stakes = 'wager'; continue }
+    if (t === 'kit' || t === 'preset' || t === 'tier') {
+      const next = tokens[i + 1]
+      const n = Math.floor(Number(String(next ?? '').replace(/[^\d]/g, '')))
+      if (n >= 1 && n <= 5) { opts.kitTier = n; i += 1; continue }
+      opts.kitTier = opts.kitTier ?? 3
+      continue
+    }
+    const presetMatch = /^t([1-5])$/i.exec(String(raw ?? '')) ?? /^kit([1-5])$/i.exec(String(raw ?? ''))
+    if (presetMatch) { opts.kitTier = Number(presetMatch[1]); continue }
+    // A mention token is never part of the guild name — match it with or
+    // without the leading `@` so `@ga2` can't leak into the query.
+    const bare = String(raw ?? '').replace(/^@+/, '')
+    if (mentioned?.has?.(raw) || mentioned?.has?.(bare)) continue
+    if (bare !== raw) continue
+    if (WAR_OPTION_TOKENS.has(t)) continue
+    opts.guildTokens.push(raw)
+  }
+
+  opts.matchType = opts.matchType ?? '1v1'
+  opts.formatId = opts.formatId ?? 'standard'
+  opts.stakes = opts.stakes ?? 'normal'
+  opts.kitTier = opts.kitTier ?? 3
+  opts.guildQuery = opts.guildTokens.join(' ').trim()
+  return opts
+}
+
+/** Register + in the right guild + not already busy. Returns player or error. */
+function resolveChampion(db, allUsers, jid, myGuildId, slotLabel) {
+  const p = allUsers.find(u => u.id === jid)
+  if (!p) return { error: `❌ Mentioned player *${slotLabel}* isn't registered yet.` }
+  if (p.guildId !== myGuildId) {
+    const g = getGuildDef(p.guildId)
+    return { error: `❌ *${p.name}* ${g ? `fights for *${g.name}*` : 'is guildless'} — champions must be in *your* guild.` }
+  }
+  if (p.inBattle) return { error: `⚔️ *${p.name}* is already in a battle.` }
+  if (p.inDungeon) return { error: `🗺️ *${p.name}* is deep in a dungeon right now.` }
+  return { player: p }
+}
+
+// ── .guild war challenge ─────────────────────────────────────────────────────
+
+async function handleWarChallenge(ctx, allUsers, warArgs) {
+  const p = config.prefix
+  const usage = () => ctx.reply(
+    `⚔️ *DECLARE A GUILD WAR*\n\n` +
+    `*${p}guild war challenge <guild> <1v1|2v2|3v3|4v4> <format> [normal|wager] [kit <1-5>] @champ1 [@champ2 …]*\n\n` +
+    `👑 Leaders only — you name the champions who represent your guild.\n` +
+    `💰 The bot stamps the pool: *500,000* for 1v1/2v2, *1,000,000* for 3v3/4v4.\n` +
+    `🎒 *kit 1-5* picks the Preset 5 tier both sides fight on.\n\n` +
+    `*Formats:* ${Object.keys(WAR_FORMATS).map(k => `${WAR_FORMATS[k].emoji} ${k}`).join(' · ')}\n` +
+    `*Stakes:* \`normal\` (war only) · \`wager\` (each champion also stakes solars)\n\n` +
+    `_Example:_ *${p}guild war challenge emberwake 2v2 mcpvp kit 4 @hero @ace*`
+  )
+
+  const { error } = requireLeader(ctx, allUsers)
+  if (error) return ctx.reply(error)
+
+  const myGuildId = ctx.player.guildId
+  const myGuild = getGuildDef(myGuildId)
+  const mentionedSet = new Set(mentionedJids(ctx))
+  const opts = parseWarChallengeArgs(warArgs, mentionedSet)
+
+  if (!opts.guildQuery) return usage()
+  const targetGuild = findGuildByQuery(opts.guildQuery)
+  if (!targetGuild) return ctx.reply(`❌ No guild matching *${opts.guildQuery}*.\n\n${guildDefs.map(g => `  • ${g.emoji} *${g.name}*`).join('\n')}`)
+  if (targetGuild.id === myGuildId) return ctx.reply(`❌ You cannot wage war against your own guild.`)
+
+  const size = MATCH_TYPES[opts.matchType] ?? 1
+  const format = WAR_FORMATS[opts.formatId] ?? WAR_FORMATS.standard
+
+  // ── Busyness: one live war per guild, ever. ──
+  await ensureWarState(ctx.db)
+  const live = findLiveWarBetween(ctx.db, myGuildId, targetGuild.id)
+  if (live) {
+    return ctx.reply(
+      live.status === 'pending'
+        ? `📩 A war between *${myGuild.name}* and *${targetGuild.name}* is already waiting for an answer. *${p}guild war status*.`
+        : `⚔️ *${myGuild.name}* and *${targetGuild.name}* are already at war! *${p}guild war status*.`
+    )
+  }
+  if (guildBusy(ctx.db, myGuildId)) return ctx.reply(`⚔️ *${myGuild.name}* already has a live war. Finish it first — *${p}guild war status*.`)
+  if (guildBusy(ctx.db, targetGuild.id)) return ctx.reply(`⚔️ *${targetGuild.name}* is already tied up in a war. Try another rival.`)
+
+  // ── Champions: your OWN guild members, exactly `size` of them ──
+  const mentioned = mentionedJids(ctx)
+  const picked = []
+  const seen = new Set()
+  for (const jid of mentioned) {
+    if (seen.has(jid)) continue
+    seen.add(jid)
+    const res = resolveChampion(ctx.db, allUsers, jid, myGuildId, `#${picked.length + 1}`)
+    if (res.error) return ctx.reply(res.error)
+    if (res.player) picked.push(res.player)
+  }
+  if (picked.length !== size) {
+    return ctx.reply(
+      `❌ *${opts.matchType}* needs *${size}* champion${size === 1 ? '' : 's'} from *${myGuild.name}* — you named *${picked.length}*.\n\n` +
+      `*@-mention them in the command*, e.g.\n` +
+      `> *${p}guild war challenge ${targetGuild.name} ${opts.matchType} ${opts.formatId} ${picked.concat(allUsers.filter(u => u.guildId === myGuildId && !seen.has(u.id))).slice(0, size).map(u => '@' + u.name).join(' ')}*`
+    )
+  }
+
+  // ── Wager wars: every champion must be able to cover the stake ──
+  const stakeSolars = opts.stakes === 'wager'
+    ? (opts.kitTier >= 4 ? 250_000 : opts.kitTier >= 3 ? 100_000 : 50_000)
+    : 0
+  if (stakeSolars) {
+    const short = picked.find(pl => (pl.wallet?.solars ?? 0) < stakeSolars)
+    if (short) {
+      return ctx.reply(
+        `☀️ *Wager war:* every champion stakes *${stakeSolars.toLocaleString()} solars*.\n` +
+        `*${short.name}* only holds *${(short.wallet?.solars ?? 0).toLocaleString()}*.`
+      )
+    }
+  }
+
+  // ── Supporters: everyone else in your guild rides along ──
+  const supportsA = allUsers
+    .filter(u => u.guildId === myGuildId && !seen.has(u.id))
+    .map(u => ({ id: u.id, name: u.name }))
+
+  const war = await createWarChallenge(ctx.db, {
+    guildAId: myGuildId,
+    guildBId: targetGuild.id,
+    challengerId: ctx.player.id,
+    matchType: opts.matchType,
+    formatId: format.id,
+    stakes: opts.stakes,
+    stakeSolars,
+    kitTier: opts.kitTier,
+    groupJid: ctx.isGroup ? ctx.sender : null,
+    teamA: picked.map(pl => ({ id: pl.id, name: pl.name })),
+    supportsA,
+  })
+
+  const targetMembers = getGuildMembers(targetGuild.id, allUsers)
+  const myMembers = getGuildMembers(myGuildId, allUsers)
+  const tagJids = [...targetMembers.map(m => m.id), ...myMembers.map(m => m.id)]
+  const targetLeader = getGuildLeader(targetGuild.id, allUsers)
+
+  const kit = warKitLabel(war.kitTier)
+  const stakeLine = war.stakes === 'wager'
+    ? `💰 *WAGER WAR* — each champion stakes *${war.stakeSolars.toLocaleString()} solars* on every pairing.`
+    : `⚖️ *Normal stakes* — only the bot's pool is on the line.`
+
+  const msg = [
+    `⚔️🔥 *GUILD WAR DECLARED!* 🔥⚔️`,
+    `━━━━━━━━━━━━━━━━━━━━`,
+    `${myGuild.emoji} *${myGuild.name}*  VS  ${targetGuild.emoji} *${targetGuild.name}*`,
+    ``,
+    `📏 Format: *${war.matchType}* — ${size} duels, each one a real 1v1, points add up.`,
+    `📜 Ruleset: ${format.emoji} *${format.name}* — _${format.description}_`,
+    `🎒 Preset: ${kit} — the ONLY gear on the field. Real inventories are set aside and return intact after each duel.`,
+    `💰 Prize pool: *☀️ ${war.prizePool.toLocaleString()} SOLARS* — generated by the bot. Nobody funds it.`,
+    stakeLine,
+    ``,
+    `🛡️ *${myGuild.name} champions:*`,
+    ...war.teamA.map((c, i) => `   ${i + 1}. ⚔️ *${c.name}*`),
+    ``,
+    `📣 *${myGuild.name} supporters* — you're tagged: rally them in chat, you earn XP and solars if they take it.`,
+    ``,
+    `🚨 *${targetGuild.name}* — your leader ${targetLeader ? `*${targetLeader.name}*` : 'whoever leads'} has *24 hours* to answer:`,
+    `> *${p}guild war accept ${Array.from({ length: size }, (_, i) => '@champ' + (i + 1)).join(' ')}*`,
+    `> (name YOUR ${size} champion${size === 1 ? '' : 's'} — @-mention them. Example above is literal: replace the placeholders.)`,
+    ``,
+    `_Check the board: *${p}guild war status* · Withdraw: *${p}guild war decline*_`,
+  ].join('\n')
+
+  await replyTagged(ctx, msg, tagJids)
+
+  await pushNotification(ctx.db, targetLeader?.id, {
+    kind: 'battle',
+    title: `⚔️ ${myGuild.name} declared Guild War!`,
+    body: `${myGuild.name} challenges ${targetGuild.name} to a ${war.matchType}. Answer within 24h with ${p}guild war accept @yourchampions.`,
+  }).catch(() => {})
+  return undefined
+}
+
+// ── .guild war accept ────────────────────────────────────────────────────────
+
+async function handleWarAccept(ctx, allUsers) {
+  const p = config.prefix
+  const { error } = requireLeader(ctx, allUsers)
+  if (error) return ctx.reply(error)
+
+  const myGuildId = ctx.player.guildId
+  await ensureWarState(ctx.db)
+
+  const pending = findWarByStatus(ctx.db, myGuildId, 'pending')
+  if (!pending) {
+    return ctx.reply(`🛡️ No Guild War challenge is waiting for *${getGuildDef(myGuildId)?.name ?? 'you'}*.`)
+  }
+  if ((pending.acceptUntil ?? 0) < Date.now()) {
+    await cancelWar(ctx.db, pending.id)
+    return ctx.reply(`⌛ That war challenge from *${getGuildDef(pending.guildAId)?.name}* expired unanswered.`)
+  }
+
+  const size = pending.size
+  const mentioned = mentionedJids(ctx)
+  const picked = []
+  const seen = new Set()
+  for (const jid of mentioned) {
+    if (seen.has(jid)) continue
+    seen.add(jid)
+    const res = resolveChampion(ctx.db, allUsers, jid, myGuildId, `#${picked.length + 1}`)
+    if (res.error) return ctx.reply(res.error)
+    if (res.player) picked.push(res.player)
+  }
+  if (picked.length !== size) {
+    const suggestions = getGuildMembers(myGuildId, allUsers).slice(0, size)
+    return ctx.reply(
+      `❌ *${getGuildDef(pending.guildAId)?.name}* named ${size} champion${size === 1 ? '' : 's'} — you must answer with *exactly ${size}* of your own.\n\n` +
+      `> *${p}guild war accept ${suggestions.map(u => '@' + u.name).join(' ')}*`
+    )
+  }
+
+  if (pending.stakes === 'wager' && pending.stakeSolars > 0) {
+    const short = picked.find(pl => (pl.wallet?.solars ?? 0) < pending.stakeSolars)
+    if (short) {
+      return ctx.reply(
+        `☀️ *Wager war:* each champion must hold *${pending.stakeSolars.toLocaleString()} solars*.\n` +
+        `*${short.name}* holds *${(short.wallet?.solars ?? 0).toLocaleString()}*.`
+      )
+    }
+  }
+
+  const supportsB = allUsers
+    .filter(u => u.guildId === myGuildId && !seen.has(u.id))
+    .map(u => ({ jid: u.id, name: u.name }))
+
+  const res = await acceptWarChallenge(ctx.db, pending.id, picked.map(pl => ({ id: pl.id, name: pl.name })))
+  if (res.error) return ctx.reply(`❌ That war can't be accepted (${res.error}).`)
+  const war = res.error ? null : getWar(ctx.db, pending.id)
+  if (war) { war.supportsB = supportsB; await ctx.db.write() }
+
+  const aDef = getGuildDef(war.guildAId)
+  const bDef = getGuildDef(war.guildBId)
+
+  const tagJids = [
+    ...war.teamA.map(c => c.jid),
+    ...war.teamB.map(c => c.jid),
+    ...(war.supportsA ?? []).map(c => c.jid),
+    ...(war.supportsB ?? []).map(c => c.jid),
+  ]
+
+  const msg = [
+    `🔥⚔️ *THE BATTLE LINES ARE DRAWN!* ⚔️🔥`,
+    `━━━━━━━━━━━━━━━━━━━━`,
+    `${aDef.emoji} *${aDef.name}*  VS  ${bDef.emoji} *${bDef.name}*`,
+    ``,
+    `📏 *${war.matchType}*  ·  📜 ${formatName(war.formatId)}  ·  🎒 ${warKitLabel(war.kitTier)}`,
+    `💰 Pool: *☀️ ${war.prizePool.toLocaleString()}* — bot-stamped.`,
+    ``,
+    `*${aDef.name}:* ${war.teamA.map(c => `⚔️ *${c.name}*`).join(', ')}`,
+    `*${bDef.name}:* ${war.teamB.map(c => `⚔️ *${c.name}*`).join(', ')}`,
+    ``,
+    `🔔 *PAIRING 1 starts now* — the two first-named champions duel.`,
+    `> *${p}pvp accept* (defender) · *${p}pvp @<opponent>* (challenger)`,
+    ``,
+    `🎒 Preset 5 isolates your gear: your inventory is stored, the war kit loads, and everything returns when the duel ends.`,
+    `📣 Supporters — every cheer counts: you're paid XP and solars if your guild takes it.`,
+    ``,
+    `_Board: *${p}guild war status* · Claim a stalled pairing: *${p}guild war claim*_`,
+  ].join('\n')
+
+  await replyTagged(ctx, msg, tagJids)
+
+  // Open pairing 1 (issues the ready-to-accept .pvp challenge + tags the pair).
+  await startNextPairing(ctx.db, war, ctx)
+  return undefined
+}
+
+// ── .guild war decline / withdraw / cancel ───────────────────────────────────
+
+async function handleWarCancel(ctx, allUsers) {
+  const p = config.prefix
+  const { error } = requireLeader(ctx, allUsers)
+  if (error) return ctx.reply(error)
+
+  const myGuildId = ctx.player.guildId
+  await ensureWarState(ctx.db)
+  const mine = warsForGuild(ctx.db, myGuildId)
+    .find(w => w.status === 'pending' || w.status === 'active')
+  if (!mine) return ctx.reply(`🏳️ Nothing to cancel — *${getGuildDef(myGuildId)?.name}* has no open Guild War.`)
+
+  const iAmChallenger = mine.challengerId === ctx.player.id
+  if (mine.status === 'active' && iAmChallenger) {
+    return ctx.reply(
+      `❌ A war that has *started* cannot be withdrawn — that would strand the champions mid-duel.\n` +
+      `_Fight it out, or wait for the pairings to conclude._`
+    )
+  }
+
+  await cancelWar(ctx.db, mine.id)
+  const a = getGuildDef(mine.guildAId)
+  const b = getGuildDef(mine.guildBId)
+  const other = mine.guildAId === myGuildId ? b : a
+  return replyTagged(
+    ctx,
+    `🏳️ *GUILD WAR CALLED OFF*\n\n${a?.emoji} *${a?.name}* and ${b?.emoji} *${b?.name}* stand down. ` +
+    `${iAmChallenger ? '*Their* challenge was withdrawn' : `*${other?.name}'s* challenge was declined`}. Nobody was paid, nobody lost anything.\n\n` +
+    `_New challenge: *${p}guild war challenge <guild> <1v1..4v4> <format> @champs*_`,
+    allCombatantJids(mine),
+  )
+}
+
+function allCombatantJids(war) {
+  return [
+    ...(war.teamA ?? []).map(c => c.jid),
+    ...(war.teamB ?? []).map(c => c.jid),
+    ...(war.supportsA ?? []).map(c => c.jid),
+    ...(war.supportsB ?? []).map(c => c.jid),
+  ]
+}
+
+// ── .guild war status ────────────────────────────────────────────────────────
+
+async function handleWarStatus(ctx, allUsers) {
+  const p = config.prefix
+  if (!ctx.player?.guildId) return ctx.reply(`❌ You're not in a guild.`)
+  await ensureWarState(ctx.db)
+
+  // Read-path hygiene: lapses, voided pairings, stale wars. No scheduler.
+  const sweepNote = await sweepGuildWars(ctx.db, Date.now(), ctx)
+  if (sweepNote) await ctx.reply(sweepNote).catch(() => {})
+
+  const mine = warsForGuild(ctx.db, ctx.player.guildId)
+    .find(w => w.status === 'pending' || w.status === 'active' || w.status === 'finished')
+  if (!mine) {
+    return ctx.reply(
+      `🛡️ *No Guild War on the board.*\n\n` +
+      `Leaders declare one with:\n` +
+      `> *${p}guild war challenge <guild> <1v1|2v2|3v3|4v4> <format> @champ1 [@champ2 …]*\n\n` +
+      `_See everything: *${p}guild war*_`
+    )
+  }
+  return ctx.reply(warBoard(mine, ctx.db))
+}
+
+// ── .guild war claim (walkover on a stalled pairing) ─────────────────────────
+
+async function handleWarClaim(ctx, allUsers) {
+  const p = config.prefix
+  if (!ctx.player?.guildId) return ctx.reply(`❌ You're not in a guild.`)
+  await ensureWarState(ctx.db)
+
+  const war = warsForGuild(ctx.db, ctx.player.guildId).find(w => w.status === 'active')
+  if (!war) return ctx.reply(`❌ *${getGuildDef(ctx.player.guildId)?.name}* has no active Guild War to claim in.`)
+
+  const match = war.matches?.[war.currentMatch]
+  if (!match || match.winnerJid) return ctx.reply(`❌ No open pairing to claim — run *${p}guild war status*.`)
+
+  const iAmA = match.aJid === ctx.player.id
+  const iAmB = match.bJid === ctx.player.id
+  if (!iAmA && !iAmB) return ctx.reply(`❌ You're not in the live pairing — only the waiting champion can claim.`)
+
+  const opponentJid = iAmA ? match.bJid : match.aJid
+
+  // If the duel is actually running, the normal `.pvp claim` covers it.
+  const opp = allUsers.find(u => u.id === opponentJid)
+  if (opp?.inBattle && opp?.battleState?.opponentJid === ctx.player.id) {
+    return ctx.reply(`⚔️ Your duel with *${opp.name}* is live — the win claim there is *${p}pvp claim*.`)
+  }
+
+  const verdict = canClaimPairing(war, match)
+  if (!verdict.ok) {
+    if (verdict.why === 'too_early') {
+      const mins = Math.max(1, Math.ceil(verdict.ms / 60000))
+      return ctx.reply(`⏳ The pairing is only just open — give them *${mins} minute(s)* to answer, then claim.`)
+    }
+    if (verdict.why === 'void') return ctx.reply(`🕳️ That pairing has timed out entirely — *${p}guild war status* to see the sweep result.`)
+    return ctx.reply(`❌ That pairing is already settled.`)
+  }
+
+  await settleWalkover(ctx.db, war, match.i, ctx.player.id, ctx,
+    `_The opposing champion never answered the pairing (${Math.round(verdict.ms / 60000)} minutes idle)._`)
+  return undefined
+}
+
+// ── .guild war forfeit ───────────────────────────────────────────────────────
+
+async function handleWarForfeit(ctx, allUsers) {
+  const p = config.prefix
+  if (!ctx.player?.guildId) return ctx.reply(`❌ You're not in a guild.`)
+  await ensureWarState(ctx.db)
+
+  const war = warsForGuild(ctx.db, ctx.player.guildId).find(w => w.status === 'active')
+  if (!war) return ctx.reply(`❌ No active Guild War.`)
+
+  const match = war.matches?.[war.currentMatch]
+  if (!match || match.winnerJid) return ctx.reply(`❌ No open pairing.`)
+
+  const iAmA = match.aJid === ctx.player.id
+  const iAmB = match.bJid === ctx.player.id
+  if (!iAmA && !iAmB) {
+    return ctx.reply(`❌ Only the two champions in the live pairing can forfeit it. *${p}guild war status* to see who.`);
+  }
+
+  const winnerJid = iAmA ? match.bJid : match.aJid
+  const me = ctx.player.name
+  await settleWalkover(ctx.db, war, match.i, winnerJid, ctx,
+    `_*${me}* forfeits the pairing — their guild eats the point._`)
+  return undefined
+}
+
+// ── .guild war leaderboard / kits / history ──────────────────────────────────
+
+async function handleWarLeaderboard(ctx, allUsers) {
+  const p = config.prefix
+  await ensureWarState(ctx.db)
+
+  const players = allUsers
+    .filter(u => (u.dominance?.score ?? 0) > 0)
+    .map(u => {
+      ensureDominance(u)
+      return { u, tier: dominanceTierFor(u.dominance.score) }
+    })
+    .sort((a, b) => b.u.dominance.score - a.u.dominance.score)
+    .slice(0, 12)
+
+  const guilds = guildDefs
+    .map(g => {
+      const { war: gw } = ensureGuildWarStats(ctx.db, g.id)
+      return { g, gw, tier: guildWarTierFor(gw.dominance) }
+    })
+    .sort((a, b) => b.gw.dominance - a.gw.dominance)
+
+  const pLines = players.length
+    ? players.map((row, i) => {
+        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `*${i + 1}.*`
+        const tag = getGuildTag(row.u.guildId)
+        const mvp = row.u.dominance.mvp > 0 ? ` · 🥇×${row.u.dominance.mvp}` : ''
+        return (
+          `${medal} ${row.tier.emoji} ${tag} *${row.u.name}* — ${row.tier.name}\n` +
+          `     ☀️ dominance *${row.u.dominance.score.toLocaleString()}* · ${row.u.dominance.wins}W/${row.u.dominance.losses}L · ${row.u.dominance.wars} war(s)${mvp}`
+        )
+      }).join('\n')
+    : `  _Nobody has fought a Guild War yet — be the first._`
+
+  const gLines = guilds.map((row, i) => {
+    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `*${i + 1}.*`
+    return (
+      `${medal} ${row.tier.emoji} ${row.g.emoji} *${row.g.name}* — ${row.tier.name}\n` +
+      `     war dominance *${row.gw.dominance.toLocaleString()}* · ${row.gw.wins}W/${row.gw.losses}L/${row.gw.draws}D · 🏆${row.gw.trophies} · streak ${row.gw.streak}`
+    )
+  }).join('\n')
+
+  const topTier = DOMINANCE_TIERS[DOMINANCE_TIERS.length - 1]
+  const guildTop = GUILD_WAR_TIERS[GUILD_WAR_TIERS.length - 1]
+
+  return ctx.reply(
+    `🎖️ *GUILD WAR DOMINANCE* 🎖️\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n\n` +
+    `*PLAYERS — top ${players.length}*  _(${DOMINANCE_TIERS.map(t => `${t.emoji}${t.name}`).join(' → ')})_\n` +
+    `${pLines}\n\n` +
+    `*GUILDS — war rank*\n` +
+    `${gLines}\n\n` +
+    `${topTier.emoji} *${topTier.name}* unlocks at ${topTier.min.toLocaleString()} dominance.\n` +
+    `${guildTop.emoji} *${guildTop.name}* unlocks at ${guildTop.min.toLocaleString()} guild war dominance.\n\n` +
+    `_Dominance comes ONLY from wars and war duels — it cannot be bought. ` +
+    `Guild war rank is separate from the donation treasury ladder._\n\n` +
+    `_Full ladder: *${p}guild war tiers* · kits: *${p}guild war kits*_`,
+  )
+}
+
+async function handleWarKits(ctx) {
+  const p = config.prefix
+  const lines = Object.values(WAR_KIT_TIERS).map(t =>
+    `  ${t.emoji} *Tier ${t.tier} — ${t.name}*\n` +
+    `     ${Object.values(t.equipped).filter(Boolean).length} gear slots + ${t.bag.length} pouch item(s)` +
+    (t.totem ? ` + totem` : '') +
+    `\n     _${t.blurb}_`
+  ).join('\n\n')
+
+  return ctx.reply(
+    `🎒 *GUILD WAR PRESET 5 — KIT TIERS* 🎒\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n\n` +
+    `Every war pairing isolates both fighters: their REAL inventory and gear move into storage, ` +
+    `and the preset below loads instead. The moment the duel ends the preset vanishes and their things return — ` +
+    `nothing of theirs can break, burn or be lost inside a war.\n\n` +
+    `${lines}\n\n` +
+    `*Which tier?* The war's kit tier, chosen by the declaring leader (\`kit 1..5\`). Both sides get the SAME kit — fairness by construction.\n\n` +
+    `*Bring your OWN gear?* Save a personal war loadout and it overrides the bot kit, slot by slot:\n` +
+    `> *${p}loadout save war*  _(or_ *${p}loadout save 5*_) — save your current gear as Preset 5_\n` +
+    `> *${p}loadout view war* — inspect it before you march\n\n` +
+    `_MCPVP/No-Totem formats strip the totem even from tiers that carry one._`,
+  )
+}
+
+async function handleWarHistory(ctx, allUsers) {
+  if (!ctx.player?.guildId) return ctx.reply(`❌ You're not in a guild.`)
+  await ensureWarState(ctx.db)
+  const g = getGuildDef(ctx.player.guildId)
+  const { war: gw } = ensureGuildWarStats(ctx.db, g.id)
+  const tier = guildWarTierFor(gw.dominance)
+
+  const hist = (gw.history ?? []).slice(0, 6)
+  const lines = hist.length
+    ? hist.map(h => {
+        const other = getGuildDef(h.vs)
+        const icon = h.result === 'win' ? '🏆' : h.result === 'loss' ? '💀' : '🤝'
+        const when = `${Math.max(1, Math.round((Date.now() - h.at) / 3600000))}h ago`
+        return `  ${icon} ${other?.emoji} *${other?.name ?? h.vs}* — ${h.score}  _(${when})_`
+      }).join('\n')
+    : `  _No wars recorded yet._`
+
+  return ctx.reply(
+    `${g.emoji} *${g.name.toUpperCase()} — WAR RECORD*\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n\n` +
+    `${tier.emoji} *Rank:* ${tier.name}  ·  ☀️ war dominance *${gw.dominance.toLocaleString()}*\n` +
+    `🏆 ${gw.wins}W — 💀 ${gw.losses}L — 🤝 ${gw.draws}D  ·  🏆 trophies *${gw.trophies}*  ·  🔥 streak *${gw.streak}* (best ${gw.bestStreak})\n` +
+    `🥇 MVP awards: *${gw.mvpAwards}*\n\n` +
+    `*RECENT WARS*\n${lines}\n\n` +
+    `_Leadership ladder: *${pfx()}guild top* · dominance ladder: *${pfx()}guild war leaderboard*_`,
+  )
+}
+
+// ── The dispatcher ───────────────────────────────────────────────────────────
 
 async function guildWarDispatch(ctx, allUsers, warArgs) {
   const p = config.prefix
   const sub = warArgs[0]?.toLowerCase()
+  const rest = warArgs.slice(1)
 
   if (!ctx.player) return ctx.reply(`⚠️ Register with *${p}register* first.`)
   if (!ctx.player.guildId) return ctx.reply(`❌ You're not in a guild. Join one with *${p}guild join <name>*.`)
 
-  if (!ctx.db.data.guildWars) ctx.db.data.guildWars = {}
-
-  if (sub === 'challenge' || sub === 'declare') {
-    return handleWarChallenge(ctx, allUsers, warArgs.slice(1))
+  if (sub === 'challenge' || sub === 'declare' || sub === 'start') {
+    return handleWarChallenge(ctx, allUsers, rest)
   }
-  if (sub === 'accept') {
-    return handleWarAccept(ctx, allUsers, warArgs.slice(1))
+  if (sub === 'accept' || sub === 'answer') {
+    return handleWarAccept(ctx, allUsers)
   }
-  if (sub === 'decline' || sub === 'cancel') {
+  if (sub === 'decline' || sub === 'cancel' || sub === 'withdraw') {
     return handleWarCancel(ctx, allUsers)
   }
-  if (sub === 'status' || sub === 'view') {
+  if (sub === 'status' || sub === 'view' || sub === 'board') {
     return handleWarStatus(ctx, allUsers)
   }
+  if (sub === 'claim') {
+    return handleWarClaim(ctx, allUsers)
+  }
+  if (sub === 'forfeit' || sub === 'surrender') {
+    return handleWarForfeit(ctx, allUsers)
+  }
+  if (sub === 'leaderboard' || sub === 'top' || sub === 'dominance' || sub === 'ranks') {
+    return handleWarLeaderboard(ctx, allUsers)
+  }
+  if (sub === 'kits' || sub === 'presets' || sub === 'kit' || sub === 'preset' || sub === 'preset5') {
+    return handleWarKits(ctx)
+  }
+  if (sub === 'record' || sub === 'history' || sub === 'log') {
+    return handleWarHistory(ctx, allUsers)
+  }
   if (sub === 'attack' || sub === 'atk' || sub === 'skill' || sub === 'defend' || sub === 'drink') {
-    return handleWarAction(ctx, allUsers, sub, warArgs.slice(1))
-  }
-
-  // Help menu
-  const formatList = Object.values(WAR_FORMATS)
-    .filter((f, idx, arr) => arr.findIndex(x => x.id === f.id) === idx)
-    .map(f => `  • ${f.emoji} *${f.name}* (${f.id}): ${f.description}`)
-    .join('\n')
-
-  const auraList = Object.entries(GUILD_AURAS)
-    .map(([gid, a]) => {
-      const g = getGuildDef(gid)
-      return `  • ${a.emoji} *${g?.name ?? gid}* [${a.name}]: ${a.description}`
-    })
-    .join('\n')
-
-  return ctx.reply(
-    `⚔️ *INTENSE GUILD WARS (1v1 & 2v2)*\n\n` +
-    `Battle rival guilds for supremacy, treasury bounties, and guild pride!\n\n` +
-    `*Commands:*\n` +
-    `• *${p}guild war challenge <guild> [1v1|2v2] [format]* — issue war challenge\n` +
-    `• *${p}guild war accept* — accept pending war challenge\n` +
-    `• *${p}guild war decline* — decline / cancel challenge\n` +
-    `• *${p}guild war status* — inspect current war board\n` +
-    `• *${p}guild war attack* — basic strike\n` +
-    `• *${p}guild war skill* — high-tier skill strike\n` +
-    `• *${p}guild war defend* — defensive stance (+MP, 50% dmg cut)\n` +
-    `• *${p}guild war drink* — quick recovery potion\n\n` +
-    `*Battle Formats & Custom Kits:*\n${formatList}\n\n` +
-    `*Teammate Aura Synergy (2v2 Mode):*\n${auraList}`,
-  )
-}
-
-async function handleWarChallenge(ctx, allUsers, args) {
-  const p = config.prefix
-  const myGuildId = ctx.player.guildId
-  const myGuild = getGuildDef(myGuildId)
-
-  const targetQuery = args[0]
-  if (!targetQuery) {
-    return ctx.reply(`❌ Specify a target guild to challenge.\nUsage: *${p}guild war challenge <targetGuild> [1v1|2v2] [standard|mcpvp|unrestricted]*`)
-  }
-
-  const targetGuild = findGuildByQuery(targetQuery)
-  if (!targetGuild) {
-    return ctx.reply(`❌ No guild matching *${targetQuery}*.`)
-  }
-  if (targetGuild.id === myGuildId) {
-    return ctx.reply(`❌ You cannot wage war against your own guild!`)
-  }
-
-  const matchType = args[1]?.toLowerCase() === '2v2' ? '2v2' : '1v1'
-  const rawFormat = args[2]?.toLowerCase() || 'standard'
-  const format = WAR_FORMATS[rawFormat] || WAR_FORMATS.standard
-
-  // Check if either guild is already in an active war
-  const activeWars = Object.values(ctx.db.data.guildWars || {})
-  const ongoing = activeWars.find(w => w.status === 'active' && (w.guildAId === myGuildId || w.guildBId === myGuildId || w.guildAId === targetGuild.id || w.guildBId === targetGuild.id))
-  if (ongoing) {
-    return ctx.reply(`⚔️ A guild war involving one of these guilds is already raging! Use *${p}guild war status*.`)
-  }
-
-  // Create pending challenge
-  const warId = `war_${Date.now()}`
-  ctx.db.data.guildWars[warId] = {
-    id: warId,
-    status: 'pending',
-    challengerId: ctx.player.id,
-    guildAId: myGuildId,
-    guildBId: targetGuild.id,
-    matchType,
-    formatId: format.id,
-    createdAt: Date.now(),
-  }
-  await ctx.db.write()
-
-  return ctx.reply(
-    `⚔️ *GUILD WAR CHALLENGE ISSUED!*\n\n` +
-    `${myGuild.emoji} *${myGuild.name}* has declared war upon ${targetGuild.emoji} *${targetGuild.name}*!\n\n` +
-    `🥊 Mode: *${matchType}*\n` +
-    `📜 Format / Kit: ${format.emoji} *${format.name}*\n` +
-    `_${format.description}_\n\n` +
-    `Any warrior of *${targetGuild.name}* can accept with:\n` +
-    `> *${p}guild war accept*`,
-  )
-}
-
-async function handleWarAccept(ctx, allUsers, args) {
-  const p = config.prefix
-  const myGuildId = ctx.player.guildId
-  const myGuild = getGuildDef(myGuildId)
-
-  const activeWars = ctx.db.data.guildWars || {}
-  const pendingEntry = Object.entries(activeWars).find(([, w]) => w.status === 'pending' && w.guildBId === myGuildId)
-
-  if (!pendingEntry) {
-    return ctx.reply(`❌ No pending war challenge waiting for ${myGuild.emoji} *${myGuild.name}*.`)
-  }
-
-  const [warId, pending] = pendingEntry
-  const opponentGuild = getGuildDef(pending.guildAId)
-
-  // Assemble teams
-  const challengerPlayer = allUsers.find(u => u.id === pending.challengerId) || ctx.player
-  const teamAPlayers = [challengerPlayer]
-  const teamBPlayers = [ctx.player]
-
-  if (pending.matchType === '2v2') {
-    // Pick highest active teammates
-    const guildAMembers = getGuildMembers(pending.guildAId, allUsers).filter(u => u.id !== challengerPlayer.id)
-    if (guildAMembers.length) teamAPlayers.push(guildAMembers[0])
-    else teamAPlayers.push({ ...challengerPlayer, id: `${challengerPlayer.id}_ally`, name: `${challengerPlayer.name} [Shadow]` })
-
-    const guildBMembers = getGuildMembers(myGuildId, allUsers).filter(u => u.id !== ctx.player.id)
-    if (guildBMembers.length) teamBPlayers.push(guildBMembers[0])
-    else teamBPlayers.push({ ...ctx.player, id: `${ctx.player.id}_ally`, name: `${ctx.player.name} [Vanguard]` })
-  }
-
-  const session = createWarSession({
-    id: warId,
-    guildAId: pending.guildAId,
-    guildBId: myGuildId,
-    formatId: pending.formatId,
-    matchType: pending.matchType,
-    teamA: teamAPlayers,
-    teamB: teamBPlayers,
-  })
-
-  ctx.db.data.guildWars[warId] = session
-  await ctx.db.write()
-
-  const auraA = GUILD_AURAS[session.guildAId]
-  const auraB = GUILD_AURAS[session.guildBId]
-  const auraNote = session.matchType === '2v2'
-    ? `\n✨ *Teammate Auras Activated!*\n` +
-      `• ${opponentGuild.emoji} ${opponentGuild.name}: *${auraA?.name}*\n` +
-      `• ${myGuild.emoji} ${myGuild.name}: *${auraB?.name}*\n`
-    : ''
-
-  return ctx.reply(
-    `🔥 *THE BATTLE LINES ARE DRAWN!*\n\n` +
-    `${opponentGuild.emoji} *${opponentGuild.name}*  ⚔️  ${myGuild.emoji} *${myGuild.name}*\n\n` +
-    `Mode: *${session.matchType}*  |  Format: *${WAR_FORMATS[session.formatId]?.name}*\n` +
-    auraNote + `\n` +
-    `Strike with *${p}guild war attack* or *${p}guild war skill*!`
-  )
-}
-
-async function handleWarCancel(ctx, allUsers) {
-  const myGuildId = ctx.player.guildId
-  const activeWars = ctx.db.data.guildWars || {}
-  const pending = Object.entries(activeWars).find(([, w]) => w.status === 'pending' && (w.guildAId === myGuildId || w.guildBId === myGuildId))
-
-  if (!pending) return ctx.reply(`❌ No pending war challenge to cancel.`)
-  delete ctx.db.data.guildWars[pending[0]]
-  await ctx.db.write()
-  return ctx.reply(`🏳️ The pending guild war challenge has been withdrawn.`)
-}
-
-async function handleWarStatus(ctx, allUsers) {
-  const p = config.prefix
-  const activeWars = ctx.db.data.guildWars || {}
-  const liveWar = Object.values(activeWars).find(w => w.status === 'active')
-
-  if (!liveWar) {
-    return ctx.reply(`🛡️ No active guild war currently in progress. Issue one with *${p}guild war challenge*.`)
-  }
-
-  const guildA = getGuildDef(liveWar.guildAId)
-  const guildB = getGuildDef(liveWar.guildBId)
-  const format = WAR_FORMATS[liveWar.formatId] || WAR_FORMATS.standard
-
-  const formatTeam = (team) => team.map(f => {
-    const status = f.alive ? `❤️ ${f.hp}/${f.maxHp} HP  💧 ${f.mp}/${f.maxMp} MP` : `💀 _Fallen_`
-    return `  • *${f.name}*: ${status}`
-  }).join('\n')
-
-  const lastLogs = liveWar.combatLog.slice(-5).join('\n') || '_Battle commencing..._'
-
-  return ctx.reply(
-    `⚔️ *GUILD WAR ARENA — LIVE CLASH*\n\n` +
-    `${guildA.emoji} *${guildA.name}* vs ${guildB.emoji} *${guildB.name}*\n` +
-    `Mode: *${liveWar.matchType}* | Format: *${format.name}*\n\n` +
-    `*${guildA.name} Lineup:*\n${formatTeam(liveWar.teamA)}\n\n` +
-    `*${guildB.name} Lineup:*\n${formatTeam(liveWar.teamB)}\n\n` +
-    `📜 *Recent Clashes:*\n${lastLogs}\n\n` +
-    `*Commands:* *${p}guild war attack* · *${p}guild war skill* · *${p}guild war defend* · *${p}guild war drink*`,
-  )
-}
-
-async function handleWarAction(ctx, allUsers, action, extraArgs) {
-  const p = config.prefix
-  const activeWars = ctx.db.data.guildWars || {}
-  const liveEntry = Object.entries(activeWars).find(([, w]) => w.status === 'active')
-
-  if (!liveEntry) {
-    return ctx.reply(`❌ No active guild war in progress. Start one with *${p}guild war challenge*.`)
-  }
-
-  const [warId, session] = liveEntry
-  const isTeamA = session.teamA.some(f => f.id === ctx.player.id)
-  const isTeamB = session.teamB.some(f => f.id === ctx.player.id)
-
-  if (!isTeamA && !isTeamB) {
-    return ctx.reply(`❌ You are not a combatant in this active guild war! Spectate with *${p}guild war status*.`)
-  }
-
-  const res = resolveWarTurn(session, ctx.player.id, action)
-  if (!res.ok) {
-    return ctx.reply(res.msg)
-  }
-
-  if (res.finished) {
-    const winningGuild = getGuildDef(res.winnerGuildId)
-    // Reward winning guild treasury with 50,000 solars
-    const guildRec = getGuildRecord(ctx.db, res.winnerGuildId)
-    guildRec.treasury += 50000
-    delete ctx.db.data.guildWars[warId]
-    await ctx.db.write()
-
     return ctx.reply(
-      `${res.logs.join('\n')}\n\n` +
-      `🏆━━━━━━━━━━━━━━━━━━━━🏆\n` +
-      `👑 *VICTORY TO ${winningGuild.emoji} ${winningGuild.name.toUpperCase()}!*\n` +
-      `Through sheer grit, tactics, and unbreakable teammate aura, they have triumphed!\n` +
-      `💰 Treasury Award: +50,000 Solars added to *${winningGuild.name}*'s vault!`
+      `⚔️ *Guild War combat is a real duel now.*\n\n` +
+      `Every pairing is fought with your own two hands through the normal duel commands:\n` +
+      `> *${p}pvp attack* · *${p}pvp skill <name>* · *${p}pvp ability <name>* · *${p}pvp defend*\n` +
+      `> *${p}pvp moves* — everything you can do this turn\n\n` +
+      `If you're mid-pairing, *${p}pvp status* shows the board.`,
     )
   }
 
-  await ctx.db.write()
-  return ctx.reply(`${res.logs.join('\n')}\n\n_Next warrior may take their move: *${p}guild war attack|skill|defend|drink*._`)
-}
+  const formatList = Object.values(WAR_FORMATS)
+    .filter((f, idx, arr) => arr.findIndex(x => x.id === f.id) === idx)
+    .map(f => `  ${f.emoji} *${f.name}* (${f.id}) — ${f.description}`)
+    .join('\n')
 
+  const sizeList = MATCH_TYPE_IDS.map(id =>
+    `  • *${id}* — ${MATCH_TYPES[id]} duel${MATCH_TYPES[id] === 1 ? '' : 's'} per side, pool ☀️ ${(id === '3v3' || id === '4v4' ? 1_000_000 : 500_000).toLocaleString()}`
+  ).join('\n')
+
+  const tierList = Object.values(WAR_KIT_TIERS).map(t =>
+    `  ${t.emoji} *Tier ${t.tier} ${t.name}*`
+  ).join('\n')
+
+  const domList = DOMINANCE_TIERS.map((t, i) =>
+    `  ${i + 1}. ${t.emoji} *${t.name}* — from ${t.min.toLocaleString()}`
+  ).join('\n')
+
+  return ctx.reply(
+    `⚔️🔥 *GUILD WARS — REAL PLAYERS, REAL DUELS* 🔥⚔️\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n\n` +
+    `Your guild LEADER declares war and names the champions. Their rival's leader answers with their own. ` +
+    `Then every pairing is a *real 1v1 duel* between those players — points add up, highest score takes the bot's prize pool.\n\n` +
+    `*COMMANDS*\n` +
+    `  *${p}guild war challenge <guild> <size> <format> [normal|wager] [kit 1-5] @champs*\n` +
+    `      — leader declares, naming ${'your champions'}\n` +
+    `  *${p}guild war accept @champ1 [@champ2 …]* — rival leader answers\n` +
+    `  *${p}guild war status* — the live board (also sweeps stale pairings)\n` +
+    `  *${p}guild war claim* — take the point if they never show\n` +
+    `  *${p}guild war forfeit* — throw your pairing (point to the enemy)\n` +
+    `  *${p}guild war decline* — withdraw / refuse a challenge\n` +
+    `  *${p}guild war leaderboard* — dominance score + highest-tier players\n` +
+    `  *${p}guild war kits* — the five Preset 5 tiers\n` +
+    `  *${p}guild war record* — your guild's war history and rank\n\n` +
+    `*SIZES & POOLS* (pool stamped by the BOT, never by players)\n${sizeList}\n\n` +
+    `*FORMATS*\n${formatList}\n\n` +
+    `*PRESET 5 KIT TIERS*\n${tierList}\n\n` +
+    `*DOMINANCE LADDER*\n${domList}\n\n` +
+    `🏷️ Supporters are tagged for every war and paid when their guild wins.\n` +
+    `🎒 *Preset 5 isolates your gear* — real inventory aside during the duel, restored intact after.\n` +
+    `💰 *Wager wars* put each champion's own solars on the line too.`,
+  )
+}
