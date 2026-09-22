@@ -30,6 +30,9 @@
  *     card at .echidna-spin (source-level check; importing the plugin
  *     pulls in canvas-era deps the test env does not install).
  *
+ *  8. RITE COPY - the sanctuary rite's prose carries no dash punctuation at
+ *     all: no em dash, no en dash, no spaced " - " substitute either.
+ *
  * Run:  node test/echidna.test.mjs
  */
 import assert from 'node:assert/strict'
@@ -284,6 +287,35 @@ ok('config carries the key as a secret, not a default', () => {
   const src = readFileSync(new URL('../config.js', import.meta.url), 'utf8')
   assert.match(src, /geminiApiKey: env\('GEMINI_API_KEY', ''\)/)
   assert.match(src, /'GEMINI_API_KEY'/)
+})
+
+console.log('── 8. the rite\'s copy carries no dashes ───────────────────────')
+// The sanctuary rite is the one block of prose the bot narrates message by
+// message, so it is held to a stricter rule than a status line: no em dash,
+// no en dash, and not even the spaced " - " the rest of the bot uses as its
+// em-dash substitute (that substitution is what the 2026-09-22 cleanup removed
+// from here). Prose pauses on commas, colons and full stops. Checked against
+// the source rather than the rendered replies because runRitual sleeps 1500ms
+// between beats and needs a holder, and the copy is what we are policing.
+ok('ritual copy is dash-free', () => {
+  const lines = readFileSync(new URL('../plugins/echidna.js', import.meta.url), 'utf8').split('\n')
+  const from = lines.findIndex(l => l.includes('The sanctuary rite, one message at a time'))
+  const to = lines.findIndex(l => l.includes('const VISIT_SCENES'))
+  assert.ok(from !== -1 && to > from, 'ritual region not found in plugins/echidna.js')
+  const offenders = []
+  for (let i = from; i < to; i++) {
+    const line = lines[i].trim()
+    if (!line || line.startsWith('//') || line.startsWith('*')) continue
+    if (/—|–|‒|―| - | -- /.test(line)) offenders.push(`L${i + 1}: ${line.slice(0, 90)}`)
+  }
+  assert.deepEqual(offenders, [], `dashes left in the rite:\n${offenders.join('\n')}`)
+})
+ok('the rite is still four beats and a closing, and still refuses a second child', () => {
+  const src = readFileSync(new URL('../plugins/echidna.js', import.meta.url), 'utf8')
+  const beats = src.match(/function ritualBeats[\s\S]*?\n\}/)[0]
+  assert.equal((beats.match(/`🍵|`📖|`🕯️|`🌙/g) ?? []).length, 4, 'expected exactly four story beats')
+  assert.match(src, /ONE child\./, 'the refusal still leads with ONE child (echidna-smoke asserts it)')
+  assert.match(src, /A child has come into your house\./)
 })
 
 console.log(`\nALL ${passed} ECHIDNA CHECKS PASSED`)
