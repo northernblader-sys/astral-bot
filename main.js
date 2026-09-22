@@ -50,6 +50,7 @@ import { updateAllPlayers, getPlayer } from './lib/player-repo.js'
 import { migrateAllPlayers } from './lib/stat-progression.js'
 import { getCardSpawnGroups, removeCardSpawnGroup } from './lib/card-spawn-groups.js'
 import { fetchSpawnCard, tierStars, cardSellPrice } from './lib/card-engine.js'
+import { sendCardMedia } from './lib/card-media.js'
 import { setActiveSpawn } from './lib/card-spawn-state.js'
 import { getSeriesSpawnGroups, removeSeriesSpawnGroup } from './lib/series-spawn-groups.js'
 import { fetchRandomSeries, getSeriesTier, seriesTierEmoji, seriesTierStars, generateSeriesClaimCode } from './lib/series-engine.js'
@@ -377,18 +378,22 @@ async function runCardSpawnSweep(instances) {
       if (!card) continue
 
       setActiveSpawn(groupJid, card)
-      await sock.sendMessage(groupJid, {
-        image: { url: card.imageUrl },
-        caption:
-          `🎴 *A WILD CARD APPEARED!*\n` +
-          `━━━━━━━━━━━━━━━━━\n` +
-          `✨ *${card.title}*\n` +
-          `📺 _${card.series}_\n` +
-          `${tierStars(card.tier)}  ·  💰 *${cardSellPrice(card.tier).toLocaleString()}* Solars\n\n` +
-          `🎯 First to type *${config.prefix}collect ${card.claim}* claims it!`,
-      }).catch(err => {
-        globalLog(`⚠️ Card spawn: failed to send in ${groupJid}:`, err.message)
-      })
+      // GIF-aware send (lib/card-media.js): gif cards transcode to MP4 and
+      // loop with gifPlayback, stills go as images, and the caption still
+      // lands as text if the media host is dead — so the claim code below
+      // is never lost while the spawn sits active in memory.
+      const sent = await sendCardMedia(
+        sock,
+        groupJid,
+        card.imageUrl,
+        `🎴 *A WILD CARD APPEARED!*\n` +
+        `━━━━━━━━━━━━━━━━━\n` +
+        `✨ *${card.title}*\n` +
+        `📺 _${card.series}_\n` +
+        `${tierStars(card.tier)}  ·  💰 *${cardSellPrice(card.tier).toLocaleString()}* Solars\n\n` +
+        `🎯 First to type *${config.prefix}collect ${card.claim}* claims it!`,
+      )
+      if (!sent) globalLog(`⚠️ Card spawn: failed to send in ${groupJid} (media + text fallback both failed)`)
     } catch (err) {
       globalLog(`⚠️ Card spawn: failed processing group ${groupJid}:`, err.message)
     }
