@@ -49,7 +49,7 @@ import { isOwnerJid } from './lib/group-helpers.js'
 import { updateAllPlayers, getPlayer } from './lib/player-repo.js'
 import { migrateAllPlayers } from './lib/stat-progression.js'
 import { getCardSpawnGroups, removeCardSpawnGroup } from './lib/card-spawn-groups.js'
-import { fetchSpawnCard, tierStars, cardSellPrice } from './lib/card-engine.js'
+import { fetchSpawnCard, tierStars, cardSellPrice, hasCardSeries } from './lib/card-engine.js'
 import { sendCardMedia } from './lib/card-media.js'
 import { setActiveSpawn } from './lib/card-spawn-state.js'
 import { getSeriesSpawnGroups, removeSeriesSpawnGroup } from './lib/series-spawn-groups.js'
@@ -389,7 +389,7 @@ async function runCardSpawnSweep(instances) {
         `🎴 *A WILD CARD APPEARED!*\n` +
         `━━━━━━━━━━━━━━━━━\n` +
         `✨ *${card.title}*\n` +
-        `📺 _${card.series}_\n` +
+        (hasCardSeries(card.series) ? `📺 _${card.series}_\n` : '') +
         `${tierStars(card.tier)}  ·  💰 *${cardSellPrice(card.tier).toLocaleString()}* Solars\n\n` +
         `🎯 First to type *${config.prefix}collect ${card.claim}* claims it!`,
       )

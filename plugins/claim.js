@@ -5,7 +5,7 @@
  */
 import { config } from '../config.js'
 import { updatePlayer } from '../lib/player-repo.js'
-import { addCardToPlayer, tierStars, cardSellPrice } from '../lib/card-engine.js'
+import { addCardToPlayer, tierStars, cardSellPrice, hasCardSeries } from '../lib/card-engine.js'
 import { getActiveSpawn, clearActiveSpawn } from '../lib/card-spawn-state.js'
 
 export default {
@@ -35,7 +35,7 @@ export default {
     return reply(
       `🎉 *${player.name}* claimed the card!\n\n` +
       `${tierStars(spawn.tier)} *${spawn.title}*\n` +
-      `📺 _${spawn.series}_\n` +
+      (hasCardSeries(spawn.series) ? `📺 _${spawn.series}_\n` : '') +
       `☀️ Worth: *${cardSellPrice(spawn.tier)}* Solars _(if sold)_\n\n` +
       `_Set as your waifu with *${config.prefix}setwaifu ${spawn.title}*, or sell with *${config.prefix}sellcard ${spawn.title}*._`
     )

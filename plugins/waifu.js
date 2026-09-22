@@ -6,7 +6,7 @@
  *                              card auto-spawn in this group
  */
 import { config } from '../config.js'
-import { getWaifu, tierStars, cardSellPrice, fetchSpawnCard } from '../lib/card-engine.js'
+import { getWaifu, tierStars, cardSellPrice, fetchSpawnCard, hasCardSeries } from '../lib/card-engine.js'
 import { isGifUrl } from '../lib/card-media.js'
 import { getGroupSettings, saveGroupSettings, saveFailedMessage, isGroupOrBotOwner } from '../lib/group-settings.js'
 import { addCardSpawnGroup, removeCardSpawnGroup } from '../lib/card-spawn-groups.js'
@@ -45,7 +45,7 @@ export default {
         `🎴 *A WILD CARD APPEARED!*\n` +
         `━━━━━━━━━━━━━━━━━\n` +
         `✨ *${card.title}*\n` +
-        `📺 _${card.series}_\n` +
+        (hasCardSeries(card.series) ? `📺 _${card.series}_\n` : '') +
         `${tierStars(card.tier)}  ·  💰 *${cardSellPrice(card.tier).toLocaleString()}* Solars\n\n` +
         `🎯 First to type *${config.prefix}collect ${card.claim}* claims it!`
       )
@@ -105,7 +105,7 @@ export default {
     const caption =
       `💘 *${player.name}'s Waifu*\n\n` +
       `${tierStars(card.tier)} *${card.title}*\n` +
-      `📺 _${card.series}_`
+      (hasCardSeries(card.series) ? `📺 _${card.series}_` : '')
 
     if (card.imageUrl) {
       const send = isGifUrl(card.imageUrl) ? replyGif : replyImage

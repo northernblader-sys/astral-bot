@@ -1,7 +1,7 @@
 /**
  * card.js — one consolidated command for the entire anime card system:
  * viewing your collection, inspecting a card, gifting/trading between
- * players, selling, setting a battle-main card, and the global player
+ * players, selling, setting your main card, and the global player
  * marketplace (list/buy/delist), plus a top-collectors leaderboard.
  *
  * Subcommands (see USAGE below, shown by `.card` with no args):
@@ -11,7 +11,7 @@
  *   .card trade <mine> <theirs> @user  — propose a card swap
  *   .card trade accept                 — accept a pending trade proposal
  *   .card sell <number|name>           — sell a card for Solars
- *   .card main <number|id>             — set your battle-main card
+ *   .card main <number|id>             — set your main card
  *   .card market [page]                — view the global marketplace
  *   .card list <number|id> <price>     — list one of your cards for sale
  *   .card buy <market_number>          — buy a listed card
@@ -37,7 +37,7 @@
 import { config } from '../config.js'
 import { getPlayer, updatePlayer, playerExists } from '../lib/player-repo.js'
 import { getMarketListings, createListing, removeListing, findListing } from '../lib/market-repo.js'
-import { findOwnedCard, tierStars, cardSellPrice, tierRank } from '../lib/card-engine.js'
+import { findOwnedCard, tierStars, cardSellPrice, tierRank, hasCardSeries } from '../lib/card-engine.js'
 import { cardMediaPayload } from '../lib/card-media.js'
 
 const DECK_PAGE_SIZE   = 10
@@ -106,7 +106,7 @@ async function sendCard(sock, jid, quoted, card, { caption, mentions = [], foote
 function cardBlurb(card) {
   return (
     `${tierStars(card.tier)} *${card.title}*\n` +
-    `📺 _${card.series}_\n` +
+    (hasCardSeries(card.series) ? `📺 _${card.series}_\n` : '') +
     `☀️ Worth: *${cardSellPrice(card.tier)}* Solars _(if sold)_`
   )
 }
@@ -119,7 +119,7 @@ const USAGE = (pr) =>
   `▹ *${pr}card trade <mine> <theirs> @user* — propose a trade\n` +
   `▹ *${pr}card trade accept* — accept a pending trade\n` +
   `▹ *${pr}card sell <number|name>* — sell for Solars\n` +
-  `▹ *${pr}card main <number|id>* — set your battle-main card\n` +
+  `▹ *${pr}card main <number|id>* — set your main card\n` +
   `▹ *${pr}card market [page]* — browse the global marketplace\n` +
   `▹ *${pr}card list <number|id> <price>* — list a card for sale\n` +
   `▹ *${pr}card buy <market_number>* — buy a listed card\n` +
@@ -141,7 +141,7 @@ export default {
     { cmd: 'trade <mine> <theirs> @user',     desc: 'propose a card swap' },
     { cmd: 'trade accept',                    desc: 'accept a pending trade proposal' },
     { cmd: 'sell <number|name>',              desc: 'sell a card for Solars' },
-    { cmd: 'main <number|id>',                desc: 'set your battle-main card' },
+    { cmd: 'main <number|id>',                desc: 'set your main card' },
     { cmd: 'market [page]',                   desc: 'view the global marketplace' },
     { cmd: 'list <number|id> <price>',        desc: 'list one of your cards for sale' },
     { cmd: 'buy <market_number>',             desc: 'buy a listed card' },
@@ -198,7 +198,13 @@ async function handleDeck(ctx, pageArg) {
 
   const lines = pageItems.map((c, i) => {
     const waifuTag = player.waifuId === c.id ? ' 💘' : ''
-    return `*#${start + i + 1}* ${tierStars(c.tier)} *${c.title}*${waifuTag}\n     _${c.series} · ☀️${cardSellPrice(c.tier)}_`
+    // Hide the 'Unknown' series placeholder — show just the worth when the
+    // card has no real series name.
+    const meta = [
+      hasCardSeries(c.series) ? c.series : null,
+      `☀️${cardSellPrice(c.tier)}`,
+    ].filter(Boolean).join(' · ')
+    return `*#${start + i + 1}* ${tierStars(c.tier)} *${c.title}*${waifuTag}\n     _${meta}_`
   })
 
   const footer = totalPages > 1
@@ -226,7 +232,7 @@ async function handleInfo(ctx) {
   const caption =
     `✨ *CARD INSPECTION* ✨\n\n` +
     `🃏 *${card.title}*\n` +
-    `📺 *Series:* ${card.series}\n` +
+    (hasCardSeries(card.series) ? `📺 *Series:* ${card.series}\n` : '') +
     `🔰 *Rarity:* ${tierStars(card.tier)}\n` +
     `🆔 *Card ID:* \`${card.id}\`\n` +
     `📅 *Obtained:* ${new Date(card.claimedAt).toDateString()}\n` +
@@ -432,8 +438,7 @@ async function handleMain(ctx) {
   })
 
   const caption =
-    `🛡️ *MAIN CARD EQUIPPED!*\n\n` +
-    `This card will now represent you in card battles.\n\n` +
+    `🛡️ *MAIN CARD SET!*\n\n` +
     cardBlurb(card)
 
   return sendCard(sock, msg.key.remoteJid, msg, card, { caption, footer: `${ctx.botName ?? config.botName} · Barracks` })

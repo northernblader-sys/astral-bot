@@ -3,10 +3,11 @@
  * ─────────────────────────────────────────────────────────────────────────────
  * Suite for the 2026-09-22 card + stats drop:
  *
- *  1. TIER REPRICE (lib/card-engine.js) — S sells for 150k, tier 6 for 130k,
- *     stepping down; buy price stays above sell price on EVERY tier so
- *     buy-then-sell can never mint Solars; unknown tiers still fall back to
- *     tier 1 instead of NaN/undefined.
+ *  1. TIER REPRICE (lib/card-engine.js) — S sells for 50k (owner-scaled
+ *     from the same morning's 150k), tier 6 for 43k, stepping down; buy
+ *     price stays above sell price on EVERY tier so buy-then-sell can
+ *     never mint Solars; unknown tiers still fall back to tier 1 instead
+ *     of NaN/undefined; hasCardSeries hides the 'Unknown' placeholder.
  *  2. GIF-AWARE CARD MEDIA (lib/card-media.js) — .gif detection, still-image
  *     payloads without touching the network, gif-transcode failure degrading
  *     to the still first frame (no throw), and sendCardMedia's text fallback.
@@ -26,7 +27,7 @@
 import assert from 'node:assert/strict'
 
 import {
-  cardSellPrice, cardBuyPrice, tierStars, tierRank,
+  cardSellPrice, cardBuyPrice, tierStars, tierRank, hasCardSeries,
 } from '../lib/card-engine.js'
 import { isGifUrl, isDirectVideoUrl, cardMediaPayload, sendCardMedia } from '../lib/card-media.js'
 import { renderStatsCard, sanitizeCanvasLine } from '../lib/stats-card-render.mjs'
@@ -62,9 +63,9 @@ function makePlayer(overrides = {}) {
 
 // ── 1. Tier reprice ─────────────────────────────────────────────────────────
 
-await test('sell ladder: S=150k, 6=130k, strictly increasing by tier rank', () => {
-  assert.strictEqual(cardSellPrice('S'), 150000)
-  assert.strictEqual(cardSellPrice(6), 130000)
+await test('sell ladder: S=50k, 6=43k, strictly increasing by tier rank', () => {
+  assert.strictEqual(cardSellPrice('S'), 50000)
+  assert.strictEqual(cardSellPrice(6), 43000)
   const ladder = ['1', '2', '3', '4', '5', '6', 'S']
   const prices = ladder.map(t => cardSellPrice(t))
   for (const p of prices) assert.ok(Number.isFinite(p) && p > 0, `non-positive sell price: ${p}`)
@@ -91,6 +92,17 @@ await test('unknown tiers fall back to tier-1 prices, never NaN', () => {
   assert.strictEqual(cardBuyPrice(undefined), cardBuyPrice(1))
   assert.ok(Number.isFinite(cardSellPrice(null)))
   assert.ok(tierStars('S').length > 0 && tierStars(1).length > 0)
+})
+
+await test("hasCardSeries hides the 'Unknown' placeholder (no 📺 Unknown)", () => {
+  assert.strictEqual(hasCardSeries('Unknown'), false)
+  assert.strictEqual(hasCardSeries('unknown'), false)
+  assert.strictEqual(hasCardSeries(' UNKNOWN '), false)
+  assert.strictEqual(hasCardSeries(''), false)
+  assert.strictEqual(hasCardSeries(null), false)
+  assert.strictEqual(hasCardSeries(undefined), false)
+  assert.strictEqual(hasCardSeries('Naruto'), true)
+  assert.strictEqual(hasCardSeries(' Cowboy Bebop '), true)
 })
 
 // ── 2. GIF-aware card media ─────────────────────────────────────────────────
