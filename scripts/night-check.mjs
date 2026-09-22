@@ -110,11 +110,25 @@ t('gate sits after the command is parsed',
 
 // Ban appeals must survive the night, same as they survive the ban/jail
 // lockouts — otherwise someone banned at 2am has no route out until morning.
+// So must spawn claims: night mode pauses the spawn SWEEPS but never clears a
+// spawn that is already live, so without this a card or series that appeared
+// just before `.night on` sits there with its code posted and nobody able to
+// spend it until morning. See SPAWN_CLAIM_COMMANDS in handler.js.
 {
   const gate = HANDLER.slice(HANDLER.indexOf('isNightMode() &&'), HANDLER.indexOf('── Ban lockout'))
-  t('appeals are exempt from the night gate', /LOCKOUT_EXEMPT_COMMANDS\.has\(cmd\)/.test(gate))
+  t('the night gate routes exemptions through isNightModeAllowed()',
+    /if \(!isNightModeAllowed\(cmd\)\)/.test(gate))
+  t('isNightModeAllowed keeps ban appeals reachable',
+    /export function isNightModeAllowed\(cmd\) \{[\s\S]{0,200}?LOCKOUT_EXEMPT_COMMANDS\.has\(cmd\)/.test(HANDLER))
+  t('isNightModeAllowed keeps spawn claims reachable',
+    /SPAWN_CLAIM_COMMANDS = new Set\(\['claim', 'collect', 'grab'\]\)/.test(HANDLER))
   t('exemption is checked BEFORE the notice is sent',
-    gate.indexOf('LOCKOUT_EXEMPT_COMMANDS') < gate.indexOf('shouldNotifyNight'))
+    gate.indexOf('isNightModeAllowed') < gate.indexOf('shouldNotifyNight'))
+  // Widening the night gate must not widen the ban/jail lockouts with it.
+  const banGate = HANDLER.slice(HANDLER.indexOf('── Ban lockout'), HANDLER.indexOf('── Jail lockout'))
+  t("'claim' was NOT added to the every-lockout exemption set",
+    /const LOCKOUT_EXEMPT_COMMANDS = new Set\(\['unban', 'unban-me', 'unbanme', 'appeal'\]\)/.test(HANDLER)
+    && !/isNightModeAllowed/.test(banGate))
 }
 
 console.log('\n=== 6b. In-battle commands are reachable mid-battle ===')
@@ -146,7 +160,11 @@ for (const fn of ['runCardSpawnSweep', 'runSeriesSpawnSweep', 'runPokemonSpawnSw
   t(fn + ' gated BEFORE it picks a socket',
     body.indexOf('isNightMode()') < body.indexOf('instances.map'))
 }
-t('main.js imports the gate', /import \{ isNightMode \} from '\.\/lib\/night-mode\.js'/.test(MAIN))
+// Named-import list, not a literal `{ isNightMode }` — main.js also imports
+// onNightModeOff from the same module, and the old single-name pattern silently
+// stopped matching the day that second import was added.
+t('main.js imports the gate',
+  /import \{[^}]*\bisNightMode\b[^}]*\} from '\.\/lib\/night-mode\.js'/.test(MAIN))
 t('exactly 3 sweeps gated', (MAIN.match(/if \(isNightMode\(\)\) return/g) ?? []).length === 3)
 
 // Leave the repo as we found it.

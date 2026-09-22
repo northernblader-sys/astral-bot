@@ -7,6 +7,12 @@
  * back tomorrow" notice, and the card/series/Pokémon auto-spawn sweeps in
  * main.js stop running so nobody wakes up to a wall of unclaimed spawns.
  *
+ * Two things stay reachable for everyone: ban appeals (as they do from every
+ * other lockout) and spawn claims — `.claim <code>` / `.collect <code>`. A card
+ * or series that spawned just before the realm closed is still live in the
+ * group with its code posted, so the claim must not be locked out with it.
+ * See SPAWN_CLAIM_COMMANDS / isNightModeAllowed in handler.js.
+ *
  * Permission: owner OR bot mod (lib/mod-repo.js) — the same set that stays
  * able to use the bot while night mode is on, so whoever can work through the
  * night can also end it. WhatsApp group admins deliberately cannot: this is a
@@ -56,7 +62,9 @@ export default {
           ? `🌙 *Night mode is ON.*\n${RULE}\n` +
             `Turned on *${since(st.since)}*` +
             (st.by ? ` by @${st.by.replace(/@.*$/, '')}` : '') + `.\n\n` +
-            `_Only you and the other mods can use commands. Auto-spawns are paused._\n\n` +
+            `_Only you and the other mods can use commands. Auto-spawns are paused, ` +
+            `but a card or series already spawned can still be claimed with ` +
+            `*${p}claim <code>*._\n\n` +
             `Wake the bot up with *${p}night off*.`
           : `☀️ *Night mode is OFF* — the bot is open to everyone.\n${RULE}\n` +
             `Close it for the night with *${p}night on*.`,
@@ -71,7 +79,9 @@ export default {
         `The bot is now closed to everyone except *you and the mods*.\n\n` +
         `• Everyone else gets a "go to sleep, back tomorrow" notice\n` +
         `• Card, series and Pokémon auto-spawns are *paused*\n` +
-        `• Nothing is lost — spawns just resume on their normal cadence\n\n` +
+        `• Nothing is lost — spawns just resume on their normal cadence\n` +
+        `• A card or series *already spawned* can still be claimed overnight ` +
+        `with *${p}claim <code>* or *${p}collect <code>*\n\n` +
         `_Reopen with_ *${p}night off*.`,
       )
     }
