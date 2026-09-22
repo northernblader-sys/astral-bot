@@ -23,6 +23,7 @@ import { resolveOverflowNotice, inventoryOverflow } from './lib/inventory-limits
 import { storageCap } from './lib/housing-engine.js'
 import { getActiveSpawn } from './lib/card-spawn-state.js'
 import { awardPetCommandSolars } from './lib/pet-bond.js'
+import { touchDungeonActivity } from './lib/dungeon-slots.js'
 import { petMap, allItems } from './lib/game-data.js'
 import { isLiveBossFight } from './lib/boss-engine.js'
 import { BOSS_TURN_TIMEOUT_MS, resolveBossTimeoutLoss } from './lib/combat-handlers.js'
@@ -1276,6 +1277,9 @@ export function makeHandler(sock, db, botName) {
       // Silent by design: a notification on every single command would be
       // unusable spam.
       if (handled && ctx.player) {
+        if (ctx.isGroup && ctx.player.inDungeon) {
+          touchDungeonActivity(ctx.sender, ctx.player, ctx.from)
+        }
         await updatePlayer(ctx.db, ctx.from, fresh => {
           awardPetCommandSolars(fresh, petMap)
           // Boss turn clock: a turn-consuming action taken during a live boss
