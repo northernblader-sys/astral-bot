@@ -2,9 +2,15 @@
  * .stats — inspect and spend the player's level-derived stat pool.
  *
  * Usage:
- *   .stats
- *   .stats add <str|agi|int|def|lck> <amount>
- *   .train [amount]
+ *   .stats                                     — stat panel IMAGE + summary
+ *   .stats add <str|agi|int|def|lck> <amount>  — allocate points (text reply)
+ *   .train [amount]                            — buy points with Solars (text)
+ *
+ * Bare `.stats` renders the obsidian-and-gold stat sheet
+ * (lib/stats-card-render.mjs) with the player's live numbers and sends it as
+ * the image, with a short summary as the caption. The full text sheet below
+ * is the fallback when the render fails, and stays the reply for unknown
+ * subcommands — so the numbers are never hostage to canvas.
  */
 import { config } from '../config.js'
 import { updatePlayer } from '../lib/player-repo.js'
@@ -18,6 +24,7 @@ import {
 } from '../lib/stat-progression.js'
 import { playerLevelCap } from '../lib/reborn-engine.js'
 import { endStatusBadge } from '../lib/end-event.js'
+import { renderStatsCard } from '../lib/stats-card-render.mjs'
 
 /**
  * `db` is optional — pass it to surface The End's aura line, which is the only
@@ -51,7 +58,27 @@ export default {
   async run(ctx) {
     const [sub, stat, rawAmount] = ctx.args ?? []
     const command = String(sub ?? '').toLowerCase()
-    if (!command) return ctx.reply(stateText(ctx.player, ctx.db))
+    if (!command) {
+      // Stat sheet image with the player's live numbers. Short caption —
+      // the image carries the breakdown; the full text sheet below is the
+      // fallback so a canvas failure never swallows the command.
+      const state = ensureStatPoints(ctx.player)
+      const endLine = endStatusBadge(ctx.db, ctx.player)
+      const caption =
+        `📊 *${ctx.player.name}'s Stat Points*\n\n` +
+        (endLine ? `${endLine}\n\n` : '') +
+        `🏅 Level: *${ctx.player.level}/${playerLevelCap(ctx.player)}*  ·  ` +
+        `✨ Unallocated: *${state.unallocated}*\n` +
+        `Earned: *${state.earned}/${statPointCap(ctx.player.level, ctx.player)}* at this level\n\n` +
+        `Use *${config.prefix}stats add <stat> <amount>* to allocate points.\n` +
+        `Use *${config.prefix}train [amount]* to buy points with Solars.`
+      try {
+        const sheet = await renderStatsCard(ctx.player, { prefix: config.prefix, endLine })
+        return await ctx.replyImage(sheet, caption)
+      } catch (err) {
+        return ctx.reply(stateText(ctx.player, ctx.db))
+      }
+    }
 
     if (command === 'add' || command === 'allocate') {
       const amount = Math.floor(Number(rawAmount))

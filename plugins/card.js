@@ -38,6 +38,7 @@ import { config } from '../config.js'
 import { getPlayer, updatePlayer, playerExists } from '../lib/player-repo.js'
 import { getMarketListings, createListing, removeListing, findListing } from '../lib/market-repo.js'
 import { findOwnedCard, tierStars, cardSellPrice, tierRank } from '../lib/card-engine.js'
+import { cardMediaPayload } from '../lib/card-media.js'
 
 const DECK_PAGE_SIZE   = 10
 const MARKET_PAGE_SIZE = 10
@@ -84,23 +85,21 @@ function resolveOwnedCardArg(player, arg) {
   return findOwnedCard(player, arg)
 }
 
-/** True if the given file extension (from a URL) is a video-type format Baileys should send as `video`, not `image`. */
-function isVideoUrl(url) {
-  return /\.(webm|mp4|gif)(\?|$)/i.test(String(url ?? ''))
-}
-
 /**
  * Sends a card (or market listing) with its image/video, correct caption,
  * mentions, and footer. Falls back gracefully to a text-only reply if the
  * card has no image at all.
+ *
+ * Media shape comes from lib/card-media.js: gif URLs are transcoded to MP4
+ * first (a raw .gif sent as `{ video: { url } }` silently fails to play on
+ * WhatsApp — the old behavior here), real video URLs loop directly, and a
+ * gif whose transcode fails still degrades to its first frame as an image.
  */
 async function sendCard(sock, jid, quoted, card, { caption, mentions = [], footer } = {}) {
   if (!card?.imageUrl) {
     return sock.sendMessage(jid, { text: caption ?? '' }, { quoted })
   }
-  const payload = isVideoUrl(card.imageUrl)
-    ? { video: { url: card.imageUrl }, gifPlayback: true, caption, mentions, footer }
-    : { image: { url: card.imageUrl }, caption, mentions, footer }
+  const payload = await cardMediaPayload(card.imageUrl, caption, { mentions, footer })
   return sock.sendMessage(jid, payload, { quoted })
 }
 

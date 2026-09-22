@@ -7,6 +7,7 @@
  */
 import { config } from '../config.js'
 import { getWaifu, tierStars, cardSellPrice, fetchSpawnCard } from '../lib/card-engine.js'
+import { isGifUrl } from '../lib/card-media.js'
 import { getGroupSettings, saveGroupSettings, saveFailedMessage, isGroupOrBotOwner } from '../lib/group-settings.js'
 import { addCardSpawnGroup, removeCardSpawnGroup } from '../lib/card-spawn-groups.js'
 import { NOT_GROUP, NOT_ALLOWED } from '../lib/group-helpers.js'
@@ -24,7 +25,7 @@ export default {
   description: 'Show your current waifu card, or toggle card auto-spawn (.waifu on/off)',
 
   async run(ctx) {
-    const { args, reply, replyImage, player } = ctx
+    const { args, reply, replyImage, replyGif, player } = ctx
     const sub = (args[0] ?? '').toLowerCase()
 
     // ── SPAWN (bot owner only) — manually force a card spawn right now ────
@@ -36,7 +37,10 @@ export default {
       if (!card) return reply(`❌ Couldn't reach the card API — try again shortly.`)
 
       setActiveSpawn(ctx.sender, card)
-      return replyImage(
+      // GIF cards loop via replyGif (MP4 transcode + gifPlayback), stills via
+      // replyImage — same split lib/card-media.js makes for the auto-spawns.
+      const send = isGifUrl(card.imageUrl) ? replyGif : replyImage
+      return send(
         card.imageUrl,
         `🎴 *A WILD CARD APPEARED!*\n` +
         `━━━━━━━━━━━━━━━━━\n` +
@@ -103,7 +107,10 @@ export default {
       `${tierStars(card.tier)} *${card.title}*\n` +
       `📺 _${card.series}_`
 
-    if (card.imageUrl) return replyImage(card.imageUrl, caption)
+    if (card.imageUrl) {
+      const send = isGifUrl(card.imageUrl) ? replyGif : replyImage
+      return send(card.imageUrl, caption)
+    }
     return reply(caption)
   },
 }
