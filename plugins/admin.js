@@ -29,6 +29,8 @@ import { getPlayer, updatePlayer, updateAllPlayers } from '../lib/player-repo.js
 import { hasInventoryRoom, inventoryFullMessage } from '../lib/inventory-limits.js'
 import { ensureStatPoints, statPointCap } from '../lib/stat-progression.js'
 import { applyLevelUps, applyEquipmentBonus } from '../lib/combat-engine.js'
+import { rebornStatBonus } from '../lib/reborn-engine.js'
+import { statPackBonus } from '../lib/stat-packs.js'
 import { syncEmptyVesselFlag } from '../lib/character-abilities.js'
 import {
   endSeason, getActiveSeason, getSeasonById, getSeasonRuntime, startSeason,
@@ -390,35 +392,91 @@ export async function setLevel(ctx) {
     return reply(`❌ That player isn't registered yet.`)
   }
 
+  let before = null
+  let after = null
   await updatePlayer(db, targetId, (pl) => {
     const state = ensureStatPoints(pl)
+    before = { level: pl.level, stats: { ...(pl.stats ?? {}) } }
+
     const { maxHp, maxMp, ...canonical } = getTotalStats(pl.classId, pl.raceId, level)
     const cap = statPointCap(level, pl)
+
+    // ── Everything that is NOT level-derived has to survive the retune ─────
+    // This command rewrites the level-derived half of the sheet, which used to
+    // mean building `stats` from canonical + allocations alone and assigning it
+    // wholesale. That silently deleted every permanent bonus the sheet carries
+    // outside class/race/level growth — the reborn reward (+100 a stat), Game
+    // Shop Stat Pack Boosts, job perks (plugins/jobs.js writes player.stats
+    // only), and the stat/maxHp/maxMp contribution of gear that is STILL
+    // equipped. A player who was set to a level came out strictly weaker than
+    // they went in, with their gear slots untouched — one of the ways "my stats
+    // keep dropping" happened. Every other rebuild site in the bot (applyLevelUps,
+    // ensureStatPoints, applyRebornFailure) re-adds these; this one now does too.
+    const rb = rebornStatBonus(pl)
+    const pack = statPackBonus(pl)
+
+    // Gear/perk delta: live value minus the current anchor. Job perks sit in
+    // this gap too (they are never written into baseStats), so carrying the gap
+    // across the rebuild preserves them exactly like it does in
+    // applyRebornFailure().
+    // `baseStats` is the anchor the delta is measured against. A save without
+    // one (hand-built record, a legacy import) falls back to the live stats —
+    // the same `player.baseStats ?? player.stats` fallback ensureStatPoints()
+    // uses — so the delta reads 0 rather than counting the whole sheet as gear.
+    const anchor = pl.baseStats ?? pl.stats ?? {}
+    const gearDelta = {}
+    for (const key of ['str', 'agi', 'int', 'def', 'lck']) {
+      gearDelta[key] = (pl.stats?.[key] ?? 0) - (anchor[key] ?? 0)
+    }
+    const hpGear = (pl.maxHp ?? 0) - (anchor.maxHp ?? 0)
+    const mpGear = (pl.maxMp ?? 0) - (anchor.maxMp ?? 0)
+
+    // Allocated points are still clamped to the new level's pool (the pool is
+    // what shrank), but the clamp is now written back into `allocations` too —
+    // leaving the old, larger map in place is what let the following level-up
+    // silently re-inflate the sheet off numbers the command had already
+    // discarded.
     const spent = Math.min(state.spent ?? 0, cap)
+    const allocations = {}
     let remainingSpent = spent
-    const stats = Object.fromEntries(
-      ['str', 'agi', 'int', 'def', 'lck'].map((key) => {
-        const allocation = Math.min(
-          state.allocations?.[key] ?? 0,
-          Math.max(0, remainingSpent),
-        )
-        remainingSpent -= allocation
-        return [key, canonical[key] + allocation]
-      }),
-    )
-    pl.level  = level
-    pl.stats  = stats
-    pl.maxHp  = maxHp
-    pl.maxMp  = maxMp
-    pl.hp     = maxHp
-    pl.mp     = maxMp
-    pl.baseStats = { ...stats, maxHp, maxMp }
+    for (const key of ['str', 'agi', 'int', 'def', 'lck']) {
+      allocations[key] = Math.min(state.allocations?.[key] ?? 0, Math.max(0, remainingSpent))
+      remainingSpent -= allocations[key]
+    }
+
+    pl.level = level
+    pl.stats = {}
+    pl.baseStats = {}
+    for (const key of ['str', 'agi', 'int', 'def', 'lck']) {
+      const base = canonical[key] + allocations[key] + rb.stat + pack[key]
+      pl.baseStats[key] = base
+      pl.stats[key] = base + gearDelta[key]
+    }
+    pl.baseStats.maxHp = maxHp + rb.maxHp
+    pl.baseStats.maxMp = maxMp
+    pl.maxHp = pl.baseStats.maxHp + hpGear
+    pl.maxMp = pl.baseStats.maxMp + mpGear
+    // Full restore, as before — an admin retune is not a punishment.
+    pl.hp = pl.maxHp
+    pl.mp = pl.maxMp
+
     pl.statPoints.earned = cap
     pl.statPoints.spent = spent
     pl.statPoints.unallocated = cap - spent
+    pl.statPoints.allocations = allocations
+    after = { level: pl.level, stats: { ...pl.stats } }
   })
 
-  return reply(`✅ Set *${target.name}*'s level to *${level}* and recalculated stats.`)
+  const moved = before && after
+    ? ['str', 'agi', 'int', 'def', 'lck'].filter(k => (after.stats[k] ?? 0) < (before.stats[k] ?? 0))
+    : []
+  return reply(
+    `✅ Set *${target.name}*'s level to *${level}* and recalculated stats.` +
+    (before && before.level !== level ? `\n📈 Level: *${before.level} → ${level}*` : '') +
+    (moved.length
+      ? `\nℹ️ ${moved.map(k => k.toUpperCase()).join(', ')} moved down with the level pool — gear, job perks, Stat Packs and the reborn bonus were kept.`
+      : ''),
+  )
 }
 
 /**

@@ -195,7 +195,12 @@ async function equipLoadout(ctx, name) {
         const item = itemMap[wantId]
         if (item) {
           applyEquipmentBonus(player, item, 1)
-          initDurability(player, slot, item)
+          // The item ID, not the item object: initDurability() looks the id up
+          // in its own map (`itemMap[itemId]`) and bails out when it finds
+          // nothing, so passing the object meant loadout-equipped gear was
+          // never durability-tracked at all — it could not wear out or break,
+          // unlike the same piece equipped with .equip (plugins/equip.js).
+          initDurability(player, slot, wantId)
         }
         equippedCount += 1
       } else {
