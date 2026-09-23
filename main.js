@@ -36,7 +36,7 @@ import { createInboundScheduler, inboundMessageKey } from './lib/inbound-schedul
 import { setHealthProvider } from './lib/bot-health.js'
 import { loadPlugins } from './lib/plugin-manager.js'
 import { makeHandler } from './handler.js'
-import { flushPendingWrites } from './lib/player-repo.js'
+import { flushPendingWrites, installReadGuard } from './lib/player-repo.js'
 import { runValidation } from './plugins/validate.js'
 import { getGroupSettings } from './lib/group-settings.js'
 import { getPremiumGroups, removePremiumGroup } from './lib/premium-groups.js'
@@ -211,6 +211,12 @@ async function initDb() {
   const adapter = createDbAdapter(config.dbPath, { log: globalLog, warn: globalErrorLog })
   // Default structure — expand when RPG features are added
   const db = new Low(adapter, { users: {}, sessions: {}, bans: {}, mods: [] })
+  // Every plugin ranking/board command calls the raw `await db.read()`, and
+  // lowdb's read() replaces db.data wholesale with the FILE. With player
+  // writes debounced (lib/player-repo.js's scheduleFlush), the file lags RAM
+  // for the length of that window — so a raw read rewound the world and the
+  // next flush persisted the rollback. See installReadGuard()'s comment.
+  installReadGuard(db)
   await db.read()
   // Low's default data only applies on first-ever creation of db.json — an
   // existing db.json from before the ban feature won't have `bans` at all,
@@ -1145,6 +1151,8 @@ function createBotInstance(botCfg) {
       botName: inst.botName,
       minGapMs: botCfg.rateLimit?.minGapMs,
       maxPerMinute: botCfg.rateLimit?.maxPerMinute,
+      burstMax: botCfg.rateLimit?.burstMax,
+      burstGapMs: botCfg.rateLimit?.burstGapMs,
       log,
     })
 
@@ -1609,11 +1617,16 @@ async function main() {
         } : null,
         send: rl ? {
           pending: rl.pending,
+          pendingReplies: rl.pendingReplies,
+          pendingBulk: rl.pendingBulk,
           pendingReactions: rl.pendingReactions,
           oldestPendingMs: rl.oldestPendingMs,
           sentLastMinute: rl.sentLastMinute,
           draining: rl.draining,
+          burstReady: rl.burstReady,
           limits: rl.limits,
+          effectiveLimits: rl.effectiveLimits,
+          throttledForMs: rl.throttledForMs,
           counters: rl.counters,
         } : null,
       }

@@ -36008,6 +36008,379 @@
           "chance": 0.1
         }
       ]
+    },
+    {
+      "id": "nh_dust_rat",
+      "name": "Dust Rat",
+      "emoji": "\ud83d\udc01",
+      "locationId": "newbie_hollow",
+      "tier": "regular",
+      "floorRange": [
+        1,
+        50
+      ],
+      "baseStats": {
+        "hp": 30,
+        "def": 1,
+        "atk": 14
+      },
+      "scaling": {
+        "hpPerFloor": 10,
+        "defPerFloor": 1,
+        "atkPerFloor": 3
+      },
+      "rewards": {
+        "xpBase": 8,
+        "xpPerFloor": 0.5,
+        "solarsBase": 2,
+        "solarsPerFloor": 0.15
+      },
+      "drops": [
+        {
+          "itemId": "leather_scrap",
+          "chance": 0.32
+        },
+        {
+          "itemId": "iron_ore",
+          "chance": 0.12
+        },
+        {
+          "itemId": "health_potion",
+          "chance": 0.14
+        }
+      ]
+    },
+    {
+      "id": "nh_hollow_slime",
+      "name": "Hollow Slime",
+      "emoji": "\ud83e\udee7",
+      "locationId": "newbie_hollow",
+      "tier": "regular",
+      "floorRange": [
+        1,
+        45
+      ],
+      "baseStats": {
+        "hp": 46,
+        "def": 3,
+        "atk": 11
+      },
+      "scaling": {
+        "hpPerFloor": 12,
+        "defPerFloor": 1,
+        "atkPerFloor": 2
+      },
+      "rewards": {
+        "xpBase": 8,
+        "xpPerFloor": 0.5,
+        "solarsBase": 2,
+        "solarsPerFloor": 0.15
+      },
+      "drops": [
+        {
+          "itemId": "wood_plank",
+          "chance": 0.22
+        },
+        {
+          "itemId": "leather_scrap",
+          "chance": 0.18
+        },
+        {
+          "itemId": "mana_potion",
+          "chance": 0.12
+        }
+      ]
+    },
+    {
+      "id": "nh_lantern_moth",
+      "name": "Lantern Moth",
+      "emoji": "\ud83e\udd8b",
+      "locationId": "newbie_hollow",
+      "tier": "regular",
+      "floorRange": [
+        1,
+        50
+      ],
+      "baseStats": {
+        "hp": 24,
+        "def": 0,
+        "atk": 19
+      },
+      "scaling": {
+        "hpPerFloor": 9,
+        "defPerFloor": 0,
+        "atkPerFloor": 4
+      },
+      "rewards": {
+        "xpBase": 8,
+        "xpPerFloor": 0.5,
+        "solarsBase": 2,
+        "solarsPerFloor": 0.15
+      },
+      "drops": [
+        {
+          "itemId": "leather_scrap",
+          "chance": 0.2
+        },
+        {
+          "itemId": "wood_plank",
+          "chance": 0.16
+        },
+        {
+          "itemId": "health_potion",
+          "chance": 0.12
+        }
+      ]
+    },
+    {
+      "id": "nh_ash_crawler",
+      "name": "Ash Crawler",
+      "emoji": "\ud83d\udc1b",
+      "locationId": "newbie_hollow",
+      "tier": "regular",
+      "floorRange": [
+        6,
+        50
+      ],
+      "baseStats": {
+        "hp": 44,
+        "def": 3,
+        "atk": 21
+      },
+      "scaling": {
+        "hpPerFloor": 12,
+        "defPerFloor": 1,
+        "atkPerFloor": 4
+      },
+      "rewards": {
+        "xpBase": 8,
+        "xpPerFloor": 0.5,
+        "solarsBase": 2,
+        "solarsPerFloor": 0.15
+      },
+      "drops": [
+        {
+          "itemId": "iron_ore",
+          "chance": 0.2
+        },
+        {
+          "itemId": "leather_scrap",
+          "chance": 0.24
+        },
+        {
+          "itemId": "rusty_dagger",
+          "chance": 0.02
+        }
+      ]
+    },
+    {
+      "id": "nh_grave_pup",
+      "name": "Grave Pup",
+      "emoji": "\ud83d\udc3a",
+      "locationId": "newbie_hollow",
+      "tier": "regular",
+      "floorRange": [
+        10,
+        50
+      ],
+      "baseStats": {
+        "hp": 36,
+        "def": 2,
+        "atk": 27
+      },
+      "scaling": {
+        "hpPerFloor": 11,
+        "defPerFloor": 1,
+        "atkPerFloor": 5
+      },
+      "rewards": {
+        "xpBase": 8,
+        "xpPerFloor": 0.5,
+        "solarsBase": 2,
+        "solarsPerFloor": 0.15
+      },
+      "drops": [
+        {
+          "itemId": "monster_fang",
+          "chance": 0.18
+        },
+        {
+          "itemId": "leather_scrap",
+          "chance": 0.2
+        },
+        {
+          "itemId": "short_bow",
+          "chance": 0.02
+        }
+      ]
+    },
+    {
+      "id": "nh_pebble_warden",
+      "name": "Pebble Warden",
+      "emoji": "\ud83e\udea8",
+      "locationId": "newbie_hollow",
+      "tier": "regular",
+      "floorRange": [
+        14,
+        50
+      ],
+      "baseStats": {
+        "hp": 62,
+        "def": 5,
+        "atk": 17
+      },
+      "scaling": {
+        "hpPerFloor": 15,
+        "defPerFloor": 2,
+        "atkPerFloor": 3
+      },
+      "rewards": {
+        "xpBase": 8,
+        "xpPerFloor": 0.5,
+        "solarsBase": 2,
+        "solarsPerFloor": 0.15
+      },
+      "drops": [
+        {
+          "itemId": "iron_ore",
+          "chance": 0.24
+        },
+        {
+          "itemId": "stone",
+          "chance": 0.2
+        },
+        {
+          "itemId": "rough_shield",
+          "chance": 0.02
+        }
+      ]
+    },
+    {
+      "id": "nh_bone_lantern",
+      "name": "Bone Lantern",
+      "emoji": "\ud83c\udfee",
+      "locationId": "newbie_hollow",
+      "tier": "regular",
+      "floorRange": [
+        20,
+        50
+      ],
+      "baseStats": {
+        "hp": 34,
+        "def": 2,
+        "atk": 31
+      },
+      "scaling": {
+        "hpPerFloor": 10,
+        "defPerFloor": 1,
+        "atkPerFloor": 6
+      },
+      "rewards": {
+        "xpBase": 8,
+        "xpPerFloor": 0.5,
+        "solarsBase": 2,
+        "solarsPerFloor": 0.15
+      },
+      "drops": [
+        {
+          "itemId": "monster_fang",
+          "chance": 0.2
+        },
+        {
+          "itemId": "iron_ore",
+          "chance": 0.18
+        },
+        {
+          "itemId": "oak_staff",
+          "chance": 0.02
+        }
+      ]
+    },
+    {
+      "id": "nh_hollow_sentinel",
+      "name": "Hollow Sentinel",
+      "emoji": "\ud83d\uddff",
+      "locationId": "newbie_hollow",
+      "tier": "elite",
+      "floorRange": [
+        12,
+        50
+      ],
+      "baseStats": {
+        "hp": 118,
+        "def": 7,
+        "atk": 33
+      },
+      "scaling": {
+        "hpPerFloor": 20,
+        "defPerFloor": 2,
+        "atkPerFloor": 6
+      },
+      "rewards": {
+        "xpBase": 8,
+        "xpPerFloor": 0.5,
+        "solarsBase": 2,
+        "solarsPerFloor": 0.15
+      },
+      "drops": [
+        {
+          "itemId": "iron_ore",
+          "chance": 0.28
+        },
+        {
+          "itemId": "iron_helmet",
+          "chance": 0.05
+        },
+        {
+          "itemId": "leather_armor",
+          "chance": 0.06
+        },
+        {
+          "itemId": "hi_health_potion",
+          "chance": 0.08
+        }
+      ]
+    },
+    {
+      "id": "nh_faded_stalker",
+      "name": "Faded Stalker",
+      "emoji": "\ud83d\udc7b",
+      "locationId": "newbie_hollow",
+      "tier": "elite",
+      "floorRange": [
+        30,
+        50
+      ],
+      "baseStats": {
+        "hp": 96,
+        "def": 4,
+        "atk": 44
+      },
+      "scaling": {
+        "hpPerFloor": 18,
+        "defPerFloor": 2,
+        "atkPerFloor": 8
+      },
+      "rewards": {
+        "xpBase": 8,
+        "xpPerFloor": 0.5,
+        "solarsBase": 2,
+        "solarsPerFloor": 0.15
+      },
+      "drops": [
+        {
+          "itemId": "monster_fang",
+          "chance": 0.28
+        },
+        {
+          "itemId": "katana",
+          "chance": 0.04
+        },
+        {
+          "itemId": "iron_chestplate",
+          "chance": 0.05
+        }
+      ]
     }
   ],
   "bosses": [
@@ -37400,6 +37773,51 @@
       ],
       "conquestTitle": "Drownbreaker",
       "description": "A choir of the dead still kneeling before an altar that stopped answering centuries ago. It does not attack out of malice, it attacks because it still believes, and you have interrupted the prayer."
+    },
+    {
+      "id": "nh_hollow_gatekeeper",
+      "name": "The Hollow Gatekeeper",
+      "emoji": "\ud83d\udddd\ufe0f",
+      "locationId": "newbie_hollow",
+      "tier": "boss",
+      "floor": 50,
+      "stats": {
+        "hp": 6500,
+        "def": 45,
+        "atk": 115
+      },
+      "rewards": {
+        "xp": 1500,
+        "solars": 400
+      },
+      "drops": [
+        {
+          "itemId": "health_potion",
+          "chance": 1
+        },
+        {
+          "itemId": "hi_health_potion",
+          "chance": 0.35
+        },
+        {
+          "itemId": "iron_sword",
+          "chance": 0.22
+        },
+        {
+          "itemId": "rough_shield",
+          "chance": 0.22
+        },
+        {
+          "itemId": "leather_armor",
+          "chance": 0.25
+        },
+        {
+          "itemId": "monster_fang",
+          "chance": 0.5
+        }
+      ],
+      "conquestTitle": "Hollow Graduate",
+      "description": "Something patient sits at the bottom of the Hollow, thin and polite and very old. It has been waiting for someone to climb this far. It does not intend to let them leave the same."
     }
   ]
 }

@@ -21,6 +21,27 @@
     "description": "The last surviving settlement in the shattered world of Astral. Every adventurer begins their journey here. The guild board, shops, the old inn, and a small pet store lining Market Row are always open."
   },
   {
+    "id": "newbie_hollow",
+    "name": "Newcomer's Hollow",
+    "type": "dungeon",
+    "safe": false,
+    "floors": 50,
+    "levelRange": [
+      1,
+      30
+    ],
+    "entryLevel": 1,
+    "maxLevel": 30,
+    "dailyFloorCap": 50,
+    "bossFloors": [
+      50
+    ],
+    "checkpointInterval": 10,
+    "prerequisite": null,
+    "travelCost": 0,
+    "description": "A soft-mouthed cave under Astral Town, warm and shallow, where the weakest things in the world wander in circles. Every adventurer's first fifty floors are here."
+  },
+  {
     "id": "entry_tower",
     "name": "Entry Tower",
     "type": "dungeon",

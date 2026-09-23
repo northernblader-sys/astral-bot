@@ -341,6 +341,14 @@ export const bots = [
     rateLimit: {
       minGapMs: parseInt(env('RATE_LIMIT_MIN_GAP_MS', '1200'), 10),
       maxPerMinute: parseInt(env('RATE_LIMIT_MAX_PER_MINUTE', '40'), 10),
+      // Burst allowance for replies to commands (see lib/send-rate-limiter.js).
+      // Up to `burstMax` sends may go out `burstGapMs` apart inside any 10s
+      // window; the trailing-60s maxPerMinute ceiling above is NOT affected, so
+      // this shortens the wait for the first answers after a quiet moment
+      // without raising how much the number sends per minute. Set burstMax=0
+      // to get the old strict pacing back.
+      burstMax: parseInt(env('RATE_LIMIT_BURST', '3'), 10),
+      burstGapMs: parseInt(env('RATE_LIMIT_BURST_GAP_MS', '350'), 10),
     },
   },
 ]

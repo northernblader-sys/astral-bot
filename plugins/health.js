@@ -75,10 +75,15 @@ export default {
       const s = inst.send
       if (s) {
         lines.push(`  send queue: *${s.pending}* waiting` +
-          (s.pending ? `, oldest ${Math.round(s.oldestPendingMs / 1000)}s` : '') +
+          (s.pending ? ` (${s.pendingReplies ?? 0} replies, ${s.pendingBulk ?? 0} bulk, oldest ${Math.round(s.oldestPendingMs / 1000)}s)` : '') +
           (s.pendingReactions ? ` (+${s.pendingReactions} reactions)` : ''))
+        const eff = s.effectiveLimits
         lines.push(`  rate: ${s.sentLastMinute}/${s.limits.maxPerMinute} per min, ` +
-          `min gap ${s.limits.minGapMs}ms`)
+          `min gap ${s.limits.minGapMs}ms` +
+          (eff && (eff.minGapMs !== s.limits.minGapMs || eff.maxPerMinute !== s.limits.maxPerMinute)
+            ? ` (throttled to ${eff.minGapMs}ms / ${eff.maxPerMinute} per min${s.throttledForMs ? `, extra pause ${Math.round(s.throttledForMs / 1000)}s` : ''})`
+            : '') +
+          `, burst ${s.burstReady ? 'ready' : 'spent'} of ${s.limits.burstMax ?? 0}`)
         const c = s.counters
         lines.push(`  sent ${c.sent} · failed ${c.failed} · timeouts ${c.timeouts}`)
         lines.push(`  dropped: ${c.dropStale} stale, ${c.dropOverflow} overflow, ${c.dropReact} reactions`)

@@ -26,7 +26,13 @@ import {
 import {
   pickMonsterForFloor, refreshStamina, hpBar, getNewlyUnlockedSkills,
   enemyPowerRatio, scaleEnemyToPlayer, scaleBossToPlayer,
+  applyVeteranScaling, veteranBanner,
 } from '../lib/combat-engine.js'
+import {
+  NEWBIE_LOCATION_ID, NEWBIE_MAX_LEVEL, isNewbieLocation, isNewbieGraduated,
+  newbieFloorsRemaining, consumeNewbieFloor, newbieFloorLimitMessage, newbieFloorsLine,
+  newbieGraduatedMessage,
+} from '../lib/newbie-dungeon.js'
 import { initBossFight } from '../lib/boss-engine.js'
 import { regulateBossXp } from '../lib/xp-regulator.js'
 import { applyPassiveAbilities } from '../lib/ability-engine.js'
@@ -120,6 +126,9 @@ function spawnBoss(locId, floor, player = null) {
     if (e && player && ratio > 1) {
       scaleBossToPlayer(e, player, ratio, BOSS_TUNING)
     }
+    // Veteran tier (level 100+): a boss is taken in FULL, unlike a swarm pack —
+    // one enemy on the field, so there is no pack multiplier compounding it.
+    if (e && player) applyVeteranScaling(e, player)
     return e
   }
   const animeDef = getAnimeBossForSlot(locId, floor)
@@ -168,6 +177,8 @@ function spawnEnemy(locId, floor, player = null) {
   if (enemy && player) {
     const ratio = enemyPowerRatio(player, locId, floor)
     if (ratio > 1) scaleEnemyToPlayer(enemy, ratio, MONSTER_SCALE_1V1)
+    // Veteran tier (level 100+) — full weight on a solo monster, same as a boss.
+    applyVeteranScaling(enemy, player)
   }
   return { enemy, bossState: null, entranceLine: null }
 }
@@ -206,6 +217,18 @@ export function dungeonList(player, db) {
       const prereqName = !unlocked && l.prerequisite
         ? ` _(requires ${locationsMap[l.prerequisite]?.name ?? l.prerequisite})_`
         : ''
+      // The newbie lane is shown as itself, not as one more tower: what a
+      // newcomer needs to know is the level ceiling and how many floors they
+      // have left today, neither of which any other dungeon has.
+      if (isNewbieLocation(l.id)) {
+        const graduated = isNewbieGraduated(player)
+        return (
+          `  ${graduated ? '🎓' : '🕯️'} *${l.id}*  ${l.name}  (lv 1 to *${NEWBIE_MAX_LEVEL}*)` +
+          (graduated
+            ? ` _(graduated)_`
+            : player ? ` · ${newbieFloorsLine(player, '.')}` : '')
+        )
+      }
       return `  ${lock} *${l.id}*  ${l.name}  (lv ${l.levelRange[0]} to ${l.levelRange[1]})${progress}${prereqName}`
     })
     .join('\n')
@@ -244,7 +267,12 @@ export async function handleEnter(ctx) {
     }
 
     // ── Group dungeon slot occupancy check (max 2, bypassed by premium) ──
-    if (ctx.isGroup) {
+    // Skipped entirely for the Newcomer's Hollow: that cap exists so two
+    // accounts can't hold a SHARED dungeon room all day, and the Hollow is not
+    // shared — every newcomer gets their own. Gating the tutorial behind a
+    // group's climbing slots would lock out exactly the players it is for. Its
+    // own 50-floors-a-day allowance is what bounds it (lib/newbie-dungeon.js).
+    if (ctx.isGroup && !isNewbieLocation(locId)) {
       const slotCheck = canEnterDungeon(ctx.sender, player, ctx.from, ctx.db)
       if (!slotCheck.allowed) {
         ctx.reply(slotCheck.reason).catch(() => {})
@@ -380,6 +408,22 @@ export async function handleEnter(ctx) {
       return player
     }
 
+    // ── Newcomer's Hollow: graduation gate + its own daily floors ───────────
+    // Ahead of the generic gates because neither applies to this lane: it has no
+    // prerequisite and it is open from level 1, but it CLOSES at level 31 (a
+    // starter lane that stayed open would be the best XP in the game for anyone
+    // under the cap) and it is rationed in floors, not runs.
+    if (isNewbieLocation(locId)) {
+      if (isNewbieGraduated(player)) {
+        ctx.reply(newbieGraduatedMessage(player, p)).catch(() => {})
+        return player
+      }
+      if (newbieFloorsRemaining(player) < 1) {
+        ctx.reply(newbieFloorLimitMessage(player, p)).catch(() => {})
+        return player
+      }
+    }
+
     if (!isDungeonUnlocked(player, locId)) {
       const prereq     = loc.prerequisite
       const prereqName = locationsMap[prereq]?.name ?? prereq
@@ -413,11 +457,19 @@ export async function handleEnter(ctx) {
     // groups all day; this caps how many runs anyone can START per day, with a
     // bigger allowance for premium. Checked after every other gate so a run is
     // only ever spent on an entry that actually happens.
-    if (runsRemaining(player) < 1) {
-      ctx.reply(runLimitMessage(player, p)).catch(() => {})
-      return player
+    //
+    // The Hollow is exempt: its allowance is 50 FLOORS a day (checked above),
+    // which is a full lap of a 50-floor dungeon. Charging one of a newcomer's 7
+    // Entry Tower runs for that — when Entry Tower is 100 floors they cannot
+    // survive — would make the starter lane the worst deal in the game.
+    const isNewbie = isNewbieLocation(locId)
+    if (!isNewbie) {
+      if (runsRemaining(player) < 1) {
+        ctx.reply(runLimitMessage(player, p)).catch(() => {})
+        return player
+      }
+      consumeDungeonRun(player)
     }
-    consumeDungeonRun(player)
 
     const progress   = player.dungeonProgress?.[locId] ?? { highestFloor: 0, conquered: false }
     const checkpoint = progress.highestFloor ?? 0
@@ -430,6 +482,11 @@ export async function handleEnter(ctx) {
     // lagging can lose progress, then clamp to the party-boss floor so a solo
     // re-entry never lands past the only party-gated floor.
     let startFloor = checkpoint > 0 ? checkpoint : 1
+    // The Hollow always starts from Floor 1 once it has been cleared: its
+    // checkpoint would otherwise sit on the gatekeeper's floor, and a newcomer
+    // re-entering would open straight into the boss with nothing left to climb.
+    // The daily floor allowance is what stops lap farming.
+    if (isNewbie && progress.conquered) startFloor = 1
     if (isSeasonDungeon) {
       const seasonFloor = ensurePlayerSeasonState(player, season.id).seasonProgress.currentFloor ?? 1
       startFloor = Math.max(startFloor, seasonFloor)
@@ -465,8 +522,11 @@ export async function handleEnter(ctx) {
       `🎯 Level Range: *${loc.levelRange[0]} to ${loc.levelRange[1]}*  ·  Your Level: *${player.level}*\n` +
       `${shapeLine}${travelLine}\n\n` +
       `📍 ${resuming ? `*Resuming from Floor ${startFloor}* ✅` : `*Starting at Floor 1*`}\n` +
-      `⚡ Stamina: *${player.stamina.current}/${player.stamina.max}*\n` +
-      `${runsLine(player, p)}\n\n` +
+      (veteranBanner(player) ? `${veteranBanner(player)}\n` : '') +
+      (isNewbie
+        ? `⚡ *No stamina cost, no run limit* — everyone gets their 50 floors a day\n`
+        : `⚡ Stamina: *${player.stamina.current}/${player.stamina.max}*\n`) +
+      `${isNewbie ? newbieFloorsLine(player, p) : runsLine(player, p)}\n\n` +
       (brief ? `${brief}\n\n` : '') +
       `_Type *${p}dungeon* to begin, *${p}dungeon leave* to exit._`,
     ).catch(() => {})
@@ -486,7 +546,11 @@ async function handleAdvance(ctx) {
       return player
     }
 
-    if (ctx.isGroup) {
+    // Same reasoning as handleEnter: the Hollow is not a shared room, so it does
+    // not consume a group dungeon slot and is never idle-kicked out of one. Its
+    // own 50-floors-a-day allowance is the limit that applies.
+    const inNewbieHollow = isNewbieLocation(player.location)
+    if (ctx.isGroup && !inNewbieHollow) {
       const slotCheck = canEnterDungeon(ctx.sender, player, ctx.from, ctx.db)
       if (!slotCheck.allowed) {
         await reply(slotCheck.reason)
@@ -504,7 +568,12 @@ async function handleAdvance(ctx) {
     }
 
     player.stamina = refreshStamina(player.stamina)
-    if (player.stamina.current < 1) {
+    // The Hollow costs no stamina. It is capped at 50 floors a day and closes at
+    // level 31; charging stamina as well made its own cap unreachable (a fresh
+    // character has 30) and left newcomers on the one lane built for them with
+    // nothing to do, which is the opposite of what it is for. Everywhere else
+    // stamina is unchanged.
+    if (!inNewbieHollow && player.stamina.current < 1) {
       const resetDate  = new Date(player.stamina.resetAt)
       const exhaustFloor = player.dungeonFloor
       player.inDungeon = false
@@ -515,6 +584,34 @@ async function handleAdvance(ctx) {
         `📍 Progress saved at Floor ${exhaustFloor}.\nResets at midnight, ${resetDate.toLocaleTimeString()}.`,
       )
       return player
+    }
+
+    // ── Newcomer's Hollow: the daily floor allowance, spent per floor ───────
+    // Checked (and spent) here rather than at entry because the allowance IS
+    // the run: a newcomer gets 50 floors a day, so the wall has to land on a
+    // floor boundary, not on the door. Exiting on exhaustion mirrors the
+    // out-of-stamina branch above, so neither one can strand someone in a
+    // dungeon they are no longer allowed to climb.
+    if (inNewbieHollow) {
+      if (isNewbieGraduated(player)) {
+        player.inDungeon = false
+        player.battleState = null
+        releaseDungeonSlot(ctx.isGroup ? ctx.sender : null, player, ctx.from)
+        await reply(newbieGraduatedMessage(player, p))
+        return player
+      }
+      if (newbieFloorsRemaining(player) < 1) {
+        const exhaustFloor = player.dungeonFloor
+        player.inDungeon = false
+        player.battleState = null
+        releaseDungeonSlot(ctx.isGroup ? ctx.sender : null, player, ctx.from)
+        await reply(
+          newbieFloorLimitMessage(player, p) +
+          `\n📍 _Your climb rests at Floor ${exhaustFloor} — tomorrow it picks up right there._`,
+        )
+        return player
+      }
+      consumeNewbieFloor(player)
     }
 
     const locId = player.location
@@ -537,8 +634,8 @@ async function handleAdvance(ctx) {
       return player
     }
 
-    // Deduct 1 stamina per encounter
-    player.stamina.current -= 1
+    // Deduct 1 stamina per encounter — except in the Hollow (see above).
+    if (!inNewbieHollow) player.stamina.current -= 1
 
     // ── Swarm floors ─────────────────────────────────────────────────────
     // Every main dungeon runs the multi-monster telegraph engine
@@ -584,6 +681,8 @@ async function handleAdvance(ctx) {
       const header = built.isApprentice
         ? `💀 ━━━ *APPRENTICE WAVE: FLOOR ${floor}/${totalFloors}* ━━━ 💀`
         : `⚔️ *SWARM: FLOOR ${floor}/${totalFloors}*`
+      const veteranLine = veteranBanner(player)
+      const hollowLine  = isNewbieLocation(locId) ? newbieFloorsLine(player, p) : ''
       const family = encounterLine(locId, built.monsters.find(m => m.alive)?.name)
       const intro = built.isApprentice
         ? `\n_An apprentice of the sword holds the stair, escorts at their flanks._\n`
@@ -593,8 +692,10 @@ async function handleAdvance(ctx) {
       const msg =
         `${header}\n` +
         `📊 ${floorBar(floor, totalFloors)}${cpLine}\n` +
-        `⚡ Stamina: *${player.stamina.current}/${player.stamina.max}*` +
+        (isNewbieLocation(locId) ? '' : `⚡ Stamina: *${player.stamina.current}/${player.stamina.max}*`) +
+        (hollowLine ? `\n${hollowLine}` : '') +
         intro +
+        (veteranLine ? `\n${veteranLine}` : '') +
         (fusionLine ? `\n${fusionLine}\n` : '') +
         `\n` +
         renderSwarmFrame(player.battleState, player)
@@ -692,8 +793,11 @@ async function handleAdvance(ctx) {
     const msg =
       `${header}\n` +
       `📊 ${floorBar(floor, totalFloors)}${cpLine}\n` +
-      `⚡ Stamina: *${player.stamina.current}/${player.stamina.max}*` +
+      (isNewbieLocation(locId)
+        ? newbieFloorsLine(player, p)
+        : `⚡ Stamina: *${player.stamina.current}/${player.stamina.max}*`) +
       bossAlert +
+      (veteranBanner(player) ? `\n${veteranBanner(player)}` : '') +
       `\n\n` +
       `${enemy.emoji ?? '👾'} *${enemy.name}*${tierTag}\n` +
       (bossImageShown ? '' : entranceMsg) +
