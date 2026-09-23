@@ -17,7 +17,8 @@
  *      stopped arriving at all (usually Baileys failing to decrypt them —
  *      those errors are filtered out of the logs by main.js's SPAM_PATTERNS).
  *      Tell-tale: `last inbound` keeps climbing while people are actively
- *      messaging the bot. main.js's watchdog force-reconnects at 15 min.
+ *      messaging the bot. Genuine socket closes still use the normal reconnect
+ *      path; this readout helps distinguish delivery trouble from a work queue.
  *
  * Everything here is read from live counters — no network calls, no database
  * reads — so it answers even when the bot is busy or backed up.
@@ -65,6 +66,12 @@ export default {
       }
       if (inst.reconnectPending) lines.push(`  reconnect pending ⏳`)
 
+      const inbound = inst.inbound
+      if (inbound) {
+        lines.push(`  inbound work: *${inbound.active}* active, ${inbound.pending} waiting, ${inbound.lanes} sender lanes`)
+        lines.push(`  inbound handled ${inbound.stats.completed} · dropped ${inbound.stats.dropped} · failed ${inbound.stats.failed}`)
+      }
+
       const s = inst.send
       if (s) {
         lines.push(`  send queue: *${s.pending}* waiting` +
@@ -91,7 +98,8 @@ export default {
 
     lines.push('')
     lines.push(`_High "send queue"/"oldest" = replies are rate-limited (bot is behind)._`)
-    lines.push(`_Climbing "last inbound msg" while people are messaging = inbound stalled; the watchdog reconnects at 15 min._`)
+    lines.push(`_Climbing "inbound waiting" = command work is backed up; different senders still run concurrently, and the queue is bounded._`)
+    lines.push(`_A stale "last inbound msg" while people are messaging points to delivery/decryption trouble rather than a command queue.`)
 
     return ctx.reply(lines.join('\n'))
   },

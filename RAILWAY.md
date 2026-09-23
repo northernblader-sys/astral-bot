@@ -125,6 +125,7 @@ already provides.
 | `DUNGEON_RUNS_PER_DAY` | No — 7 is the default now. |
 | `DUNGEON_RUNS_PER_DAY_PREMIUM` | No — 20 is the default now. |
 | `RATE_LIMIT_MIN_GAP_MS` / `..._MAX_PER_MINUTE` | No — 1200 / 40, and the limiter backs off on its own when WhatsApp says `rate-overlimit`. |
+| `INBOUND_CONCURRENCY` / `INBOUND_QUEUE_LIMIT` | No — 8 workers / 512 waiting messages; tune only if logs show sustained inbound queue pressure. |
 | `JWT_SECRET` | **Yes** — this one has no safe default and the API refuses to sign tokens without it. You'll already have it. |
 | `BOT_PUBLIC_NUMBER`, `DEFAULT_COUNTRY_CODE`, `SITE_URL` | Whatever you already had — unchanged by any of this. |
 

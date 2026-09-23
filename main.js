@@ -32,6 +32,7 @@ import { join as pathJoin, dirname as pathDirname } from 'path'
 import { fileURLToPath } from 'url'
 import { config, bots } from './config.js'
 import { wrapSendWithRateLimit } from './lib/send-rate-limiter.js'
+import { createInboundScheduler, inboundMessageKey } from './lib/inbound-scheduler.js'
 import { setHealthProvider } from './lib/bot-health.js'
 import { loadPlugins } from './lib/plugin-manager.js'
 import { makeHandler } from './handler.js'
@@ -1015,6 +1016,9 @@ function createBotInstance(botCfg) {
     currentSock: null,
     connectInFlight: false,
     reconnectTimer: null,
+    // Bounded inbound work queue for the currently active socket. Retired
+    // sockets clear its pending messages during connection.close.
+    inboundScheduler: null,
   }
 
   // Bot log file — appends to logs/<botName>/out.log, still shows in pm2
@@ -1185,29 +1189,52 @@ function createBotInstance(botCfg) {
     // asks is "is WhatsApp still delivering anything at all to this socket",
     // not "did anyone run a command".
     const handleMessages = makeHandler(sock, db, inst.botName)
-    // Inbound batches are processed ONE AT A TIME per socket, FIFO, via this
-    // chain (2026-09: the overspam disconnect). Before, every messages.upsert
-    // event ran handleMessages() concurrently with every other one: a flood
-    // turned into dozens of interleaved handleOne() pipelines, each doing its
-    // own updatePlayer cycles, moderation scans and reply sends, all
-    // contending for the same write queue and the same event loop. The socket
-    // then falls behind WhatsApp's frame stream until Baileys' keepalive
-    // watchdog (socket.js: "diff > keepAliveIntervalMs + 5000" →
-    // `Connection was lost`) kills it — which is the brief disconnect on
-    // overspam. Serializing the batches keeps one steady pipeline: a flood
-    // becomes a backlog of cheap sequential work instead of a CPU pile-up,
-    // and messages are handled in the order they arrived.
-    let inboundChain = Promise.resolve()
+
+    // Do not put every upsert on one global promise chain. A single slow
+    // command (media/API work or a reply waiting on the outbound safety
+    // limiter) used to prevent later messages from even reaching handler.js;
+    // the bot then appeared to "load" and catch up by reacting/replying one
+    // message at a time. Run different senders concurrently, while keeping a
+    // FIFO lane per sender so two stateful commands from one player cannot
+    // overtake each other. The global cap protects the websocket/event loop
+    // during a genuine group flood.
+    const inboundScheduler = createInboundScheduler({
+      concurrency: config.inboundConcurrency,
+      maxPending: config.inboundQueueLimit,
+      handle: (payload) => handleMessages(payload),
+      log: ({ err, pending, active, maxPending }, message) => {
+        if (err) {
+          log(`⚠️ ${message}:`, err?.message ?? err)
+        } else {
+          log(`⚠️ ${message} pending=${pending} active=${active} limit=${maxPending}`)
+        }
+      },
+    })
+
+    // Retire the scheduler with this socket. Running handlers are allowed to
+    // finish (they may already have mutated player state), but queued work must
+    // not wake up later and send through a dead Baileys socket.
+    inst.inboundScheduler = inboundScheduler
+
     sock.ev.on('messages.upsert', (arg) => {
       inst.lastInboundAt = Date.now()
       inst.inboundCount++
-      // The handler already try/catches each message, but a throw in its own
-      // outer scope would otherwise surface as an unhandled rejection with no
-      // instance name attached to it. The .catch on the chain keeps one bad
-      // batch from wedging every later one.
-      inboundChain = inboundChain
-        .then(() => handleMessages(arg))
-        .catch(err => log('⚠️ Message handler threw:', err?.message ?? err))
+
+      const messages = Array.isArray(arg?.messages) ? arg.messages : []
+      if (!messages.length) {
+        inboundScheduler.enqueue(arg, `event:${Date.now()}`)
+        return
+      }
+
+      // Schedule one message at a time instead of handing a whole batch to a
+      // serial handler. This is important during history/live bursts: one
+      // expensive message must not hold the rest of the batch hostage.
+      for (const msg of messages) {
+        inboundScheduler.enqueue(
+          { ...arg, messages: [msg] },
+          inboundMessageKey(msg),
+        )
+      }
     })
 
     // ── Welcome / goodbye announcements ───────────────────────────────────
@@ -1405,6 +1432,13 @@ function createBotInstance(botCfg) {
         }
 
         // Nothing else is listening to this socket now. Baileys' own end()
+        // already drops its ws + connection.update listeners; clear the
+        // application-level queue too so pending work cannot be replayed
+        // against the socket that just died.
+        inst.inboundScheduler?.close(`socket closed (${statusCode ?? 'unknown'})`)
+        inst.inboundScheduler = null
+
+        // Nothing else is listening to this socket now. Baileys' own end()
         // already drops its ws + connection.update listeners; this releases
         // the rest (messages.upsert, group-participants.update) so a dead
         // socket can't keep a handler — and the db it closes over — alive.
@@ -1566,6 +1600,13 @@ async function main() {
         inboundCount: inst.inboundCount,
         lastForcedReconnectAt: inst.lastForcedReconnectAt,
         reconnectPending: Boolean(inst.reconnectTimer),
+        inbound: inst.inboundScheduler ? {
+          active: inst.inboundScheduler.active,
+          pending: inst.inboundScheduler.pending,
+          lanes: inst.inboundScheduler.laneCount,
+          limits: inst.inboundScheduler.limits,
+          stats: inst.inboundScheduler.stats,
+        } : null,
         send: rl ? {
           pending: rl.pending,
           pendingReactions: rl.pendingReactions,
