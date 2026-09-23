@@ -45,6 +45,7 @@ import {
   endPhase, endOpensAt, isAsleepByEnd, isEventActive, getEndEvent,
   THE_END_LOCATION_ID, THE_END_BOSS_ID,
 } from '../lib/end-event.js'
+import { entryBrief, encounterLine, tollVoice } from '../lib/dungeon-lore.js'
 
 // The five main dungeons that run the multi-monster swarm engine on floors
 // 1 to 99. Floor 100 stays a 1v1 fight against that dungeon's original master.
@@ -454,8 +455,9 @@ export async function handleEnter(ctx) {
     const resuming    = checkpoint > 0
     const totalFloors = loc.floors ?? '?'
     const masterFloor = (loc.bossFloors ?? [])[(loc.bossFloors ?? []).length - 1] ?? loc.floors
-    const travelLine  = travelCost > 0 ? `\n☀️ Travel cost: *${travelCost} Solars* paid.` : ''
+    const travelLine  = travelCost > 0 ? `\n${tollVoice(locId, travelCost)}` : ''
     const shapeLine   = `🏰 Floors: *${totalFloors}*  ·  the master waits on *${masterFloor}*`
+    const brief       = entryBrief(loc, startFloor, resuming)
 
     ctx.reply(
       `╔══ ⚔️ *${loc.name.toUpperCase()}* ══╗\n\n` +
@@ -465,7 +467,7 @@ export async function handleEnter(ctx) {
       `📍 ${resuming ? `*Resuming from Floor ${startFloor}* ✅` : `*Starting at Floor 1*`}\n` +
       `⚡ Stamina: *${player.stamina.current}/${player.stamina.max}*\n` +
       `${runsLine(player, p)}\n\n` +
-      `_The floors are not empty. Monsters close from more than one side, then the master holds the top._\n` +
+      (brief ? `${brief}\n\n` : '') +
       `_Type *${p}dungeon* to begin, *${p}dungeon leave* to exit._`,
     ).catch(() => {})
     return player
@@ -582,9 +584,11 @@ async function handleAdvance(ctx) {
       const header = built.isApprentice
         ? `💀 ━━━ *APPRENTICE WAVE: FLOOR ${floor}/${totalFloors}* ━━━ 💀`
         : `⚔️ *SWARM: FLOOR ${floor}/${totalFloors}*`
+      const family = encounterLine(locId, built.monsters.find(m => m.alive)?.name)
       const intro = built.isApprentice
         ? `\n_An apprentice of the sword holds the stair, escorts at their flanks._\n`
-        : `\n_The floor is not empty. They close from more than one side._\n`
+        : `\n_The floor is not empty. They close from more than one side._\n` +
+          (family ? `_${family}_\n` : '')
 
       const msg =
         `${header}\n` +
@@ -652,7 +656,8 @@ async function handleAdvance(ctx) {
     const header = boss
       ? `💀 ━━━ *BOSS FIGHT: FLOOR ${floor}/${totalFloors}* ━━━ 💀`
       : `⚔️ *ENCOUNTER: FLOOR ${floor}/${totalFloors}*`
-    const entranceMsg = entranceLine ? `\n_${entranceLine}_\n` : ''
+    const familyLine = boss ? '' : encounterLine(locId, enemy.name)
+    const entranceMsg = (familyLine ? `\n_${familyLine}_\n` : '') + (entranceLine ? `\n_${entranceLine}_\n` : '')
 
     // ── Original tower masters: cinematic portrait + full entrance dialogue ──
     // The five image-bearing floor-100 masters (Syclila, Kikaru, Celestia, Bam,
@@ -736,6 +741,7 @@ async function handleLeave(ctx) {
     player.inDungeon   = false
     player.inBattle    = false
     player.battleState = null
+    player.location    = 'astral_town'
     releaseDungeonSlot(ctx.isGroup ? ctx.sender : null, player, ctx.from)
 
     await reply(

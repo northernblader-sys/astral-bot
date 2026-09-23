@@ -4,34 +4,39 @@
     "name": "Astral Vanguard",
     "emoji": "⚔️",
     "location": "astral_town",
-    "description": "Front-line conquerors who believe every floor exists to be cleared first. No ceremony, no hierarchy — just whoever's still climbing."
+    "description": "Front-line conquerors who believe every floor exists to be cleared first. No ceremony, no hierarchy, just whoever is still climbing.",
+    "oath": "You sign the climb board. First up the stair leads. The rest follow the chalk."
   },
   {
     "id": "shadow_covenant",
     "name": "Shadow Covenant",
     "emoji": "🌑",
     "location": "astral_town",
-    "description": "A quiet, calculating guild that trusts results over reputation. They let their floor counts speak for them."
+    "description": "A quiet, calculating guild that trusts results over reputation. They let their floor counts speak for them.",
+    "oath": "You give your name and nothing else. They will read the floors, not the speech."
   },
   {
     "id": "gilded_order",
     "name": "Gilded Order",
     "emoji": "⚜️",
     "location": "astral_town",
-    "description": "Disciplined and prestige-driven — every member treats a conquered floor like a badge of honor."
+    "description": "Disciplined and prestige-driven. Every member treats a conquered floor like a badge of honor.",
+    "oath": "You take the oath standing. A floor is a badge. The board outside is work, not glory."
   },
   {
     "id": "stormbreakers",
     "name": "Stormbreakers",
     "emoji": "⛈️",
     "location": "astral_town",
-    "description": "Reckless, loud, and always first through the dungeon gate. Leadership goes to whoever dives deepest."
+    "description": "Reckless, loud, and always first through the dungeon gate. Leadership goes to whoever dives deepest.",
+    "oath": "They shout your name once and point at the gate. Deepest dive leads. Try not to die famous."
   },
   {
     "id": "emberwake",
     "name": "Emberwake",
     "emoji": "🔥",
     "location": "astral_town",
-    "description": "Bound by rivalry and fire — every member is chasing the next floor record, and the guild answers to whoever's winning."
+    "description": "Bound by rivalry and fire. Every member is chasing the next floor record, and the guild answers to whoever is winning.",
+    "oath": "The hearth takes your name. Whoever is winning the floors answers for the rest."
   }
 ]

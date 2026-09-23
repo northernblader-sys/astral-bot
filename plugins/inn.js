@@ -54,7 +54,8 @@ export default {
     // Show menu
     if (!sub || sub === 'menu') {
       return reply(
-        `🏠 *ASTRAL INN*\n\n` +
+        `🏠 *ASTRAL INN*\n` +
+        `_Maelin is behind the desk. The lamp is lit. This is a bed, not a menu._\n\n` +
         `👤 *${player.name}*\n` +
         `❤️ HP: ${hpBar(player.hp, player.maxHp)}\n` +
         `💧 MP: ${player.mp}/${player.maxMp}\n` +
