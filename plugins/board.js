@@ -1,8 +1,8 @@
 /**
  * board.js — the guild job board.
  *
- *   .board                 today's three slips, and the one in your hand
- *   .board take <id>       pull a slip (needs a guild)
+ *   .board                 your hall's three slips, and the one in your hand
+ *   .board take <id>       pull one of your hall's slips
  *   .board turnin          pin a finished slip and get paid
  *   .board abandon         put it back
  *   .board track           step by step
@@ -16,7 +16,8 @@ import { updatePlayer } from '../lib/player-repo.js'
 import { getGuildDef, getGuildRecord } from '../lib/guild-repo.js'
 import {
   takeSlip, abandonSlip, turnIn, guideText, trackView, logView, boardView,
-  findSlip, postedIds, ensureBoardState, stepLabel, TURNIN_CAP,
+  findSlip, postedIds, postedInOtherHall, ensureBoardState, stepLabel,
+  closedBoardText, TURNIN_CAP,
 } from '../lib/guild-board.js'
 
 function hallLine(ctx) {
@@ -24,12 +25,13 @@ function hallLine(ctx) {
   if (!id) return { motd: '', hall: '' }
   const def = getGuildDef(id)
   const record = getGuildRecord(ctx.db, id)
-  const hall = def ? `You are sworn to ${def.emoji} ${def.name}. The slips do not care which banner.` : ''
+  const hall = def ? `You are sworn to ${def.emoji} ${def.name}. These three are yours. Another hall has a different nail.` : ''
   return { motd: record?.motd ?? '', hall }
 }
 
 export async function runBoard(ctx, args = ctx.args ?? []) {
   const p = config.prefix
+  if (!ctx.player?.guildId) return ctx.reply(closedBoardText(p))
   const sub = (args[0] ?? '').toLowerCase()
   const rest = args.slice(1).join(' ').trim()
 
@@ -65,9 +67,11 @@ export async function runBoard(ctx, args = ctx.args ?? []) {
         text = `❌ No slip called *${query}*.\n_Posted ids are on *${p}board*._`
         return player
       }
-      const posted = postedIds(state.day)
+      const posted = postedIds(state.day, player.guildId)
       if (found.id !== state.activeId && !posted.includes(found.id)) {
-        text = `📌 *${found.name}* is not on the board today.\n_Sera only explains what is nailed up._`
+        text = postedInOtherHall(state.day, player.guildId, found.id)
+          ? `📌 *${found.name}* is nailed in another hall today.\n_You only get the three on your own board._`
+          : `📌 *${found.name}* is not on your hall's board today.\n_Sera only explains what your hall nailed up._`
         return player
       }
       text = guideText(found, p)
@@ -90,18 +94,17 @@ export async function runBoard(ctx, args = ctx.args ?? []) {
       const list = outcome.matches.map(s => `  • \`${s.id}\` ${s.name}`).join('\n')
       return ctx.reply(`❓ More than one slip matches.\n${list}`)
     }
+    if (!outcome.ok && outcome.reason === 'otherhall') {
+      return ctx.reply(`📌 *${outcome.slip.name}* is nailed in another hall today.\n_Your board has a different three._`)
+    }
     if (!outcome.ok && outcome.reason === 'notposted') {
-      return ctx.reply(`📌 *${outcome.slip.name}* is not nailed up today.\n_The board shows three. That is the list._`)
+      return ctx.reply(`📌 *${outcome.slip.name}* is not nailed up in your hall today.\n_The board shows three. That is the list._`)
     }
     if (!outcome.ok && outcome.reason === 'level') {
       return ctx.reply(`🔒 *${outcome.slip.name}* needs level *${outcome.slip.minLevel}*. You are *${ctx.player?.level ?? 1}*.`)
     }
     if (!outcome.ok && outcome.reason === 'noguild') {
-      return ctx.reply(
-        `🏰 *The board is public. The slip is not.*\n\n` +
-        `_Swear to a hall first, then pull it._\n` +
-        `*${p}guild*  ·  *${p}guild join <name>*`,
-      )
+      return ctx.reply(closedBoardText(p))
     }
     if (!outcome.ok && outcome.reason === 'cap') {
       return ctx.reply(`📜 *The hall is done with you today.*\n_${TURNIN_CAP} slips pinned. Come back after midnight._`)
@@ -155,7 +158,7 @@ export async function runBoard(ctx, args = ctx.args ?? []) {
     if (!outcome.ok && outcome.reason === 'cap') {
       return ctx.reply(`📜 You have already pinned ${TURNIN_CAP} slips today.`)
     }
-    const bits = [`☀️ *${outcome.solars}* Solars`, `🌟 *${outcome.fame}* fame`]
+    const bits = [`☀️ *${Number(outcome.solars).toLocaleString('en-US')}* Solars`, `🌟 *${outcome.fame}* fame`]
     if (outcome.gems) bits.push(`💎 *${outcome.gems}* Gem`)
     return ctx.reply(
       `🎁 *SLIP PINNED*\n\n` +
@@ -180,9 +183,9 @@ export default {
   aliases: ['noticeboard', 'slips', 'guildboard'],
   category: 'town',
   requiresPlayer: true,
-  description: 'The guild job board: three slips a day, one in your hand',
+  description: 'Your hall\'s job board: three slips a day, not the same as another hall',
   subcommands: [
-    { cmd: 'take <id>', desc: 'pull a posted slip (needs a guild)' },
+    { cmd: 'take <id>', desc: 'pull a slip nailed in your hall' },
     { cmd: 'track', desc: 'step by step on the slip in your hand' },
     { cmd: 'guide [id]', desc: 'how to finish a posted slip' },
     { cmd: 'turnin', desc: 'pin a finished slip and get paid' },

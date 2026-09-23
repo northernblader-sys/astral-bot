@@ -56,7 +56,7 @@
         "guilds",
         "board"
       ],
-      "scene": "Five banners, one door, and Sera's desk under the job board. The same three slips are nailed up in every hall today.",
+      "scene": "Five banners, one door, and Sera's desk under the job board. Your hall's three slips are nailed here. Another banner has a different three.",
       "npcs": [
         "sera"
       ]
@@ -308,7 +308,7 @@
         "pipp",
         "crier"
       ],
-      "line": "Pipp shouts the day's three slips whether anyone asked or not."
+      "line": "Pipp shouts your hall's three slips whether anyone asked or not. He does not shout another hall's."
     },
     {
       "id": "hesta",
@@ -342,7 +342,7 @@
         "sera",
         "clerk"
       ],
-      "line": "Sera nails the slips at dawn and takes them down at midnight. She does not care which hall you swear to."
+      "line": "Sera nails three slips for your hall at dawn and takes them down at midnight. Another banner does not see yours."
     },
     {
       "id": "fenn",

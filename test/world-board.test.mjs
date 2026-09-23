@@ -10,19 +10,19 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
 import {
-  SLIPS, POSTED_COUNT, TURNIN_CAP, GEM_CAP,
+  SLIPS, POSTED_COUNT, TURNIN_CAP, GEM_CAP, HALLS,
   postedIds, postedSlips, ensureBoardState, takeSlip, abandonSlip,
-  noteVisit, noteTalk, noteKill, turnIn, startOfDay,
+  noteVisit, noteTalk, noteKill, turnIn, startOfDay, boardView,
 } from '../lib/guild-board.js'
 import { TOWN_SPOTS, TOWN_NPCS, townWalkBlock, findSpot, findNpc } from '../lib/town.js'
 import { entryBrief, encounterLine } from '../lib/dungeon-lore.js'
 import { isOwnerCommand, playerSubcommands, buildCommandPages, cleanCopy } from '../lib/command-list.js'
 
 const BANDS = {
-  copper: { min: 250, max: 450, fame: 2, gems: 0 },
-  iron:   { min: 550, max: 900, fame: 4, gems: 0 },
-  silver: { min: 1100, max: 1700, fame: 6, gems: 0 },
-  gold:   { min: 2000, max: 3200, fame: 8, gems: 1 },
+  copper: { min: 10000, max: 16000, fame: 25, gems: 0 },
+  iron:   { min: 18000, max: 30000, fame: 50, gems: 0 },
+  silver: { min: 32000, max: 46000, fame: 80, gems: 0 },
+  gold:   { min: 48000, max: 60000, fame: 150, gems: 1 },
 }
 
 function player(extra = {}) {
@@ -81,29 +81,51 @@ test('fetch slips name buyable potions, not scrap or ore', () => {
   }
 })
 
-test('the day posts one copper, one iron, and one harder slip', () => {
+test('each hall posts its own copper, iron, and harder slip, with no overlap', () => {
   const day = startOfDay(Date.UTC(2026, 8, 23))
-  const posted = postedSlips(day)
-  assert.equal(posted.length, 3)
-  assert.deepEqual(postedIds(day), postedIds(day))
-  assert.notDeepEqual(postedIds(day), postedIds(day + 86_400_000))
-  assert.equal(posted.filter(s => s.rank === 'copper').length, 1)
-  assert.equal(posted.filter(s => s.rank === 'iron').length, 1)
-  assert.equal(posted.filter(s => s.rank === 'silver' || s.rank === 'gold').length, 1)
+  const seen = new Set()
+  for (const hall of HALLS) {
+    const posted = postedSlips(day, hall)
+    assert.equal(posted.length, 3, hall)
+    assert.deepEqual(postedIds(day, hall), postedIds(day, hall))
+    assert.notDeepEqual(postedIds(day, hall), postedIds(day + 86_400_000, hall))
+    assert.equal(posted.filter(s => s.rank === 'copper').length, 1, hall)
+    assert.equal(posted.filter(s => s.rank === 'iron').length, 1, hall)
+    assert.equal(posted.filter(s => s.rank === 'silver' || s.rank === 'gold').length, 1, hall)
+    for (const slip of posted) {
+      assert.equal(seen.has(slip.id), false, `${slip.id} posted in two halls`)
+      seen.add(slip.id)
+    }
+  }
+  assert.equal(seen.size, HALLS.length * 3)
+  assert.notDeepEqual(postedIds(day, HALLS[0]), postedIds(day, HALLS[1]))
+  assert.deepEqual(postedIds(day), [])
+  const guildIds = JSON.parse(readFileSync(new URL('../data/guilds.json', import.meta.url))).map(g => g.id)
+  assert.deepEqual([...guildIds].sort(), [...HALLS].sort())
+  const ember = boardView(player({ guildId: 'emberwake' }), '.', {}, day)
+  const otherId = postedIds(day, 'astral_vanguard')[0]
+  assert.match(ember, new RegExp(postedIds(day, 'emberwake')[0]))
+  assert.equal(ember.includes(otherId), false)
+  assert.match(ember, /another hall/i)
 })
 
 test('taking a slip needs a hall, and only one can be held', () => {
   const day = startOfDay()
-  const [id] = postedIds(day)
+  const hall = 'emberwake'
+  const [id] = postedIds(day, hall)
   const guildless = player({ guildId: null })
   assert.equal(takeSlip(guildless, id, day).reason, 'noguild')
+  assert.match(boardView(guildless, '.'), /hall members/)
 
-  const held = player()
+  const held = player({ guildId: hall })
   assert.equal(takeSlip(held, id, day).ok, true)
-  const other = postedIds(day).find(x => x !== id)
+  const other = postedIds(day, hall).find(x => x !== id)
   assert.equal(takeSlip(held, other, day).reason, 'busy')
-  assert.equal(takeSlip(player(), 'not-a-slip', day).reason, 'unknown')
-  assert.equal(takeSlip(player(), SLIPS.find(s => !postedIds(day).includes(s.id)).id, day).reason, 'notposted')
+  assert.equal(takeSlip(player({ guildId: hall }), 'not-a-slip', day).reason, 'unknown')
+  const foreign = postedIds(day, 'astral_vanguard').find(x => !postedIds(day, hall).includes(x))
+  assert.equal(takeSlip(player({ guildId: hall }), foreign, day).reason, 'otherhall')
+  const nowhere = SLIPS.find(s => !HALLS.some(h => postedIds(day, h).includes(s.id)))
+  assert.equal(takeSlip(player({ guildId: hall }), nowhere.id, day).reason, 'notposted')
 })
 
 test('a visit, a talk, and a delivery finish a slip and pay the player, not a treasury', () => {
@@ -187,7 +209,7 @@ test('a cull counts the family, skips bosses, and a gold Gem is once a day', () 
 test('midnight drops the slip in your hand', () => {
   const p = player()
   const day = startOfDay()
-  takeSlip(p, postedIds(day)[0], day)
+  takeSlip(p, postedIds(day, p.guildId)[0], day)
   assert.ok(p.guildBoard.activeId)
   ensureBoardState(p, day + 86_400_000)
   assert.equal(p.guildBoard.activeId, null)
@@ -195,18 +217,23 @@ test('midnight drops the slip in your hand', () => {
   assert.equal(p.guildBoard.gemsToday, 0)
 })
 
-test('three pins is the day, and abandon frees the hand', () => {
+test('three pins is the day, and a slip does not follow you to another hall', () => {
   const p = player()
   const day = startOfDay()
-  const id = postedIds(day)[0]
+  const id = postedIds(day, p.guildId)[0]
   takeSlip(p, id, day)
   abandonSlip(p, day)
   assert.equal(p.guildBoard.activeId, null)
   takeSlip(p, id, day)
+  p.guildId = 'shadow_covenant'
+  ensureBoardState(p, day)
+  assert.equal(p.guildBoard.activeId, null, 'a slip does not follow you into another hall')
+  p.guildId = 'emberwake'
+  takeSlip(p, id, day)
   p.guildBoard.step = 99
   assert.equal(turnIn(p, day).ok, true)
   p.guildBoard.turnins = TURNIN_CAP
-  const again = postedIds(day).find(x => x !== id)
+  const again = postedIds(day, 'emberwake').find(x => x !== id)
   assert.equal(takeSlip(p, again, day).reason, 'cap')
 })
 

@@ -178,8 +178,8 @@ const TOPICS = {
     `*The town*\n` +
     `▸ *${p}town* : walk the streets. *${p}where* says where you are standing.\n` +
     `▸ *${p}talk* : speak to whoever is on that street.\n` +
-    `▸ *${p}board* : three guild slips a day. *${p}guild board* is the same nail.\n` +
-    `▸ *${p}guild* : join and manage a guild. A hall is required to pull a slip.\n` +
+    `▸ *${p}board* : your hall's three slips. Another hall has a different three. *${p}guild board* is the same nail.\n` +
+    `▸ *${p}guild* : join and manage a guild. The board is shut until you swear.\n` +
     `▸ *${p}fame* : your renown from kills, bosses, and level ups.\n` +
     `▸ *${p}stream* : go live and let the town watch.\n` +
     `▸ *${p}top* / *${p}ranking* : the leaderboards.\n` +

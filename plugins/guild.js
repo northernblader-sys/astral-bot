@@ -63,6 +63,7 @@ import {
   MERIT_PER_FLOOR,
 } from '../lib/guild-engine.js'
 import { sendImageTo } from '../lib/image.js'
+import { ensureBoardState } from '../lib/guild-board.js'
 
 import { getGroupMetadata } from '../lib/group-helpers.js'
 import { pushNotification } from '../lib/notification-repo.js'
@@ -120,7 +121,7 @@ export default {
   description:    'Join, view, and manage Astral Town guilds',
   subcommands: [
     { cmd: 'join <name>', desc: 'sign up with one of the five' },
-    { cmd: 'board', desc: 'today\'s three guild slips, the same list as .board' },
+    { cmd: 'board', desc: 'your hall\'s three slips, a different list in every hall' },
     { cmd: 'info <name>', desc: 'details, banner, and the member roll' },
     { cmd: 'donate <amount>', desc: 'fund the treasury and raise your role' },
     { cmd: 'treasury', desc: 'the vault, tier progress and top donors' },
@@ -171,7 +172,7 @@ export default {
       `*${p}guild*: list guilds\n` +
       `*${p}guild info <name>*: guild details\n` +
       `*${p}guild join <name>*: join a guild\n` +
-      `*${p}guild board*: today's three slips\n` +
+      `*${p}guild board*: your hall's three slips\n` +
       `*${p}guild leave*: leave your guild\n` +
       `*${p}guild donate <amount>*: fund the treasury\n` +
       `*${p}guild treasury*: vault and tier progress\n` +
@@ -204,7 +205,7 @@ function listGuilds(ctx, allUsers) {
     `🏰 *ASTRAL TOWN GUILDS*\n\n${lines.join('\n\n')}\n\n` +
     `_Leadership is earned, not given. The member who's conquered the most floors since joining leads._\n` +
     `_The treasury is separate: donations raise the guild's tier and buy perks for everyone, never the crown._\n` +
-    `_The job board is the same in every hall. Sera nails three slips at dawn._\n\n` +
+    `_Each hall nails its own three slips at dawn. Another banner does not see yours._\n\n` +
     `*${p}guild info <name>* · *${p}guild join <name>* · *${p}guild board* · *${p}guild top*`
   )
 }
@@ -339,6 +340,8 @@ async function joinGuild(ctx, query) {
     player.guildId           = guild.id
     player.guildJoinedAt     = Date.now()
     player.guildJoinBaseline = totalFloorsConquered(player)
+    // A slip from the hall you just left does not come with you.
+    ensureBoardState(player)
     message =
       `✅ Welcome to ${guild.emoji} *${guild.name}*!\n\n` +
       `_${guild.oath || 'The clerk writes your name in the hall book.'}_\n\n` +
@@ -364,6 +367,7 @@ async function leaveGuild(ctx) {
     player.guildId = null
     player.guildJoinedAt = null
     player.guildJoinBaseline = 0
+    ensureBoardState(player)
     message = `👋 You've left ${guild?.emoji ?? ''} *${guild?.name ?? 'your guild'}*.`
     return player
   })
