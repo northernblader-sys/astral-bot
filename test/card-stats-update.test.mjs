@@ -18,7 +18,10 @@
  *  3. STATS CARD RENDER (lib/stats-card-render.mjs) — renders a real PNG for
  *     a full player, a bare-minimum legacy-shaped player, and with a The End
  *     aura line; the sanitizer strips emoji/markdown so canvas never draws
- *     tofu.
+ *     tofu. The radar chart itself (2026-09-23 redesign: spider chart with a
+ *     stat + letter grade at each vertex, fill bulging toward the strong
+ *     stats) is tested via computeRadar/gradeFor — geometry, tidy ring scale,
+ *     peak pinned at the rim, and the all-zero degenerate case.
  *  4. .stats PLUGIN WIRING (plugins/stats.js) — bare .stats sends the image
  *     with a summary caption; the add/train subcommands still answer in text.
  *
@@ -30,7 +33,7 @@ import {
   cardSellPrice, cardBuyPrice, tierStars, tierRank, hasCardSeries,
 } from '../lib/card-engine.js'
 import { isGifUrl, isDirectVideoUrl, cardMediaPayload, sendCardMedia } from '../lib/card-media.js'
-import { renderStatsCard, sanitizeCanvasLine } from '../lib/stats-card-render.mjs'
+import { renderStatsCard, sanitizeCanvasLine, computeRadar, gradeFor } from '../lib/stats-card-render.mjs'
 import statsPlugin from '../plugins/stats.js'
 
 console.log('🧪 Card reprice + gif media + stats card — feature suite')
@@ -205,6 +208,86 @@ await test('sanitizeCanvasLine strips emoji + markdown, keeps the numbers', () =
   assert.ok(!/[\u{1F300}-\u{1FAFF}]/u.test(out), `emoji leaked: ${out}`)
   assert.ok(out.includes('40'), `lost the number: ${out}`)
   assert.ok(out.length <= 90)
+})
+
+// ── 3b. Radar geometry + letter grades ─────────────────────────────────────
+// The redesign draws a spider chart: one axis per stat, a letter grade at
+// each vertex, and a fill polygon that bulges toward the strong stats. The
+// math lives in computeRadar() so it is tested here, independent of the
+// pixel pass.
+
+await test('radar: tidy ring scale, peak pinned at the rim as an S', () => {
+  const radar = computeRadar({ str: 120, agi: 95, int: 60, def: 110, lck: 40 }, { cx: 100, cy: 100, R: 168 })
+  assert.strictEqual(radar.points.length, 5)
+  // 120/4 = 30 is already tidy → step 30, rim 120. Peak fills the whole rim.
+  assert.strictEqual(radar.step, 30)
+  assert.strictEqual(radar.ref, 120)
+  assert.strictEqual(radar.rings, 4)
+  assert.strictEqual(radar.peak.key, 'str')
+  assert.strictEqual(radar.peak.value, 120)
+
+  const str = radar.points[0]
+  assert.strictEqual(str.label, 'STR')
+  assert.ok(Math.abs(str.frac - 1) < 1e-9, `peak frac ${str.frac} should sit at the rim`)
+  assert.strictEqual(str.grade, 'S')
+  // The top vertex points straight up from the centre.
+  assert.ok(Math.abs(str.x - 100) < 1e-6, `STR x ${str.x} off the top axis`)
+  assert.ok(Math.abs(str.y - (100 - 168)) < 1e-6, `STR y ${str.y} not at the rim`)
+  assert.strictEqual(str.labelSide, 'top')
+
+  // Every axis resolves to a finite point and a known label side.
+  for (const p of radar.points) {
+    assert.ok(Number.isFinite(p.x) && Number.isFinite(p.y) && Number.isFinite(p.r), 'non-finite geometry')
+    assert.ok(['top', 'left', 'right'].includes(p.labelSide), `bad side ${p.labelSide}`)
+  }
+  const sides = radar.points.map((p) => p.labelSide)
+  assert.deepStrictEqual(sides, ['top', 'right', 'right', 'left', 'left'])
+})
+
+await test('radar: lopsided build spikes one axis and reads as a thin spread', () => {
+  const radar = computeRadar({ str: 410, agi: 74, int: 12, def: 96, lck: 55 }, { R: 168 })
+  // 410/4 = 102.5 → step rounds up to 120, rim 480 (overshoot < 25%).
+  assert.strictEqual(radar.ref, 480)
+  assert.strictEqual(radar.peak.key, 'str')
+  // The one big stat still grades S; the near-empty ones fall to D/E.
+  assert.strictEqual(radar.points[0].grade, 'S')
+  assert.strictEqual(radar.points[2].grade, 'E') // int 12
+  assert.ok(radar.points[2].r < radar.points[0].r * 0.1, 'weakest axis should hug the centre')
+  // Density (mean / rim) is the OVERALL RATING driver — a one-stat dump is thin.
+  assert.ok(radar.density < 0.4, `density ${radar.density} should read thin`)
+  assert.strictEqual(radar.total, 647)
+})
+
+await test('radar: empty stats → every axis E, finite geometry, no NaN', () => {
+  const radar = computeRadar({}, { cx: 0, cy: 0, R: 168 })
+  assert.strictEqual(radar.empty, true)
+  assert.strictEqual(radar.total, 0)
+  assert.strictEqual(radar.density, 0)
+  for (const p of radar.points) {
+    assert.strictEqual(p.value, 0)
+    assert.strictEqual(p.grade, 'E')
+    // r = 0 → every vertex collapses to the centre, never NaN.
+    assert.ok(Number.isFinite(p.x) && Number.isFinite(p.y))
+    assert.strictEqual(p.x, 0)
+    assert.strictEqual(p.y, 0)
+  }
+  // A zero player still gets a sane scale (rim 4) so the rings can draw.
+  assert.ok(radar.ref >= radar.rings, `degenerate ref ${radar.ref}`)
+})
+
+await test('gradeFor: S/A/B/C/D/E thresholds land on the right letter', () => {
+  assert.strictEqual(gradeFor(1).grade, 'S')
+  assert.strictEqual(gradeFor(0.74).grade, 'S')   // S floor
+  assert.strictEqual(gradeFor(0.739).grade, 'A')  // just below the peak
+  assert.strictEqual(gradeFor(0.58).grade, 'A')
+  assert.strictEqual(gradeFor(0.44).grade, 'B')
+  assert.strictEqual(gradeFor(0.30).grade, 'C')
+  assert.strictEqual(gradeFor(0.15).grade, 'D')
+  assert.strictEqual(gradeFor(0).grade, 'E')
+  // Out-of-range input clamps instead of throwing.
+  assert.strictEqual(gradeFor(-5).grade, 'E')
+  assert.strictEqual(gradeFor(NaN).grade, 'E')
+  assert.strictEqual(gradeFor(Infinity).grade, 'S')
 })
 
 // ── 4. .stats plugin wiring ─────────────────────────────────────────────────
