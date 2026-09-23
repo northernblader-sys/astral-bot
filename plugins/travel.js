@@ -26,6 +26,7 @@ import { locationsMap } from '../lib/game-data.js'
 import { getGroupSettings } from '../lib/group-settings.js'
 import { MARKET_CONFIG, tierOf } from '../lib/empire-engine.js'
 import { isDungeonUnlocked, handleEnter } from './dungeon.js'
+import { isNewbieLocation, isNewbieGraduated, newbieFloorsLine, NEWBIE_MAX_LEVEL } from '../lib/newbie-dungeon.js'
 import { releaseDungeonSlot } from '../lib/dungeon-slots.js'
 import { isEventActive, endPhase, getEndEvent, THE_END_LOCATION_ID } from '../lib/end-event.js'
 
@@ -74,6 +75,19 @@ function renderMap(player, db, empires = []) {
           : endPhase(db) === 'reckoning'
             ? `🌑 *${loc.id}* — ${loc.name}  _(OPEN — the End can be fought)_${here}`
             : `☠️ *${loc.id}* — ${loc.name}  _(lethal — the aura kills on contact)_${here}`,
+      )
+      continue
+    }
+
+    // The Newcomer's Hollow reads differently from every other dungeon: no
+    // prerequisite, no travel cost, a LEVEL CEILING rather than a floor, and its
+    // own 50-floors-a-day allowance. Showing it as one more locked tower would
+    // hide the only thing a new player needs to know about it.
+    if (isNewbieLocation(loc.id)) {
+      lines.push(
+        isNewbieGraduated(player)
+          ? `🎓 *${loc.id}* — ${loc.name}  _(lv 1-${NEWBIE_MAX_LEVEL} · graduated)_${here}`
+          : `🕯️ *${loc.id}* — ${loc.name}  _(lv 1-${NEWBIE_MAX_LEVEL} · ${newbieFloorsLine(player, '.')})_${here}`,
       )
       continue
     }

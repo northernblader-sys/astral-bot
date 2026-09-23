@@ -351,6 +351,71 @@ await test('.cb owner can clear a TAGGED player (and settles their party too)', 
   assert.ok(ctx.sent.some(t => t.includes("battle state cleared")), 'confirmation sent')
 })
 
+// ── 8. Level-100+ veteran tier in co-op ───────────────────────────────────
+const partyPlugin = (await import('../plugins/party.js')).default
+
+function readyPartyDb(level) {
+  const db = makeDb()
+  for (const jid of [A, B]) {
+    Object.assign(db.data.users[jid], {
+      level,
+      inBattle: false,
+      inDungeon: false,
+      battleState: null,
+      stamina: { current: 30, max: 30, resetAt: Date.now() + 3_600_000 },
+      dungeonProgress: { [LOC]: { highestFloor: 10, unlocked: true, conquered: false } },
+      inventory: [],
+      wallet: { solars: 10_000, gems: 0 },
+    })
+  }
+  db.data.parties[A] = {
+    leaderId: A, members: [A, B], pendingInvites: [],
+    battle: null, run: null, createdAt: Date.now(),
+  }
+  return db
+}
+
+async function enterParty(db) {
+  const ctx = makeCtx(db, A)
+  ctx.args = ['enter', LOC]
+  await partyPlugin.run(ctx)
+  return { ctx, party: db.data.parties[A], sent: ctx.sent.join('\n') }
+}
+
+await test('a level 100+ party faces veteran-scaled enemies, and the tier is announced', async () => {
+  const db = readyPartyDb(200)
+  const { party, sent } = await enterParty(db)
+
+  assert.ok(party.battle, `the party entered a floor:\n${sent}`)
+  const enemy = party.battle.enemy
+  assert.ok(enemy.veteran, 'the spawned enemy carries the veteran stamp')
+  assert.equal(enemy.veteran.level, 200)
+  assert.equal(enemy.veteran.hpMult, 2.6, 'full weight at the level 200 cap')
+  assert.equal(enemy.veteran.atkMult, 1.8)
+  assert.equal(enemy.veteran.defMult, 1.5)
+  assert.ok(sent.includes('Veteran pace'), 'the co-op floor announces the tier')
+  assert.ok(enemy.maxHp > 0 && enemy.atk > 0, 'the scaled enemy is still a legal enemy')
+})
+
+await test('a low-level party gets no veteran scaling and no banner', async () => {
+  const db = readyPartyDb(10)
+  const { party, sent } = await enterParty(db)
+
+  assert.ok(party.battle, `the party entered a floor:\n${sent}`)
+  assert.equal(party.battle.enemy.veteran, undefined, 'below level 100 there is no tier')
+  assert.ok(!sent.includes('Veteran pace'), 'and no banner noise')
+})
+
+await test('party tier is sized from the highest member, not the average', async () => {
+  const db = readyPartyDb(10)               // both low...
+  db.data.users[A].level = 200             // ...but the leader is a veteran
+  const { party, sent } = await enterParty(db)
+
+  assert.ok(party.battle, `the party entered a floor:\n${sent}`)
+  assert.equal(party.battle.enemy.veteran?.level, 200, 'one veteran in the party is enough to raise the tier')
+  assert.ok(sent.includes('Veteran pace'), 'and the banner is shown')
+})
+
 // ── Summary ────────────────────────────────────────────────────────────────
 console.log(`\n${passed} passed, ${failures.length} failed`)
 if (failures.length) {

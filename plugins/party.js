@@ -82,7 +82,7 @@ import {
   levelsData,
   getTotalStats,
 } from '../lib/game-data.js'
-import { pickMonsterForFloor, refreshStamina, hpBar, calcPlayerDamage, applyDefense, calcMonsterDamage, calcPlayerHitChance, calcMonsterHitChance, rollDrops, applyLevelUps, getNewlyUnlockedSkills, rollEchoStrike } from '../lib/combat-engine.js'
+import { pickMonsterForFloor, refreshStamina, hpBar, calcPlayerDamage, applyDefense, calcMonsterDamage, calcPlayerHitChance, calcMonsterHitChance, rollDrops, applyLevelUps, getNewlyUnlockedSkills, rollEchoStrike, applyVeteranScaling, veteranBanner } from '../lib/combat-engine.js'
 // isDungeonUnlocked is a hoisted function export, so importing it here from the
 // solo dungeon plugin is safe even though both are auto-loaded plugins (no
 // evaluation-order cycle — it's only ever called at runtime).
@@ -763,6 +763,15 @@ async function spawnAndAnnounceFloor(ctx, party, { first = false } = {}) {
   const memberCount = present.length || 1
 
   const enemy = spawnPartyEnemy(locId, floor, memberCount)
+  // Level-100+ difficulty tier (see applyVeteranScaling). A co-op floor is
+  // sized from the HIGHEST present level, not the average: a level 200 player
+  // carrying two friends is still a level 200 fight, and averaging would let
+  // one low-level alt quietly halve the tier for the whole party.
+  const veteranAnchor = present
+    .map(m => getPlayer(ctx.db, m))
+    .filter(Boolean)
+    .reduce((best, pl) => (best && (best.level ?? 0) >= (pl.level ?? 0) ? best : pl), null)
+  if (veteranAnchor) applyVeteranScaling(enemy, veteranAnchor)
   if (!enemy) {
     for (const jid of party.members) await updatePlayer(ctx.db, jid, async m => { m.inBattle = false; return m })
     party.run = null
@@ -801,7 +810,10 @@ async function spawnAndAnnounceFloor(ctx, party, { first = false } = {}) {
       ? `╔═══ ⚔️ *PARTY CLIMB* ═══╗\n\n`
       : `╔═══ ⬇️ *FLOOR ${floor}* ═══╗\n\n`
   msg += `📍 *${loc?.name ?? locId}* — Floor ${floor}${totalFloors ? `/${totalFloors}` : ''}\n`
-  msg += `👥 Party (${present.length}): ${present.map(m => nameFor(ctx.db, m)).join(', ')}\n\n`
+  msg += `👥 Party (${present.length}): ${present.map(m => nameFor(ctx.db, m)).join(', ')}\n`
+  const vetLine = veteranBanner(veteranAnchor)
+  if (vetLine) msg += `${vetLine}\n`
+  msg += `\n`
   if (isFinalBoss) {
     // Full reveal — conquest title, lore, HP, and the loot on the line.
     msg += `${enemy.emoji ?? '👑'} *${enemy.name}*`
