@@ -299,6 +299,14 @@ export const config = {
   // testing. MUST be false/unset in production, or anyone could log in as
   // anyone else without needing the real phone.
   devMode: env('DEV_MODE', 'false').trim().toLowerCase() === 'true',
+
+  // Inbound command work is concurrent across senders, but ordered per sender
+  // (see lib/inbound-scheduler.js). This prevents one slow media/API command
+  // from making every later WhatsApp message wait in a single global chain.
+  // Keep the cap modest: it is a safety valve for group overspam, not a way to
+  // run unlimited handlers at once.
+  inboundConcurrency: Math.max(1, parseInt(env('INBOUND_CONCURRENCY', '8'), 10) || 8),
+  inboundQueueLimit: Math.max(32, parseInt(env('INBOUND_QUEUE_LIMIT', '512'), 10) || 512),
 }
 
 /**
