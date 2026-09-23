@@ -56,7 +56,7 @@
     "checkpointInterval": 10,
     "prerequisite": "entry_tower",
     "travelCost": 65,
-    "description": "The domain of the trickster Gambit. A labyrinth that shifts with each descent: mirrors show what never was, and shadows move on their own. Ten of Gambit's champions bar the way deeper."
+    "description": "The domain of the trickster Gambit. A labyrinth that shifts with each descent: mirrors show what never was, and shadows move on their own. Kikaru keeps the last floor. The halls below are not champions."
   },
   {
     "id": "centurions_dungeon",
@@ -75,7 +75,7 @@
     "checkpointInterval": 10,
     "prerequisite": "gambits_dungeon",
     "travelCost": 80,
-    "description": "A fortress of endless war. The Centurion's elite legions patrol every hall, growing deadlier with each descent. Ten warlords of iron and blood hold the gates."
+    "description": "A fortress of endless war. The Centurion's elite legions patrol every hall, growing deadlier with each descent. Celestia holds the last gate. The ranks below her are the test, not masters."
   },
   {
     "id": "astral_tower",
@@ -94,7 +94,7 @@
     "checkpointInterval": 10,
     "prerequisite": "centurions_dungeon",
     "travelCost": 90,
-    "description": "A rift between worlds. The creatures here are not flesh, they are pure astral energy given violent form. Ten fractured entities guard the passage between realities."
+    "description": "A rift between worlds. The creatures here are not flesh, they are pure astral energy given violent form. Bam waits where the tower stops being stone. Nothing on the way up is a master."
   },
   {
     "id": "eternal_dungeon",
@@ -113,7 +113,7 @@
     "checkpointInterval": 10,
     "prerequisite": "astral_tower",
     "travelCost": 100,
-    "description": "The final frontier. Those who reach its depths are said to have touched eternity itself. Ten ancient horrors mark the long walk to the end of everything."
+    "description": "The final frontier. Those who reach its depths are said to have touched eternity itself. Esteria keeps the last floor. The long walk below is not a row of champions."
   },
   {
     "id": "season_01_ruins",
@@ -171,6 +171,6 @@
     "checkpointInterval": 25,
     "prerequisite": "eternal_dungeon",
     "travelCost": 500,
-    "description": "A shattered pocket of reality with no exit and no ceiling. The creatures here were never meant to exist \u2014 sealed away because nothing else could contain them. Even the strongest titled hunters struggle to survive. There are no bosses to conquer, no final floor to clear. There is only the grind, the howl, and the impossible weight of something that should not be alive pressing down on you with every passing second."
+    "description": "A shattered pocket of reality with no exit and no ceiling. The creatures here were never meant to exist, sealed away because nothing else could contain them. Even the strongest titled hunters struggle to survive. There are no bosses to conquer, no final floor to clear. There is only the grind, the howl, and the impossible weight of something that should not be alive pressing down on you with every passing second."
   }
 ]

@@ -107,6 +107,7 @@ import { addStatusEffect } from '../lib/effects.js'
 import { isPremiumActive } from '../lib/premium.js'
 import { startOfDay } from '../lib/sleep-engine.js'
 import { recordQuestEvent } from '../lib/quest-engine.js'
+import { noteKill, readyLine } from '../lib/guild-board.js'
 
 const MAX_PARTY_SIZE = 3
 const MIN_PARTY_TO_ENTER = 2            // party mode is co-op only — no solo XP grinding
@@ -2464,8 +2465,16 @@ async function resolvePartyVictory(ctx, party) {
         // do (recordQuestEvent is a pure in-mutator mutation). Before this,
         // party grinders' quests never moved, and .quest claim came up empty.
         recordQuestEvent(player, 'kill', 1)
+        // Party kills never call creditKill, so the guild-board cull has to
+        // hear them here or a co-op clear would not count.
+        const boardKill = noteKill(player, {
+          name: enemy.name,
+          locationId: locId,
+          isBoss: !!enemy.isBoss,
+        })
 
         let line = `  ${nameFor(ctx.db, jid)}: +${xpShare} XP, +${solarsShare} ☀️ _(${Math.round(share * 100)}% dmg)_`
+        if (boardKill.ready) line += `\n     ${readyLine(config.prefix)}`
         if (lvlMsgs.length) line += `  · 🎉 *Lv ${player.level}!*`
         if (newSkills.length) line += `\n     ✨ Skill: ${newSkills.map(s => s.name).join(', ')}`
         rewardLines.push(line)

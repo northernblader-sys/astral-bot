@@ -120,6 +120,7 @@ export default {
   description:    'Join, view, and manage Astral Town guilds',
   subcommands: [
     { cmd: 'join <name>', desc: 'sign up with one of the five' },
+    { cmd: 'board', desc: 'today\'s three guild slips, the same list as .board' },
     { cmd: 'info <name>', desc: 'details, banner, and the member roll' },
     { cmd: 'donate <amount>', desc: 'fund the treasury and raise your role' },
     { cmd: 'treasury', desc: 'the vault, tier progress and top donors' },
@@ -158,21 +159,28 @@ export default {
     if (sub === 'top' || sub === 'rank' || sub === 'ranking' || sub === 'leaderboard') return guildTop(ctx, allUsers)
     if (sub === 'motd' || sub === 'notice')     return setMotd(ctx, allUsers, args.slice(1).join(' '))
     if (sub === 'war' || sub === 'wars' || sub === 'clash') return guildWarDispatch(ctx, allUsers, args.slice(1))
+    // The job board, not the war board. .guild war board already left above.
+    // .guild notice stays the motd, claimed further up.
+    if (sub === 'board' || sub === 'jobs' || sub === 'slips') {
+      const { runBoard } = await import('./board.js')
+      return runBoard(ctx, args.slice(1))
+    }
 
     return reply(
       `❓ Unknown guild command.\n\n` +
-      `*${p}guild* — list guilds\n` +
-      `*${p}guild info <name>* — guild details\n` +
-      `*${p}guild join <name>* — join a guild\n` +
-      `*${p}guild leave* — leave your guild\n` +
-      `*${p}guild donate <amount>* — fund the treasury\n` +
-      `*${p}guild treasury* — vault and tier progress\n` +
-      `*${p}guild perks* — what your tier grants\n` +
-      `*${p}guild top* — rank all five guilds\n` +
-      `*${p}guild war* — declare real player-vs-player wars (1v1 up to 4v4) with prize pools, Preset 5 kits & dominance ladders\n` +
-      `*${p}guild motd <text>* — (leader) set the notice\n` +
-      `*${p}guild kick <player>* — (leader) remove a member\n` +
-      `*${p}guild banner* / *${p}guild pfp* — (leader) attach an image`,
+      `*${p}guild*: list guilds\n` +
+      `*${p}guild info <name>*: guild details\n` +
+      `*${p}guild join <name>*: join a guild\n` +
+      `*${p}guild board*: today's three slips\n` +
+      `*${p}guild leave*: leave your guild\n` +
+      `*${p}guild donate <amount>*: fund the treasury\n` +
+      `*${p}guild treasury*: vault and tier progress\n` +
+      `*${p}guild perks*: what your tier grants\n` +
+      `*${p}guild top*: rank all five guilds\n` +
+      `*${p}guild war*: declare real player-vs-player wars (1v1 up to 4v4)\n` +
+      `*${p}guild motd <text>*: (leader) set the notice\n` +
+      `*${p}guild kick <player>*: (leader) remove a member\n` +
+      `*${p}guild banner* / *${p}guild pfp*: (leader) attach an image`,
     )
   },
 }
@@ -194,9 +202,10 @@ function listGuilds(ctx, allUsers) {
 
   return ctx.reply(
     `🏰 *ASTRAL TOWN GUILDS*\n\n${lines.join('\n\n')}\n\n` +
-    `_Leadership is earned, not given — the member who's conquered the most floors since joining leads._\n` +
-    `_The treasury is separate: donations raise the guild's tier and buy perks for everyone, never the crown._\n\n` +
-    `*${p}guild info <name>* · *${p}guild join <name>* · *${p}guild top*`,
+    `_Leadership is earned, not given. The member who's conquered the most floors since joining leads._\n` +
+    `_The treasury is separate: donations raise the guild's tier and buy perks for everyone, never the crown._\n` +
+    `_The job board is the same in every hall. Sera nails three slips at dawn._\n\n` +
+    `*${p}guild info <name>* · *${p}guild join <name>* · *${p}guild board* · *${p}guild top*`
   )
 }
 
@@ -330,7 +339,11 @@ async function joinGuild(ctx, query) {
     player.guildId           = guild.id
     player.guildJoinedAt     = Date.now()
     player.guildJoinBaseline = totalFloorsConquered(player)
-    message = `✅ Welcome to ${guild.emoji} *${guild.name}*!\n\nConquer floors to climb the ranks — the top conqueror leads the guild.`
+    message =
+      `✅ Welcome to ${guild.emoji} *${guild.name}*!\n\n` +
+      `_${guild.oath || 'The clerk writes your name in the hall book.'}_\n\n` +
+      `Conquer floors to climb the ranks. The top conqueror leads the guild.\n` +
+      `The board is already up: *${p}guild board*.`
     return player
   })
 

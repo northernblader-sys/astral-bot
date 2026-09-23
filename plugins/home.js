@@ -92,6 +92,7 @@ function homeView(ctx) {
   const lines = [
     `🏠 *${tier.name.toUpperCase()}*`,
     `_${tier.blurb}_`,
+    `_The house sits on the homes row. If a slip asks you to stand at the door, that is *${p}town homes*._`,
     '',
     `✨ Comfort: *${comfort}*   🛏️ Rest: *+${(tier.restBonus ?? 0) + perkTotal(player, 'rest') + guildRestFor(ctx.db, player)}%*`,
     `🚪 Rooms: *${home.rooms.length}/${tier.rooms}*   🖼️ Decor: *${home.decor.length}/${tier.decorSlots}*`,

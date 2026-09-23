@@ -50,12 +50,12 @@ function overview(p) {
     `_More: *${p}guide economy*_\n\n` +
 
     `*9. Put down roots* 🏠\n` +
-    `Build and furnish a house with *${p}home*, *${p}build*, and *${p}decor*. Join a *${p}guild*, grow your *${p}fame*, and go *${p}stream*.\n` +
+    `Build and furnish a house with *${p}home*, *${p}build*, and *${p}decor*. Walk the streets with *${p}town*, take a hall slip with *${p}board*, join a *${p}guild*, grow your *${p}fame*, and go *${p}stream*.\n` +
     `_More: *${p}guide social*_\n\n` +
 
     `${DIV}\n` +
-    `📜 Every command: *${p}menu*\n` +
-    `📖 The duel opening book: *${p}gambits*`
+    `📜 Every command: *${p}menu*  ·  the flat list: *${p}allcommands*\n` +
+    `📖 The duel opening book: *${p}gambits*  ·  the towers: *${p}bestiary*`
   )
 }
 
@@ -110,7 +110,9 @@ const TOPICS = {
     `▸ *${p}travel* : open the world map and move to a dungeon.\n` +
     `▸ *${p}enter* / *${p}dungeon* : step into the current rift.\n` +
     `▸ Clear each floor with the combat commands (see *${p}guide combat*).\n` +
+    `▸ *${p}bestiary* : what the tower feels like, and the families that walk it.\n` +
     `▸ *${p}ranking* : the dungeon floor leaderboard.\n\n` +
+    `_The master is the last floor. The floors under that are not champions._\n\n` +
     `*The season boss* 👑\n` +
     `Floor 50 is guarded by the season's final boss, built for a team and not a solo run.\n` +
     `▸ *${p}dparty* : create or join a dungeon squad (also *${p}dp*, *${p}coop*).\n` +
@@ -174,10 +176,14 @@ const TOPICS = {
     `▸ *${p}farm* : work the plots on your land.\n` +
     `▸ *${p}homeinvite* : invite players over or visit theirs.\n\n` +
     `*The town*\n` +
-    `▸ *${p}guild* : join and manage a guild.\n` +
+    `▸ *${p}town* : walk the streets. *${p}where* says where you are standing.\n` +
+    `▸ *${p}talk* : speak to whoever is on that street.\n` +
+    `▸ *${p}board* : three guild slips a day. *${p}guild board* is the same nail.\n` +
+    `▸ *${p}guild* : join and manage a guild. A hall is required to pull a slip.\n` +
     `▸ *${p}fame* : your renown from kills, bosses, and level ups.\n` +
     `▸ *${p}stream* : go live and let the town watch.\n` +
-    `▸ *${p}top* / *${p}ranking* : the leaderboards.`,
+    `▸ *${p}top* / *${p}ranking* : the leaderboards.\n` +
+    `▸ *${p}allcommands* : every command you can type. Owner tools are left out.`,
 }
 
 // Friendly aliases so near misses still land on the right page.

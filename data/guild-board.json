@@ -1,0 +1,1372 @@
+{
+  "posted": 3,
+  "slips": [
+    {
+      "id": "cat_awning",
+      "name": "The Cat on the Awning",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "A tabby will not come down from Hesta's awning, and the market is tired of hearing about it.",
+      "reward": {
+        "solars": 320,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "market"
+        },
+        {
+          "kind": "talk",
+          "npc": "hesta",
+          "line": "The tabby comes down when you look up. Hesta says that was the whole job."
+        }
+      ]
+    },
+    {
+      "id": "ribbon_square",
+      "name": "The Lost Ribbon",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "Rowan lost a ribbon off the notice board. He will not admit it matters.",
+      "reward": {
+        "solars": 280,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "square"
+        },
+        {
+          "kind": "talk",
+          "npc": "rowan",
+          "line": "Rowan pins the ribbon back and pretends he never asked."
+        }
+      ]
+    },
+    {
+      "id": "crier_voice",
+      "name": "Pipp's Lost Line",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "The crier forgot the third slip's name and is shouting the wrong one.",
+      "reward": {
+        "solars": 260,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "square"
+        },
+        {
+          "kind": "talk",
+          "npc": "pipp",
+          "line": "Pipp hears the right name, nods, and starts over louder."
+        }
+      ]
+    },
+    {
+      "id": "lamp_inn",
+      "name": "The Inn Lamp",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "Maelin's door lamp keeps going out. She wants someone to stand under it and say it is lit.",
+      "reward": {
+        "solars": 300,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "inn"
+        },
+        {
+          "kind": "talk",
+          "npc": "maelin",
+          "line": "The lamp holds. Maelin says that is as much magic as she trusts."
+        }
+      ]
+    },
+    {
+      "id": "kitchen_smoke",
+      "name": "Smoke in the Kitchen",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "Bram's pot boiled over and the lane thinks the kitchen is on fire.",
+      "reward": {
+        "solars": 340,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "kitchen"
+        },
+        {
+          "kind": "talk",
+          "npc": "bram",
+          "line": "Bram waves you at the pot. It is soup, not a fire. He is still angry."
+        }
+      ]
+    },
+    {
+      "id": "lost_pup",
+      "name": "The Pup in the Straw",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "Something small in Lila's shop will not stop crying, and she will not leave the door.",
+      "reward": {
+        "solars": 360,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "pets"
+        },
+        {
+          "kind": "talk",
+          "npc": "lila",
+          "line": "Lila finds the pup under the straw. It was never lost. It was hiding from the bell."
+        }
+      ]
+    },
+    {
+      "id": "well_bucket",
+      "name": "The Stuck Bucket",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "Tam's bucket is stuck again. He wants a second pair of hands and no advice.",
+      "reward": {
+        "solars": 250,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "well"
+        },
+        {
+          "kind": "talk",
+          "npc": "tam",
+          "line": "The bucket comes up. Tam says he will fix the rope. He will not."
+        }
+      ]
+    },
+    {
+      "id": "stable_bridle",
+      "name": "The Missing Bridle",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "Tess hung a bridle on the wrong peg and the horse is taking it personally.",
+      "reward": {
+        "solars": 290,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "stable"
+        },
+        {
+          "kind": "talk",
+          "npc": "tess",
+          "line": "Tess moves the bridle. The horse forgives her, which is more than she expected."
+        }
+      ]
+    },
+    {
+      "id": "alley_lantern",
+      "name": "The Dark Lantern",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "One lantern in the alley is out. Kit will not walk that stretch until it is not.",
+      "reward": {
+        "solars": 310,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "alley"
+        },
+        {
+          "kind": "talk",
+          "npc": "kit",
+          "line": "Kit lights it with a stub of candle and acts like you did the brave part."
+        }
+      ]
+    },
+    {
+      "id": "chapel_candle",
+      "name": "A Candle for No Name",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "Nia wants a candle lit for someone who came back and would not give a name.",
+      "reward": {
+        "solars": 330,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "chapel"
+        },
+        {
+          "kind": "talk",
+          "npc": "nia",
+          "line": "Nia lets you light it. She does not ask who you were thinking of."
+        }
+      ]
+    },
+    {
+      "id": "pier_net",
+      "name": "Pike's Net",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "Pike needs the net held while he ties the last hole. He has been saying that for days.",
+      "reward": {
+        "solars": 350,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "pier"
+        },
+        {
+          "kind": "talk",
+          "npc": "pike",
+          "line": "The knot holds. Pike says the sea can have it now."
+        }
+      ]
+    },
+    {
+      "id": "gate_chalk",
+      "name": "Chalk the Gate",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "Holt wants today's mark on the gate post before the watch changes.",
+      "reward": {
+        "solars": 270,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "gate"
+        },
+        {
+          "kind": "talk",
+          "npc": "holt",
+          "line": "Holt checks the chalk, grunts, and lets the next watch through."
+        }
+      ]
+    },
+    {
+      "id": "orchard_cat",
+      "name": "The Orchard Cat",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "Mira's cat is in a tree and will only come down for someone who is not Mira.",
+      "reward": {
+        "solars": 380,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "orchard"
+        },
+        {
+          "kind": "talk",
+          "npc": "mira",
+          "line": "The cat drops onto your shoulder like it planned this. Mira is not surprised."
+        }
+      ]
+    },
+    {
+      "id": "bank_seal",
+      "name": "The Unsealed Pouch",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "Voss has a pouch with a broken seal and wants a witness before he opens it.",
+      "reward": {
+        "solars": 400,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "bank"
+        },
+        {
+          "kind": "talk",
+          "npc": "voss",
+          "line": "Voss opens it in front of you. Coin, and a note he will not read aloud."
+        }
+      ]
+    },
+    {
+      "id": "jobs_peg",
+      "name": "Fenn's Empty Peg",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "A shift peg is bare and Fenn wants it said out loud that nobody took the work.",
+      "reward": {
+        "solars": 250,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "jobs"
+        },
+        {
+          "kind": "talk",
+          "npc": "fenn",
+          "line": "Fenn writes the peg closed. Day work is not your problem. He looks relieved."
+        }
+      ]
+    },
+    {
+      "id": "homes_door",
+      "name": "The Door on Home Street",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "Wren says a door has not opened since yesterday. She wants someone to knock.",
+      "reward": {
+        "solars": 300,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "homes"
+        },
+        {
+          "kind": "talk",
+          "npc": "wren",
+          "line": "The neighbor answers, embarrassed and alive. Wren pretends she knew."
+        }
+      ]
+    },
+    {
+      "id": "watch_flag",
+      "name": "The Dropped Flag",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "Yenn's flag came off the watch in the wind. She can see it. She cannot leave the bell.",
+      "reward": {
+        "solars": 340,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "watch"
+        },
+        {
+          "kind": "talk",
+          "npc": "yenn",
+          "line": "You get the flag back up. Yenn rings once, for the record."
+        }
+      ]
+    },
+    {
+      "id": "quarry_whistle",
+      "name": "The Quarry Whistle",
+      "rank": "copper",
+      "minLevel": 1,
+      "summary": "Dorr is one whistle short at the count. He will not start the day until he is not.",
+      "reward": {
+        "solars": 420,
+        "fame": 2,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "quarry"
+        },
+        {
+          "kind": "talk",
+          "npc": "dorr",
+          "line": "The whistle was under a cart. Dorr counts again, and the day starts."
+        }
+      ]
+    },
+    {
+      "id": "escort_nell",
+      "name": "Walk Nell Home",
+      "rank": "iron",
+      "minLevel": 1,
+      "summary": "Nell is stuck where the river lamps end. Maelin has a bed if someone walks her in.",
+      "reward": {
+        "solars": 700,
+        "fame": 4,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "river"
+        },
+        {
+          "kind": "talk",
+          "npc": "nell",
+          "line": "Nell takes your arm like she has been waiting for a specific stranger."
+        },
+        {
+          "kind": "visit",
+          "spot": "inn"
+        },
+        {
+          "kind": "talk",
+          "npc": "maelin",
+          "line": "Maelin puts a bowl down before Nell sits. The walk is the job."
+        }
+      ]
+    },
+    {
+      "id": "escort_kit",
+      "name": "Kit to the Chapel",
+      "rank": "iron",
+      "minLevel": 1,
+      "summary": "Kit has a message that is not for you. Nia is the only person he will hand it to.",
+      "reward": {
+        "solars": 640,
+        "fame": 4,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "alley"
+        },
+        {
+          "kind": "talk",
+          "npc": "kit",
+          "line": "Kit falls in beside you and does not explain the paper."
+        },
+        {
+          "kind": "visit",
+          "spot": "chapel"
+        },
+        {
+          "kind": "talk",
+          "npc": "nia",
+          "line": "Nia takes the paper and burns nothing. Kit is already gone."
+        }
+      ]
+    },
+    {
+      "id": "escort_mira",
+      "name": "Mira's Basket",
+      "rank": "iron",
+      "minLevel": 1,
+      "summary": "Mira has a basket for Hesta and will not cross the market with the cat following.",
+      "reward": {
+        "solars": 680,
+        "fame": 4,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "orchard"
+        },
+        {
+          "kind": "talk",
+          "npc": "mira",
+          "line": "Mira ties the basket shut and tells the cat to stay. It does not."
+        },
+        {
+          "kind": "visit",
+          "spot": "market"
+        },
+        {
+          "kind": "talk",
+          "npc": "hesta",
+          "line": "Hesta takes the basket and the cat in the same breath."
+        }
+      ]
+    },
+    {
+      "id": "deliver_tonic",
+      "name": "Tonic for the Inn",
+      "rank": "iron",
+      "minLevel": 1,
+      "summary": "Maelin needs an antidote on the bar before night. She will not say for whom.",
+      "reward": {
+        "solars": 620,
+        "fame": 4,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "inn"
+        },
+        {
+          "kind": "deliver",
+          "npc": "maelin",
+          "item": "antidote",
+          "itemName": "Antidote",
+          "qty": 1,
+          "line": "Maelin pockets the antidote and does not thank you where anyone can hear."
+        }
+      ]
+    },
+    {
+      "id": "deliver_salve",
+      "name": "Salve for Pike",
+      "rank": "iron",
+      "minLevel": 1,
+      "summary": "Pike burned his hands on the rope. He wants salve, not a lecture.",
+      "reward": {
+        "solars": 660,
+        "fame": 4,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "pier"
+        },
+        {
+          "kind": "deliver",
+          "npc": "pike",
+          "item": "burn_salve",
+          "itemName": "Burn Salve",
+          "qty": 1,
+          "line": "Pike smears it on and goes back to the net like the pain was a rumor."
+        }
+      ]
+    },
+    {
+      "id": "deliver_ether",
+      "name": "Ether for the Chapel",
+      "rank": "iron",
+      "minLevel": 1,
+      "summary": "Nia is out of ether for the people who come back shaking.",
+      "reward": {
+        "solars": 780,
+        "fame": 4,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "chapel"
+        },
+        {
+          "kind": "deliver",
+          "npc": "nia",
+          "item": "ether",
+          "itemName": "Ether",
+          "qty": 1,
+          "line": "Nia sets the ether with the candles. She says the chapel can breathe again."
+        }
+      ]
+    },
+    {
+      "id": "deliver_stamina",
+      "name": "A Drink for the Gate",
+      "rank": "iron",
+      "minLevel": 1,
+      "summary": "Holt's watch is fading. He will take a stamina potion and nothing else.",
+      "reward": {
+        "solars": 720,
+        "fame": 4,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "gate"
+        },
+        {
+          "kind": "deliver",
+          "npc": "holt",
+          "item": "stamina_potion",
+          "itemName": "Stamina Potion",
+          "qty": 1,
+          "line": "Holt drinks it standing up. The gate looks the same. He does not."
+        }
+      ]
+    },
+    {
+      "id": "deliver_potion",
+      "name": "Hesta's Counter",
+      "rank": "iron",
+      "minLevel": 1,
+      "summary": "Hesta sold the last health potion out of her own bag. She wants one back before noon.",
+      "reward": {
+        "solars": 600,
+        "fame": 4,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "market"
+        },
+        {
+          "kind": "deliver",
+          "npc": "hesta",
+          "item": "health_potion",
+          "itemName": "Health Potion",
+          "qty": 1,
+          "line": "Hesta puts it under the counter, not on the shelf. That one is hers."
+        }
+      ]
+    },
+    {
+      "id": "patrol_walls",
+      "name": "Walk the Walls",
+      "rank": "iron",
+      "minLevel": 1,
+      "summary": "Holt wants the gate, the east watch, and the pier looked at before he signs the day.",
+      "reward": {
+        "solars": 800,
+        "fame": 4,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "gate"
+        },
+        {
+          "kind": "visit",
+          "spot": "watch"
+        },
+        {
+          "kind": "visit",
+          "spot": "pier"
+        },
+        {
+          "kind": "talk",
+          "npc": "holt",
+          "line": "Holt ticks three marks. The walls held. That is the report."
+        }
+      ]
+    },
+    {
+      "id": "patrol_lanes",
+      "name": "The Lane Round",
+      "rank": "iron",
+      "minLevel": 1,
+      "summary": "Rowan wants the alley, the well, and the square checked for anything the crier should not shout.",
+      "reward": {
+        "solars": 580,
+        "fame": 4,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "alley"
+        },
+        {
+          "kind": "visit",
+          "spot": "well"
+        },
+        {
+          "kind": "visit",
+          "spot": "square"
+        },
+        {
+          "kind": "talk",
+          "npc": "rowan",
+          "line": "Rowan writes 'quiet' and looks disappointed."
+        }
+      ]
+    },
+    {
+      "id": "patrol_market",
+      "name": "Market to Kitchen",
+      "rank": "iron",
+      "minLevel": 1,
+      "summary": "Hesta wants eyes on the market, the kitchen, and the pet store before she closes.",
+      "reward": {
+        "solars": 640,
+        "fame": 4,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "market"
+        },
+        {
+          "kind": "visit",
+          "spot": "kitchen"
+        },
+        {
+          "kind": "visit",
+          "spot": "pets"
+        },
+        {
+          "kind": "talk",
+          "npc": "hesta",
+          "line": "Hesta closes the book. Nothing bit anyone. She calls that a good day."
+        }
+      ]
+    },
+    {
+      "id": "courier_sera",
+      "name": "Seal to the Hall",
+      "rank": "iron",
+      "minLevel": 1,
+      "summary": "Voss has a sealed note for Sera. He will not send it with Pipp.",
+      "reward": {
+        "solars": 860,
+        "fame": 4,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "bank"
+        },
+        {
+          "kind": "talk",
+          "npc": "voss",
+          "line": "Voss hands you the seal and watches you put it away."
+        },
+        {
+          "kind": "visit",
+          "spot": "guildhall"
+        },
+        {
+          "kind": "talk",
+          "npc": "sera",
+          "line": "Sera breaks the seal, reads nothing aloud, and pins a fresh slip over the old one."
+        }
+      ]
+    },
+    {
+      "id": "courier_fenn",
+      "name": "Fenn's Warning",
+      "rank": "iron",
+      "minLevel": 1,
+      "summary": "Fenn heard a shift never came back from the gate. Holt should hear it from a person, not a peg.",
+      "reward": {
+        "solars": 740,
+        "fame": 4,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "jobs"
+        },
+        {
+          "kind": "talk",
+          "npc": "fenn",
+          "line": "Fenn gives you the name and tells you not to shout it in the yard."
+        },
+        {
+          "kind": "visit",
+          "spot": "gate"
+        },
+        {
+          "kind": "talk",
+          "npc": "holt",
+          "line": "Holt already has the name. He wanted it said anyway."
+        }
+      ]
+    },
+    {
+      "id": "lost_to_inn",
+      "name": "From the Fields to a Bed",
+      "rank": "iron",
+      "minLevel": 1,
+      "summary": "Bren found someone sitting in the stubble. Maelin has the bed. You have the walk.",
+      "reward": {
+        "solars": 900,
+        "fame": 4,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "fields"
+        },
+        {
+          "kind": "talk",
+          "npc": "bren",
+          "line": "Bren points at a figure who stands when you do."
+        },
+        {
+          "kind": "visit",
+          "spot": "inn"
+        },
+        {
+          "kind": "talk",
+          "npc": "maelin",
+          "line": "Maelin does not ask the name. The bowl is the welcome."
+        }
+      ]
+    },
+    {
+      "id": "slime_cellar",
+      "name": "Slime in the Cellar Stair",
+      "rank": "silver",
+      "minLevel": 1,
+      "summary": "The Entry Tower's lower stair is slick. The hall wants the slimes thinned, not studied.",
+      "reward": {
+        "solars": 1200,
+        "fame": 6,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "cull",
+          "dungeon": "entry_tower",
+          "words": [
+            "slime"
+          ],
+          "count": 6
+        }
+      ]
+    },
+    {
+      "id": "gargoyle_eaves",
+      "name": "Gargoyles on the Eaves",
+      "rank": "silver",
+      "minLevel": 1,
+      "summary": "Gargoyles are dropping off the Entry Tower onto the road. Bren wants fewer of them.",
+      "reward": {
+        "solars": 1300,
+        "fame": 6,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "fields"
+        },
+        {
+          "kind": "talk",
+          "npc": "bren",
+          "line": "Bren points at the tower. He will not go up with you."
+        },
+        {
+          "kind": "cull",
+          "dungeon": "entry_tower",
+          "words": [
+            "gargoyle"
+          ],
+          "count": 5
+        },
+        {
+          "kind": "talk",
+          "npc": "bren",
+          "line": "Bren counts you back. That is the whole ceremony."
+        }
+      ]
+    },
+    {
+      "id": "brute_road",
+      "name": "Brutes on the Road",
+      "rank": "silver",
+      "minLevel": 1,
+      "summary": "Something heavy is walking off the Entry Tower. The hall calls them brutes and wretches and wants them gone.",
+      "reward": {
+        "solars": 1400,
+        "fame": 6,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "cull",
+          "dungeon": "entry_tower",
+          "words": [
+            "brute",
+            "wretch"
+          ],
+          "count": 6
+        }
+      ]
+    },
+    {
+      "id": "harpy_sky",
+      "name": "Harpy Hour",
+      "rank": "silver",
+      "minLevel": 1,
+      "summary": "Bats and harpies are owning the hour before dusk. Pike cannot fish through it.",
+      "reward": {
+        "solars": 1250,
+        "fame": 6,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "pier"
+        },
+        {
+          "kind": "talk",
+          "npc": "pike",
+          "line": "Pike ducks a shadow and tells you the sky is your problem."
+        },
+        {
+          "kind": "cull",
+          "dungeon": "entry_tower",
+          "words": [
+            "harpy",
+            "bat"
+          ],
+          "count": 5
+        },
+        {
+          "kind": "talk",
+          "npc": "pike",
+          "line": "Pike looks up, sees nothing, and goes back to the net."
+        }
+      ]
+    },
+    {
+      "id": "decoy_lane",
+      "name": "Decoys in the Maze",
+      "rank": "silver",
+      "minLevel": 15,
+      "summary": "Gambit's halls are leaving decoys on the town side of the mirror. The hall wants them broken.",
+      "reward": {
+        "solars": 1500,
+        "fame": 6,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "cull",
+          "dungeon": "gambits_dungeon",
+          "words": [
+            "decoy",
+            "illusion",
+            "jester"
+          ],
+          "count": 8
+        }
+      ]
+    },
+    {
+      "id": "marionette_strings",
+      "name": "Cut the Strings",
+      "rank": "silver",
+      "minLevel": 15,
+      "summary": "Marionettes and lures are walking people toward Gambit's gate. Sera wants the strings cut.",
+      "reward": {
+        "solars": 1550,
+        "fame": 6,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "guildhall"
+        },
+        {
+          "kind": "talk",
+          "npc": "sera",
+          "line": "Sera taps the slip. She does not say good luck."
+        },
+        {
+          "kind": "cull",
+          "dungeon": "gambits_dungeon",
+          "words": [
+            "marionette",
+            "lure"
+          ],
+          "count": 6
+        }
+      ]
+    },
+    {
+      "id": "lancer_gate",
+      "name": "Lancers at the Gate",
+      "rank": "silver",
+      "minLevel": 35,
+      "summary": "Centurion lancers are drilling where the town road used to be safe. Holt wants a count of them down.",
+      "reward": {
+        "solars": 1650,
+        "fame": 6,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "gate"
+        },
+        {
+          "kind": "talk",
+          "npc": "holt",
+          "line": "Holt gives you the direction and keeps the gate."
+        },
+        {
+          "kind": "cull",
+          "dungeon": "centurions_dungeon",
+          "words": [
+            "lancer",
+            "phalanx"
+          ],
+          "count": 8
+        }
+      ]
+    },
+    {
+      "id": "gladiator_pit",
+      "name": "The Pit's Echo",
+      "rank": "silver",
+      "minLevel": 35,
+      "summary": "Gladiators and ironclads are still fighting a war the town did not declare.",
+      "reward": {
+        "solars": 1700,
+        "fame": 6,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "cull",
+          "dungeon": "centurions_dungeon",
+          "words": [
+            "gladiator",
+            "ironclad"
+          ],
+          "count": 6
+        }
+      ]
+    },
+    {
+      "id": "fields_slime",
+      "name": "The Field Leak",
+      "rank": "silver",
+      "minLevel": 1,
+      "summary": "Bren says slimes are leaking out of the tower onto the stubble. Thin them, then tell him.",
+      "reward": {
+        "solars": 1450,
+        "fame": 6,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "fields"
+        },
+        {
+          "kind": "talk",
+          "npc": "bren",
+          "line": "Bren shows you the shine on the grass. It is not dew."
+        },
+        {
+          "kind": "cull",
+          "dungeon": "entry_tower",
+          "words": [
+            "slime"
+          ],
+          "count": 4
+        },
+        {
+          "kind": "talk",
+          "npc": "bren",
+          "line": "Bren scrapes a boot clean and calls the field closed."
+        }
+      ]
+    },
+    {
+      "id": "save_nell",
+      "name": "Nell's Road",
+      "rank": "silver",
+      "minLevel": 1,
+      "summary": "Nell will not walk the river road until the brutes on it are fewer. Then she wants to see you again.",
+      "reward": {
+        "solars": 1600,
+        "fame": 6,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "river"
+        },
+        {
+          "kind": "talk",
+          "npc": "nell",
+          "line": "Nell points at the dark between lamps and stays where she is."
+        },
+        {
+          "kind": "cull",
+          "dungeon": "entry_tower",
+          "words": [
+            "brute",
+            "wretch"
+          ],
+          "count": 4
+        },
+        {
+          "kind": "talk",
+          "npc": "nell",
+          "line": "Nell steps onto the road. She does not take your arm this time."
+        }
+      ]
+    },
+    {
+      "id": "quarry_brutes",
+      "name": "Dorr's Missing Count",
+      "rank": "silver",
+      "minLevel": 1,
+      "summary": "Dorr lost two workers to something that came up the tower stair. He wants brutes, not condolences.",
+      "reward": {
+        "solars": 1500,
+        "fame": 6,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "quarry"
+        },
+        {
+          "kind": "talk",
+          "npc": "dorr",
+          "line": "Dorr gives you a whistle and tells you not to blow it unless you mean it."
+        },
+        {
+          "kind": "cull",
+          "dungeon": "entry_tower",
+          "words": [
+            "brute"
+          ],
+          "count": 5
+        },
+        {
+          "kind": "talk",
+          "npc": "dorr",
+          "line": "Dorr takes the whistle back. The count is still short. The stair is quieter."
+        }
+      ]
+    },
+    {
+      "id": "watch_bats",
+      "name": "Yenn's Bell",
+      "rank": "silver",
+      "minLevel": 1,
+      "summary": "Yenn cannot ring the bell and watch the sky. Bats and harpies first, then the bell.",
+      "reward": {
+        "solars": 1350,
+        "fame": 6,
+        "gems": 0
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "watch"
+        },
+        {
+          "kind": "talk",
+          "npc": "yenn",
+          "line": "Yenn keeps a hand on the rope and sends you up the story, not the watch."
+        },
+        {
+          "kind": "cull",
+          "dungeon": "entry_tower",
+          "words": [
+            "bat",
+            "harpy"
+          ],
+          "count": 5
+        },
+        {
+          "kind": "talk",
+          "npc": "yenn",
+          "line": "Yenn rings once. The sky stays empty long enough."
+        }
+      ]
+    },
+    {
+      "id": "wraith_quiet",
+      "name": "Quiet the Wraiths",
+      "rank": "gold",
+      "minLevel": 60,
+      "summary": "Astral Tower is leaking wraiths into the reports. The hall pays in coin and one gem, and it does not post this often.",
+      "reward": {
+        "solars": 2400,
+        "fame": 8,
+        "gems": 1
+      },
+      "steps": [
+        {
+          "kind": "cull",
+          "dungeon": "astral_tower",
+          "words": [
+            "wraith",
+            "specter"
+          ],
+          "count": 8
+        }
+      ]
+    },
+    {
+      "id": "remnant_tide",
+      "name": "Remnant Tide",
+      "rank": "gold",
+      "minLevel": 60,
+      "summary": "Remnants and drifters are walking the rift like they have a town to get to. They do not.",
+      "reward": {
+        "solars": 2600,
+        "fame": 8,
+        "gems": 1
+      },
+      "steps": [
+        {
+          "kind": "cull",
+          "dungeon": "astral_tower",
+          "words": [
+            "remnant",
+            "drifter"
+          ],
+          "count": 8
+        }
+      ]
+    },
+    {
+      "id": "lich_watch",
+      "name": "The Lich Watch",
+      "rank": "gold",
+      "minLevel": 80,
+      "summary": "Eternal's liches and wails are in the chapel book. Nia will not read the page aloud. The hall will pay.",
+      "reward": {
+        "solars": 3000,
+        "fame": 8,
+        "gems": 1
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "chapel"
+        },
+        {
+          "kind": "talk",
+          "npc": "nia",
+          "line": "Nia closes the book on a name she will not say."
+        },
+        {
+          "kind": "cull",
+          "dungeon": "eternal_dungeon",
+          "words": [
+            "lich",
+            "wail"
+          ],
+          "count": 8
+        }
+      ]
+    },
+    {
+      "id": "harbinger_bell",
+      "name": "Harbinger Bell",
+      "rank": "gold",
+      "minLevel": 80,
+      "summary": "A harbinger was heard from the east watch. Yenn wants it, and whatever vessel walked with it, gone.",
+      "reward": {
+        "solars": 3200,
+        "fame": 8,
+        "gems": 1
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "watch"
+        },
+        {
+          "kind": "talk",
+          "npc": "yenn",
+          "line": "Yenn says she heard a bell that was not hers."
+        },
+        {
+          "kind": "cull",
+          "dungeon": "eternal_dungeon",
+          "words": [
+            "harbinger",
+            "vessel"
+          ],
+          "count": 6
+        }
+      ]
+    },
+    {
+      "id": "choir_thin",
+      "name": "Thin the Choir",
+      "rank": "gold",
+      "minLevel": 25,
+      "summary": "The sunken ruins are singing again. The hall wants the choir thinner before anyone goes to listen.",
+      "reward": {
+        "solars": 2200,
+        "fame": 8,
+        "gems": 1
+      },
+      "steps": [
+        {
+          "kind": "cull",
+          "dungeon": "season_01_ruins",
+          "words": [],
+          "count": 6
+        }
+      ]
+    },
+    {
+      "id": "gambit_gold",
+      "name": "Break the Bluff",
+      "rank": "gold",
+      "minLevel": 15,
+      "summary": "Gambit's own doubles are answering to the town's name. Sera wants the bluff broken, and she circled the gem twice.",
+      "reward": {
+        "solars": 2000,
+        "fame": 8,
+        "gems": 1
+      },
+      "steps": [
+        {
+          "kind": "visit",
+          "spot": "guildhall"
+        },
+        {
+          "kind": "talk",
+          "npc": "sera",
+          "line": "Sera circles the gem on the slip and does not smile."
+        },
+        {
+          "kind": "cull",
+          "dungeon": "gambits_dungeon",
+          "words": [
+            "gambit",
+            "doppel",
+            "bluff"
+          ],
+          "count": 10
+        }
+      ]
+    }
+  ]
+}

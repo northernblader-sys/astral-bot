@@ -1,0 +1,516 @@
+{
+  "spots": [
+    {
+      "id": "square",
+      "name": "Town Square",
+      "emoji": "🏛️",
+      "words": [
+        "square",
+        "plaza",
+        "centre",
+        "center"
+      ],
+      "scene": "The fountain is running. Notices flutter on the board by the well, and someone is always arguing about a floor.",
+      "npcs": [
+        "rowan",
+        "pipp"
+      ]
+    },
+    {
+      "id": "market",
+      "name": "Market Row",
+      "emoji": "🏪",
+      "words": [
+        "market",
+        "row",
+        "stalls",
+        "shop"
+      ],
+      "scene": "Awnings, crates, and Hesta calling prices over the lane. The cat is usually on the awning.",
+      "npcs": [
+        "hesta"
+      ]
+    },
+    {
+      "id": "inn",
+      "name": "The Old Inn",
+      "emoji": "🏠",
+      "words": [
+        "inn",
+        "tavern",
+        "maelin"
+      ],
+      "scene": "Warm bread, wet cloaks, and Maelin pretending she does not listen to every story.",
+      "npcs": [
+        "maelin"
+      ]
+    },
+    {
+      "id": "guildhall",
+      "name": "Guild Hall",
+      "emoji": "🏰",
+      "words": [
+        "guildhall",
+        "guild",
+        "hall",
+        "guilds",
+        "board"
+      ],
+      "scene": "Five banners, one door, and Sera's desk under the job board. The same three slips are nailed up in every hall today.",
+      "npcs": [
+        "sera"
+      ]
+    },
+    {
+      "id": "jobs",
+      "name": "Job Yard",
+      "emoji": "🧰",
+      "words": [
+        "jobs",
+        "yard",
+        "work"
+      ],
+      "scene": "Pegs, chalk, and Fenn sorting who is late for a shift. This is day work, not the guild board.",
+      "npcs": [
+        "fenn"
+      ]
+    },
+    {
+      "id": "pier",
+      "name": "The Pier",
+      "emoji": "🎣",
+      "words": [
+        "pier",
+        "docks",
+        "wharf",
+        "fish"
+      ],
+      "scene": "Salt, rope, and Pike mending a net he will swear is fine.",
+      "npcs": [
+        "pike"
+      ]
+    },
+    {
+      "id": "homes",
+      "name": "Home Street",
+      "emoji": "🏘️",
+      "words": [
+        "homes",
+        "street",
+        "houses",
+        "neighborhood",
+        "neighbourhood"
+      ],
+      "scene": "Tents, cottages, and smoke from kitchens. Wren sits on a step and watches who comes home.",
+      "npcs": [
+        "wren"
+      ]
+    },
+    {
+      "id": "kitchen",
+      "name": "The Kitchen",
+      "emoji": "🍳",
+      "words": [
+        "kitchen",
+        "cook",
+        "cookshop"
+      ],
+      "scene": "Steam, a shouting pot, and Bram who will not let a burnt stew leave the door.",
+      "npcs": [
+        "bram"
+      ]
+    },
+    {
+      "id": "pets",
+      "name": "Pet Store",
+      "emoji": "🐾",
+      "words": [
+        "pets",
+        "pet",
+        "store"
+      ],
+      "scene": "Cages, straw, and Lila talking to something that answers.",
+      "npcs": [
+        "lila"
+      ]
+    },
+    {
+      "id": "bank",
+      "name": "The Counting House",
+      "emoji": "🏦",
+      "words": [
+        "bank",
+        "counting",
+        "vault"
+      ],
+      "scene": "Quiet coin, iron bars, and Voss who counts twice and then once more.",
+      "npcs": [
+        "voss"
+      ]
+    },
+    {
+      "id": "orchard",
+      "name": "South Orchard",
+      "emoji": "🍎",
+      "words": [
+        "orchard",
+        "south",
+        "trees"
+      ],
+      "scene": "Low trees past the last house. Mira says the cats own this place more than she does.",
+      "npcs": [
+        "mira"
+      ]
+    },
+    {
+      "id": "alley",
+      "name": "Lantern Alley",
+      "emoji": "🏮",
+      "words": [
+        "alley",
+        "lantern",
+        "lane"
+      ],
+      "scene": "Narrow, lamp-lit, and always one child who knows a shortcut the map does not.",
+      "npcs": [
+        "kit"
+      ]
+    },
+    {
+      "id": "river",
+      "name": "River Road",
+      "emoji": "🌊",
+      "words": [
+        "river",
+        "road",
+        "path"
+      ],
+      "scene": "The road out of town follows the water. Nell waits where the lamps stop.",
+      "npcs": [
+        "nell"
+      ]
+    },
+    {
+      "id": "fields",
+      "name": "West Fields",
+      "emoji": "🌾",
+      "words": [
+        "fields",
+        "west",
+        "field"
+      ],
+      "scene": "Stubble, a broken fence, and Bren watching the tower road for what walks off it.",
+      "npcs": [
+        "bren"
+      ]
+    },
+    {
+      "id": "chapel",
+      "name": "Chapel of the First Stair",
+      "emoji": "🕯️",
+      "words": [
+        "chapel",
+        "church",
+        "stair"
+      ],
+      "scene": "A small chapel for people who came back. Nia keeps the candles and does not ask what you saw.",
+      "npcs": [
+        "nia"
+      ]
+    },
+    {
+      "id": "gate",
+      "name": "North Gate",
+      "emoji": "🚪",
+      "words": [
+        "gate",
+        "north",
+        "walls"
+      ],
+      "scene": "The town gate, a chalk mark for the day, and Holt who wants names more than stories.",
+      "npcs": [
+        "holt"
+      ]
+    },
+    {
+      "id": "well",
+      "name": "The Town Well",
+      "emoji": "🪣",
+      "words": [
+        "well"
+      ],
+      "scene": "The bucket sticks. Tam has been saying he will fix it since before you arrived.",
+      "npcs": [
+        "tam"
+      ]
+    },
+    {
+      "id": "stable",
+      "name": "The Stables",
+      "emoji": "🐴",
+      "words": [
+        "stable",
+        "stables",
+        "horses"
+      ],
+      "scene": "Straw, leather, and Tess who talks to the horses like they pay rent.",
+      "npcs": [
+        "tess"
+      ]
+    },
+    {
+      "id": "watch",
+      "name": "East Watch",
+      "emoji": "🗼",
+      "words": [
+        "watch",
+        "tower",
+        "east"
+      ],
+      "scene": "A wooden watch over the fields. Yenn can see the tower road and pretends that helps.",
+      "npcs": [
+        "yenn"
+      ]
+    },
+    {
+      "id": "quarry",
+      "name": "The Quarry Mouth",
+      "emoji": "⛏️",
+      "words": [
+        "quarry",
+        "mine",
+        "mouth"
+      ],
+      "scene": "The town side of the mine. Dorr will not let you call a whistle a rescue.",
+      "npcs": [
+        "dorr"
+      ]
+    }
+  ],
+  "npcs": [
+    {
+      "id": "rowan",
+      "name": "Rowan",
+      "title": "town clerk",
+      "spot": "square",
+      "words": [
+        "rowan",
+        "clerk"
+      ],
+      "line": "If it happened in the square, Rowan already wrote it down. If it did not, he will still have an opinion."
+    },
+    {
+      "id": "pipp",
+      "name": "Pipp",
+      "title": "crier",
+      "spot": "square",
+      "words": [
+        "pipp",
+        "crier"
+      ],
+      "line": "Pipp shouts the day's three slips whether anyone asked or not."
+    },
+    {
+      "id": "hesta",
+      "name": "Hesta",
+      "title": "market keeper",
+      "spot": "market",
+      "words": [
+        "hesta",
+        "keeper",
+        "shopkeep"
+      ],
+      "line": "Coin on the counter, goods off the shelf. Hesta does not do credit, and she does not do haste."
+    },
+    {
+      "id": "maelin",
+      "name": "Maelin",
+      "title": "innkeeper",
+      "spot": "inn",
+      "words": [
+        "maelin",
+        "innkeeper"
+      ],
+      "line": "Maelin keeps a bed, a bowl, and a longer memory than the guild ledger."
+    },
+    {
+      "id": "sera",
+      "name": "Sera",
+      "title": "board clerk",
+      "spot": "guildhall",
+      "words": [
+        "sera",
+        "clerk"
+      ],
+      "line": "Sera nails the slips at dawn and takes them down at midnight. She does not care which hall you swear to."
+    },
+    {
+      "id": "fenn",
+      "name": "Fenn",
+      "title": "yard master",
+      "spot": "jobs",
+      "words": [
+        "fenn"
+      ],
+      "line": "Fenn pays for a shift, not a story. The guild board is next door, and he is glad it is not his."
+    },
+    {
+      "id": "pike",
+      "name": "Pike",
+      "title": "net mender",
+      "spot": "pier",
+      "words": [
+        "pike",
+        "fisher"
+      ],
+      "line": "Pike has been mending the same net for a week. He says the sea can wait."
+    },
+    {
+      "id": "wren",
+      "name": "Wren",
+      "title": "neighbor",
+      "spot": "homes",
+      "words": [
+        "wren"
+      ],
+      "line": "Wren knows which chimneys are lit and which doors have not opened since yesterday."
+    },
+    {
+      "id": "bram",
+      "name": "Bram",
+      "title": "cook",
+      "spot": "kitchen",
+      "words": [
+        "bram",
+        "cook"
+      ],
+      "line": "Bram feeds whoever comes in hungry and scolds whoever comes in late."
+    },
+    {
+      "id": "lila",
+      "name": "Lila",
+      "title": "beast keeper",
+      "spot": "pets",
+      "words": [
+        "lila"
+      ],
+      "line": "Lila names every animal in the shop and most of the ones that are not."
+    },
+    {
+      "id": "voss",
+      "name": "Voss",
+      "title": "teller",
+      "spot": "bank",
+      "words": [
+        "voss",
+        "teller"
+      ],
+      "line": "Voss speaks softly because coin is loud enough."
+    },
+    {
+      "id": "mira",
+      "name": "Mira",
+      "title": "orchard keeper",
+      "spot": "orchard",
+      "words": [
+        "mira"
+      ],
+      "line": "Mira keeps the trees. The cats keep Mira."
+    },
+    {
+      "id": "kit",
+      "name": "Kit",
+      "title": "alley runner",
+      "spot": "alley",
+      "words": [
+        "kit"
+      ],
+      "line": "Kit runs messages for bread and will not say whose."
+    },
+    {
+      "id": "nell",
+      "name": "Nell",
+      "title": "road villager",
+      "spot": "river",
+      "words": [
+        "nell"
+      ],
+      "line": "Nell was walking home when the lamps ran out. She is still walking."
+    },
+    {
+      "id": "bren",
+      "name": "Bren",
+      "title": "field watch",
+      "spot": "fields",
+      "words": [
+        "bren",
+        "captain"
+      ],
+      "line": "Bren counts what comes off the tower road. He does not like the number."
+    },
+    {
+      "id": "nia",
+      "name": "Nia",
+      "title": "chapel keeper",
+      "spot": "chapel",
+      "words": [
+        "nia",
+        "sister"
+      ],
+      "line": "Nia lights a candle for anyone who asks and does not write the name down."
+    },
+    {
+      "id": "holt",
+      "name": "Holt",
+      "title": "gate warden",
+      "spot": "gate",
+      "words": [
+        "holt",
+        "warden"
+      ],
+      "line": "Holt wants the gate chalked, the watch awake, and the road quiet."
+    },
+    {
+      "id": "tam",
+      "name": "Tam",
+      "title": "well keeper",
+      "spot": "well",
+      "words": [
+        "tam"
+      ],
+      "line": "Tam has a wrench, a complaint, and a bucket that hates both."
+    },
+    {
+      "id": "tess",
+      "name": "Tess",
+      "title": "stable groom",
+      "spot": "stable",
+      "words": [
+        "tess",
+        "groom"
+      ],
+      "line": "Tess says the horses know who is lying. She has not been wrong in a way you can prove."
+    },
+    {
+      "id": "yenn",
+      "name": "Yenn",
+      "title": "east scout",
+      "spot": "watch",
+      "words": [
+        "yenn",
+        "scout"
+      ],
+      "line": "Yenn sees farther than she can help. She still rings the bell."
+    },
+    {
+      "id": "dorr",
+      "name": "Dorr",
+      "title": "quarry boss",
+      "spot": "quarry",
+      "words": [
+        "dorr"
+      ],
+      "line": "Dorr counts workers the way other people count coin. A missing whistle is a missing person."
+    }
+  ]
+}

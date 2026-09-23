@@ -751,7 +751,8 @@ function mainMenu(player) {
     `┏━━━━━━━━━━━━━━┓\n` +
     `┃  🏪 *ASTRAL SHOP* 🏪\n` +
     `┗━━━━━━━━━━━━━━┛\n` +
-    `_Everything an adventurer needs, under one roof._\n\n` +
+    `_Hesta keeps the counter on Market Row. The bell over the door still works._\n` +
+    `_Everything an adventurer needs, under one roof. Guild slips that ask for a potion mean this counter._\n\n` +
     `💰 ☀️ *${solars}* Solars   ·   💎 *${fmtGems(gems)}* Gems\n\n` +
     `📦 *Browse:*\n` +
     `   🗡️ *${p}shop weapons* — _blades, bows & more_\n` +

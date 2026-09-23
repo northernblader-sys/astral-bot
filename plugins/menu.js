@@ -313,9 +313,10 @@ export default {
     lines.push('↴')
     lines.push('')
     lines.push(`> 📚 ${pr}menu <section>: every command in that section`)
-    lines.push(`> 🧳 ${pr}me — view your profile`)
-    lines.push(`> 🛟 ${pr}support — get help`)
-    lines.push(`> 📨 ${pr}contactteam <msg> — message the dev team`)
+    lines.push(`> 📋 ${pr}allcommands: every command you can type`)
+    lines.push(`> 🧳 ${pr}me: view your profile`)
+    lines.push(`> 🛟 ${pr}support: get help`)
+    lines.push(`> 📨 ${pr}contactteam <msg>: message the dev team`)
     lines.push(`> 🌐 ${ctx.botName || config.botName} · Type *${pr}<command>* to use one directly.`)
 
     const overviewText = lines.join('\n')
