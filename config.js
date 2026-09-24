@@ -307,6 +307,11 @@ export const config = {
   // run unlimited handlers at once.
   inboundConcurrency: Math.max(1, parseInt(env('INBOUND_CONCURRENCY', '8'), 10) || 8),
   inboundQueueLimit: Math.max(32, parseInt(env('INBOUND_QUEUE_LIMIT', '512'), 10) || 512),
+  // A handler running longer than this is DETACHED from the inbound stream —
+  // its concurrency slot is taken back and its sender's lane moves on, so one
+  // hung command (untimed API call, stuck db flush) can no longer deaf the
+  // whole bot. See lib/inbound-scheduler.js's header for the full story.
+  inboundJobTimeoutMs: Math.max(10_000, parseInt(env('INBOUND_JOB_TIMEOUT_MS', '180000'), 10) || 180_000),
 }
 
 /**

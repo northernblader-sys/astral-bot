@@ -459,19 +459,14 @@ const BOSS_TURN_TIMER_EXEMPT = new Set([
 // Link detection lives in lib/group-helpers.js (containsLink) and is applied by
 // the antilink rule in lib/moderation-scan.js. Nothing in this file needs it.
 
-// Reaction emoji auto-applied to every valid command message, fired right
-// before the command is processed (not after) — just a "seen it, working on
-// it" acknowledgement. Picked per-instance from botName (see makeHandler's
-// param below): the Sun number reacts with ☀️, the Moon number with 🌙, and
-// anything else (Discord/Telegram never call this, but just in case) falls
-// back to the old crossed-swords default.
-const AUTO_REACT_EMOJI_DEFAULT = '⚔️'
-function autoReactEmojiFor(botName) {
-  const n = (botName ?? '').toLowerCase()
-  if (n.includes('sun'))  return '☀️'
-  if (n.includes('moon')) return '🌙'
-  return AUTO_REACT_EMOJI_DEFAULT
-}
+// NOTE (2026-09): the per-command auto-react (⚔️/☀️/🌙 on every command
+// message) was removed on owner request. It was a decoration that doubled
+// outbound traffic (a command burst = a react burst on top of the replies),
+// which is how WhatsApp's spam heuristics kept reading the bot as a spammer
+// — see the reaction-lane note in lib/send-rate-limiter.js. Plugins that
+// react to their OWN results (downloader ✅/❌, gif2mp4, manga) still do.
+// The Sun/Moon identity for the .menu banner lives in plugins/menu.js's
+// instanceIdentity().
 
 /**
  * LOCKDOWN MODE — while true, only the configured owner (via DM, not a
@@ -908,17 +903,6 @@ export function makeHandler(sock, db, botName) {
           }, { quoted: msg }).catch(() => {})
         }
       }
-
-      // ── Auto-react ──────────────────────────────────────────────────────
-      // React on the sender's own command message before any reply is sent,
-      // regardless of which plugin (or none) ends up handling it — this is
-      // just an acknowledgement that the bot saw a real command, not a
-      // signal about success/failure. Fire-and-forget: a failed react
-      // (message deleted, no reaction permission, etc.) should never block
-      // or delay the actual command from running.
-      sock.sendMessage(sender, {
-        react: { text: autoReactEmojiFor(botName), key: msg.key },
-      }).catch(() => {})
 
       /** ctx passed to every plugin */
       const ctx = {
