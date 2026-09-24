@@ -91,10 +91,17 @@ const SPAM_PATTERNS = [
   'chainKey', 'chainType', 'messageKeys', 'rootKey', '<Buffer',
   'pubKey', 'privKey', 'previousCounter', 'indexInfo',
   'Closing open session', 'Decrypted message with closed session',
-  'Failed to decrypt', 'Session error', 'Bad MAC', 'SessionCipher',
+  'SessionCipher',
   'decryptWithSessions', 'verifyMAC', 'asyncQueueExecutor', 'closed session',
-  'Connection Closed', 'rate-overlimit',
+  'Connection Closed',
 ]
+// DELIBERATELY NOT FILTERED (do not add them back without reading the
+// inbound-stall notes in runStallWatchdog): 'Failed to decrypt', 'Bad MAC',
+// 'Session error' and 'rate-overlimit' are the ONLY signals that explain the
+// "bot ignores everyone but spawns keep coming" outage. Filtering them made
+// that outage undiagnosable — the errors were happening, they just never
+// reached the logs. They are rare (only on real faults), so they cost no
+// noise.
 function isSpam(str) {
   if (typeof str !== 'string') return false
   return SPAM_PATTERNS.some(p => str.includes(p))
@@ -110,12 +117,63 @@ process.stderr.write = (chunk, ...args) => {
   return _stderrWrite(chunk, ...args)
 }
 
-// ── Silent Baileys logger ─────────────────────────────────────────────────
-const silentLogger = {
-  level: 'silent',
-  trace: () => {}, debug: () => {}, info:  () => {},
-  warn:  () => {}, error: () => {}, fatal: () => {},
-  child: () => silentLogger,
+// ── Baileys logger: silent, except the one thing we must never miss ────────
+// A wedged Signal session fails to DECRYPT incoming messages ("Failed to
+// decrypt" / "Bad MAC"). Baileys drops those messages before
+// messages.upsert ever fires — the socket looks perfectly healthy, outbound
+// keeps working, and inbound just quietly never arrives. That is exactly the
+// "the bot ignores everyone but the card/pokémon spawns keep coming" outage
+// (see runStallWatchdog below), and with a fully silent logger it is
+// undiagnosable: the errors existed, they just went nowhere.
+//
+// So: everything stays silent, except warn/error messages that look like
+// Signal decryption/session failures. Those are stamped into the instance's
+// decryptFailures ledger (read by the watchdog) and echoed to the log a few
+// times per window — loud enough to find in pm2-err.log, quiet enough not to
+// flood while the session stays wedged.
+const DECRYPT_FAIL_RE = /fail(ed)? to decrypt|bad mac|session error|bad session|invalid session/i
+// Sliding window the watchdog counts decryption failures in.
+const DECRYPT_FAIL_WINDOW_MS = 10 * 60_000
+// This many failures in the window (with no successful inbound since) is a
+// wedged session — only a reconnect renegotiates it.
+const DECRYPT_FAIL_LIMIT = 10
+// Inbound must have been dry at least this long for the decrypt-failure
+// trigger to act — a session that is still decrypting fine moments ago is
+// not the outage, even if it logged a few stale-session errors.
+const DECRYPT_STALE_INBOUND_MS = 60_000
+
+function recordSignalFailure(inst, args) {
+  const text = args
+    .map(a => (typeof a === 'string' ? a : (a && (a.message || a.err?.message)) || ''))
+    .join(' ')
+    .trim()
+  if (!text || !DECRYPT_FAIL_RE.test(text)) return
+
+  const now = Date.now()
+  // Timestamps are appended in order, so the stale ones are always at the
+  // front — drop them to keep the ledger bounded (a wedged session can keep
+  // logging for hours).
+  while (inst.decryptFailures.length && inst.decryptFailures[0] < now - DECRYPT_FAIL_WINDOW_MS) inst.decryptFailures.shift()
+  inst.decryptFailures.push(now)
+  const inWindow = inst.decryptFailures
+  const n = inWindow.length
+  // First 3 in the window, then every 25th — see the note above.
+  if (n <= 3 || n % 25 === 0) {
+    globalErrorLog(`🚨 [${inst.botName}] Signal decryption/session failure #${n} in ${DECRYPT_FAIL_WINDOW_MS / 60_000} min: ${text.slice(0, 300)}`)
+  }
+}
+
+function makeBaileysLogger(inst) {
+  const noop = () => {}
+  const capture = (...args) => {
+    try { recordSignalFailure(inst, args) } catch { /* never break Baileys over a logger */ }
+  }
+  return {
+    level: 'silent',
+    trace: noop, debug: noop, info: noop,
+    warn: capture, error: capture, fatal: capture,
+    child: () => makeBaileysLogger(inst),
+  }
 }
 
 // ── Global (not-instance-specific) log helper ───────────────────────────────
@@ -901,34 +959,58 @@ async function runSeasonSweep(db) {
 
 // ── Inbound-stall watchdog ─────────────────────────────────────────────────
 //
-// The bug this exists for: "the bot is online, everyone is sending messages
-// and it won't answer, but the hourly card and the Pokémon spawns still
-// arrive normally."
+// THE BUG THIS SECTION OWNS — if the bot ever "stops reacting to people's
+// messages but keeps doing its logic" (card spawns keep arriving, series and
+// Pokémon spawns fire, dungeon tags get posted, .health says online), start
+// here and in lib/inbound-scheduler.js. That exact combination is only
+// possible if OUTBOUND works and INBOUND doesn't: every spawn/tag sweep above
+// is driven by setInterval, so it never touches the inbound path and keeps
+// firing no matter how dead message processing is. That is what makes the
+// bot look healthy while it ignores every command — and why nobody notices
+// for hours.
 //
-// That combination is only possible if OUTBOUND works and INBOUND doesn't.
-// The spawn sweeps above are driven by setInterval, so they never touch the
-// inbound path — they keep firing on schedule no matter how dead message
-// delivery is, which is exactly what makes the bot look healthy while it
-// ignores every command.
+// Two mechanisms can put the inbound path in that state, and NEITHER closes
+// the socket, so Baileys' own keepalive (healthy pings) and the
+// connection.update handler (no close event) can never see it:
 //
-// Two things can put a socket in that state, and neither one closes it:
+//   • A handler promise never settles. The inbound scheduler (lib/
+//     inbound-scheduler.js) counts running handlers up to
+//     config.inboundConcurrency; `active` only drops when a handler
+//     SETTLES. One hung await — an external API call with no timeout, a
+//     stuck db flush, a Baileys send that never resolves — holds its slot
+//     forever. Eight such jobs and pump() stops dispatching: every new
+//     message sits in the pending queue, the bot goes deaf, and the spawns
+//     keep coming.
+//   • Baileys fails to DECRYPT incoming messages (stale Signal session, bad
+//     prekey, "Bad MAC"). WhatsApp delivers fine, Baileys can't open the
+//     messages, and they are dropped BEFORE messages.upsert — no upsert, no
+//     handler, no queue, total inbound silence while outbound is perfect.
 //
-//   • Baileys fails to decrypt incoming messages (stale Signal session, bad
-//     prekey, "Bad MAC"). Those errors are also FILTERED OUT of the logs by
-//     SPAM_PATTERNS at the top of this file, so the symptom is invisible.
-//     The socket is fine; the messages are dropped before messages.upsert.
-//   • The WhatsApp side quietly stops routing to this device while the
-//     websocket and its keepalive pings stay perfectly healthy.
+// The fix is three layers, all in this file unless noted:
 //
-// Baileys' own keepalive can't catch either one: the ping round-trips fine.
-// So the only reliable signal is silence on messages.upsert itself, and the
-// only known fix is a reconnect, which forces sessions to be renegotiated.
+//   1. DETACH (lib/inbound-scheduler.js) — every scheduled job has a timeout
+//      (config.inboundJobTimeoutMs). A handler that outlives it is detached:
+//      its concurrency slot is taken back, its lane moves on, a loud log line
+//      names the lane. One hung command can no longer deaf the bot; the bot
+//      keeps answering everyone else while the wedged one is abandoned.
+//   2. ACT (this watchdog, below) — if the wedge PERSISTS (scheduler pending/
+//      stuck for INBOUND_STALL_EVIDENCE_MS, or a burst of decryption failures
+//      with no successful inbound since), force a clean reconnect, which
+//      renegotiates the Signal sessions and rebuilds the socket + scheduler.
+//   3. SEE — the Baileys logger (makeBaileysLogger above) is no longer fully
+//      silent: Signal decryption/session failures are counted per instance
+//      and echoed to pm2-err.log, and SPAM_PATTERNS no longer eats
+//      "Failed to decrypt" / "Bad MAC" / "Session error" / "rate-overlimit".
 //
-// The trade-off is deliberate: a genuinely idle bot (nobody talking for 15
-// minutes at 4am) will occasionally reconnect for no reason. A reconnect is
-// cheap, keeps the auth files, and is rate-limited by the cooldown below —
-// a pointless reconnect every 20 minutes is a much smaller problem than
-// hours of unanswered commands.
+// Why this version does NOT repeat the mistake that got the old one removed:
+// the 2026-09 predecessor forced a reconnect after 15 minutes of inbound
+// SILENCE. A quiet group is just a quiet group — it fired on healthy sockets
+// in the small hours, and every forced reconnect renegotiates sessions and
+// drops the send queue. THIS version never looks at silence by itself: it
+// acts only on positive evidence that work exists and is not being processed
+// (scheduler) or that delivery is provably broken (decrypt failures with a
+// dry inbound path). A genuinely idle bot produces neither, so it is left
+// alone.
 const STALL_CHECK_INTERVAL_MS = 60_000
 
 // A reply that has been waiting this long means the outbound queue — not the
@@ -937,6 +1019,29 @@ const STALL_CHECK_INTERVAL_MS = 60_000
 // throw the backlog away).
 const SEND_BACKLOG_WARN_MS = 60_000
 
+// Scheduler wedge evidence must persist this long before acting. A busy
+// group also shows pending > 0 — for a few seconds, then it drains. Three
+// 60-second ticks is the line between "busy" and "wedge".
+const INBOUND_STALL_EVIDENCE_MS = 3 * 60_000
+
+/**
+ * Force a clean in-process reconnect. Sets inst.forcedReconnect so the
+ * 'close' handler that follows (a) retires the scheduler, (b) clears
+ * activeSock, and (c) schedules the fast 5s reconnect — that path must own
+ * all of that, so we only mark + end the socket here.
+ */
+function forceReconnect(inst, sock, reason) {
+  globalErrorLog(`🚑 [${inst.botName}] forcing reconnect — ${reason}`)
+  inst.forcedReconnect = true
+  inst.lastForcedReconnectAt = Date.now()
+  inst.inboundStallSince = 0
+  try {
+    sock.end?.()
+  } catch (err) {
+    globalErrorLog(`⚠️ [${inst.botName}] sock.end() threw: ${err?.message ?? err}`)
+  }
+}
+
 function runStallWatchdog(instances, db) {
   const now = Date.now()
 
@@ -944,7 +1049,7 @@ function runStallWatchdog(instances, db) {
     const sock = inst.activeSock
     if (!sock) continue // not open — the reconnect logic already owns this case
 
-    // Outbound side: report, don't reconnect.
+    // ── Outbound side: report, don't reconnect ─────────────────────────────
     const rl = sock.__rateLimiter
     if (rl && rl.oldestPendingMs > SEND_BACKLOG_WARN_MS) {
       globalErrorLog(
@@ -954,20 +1059,42 @@ function runStallWatchdog(instances, db) {
       )
     }
 
-    // Inbound side: REMOVED (2026-09).
-    //
-    // This used to force a reconnect after 15 minutes without an inbound
-    // message, on the theory that silence meant Baileys had stopped
-    // delivering. In practice a quiet group is just a quiet group: the
-    // watchdog fired on healthy sockets in the small hours, and every
-    // forced reconnect renegotiates sessions, drops whatever was in the
-    // send queue, and risks the connection it was supposed to be
-    // protecting. The "🚑 no inbound message for 15 min" line was noise.
-    //
-    // Genuine disconnects still reconnect on their own: Baileys emits
-    // connection.update {connection:'close'} and the handler below owns
-    // that path. If inbound delivery really does wedge again, bring this
-    // back behind an env flag rather than on by default.
+    // ── Inbound side — evidence #1: the scheduler itself is wedged ─────────
+    // Messages were accepted (pending > 0) but are not draining, or a handler
+    // was detached as stuck (lib/inbound-scheduler.js). This is the "bot
+    // ignores everyone" state measured from the inside. The evidence must
+    // persist — a busy group is pending > 0 for seconds, then empty.
+    const sch = inst.inboundScheduler
+    const wedged = sch && (sch.pending > 0 || sch.stuck > 0)
+    if (wedged) {
+      if (!inst.inboundStallSince) {
+        inst.inboundStallSince = now
+      } else if (now - inst.inboundStallSince >= INBOUND_STALL_EVIDENCE_MS) {
+        forceReconnect(
+          inst, sock,
+          `inbound stalled ${Math.round((now - inst.inboundStallSince) / 1000)}s ` +
+          `(pending=${sch.pending} stuck=${sch.stuck} active=${sch.active}/${sch.limits.concurrency} lanes=${sch.laneCount})`,
+        )
+        continue
+      }
+    } else {
+      inst.inboundStallSince = 0
+    }
+
+    // ── Inbound side — evidence #2: the Signal session is wedged ───────────
+    // Repeated decryption failures (recorded by makeBaileysLogger) AND no
+    // message has decrypted successfully since. WhatsApp is delivering and
+    // Baileys is failing to open the messages, so messages.upsert never
+    // fires and evidence #1 above can never see it. Only a reconnect
+    // renegotiates the session.
+    const recentFailures = inst.decryptFailures.filter(t => now - t <= DECRYPT_FAIL_WINDOW_MS)
+    if (recentFailures.length >= DECRYPT_FAIL_LIMIT && now - inst.lastInboundAt >= DECRYPT_STALE_INBOUND_MS) {
+      forceReconnect(
+        inst, sock,
+        `${recentFailures.length} Signal decryption failures in ${DECRYPT_FAIL_WINDOW_MS / 60_000} min, ` +
+        `no inbound for ${Math.round((now - inst.lastInboundAt) / 1000)}s`,
+      )
+    }
   }
 }
 
@@ -1001,14 +1128,26 @@ function createBotInstance(botCfg) {
 
     // ── Liveness bookkeeping (read by runStallWatchdog + plugins/health.js) ──
     // When connection === 'open' last happened, and when we last saw ANY
-    // inbound message. The gap between those two is the whole basis of the
-    // stall watchdog: a socket that has been open for an hour with zero
-    // inbound messages is not idle, it's deaf.
+    // inbound message. lastInboundAt is now only an INPUT to the stall
+    // evidence (fresh inbound proves the inbound path works) — the watchdog
+    // no longer acts on silence alone, which is what made the old version
+    // get removed (see runStallWatchdog).
     openedAt: 0,
     lastInboundAt: 0,
     inboundCount: 0,
     lastForcedReconnectAt: 0,
     forcedReconnect: false,
+
+    // ── Inbound-stall evidence (2026-09) ───────────────────────────────────
+    // When the inbound scheduler FIRST showed a wedge (work accepted but not
+    // draining, or a handler detached as stuck). 0 = healthy so far. The
+    // watchdog only acts once this has persisted INBOUND_STALL_EVIDENCE_MS —
+    // a busy minute drains in seconds and never sets it.
+    inboundStallSince: 0,
+    // Timestamps of recent Signal decryption failures, recorded by
+    // makeBaileysLogger/recordSignalFailure. A burst of these with a dry
+    // inbound path is a wedged session — a reconnect is the only fix.
+    decryptFailures: [],
 
     // ── Reconnect hygiene ───────────────────────────────────────────────────
     // connect() used to be callable from several places at once: every
@@ -1111,7 +1250,7 @@ function createBotInstance(botCfg) {
         // this, rapid session lookups during pairing/reconnect can desync
         // and cause WhatsApp to kill the connection almost immediately
         // (fast 401s).
-        keys: makeCacheableSignalKeyStore(state.keys, silentLogger),
+        keys: makeCacheableSignalKeyStore(state.keys, makeBaileysLogger(inst)),
       },
       browser: Browsers.ubuntu('Chrome'), // explicit, recognized browser identity
       printQRInTerminal: false,
@@ -1136,8 +1275,10 @@ function createBotInstance(botCfg) {
       // closes the socket from WhatsApp's side either way.
       keepAliveIntervalMs: 60_000,
       connectTimeoutMs: 60_000,
-      // Silence Baileys' internal logger unless you need deep debug
-      logger: silentLogger,
+      // Silent except Signal decryption/session failures — those are the
+      // fingerprint of the inbound-stall outage and must reach the logs
+      // (and inst.decryptFailures for the watchdog). See makeBaileysLogger.
+      logger: makeBaileysLogger(inst),
     })
 
     // Newer / less-trusted numbers get banned fast if plugins burst-send
@@ -1209,10 +1350,19 @@ function createBotInstance(botCfg) {
     const inboundScheduler = createInboundScheduler({
       concurrency: config.inboundConcurrency,
       maxPending: config.inboundQueueLimit,
+      jobTimeoutMs: config.inboundJobTimeoutMs,
       handle: (payload) => handleMessages(payload),
-      log: ({ err, pending, active, maxPending }, message) => {
+      log: ({ err, pending, active, maxPending, laneKey, elapsedMs }, message) => {
         if (err) {
           log(`⚠️ ${message}:`, err?.message ?? err)
+        } else if (laneKey) {
+          // A handler timed out and was detached — the exact moment a
+          // "bot stops answering" outage can start. pm2-err.log, not the
+          // quiet lane log: if a command is hanging, find THIS line first.
+          globalErrorLog(
+            `⚠️ [${inst.botName}] ${message} lane=${laneKey} after ${Math.round(elapsedMs / 1000)}s ` +
+            `(timeout ${config.inboundJobTimeoutMs / 1000}s) — the stream kept working, this command was abandoned.`,
+          )
         } else {
           log(`⚠️ ${message} pending=${pending} active=${active} limit=${maxPending}`)
         }
@@ -1377,6 +1527,12 @@ function createBotInstance(botCfg) {
         // socket it just built.
         inst.lastInboundAt = Date.now()
         inst.forcedReconnect = false
+        // Fresh scheduler, fresh sessions — reset the stall evidence so the
+        // watchdog measures THIS socket, not the dead one it replaces (a
+        // reconnect that was the cure for the old socket's wedge must not
+        // immediately re-trigger on the old socket's evidence).
+        inst.inboundStallSince = 0
+        inst.decryptFailures = []
         // Publish the socket only now that it can actually send. Everything
         // that reaches for a socket (the sweeps above, the website's OTP DM
         // in lib/api-server.js) goes through this field.
@@ -1662,7 +1818,7 @@ async function main() {
     try { runStallWatchdog(instances, db) }
     catch (err) { globalErrorLog('⚠️ Stall watchdog crashed:', err?.message ?? err) }
   }, STALL_CHECK_INTERVAL_MS)
-  globalLog('⏱️ Outbound backlog watchdog active (reports a stuck send queue; never forces a reconnect)')
+  globalLog('⏱️ Inbound-stall watchdog active (reports stuck send queue; forces a reconnect only on sustained inbound-scheduler evidence or Signal decryption failures — silence alone never triggers it)')
 
   setInterval(() => {
     runSeasonSweep(db).catch(err => globalLog('⚠️ Season sweep crashed:', err.message))

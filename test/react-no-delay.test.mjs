@@ -1,13 +1,18 @@
 /**
- * react-no-delay.test.mjs — proves the auto-react no longer paces the reply.
+ * react-no-delay.test.mjs — proves a reaction never paces or budgets a reply.
  *
- * The bug: every command fired a ⚔️ react before its reply. The rate limiter
- * counted that react as a real send, resetting the inter-send gap, so the
- * reply that followed a few ms later was forced to wait out almost the whole
- * gap. Symptom: "the bot reacts, then the response is delayed."
+ * The original bug: every command fired a ⚔️ react before its reply (the
+ * per-command auto-react was removed 2026-09 — see handler.js's note), and
+ * the rate limiter counted that react as a real send, resetting the
+ * inter-send gap, so the reply that followed a few ms later was forced to
+ * wait out almost the whole gap. Symptom: "the bot reacts, then the response
+ * is delayed."
  *
  * The fix: reactions are decoration — they send immediately and are invisible
- * to the pacer. Only real replies are spaced (the ban-safety we keep).
+ * to the pacer. Only real replies are spaced (the ban-safety we keep). The
+ * react lane still exists for the reactions plugins fire on their OWN
+ * results (downloader ✅/❌, gif2mp4, manga), which is what these tests
+ * guard: that lane must never delay a reply or eat its per-minute budget.
  *
  * Run:  node test/react-no-delay.test.mjs
  */
@@ -44,7 +49,8 @@ await test('a react fired just before a reply does NOT delay the reply', async (
   wrapSendWithRateLimit(sock, { botName: 'T', minGapMs: GAP, maxPerMinute: 40 })
 
   const t0 = Date.now()
-  // Exactly what handler.js does: react (fire-and-forget) then reply.
+  // Exactly what a plugin does (e.g. downloader): react (fire-and-forget),
+  // then reply.
   sock.sendMessage('user@x', { react: { text: '⚔️', key: {} } })
   const reply = sock.sendMessage('user@x', { text: 'hello' })
   await reply

@@ -156,8 +156,8 @@ function capitalize(str) {
 /**
  * Which of the bot's two WhatsApp numbers this message came in on, read off
  * ctx.botName (see handler.js's makeHandler / config.js's botName / botName2).
- * Mirrors handler.js's autoReactEmojiFor so the menu banner and the message
- * reaction always agree on sun vs moon for the same number.
+ * This is the only remaining consumer of the sun/moon identity — the
+ * per-command auto-react it used to keep in sync with was removed 2026-09.
  */
 function instanceIdentity(botName) {
   const n = (botName ?? '').toLowerCase()
