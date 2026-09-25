@@ -1,13 +1,13 @@
 /**
- * event.js — `.event` : The End / Blue Band world event.
+ * event.js — `.event` : the current world event hub.
  *
  * Player-facing:
- *   .event                  — what's happening, how long, and where you stand
+ *   .event                  — the latest world event, its clock, and your standing
  *
  * Owner-only (lib/group-helpers.js's isOwnerJid):
- *   .event start            — stamp the clock, flood the world, announce it
- *   .event end              — kill-switch: lift the aura for everyone, announce it
- *   .event skip             — test hook: open the End's rift right now
+ *   .event start            — The End only: stamp the clock, flood the world, announce it
+ *   .event end              — The End only: kill-switch, lift the aura for everyone
+ *   .event skip             — The End only: test hook, open the rift right now
  *
  * Every lifecycle flip is a single write to db.data.endEvent inside
  * updateAllPlayers, so it rides the same serialized queue as every other
@@ -18,6 +18,23 @@ import { updateAllPlayers, getPlayer } from '../lib/player-repo.js'
 import { isOwnerJid } from '../lib/group-helpers.js'
 import { formatTimeLeft } from '../lib/time-format.js'
 import {
+  COMPANIONS,
+  GUARDIAN,
+  REGIONS,
+  REGION_MAP,
+  TYPE_BADGE,
+  dailyCap,
+  ensureGuardianState,
+  eventDay,
+  getGuardianEvent,
+  isGuardianActive,
+  isRegionOpen,
+  nextRenownRank,
+  playerCompanion,
+  renownRank,
+  rescuesLeftToday,
+} from '../lib/guardian-event.js'
+import {
   getEndEvent, isEventActive, endPhase, endOpensAt,
   startEndEvent, forceEndEvent, skipEndEventWait, syncEndWeakenForAll,
   endStatusBadge,
@@ -25,9 +42,120 @@ import {
   END_WEAKEN_PCT, SLEEP_MAX_LEVEL, LUNA_GRACE_MS, THE_END_LOCATION_ID,
 } from '../lib/end-event.js'
 
-// ── Overview ──────────────────────────────────────────────────────────────
+// ── Overview routing ───────────────────────────────────────────────────────
 
-function renderStatus(ctx) {
+function latestWorldEventKey(db, now = Date.now()) {
+  const candidates = []
+  const guardian = getGuardianEvent(db)
+  const end = getEndEvent(db)
+
+  if (guardian.startedAt) {
+    candidates.push({
+      key: 'guardian',
+      active: isGuardianActive(db, now),
+      startedAt: guardian.startedAt,
+    })
+  }
+  if (end.startedAt) {
+    candidates.push({
+      key: 'end',
+      active: isEventActive(db),
+      startedAt: end.startedAt,
+    })
+  }
+
+  if (!candidates.length) return null
+
+  const active = candidates
+    .filter(c => c.active)
+    .sort((a, b) => (b.startedAt ?? 0) - (a.startedAt ?? 0))
+  if (active.length) return active[0].key
+
+  candidates.sort((a, b) => (b.startedAt ?? 0) - (a.startedAt ?? 0))
+  return candidates[0].key
+}
+
+// ── Guardian of the Innocent ───────────────────────────────────────────────
+
+function renderGuardianStatus(ctx) {
+  const p = config.prefix
+  const db = ctx.db
+  const player = ctx.player ?? null
+  const now = Date.now()
+  const e = getGuardianEvent(db)
+  const active = isGuardianActive(db, now)
+  const totalDays = e.startedAt && e.endsAt
+    ? Math.max(1, Math.round((e.endsAt - e.startedAt) / 86400000))
+    : GUARDIAN.durationDays
+  const openRegions = REGIONS.filter(region => isRegionOpen(db, region, now))
+  const nextRegion = active ? REGIONS.find(region => !isRegionOpen(db, region, now)) : null
+  const unclaimed = COMPANIONS.filter(companion => !e.companions?.[companion.id]?.owner)
+
+  const lines = [
+    '🕊️ *GUARDIAN OF THE INNOCENT*',
+    '',
+    `_${GUARDIAN.intro}_`,
+    '',
+  ]
+
+  if (active) {
+    lines.push(`📅 Day *${eventDay(db, now)}*/${totalDays}  ·  ⏳ Ends in *${formatTimeLeft(Math.max(0, e.endsAt - now))}*`)
+  } else if (e.startedAt && (e.endedAt || now >= (e.endsAt ?? 0))) {
+    const endedAt = e.endedAt ?? e.endsAt ?? now
+    lines.push(`🔚 _This run has ended (${formatTimeLeft(Math.max(0, now - endedAt))} ago). Companions stay with their players._`)
+  } else {
+    lines.push('🔒 _This event has not started yet._')
+  }
+
+  lines.push('')
+  if (active) {
+    lines.push(`🗺️ Open locations: *${openRegions.length}/${REGIONS.length}*`)
+    if (openRegions.length) lines.push(`📍 Open now: *${openRegions.map(region => region.name).join('*, *')}*`)
+    if (nextRegion) {
+      lines.push(`⏳ Next opening: *${nextRegion.name}* in *${formatTimeLeft(Math.max(0, (e.startedAt + (nextRegion.opensOnDay - 1) * 86400000) - now))}*`)
+    }
+    lines.push(`⚔️ No level gate. Slavers size themselves to whoever walks in.`)
+  } else {
+    lines.push(`🗺️ Event locations: *${REGIONS.length}* total  ·  💞 One-of-one companions: *${COMPANIONS.length}*`)
+  }
+
+  if (player) {
+    const g = ensureGuardianState(player)
+    const rank = renownRank(g.freed)
+    const next = nextRenownRank(g.freed)
+    const companion = playerCompanion(player)
+
+    lines.push('', '👤 *Your standing*')
+    lines.push(
+      `🕊️ Freed: *${g.freed}*  ·  ${rank.emoji} *${rank.label}*` +
+      (next ? ` _(next: ${next.label} at ${next.min})_` : ''),
+    )
+    if (active) {
+      lines.push(
+        `🗺️ Location: *${g.region ? REGION_MAP[g.region]?.name ?? g.region : 'none yet'}*  ·  ` +
+        `Rescues left today: *${rescuesLeftToday(db, player, now)}*/${dailyCap(player)}`,
+      )
+    }
+    if (companion) {
+      lines.push(`💞 Companion: *${companion.name}*  ·  ${TYPE_BADGE[companion.type] ?? '🕊️ No type'}`)
+    }
+  }
+
+  lines.push('')
+  lines.push(`⛓️ Unclaimed companions: *${unclaimed.length}/${COMPANIONS.length}*`)
+  if (unclaimed.length) {
+    lines.push(`_The first player to free each captor and accept the request is the only one who can take that companion home._`)
+  }
+  lines.push('')
+  lines.push(`🗺️ *${p}guardian map*  ·  🚶 *${p}guardian travel <name>*`)
+  lines.push(`⚔️ *${p}rescue*  ·  💞 *${p}companion*  ·  🏆 *${p}guardian top*`)
+
+  return lines.join('\n')
+}
+
+// ── The End / Blue Band ────────────────────────────────────────────────────
+
+function renderEndStatus(ctx) {
   const p = config.prefix
   const db = ctx.db
   const e = getEndEvent(db)
@@ -166,19 +294,20 @@ export default {
   aliases:        ['endevent', 'theend', 'worldevent'],
   category:       'event',
   requiresPlayer: false,
-  description:    `${config.prefix}event — the current world event (The End / Blue Band)`,
+  description:    `${config.prefix}event — the latest world event and your standing in it`,
   subcommands: [
     { cmd: 'event',       desc: 'Current world event, how long it lasts, and your status' },
-    { cmd: 'event start', desc: 'Owner — begin the End\'s rampage and announce it' },
-    { cmd: 'event end',   desc: 'Owner — lift the aura server-wide (kill-switch)' },
-    { cmd: 'event skip',  desc: 'Owner — open the End\'s rift immediately (testing)' },
+    { cmd: 'event start', desc: 'Owner — The End only: begin the rampage and announce it' },
+    { cmd: 'event end',   desc: 'Owner — The End only: lift the aura server-wide' },
+    { cmd: 'event skip',  desc: 'Owner — The End only: open the rift immediately (testing)' },
   ],
 
   async run(ctx) {
     const action = String(ctx.args?.[0] ?? 'status').toLowerCase()
 
     if (action === 'status' || action === 'info') {
-      return ctx.reply(renderStatus(ctx))
+      const latest = latestWorldEventKey(ctx.db)
+      return ctx.reply(latest === 'guardian' ? renderGuardianStatus(ctx) : renderEndStatus(ctx))
     }
 
     if (['start', 'begin', 'end', 'stop', 'skip', 'ff', 'fastforward'].includes(action)) {
