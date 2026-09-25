@@ -126,6 +126,16 @@ export default {
     // duel — that is the whole point of the format-agnostic runner.
     const heldPremium = findHeldPremiumAbility(ctx.player, args.join(' '))
     if (heldPremium?.active) return runPremiumActive(ctx, heldPremium.id)
+    // Jack of All Trades has no active at all, so it used to fall through to the
+    // slot-ability path below and come back as "not found or not equipped" for an
+    // ability the player is holding. Answer it where it belongs instead.
+    if (heldPremium) {
+      return ctx.reply(
+        `${heldPremium.emoji ?? '✨'} *${heldPremium.name} has no active move.*\n` +
+        `It's a one-of-one, and this one is passive only: ${heldPremium.passiveDesc ?? ''}\n\n` +
+        `_It's already live in every fight you're in. *${p}ability* lists everything you hold and how each one fires._`,
+      )
+    }
 
     // Equipped abilities resolve on the PvE turn engine: everything below reads
     // bs.enemy and works a monster fight. A duel's battleState is type 'pvp'

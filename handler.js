@@ -35,9 +35,11 @@ import { runAfkScan } from './lib/afk-scan.js'
 // not just people the owner has already DM'd first. The Mond commands and
 // `.character` are here so the whole buy-a-character-with-Monds flow works in a
 // DM: `.monds buy` for the currency (the plugin is DM-only by design anyway),
-// `.character buy` to spend it. Story Mode is a DM-only feature by design (see
-// plugins/story.js), so it needs the same exemption, as does the unban appeal
-// (plugins/unban-me.js) — a banned user has nowhere else to start one.
+// `.character buy` to spend it. `.story` stays reachable in a DM on purpose, but
+// NOT to be played there — Story Mode is group-only, and plugins/story.js says so
+// itself; what a DM gets is the guide and the volume list, which is what a player
+// asking "how does this work" needs. It needs the same exemption, as does the
+// unban appeal (plugins/unban-me.js) — a banned user has nowhere else to start one.
 const DM_ALLOWED_COMMANDS = new Set(['premium', 'vip', 'topup', 'gems', 'buygems', 'code', 'mycode', 'linkcode', 'connectcode', 'season', 'seasons', 'seasoninfo', 'gm', 'gameshop', 'unban-me', 'unbanme', 'appeal', 'monds', 'mond', 'buymonds', 'mondshop', 'character', 'characters', 'char'])
 
 // Commands that survive EVERY lockout gate below (ban, jail, inn sleep,
@@ -430,6 +432,10 @@ const BATTLE_ALLOWED_COMMANDS = new Set([
   // ability you have is exactly what you want to do mid-fight, before spending
   // the turn on it with `.useability`.
   'ability', 'abilities', 'myabilities',
+  // The same plugin's standalone spellings (plugins/ability.js aliases). Still
+  // read-only — a slot swap mid-fight is harmless — but leaving them off would
+  // have a player told ".ability works, .equipability doesn't" in the same fight.
+  'equipability', 'unequipability',
   'inventory',
   'skillslot', 'skillslots', 'slots',
   'stats', 'stat', 'train',

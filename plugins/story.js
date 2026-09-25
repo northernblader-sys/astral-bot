@@ -25,6 +25,15 @@
  *   .story start           — begins/resumes playing beats in the player's
  *                            current chapter for whichever volume they last
  *                            entered
+ *   .story slot            — read-only: who holds this group's slot right now,
+ *                            and how many idle minutes it has left. Works with
+ *                            Story Mode on OR off, since "who's got it" is
+ *                            exactly what someone asks when it's off.
+ *
+ * Slot visibility: every change to the shared slot is posted into the group —
+ * claim, volume-complete release, detour release, `.story off` release and the
+ * 15-minute idle sweep (main.js). Before that, only the sweep spoke, so a group
+ * watching a story could not tell who was playing or when the baton moved.
  *
  * Delivery: beats are sent as separate sequential messages into the group
  * with a short delay between them (narrative pacing), never as one big
@@ -139,6 +148,52 @@ async function sendChoiceButtons(ctx, beat) {
 /** Option labels are authored with surrounding quotes; strip them for display. */
 function stripQuotes(label) {
   return String(label ?? '').replace(/^"|"$/g, '')
+}
+
+// ── Slot announcements ────────────────────────────────────────────────────────
+// The story slot is shared, group-wide state, and until now every change to it
+// was silent: claiming it printed nothing, finishing a volume freed it without a
+// word, a detour freed it without a word, and `.story off` dropped the holder
+// without a word. The only slot change anyone could ever SEE was the 15-minute
+// idle sweep in main.js. So a group watching a story had no idea who was playing,
+// when the baton passed, or why it suddenly passed. Every transition below now
+// posts one short line into the group, with the player tagged, and every one of
+// them fails silently (a missed announcement must never abort the story itself).
+
+/** "@23470..." — WhatsApp renders this as a real mention when it's in `mentions`. */
+const bareTag = (jid) => String(jid ?? '').replace(/@.*$/, '')
+
+/** One group-visible line about the slot. Never throws: the story comes first. */
+async function announceStory(ctx, text, mentions = []) {
+  await ctx.sock.sendMessage(ctx.sender, { text: String(text), mentions }).catch(err =>
+    ctx.logger?.warn?.({ err: err.message }, 'story.js: announceStory failed'))
+}
+
+/**
+ * Posts the "X has the slot" line when a claim is NEW. Called on every
+ * .story enter / .story start, but stays quiet when this player already held it —
+ * otherwise every beat continuation would re-announce the same holder and the
+ * group would read the bot stalling on its own narration.
+ */
+async function announceSlotClaimed(ctx, { wasHeld }) {
+  if (wasHeld) return
+  await announceStory(ctx,
+    `📖 *Story slot claimed*\n` +
+    `@${bareTag(ctx.from)} is playing now — one player at a time in this group.\n` +
+    `_Everyone else reads along. It frees itself after ${STORY_IDLE_MINUTES} idle minutes; ` +
+    `an admin can free it with *${config.prefix}story clear*. Check any time with *${config.prefix}story slot*._`,
+    [ctx.from],
+  )
+}
+
+/** Posts the "the slot is free again" line, with why. */
+async function announceSlotReleased(ctx, reason) {
+  await announceStory(ctx,
+    `📖 *Story slot is free*\n` +
+    `${reason}\n` +
+    `▸ *${config.prefix}story enter <volume>* — anyone, the slot is open\n` +
+    `▸ *${config.prefix}story slot* — who's holding it right now`,
+  )
 }
 
 /** "1, 2, or 3" / "1 or 2" — never hardcoded, since option counts vary. */
@@ -332,8 +387,10 @@ async function finishChapter(ctx, volumeId, chapter) {
     )
     // Volume finished — free the slot immediately rather than making the
     // next group member wait out a timeout that will never fire (this
-    // player has nothing left to run .story start on).
+    // player has nothing left to run .story start on). The group is told,
+    // because a silent release looks exactly like the bot stalling.
     await releaseStorySlot(ctx.sender)
+    await announceSlotReleased(ctx, `@${bareTag(ctx.from)} finished the volume — the slot is open for the next reader.`)
     return
   }
 
@@ -348,12 +405,28 @@ async function finishChapter(ctx, volumeId, chapter) {
   const nextGate = canStartChapter(getPlayer(ctx.db, ctx.from), volumeId)
   if (nextGate.allowed) {
     await sendLine(ctx, `Chapter ${chapter.num + 1} is ready. Run *${config.prefix}story start* to continue.`)
-  } else if (nextGate.reason === 'cooldown') {
+    // The slot stays with them: they can keep going right now.
+    return
+  }
+
+  if (nextGate.reason === 'cooldown') {
     const mins = Math.ceil((nextGate.retryAt - Date.now()) / 60000)
     const hrs = Math.floor(mins / 60)
     const remMins = mins % 60
     await sendLine(ctx, `Next chapter unlocks in *${hrs}h ${remMins}m*. Run *${config.prefix}story start* then.`)
+  } else {
+    await sendLine(ctx, `This volume is finished for you.`)
   }
+
+  // They cannot advance for hours, so the slot is dead weight in their hands and
+  // the rest of the group is locked out of Story Mode for nothing. Hand it back
+  // and SAY so — this is the release that used to be completely invisible, which
+  // is why the slot looked stuck after a chapter that plainly ended.
+  await releaseStorySlot(ctx.sender)
+  await announceSlotReleased(
+    ctx,
+    `@${bareTag(ctx.from)} finished chapter ${chapter.num} — the next one unlocks in hours, so the slot is open for someone else.`,
+  )
 }
 
 /**
@@ -542,6 +615,9 @@ export async function handleStoryChoiceReply(ctx, player, rawText) {
     await releaseStorySlot(ctx.sender)
     const hrs = option.detour.lockHours
     await sendLine(ctx, `💤 Run *${config.prefix}story start* again in ${hrs} hour${hrs === 1 ? '' : 's'} to continue.`)
+    // This release was completely silent before: the group watched a story stop
+    // mid-scene with no idea the baton had been handed back.
+    await announceSlotReleased(ctx, `@${bareTag(ctx.from)} went down a detour — their chapter waits for them, the slot is open.`)
     return true
   }
 
@@ -570,6 +646,10 @@ function storyGuide(volumeLines = []) {
     `  ▸ *${p}story* — this menu\n\n` +
     `*The slot*\n` +
     `  ▸ Only one player can be in a story at a time per group.\n` +
+    `  ▸ *${p}story slot* — who's holding it, and how long until it frees up.\n` +
+    `  ▸ Every change is posted in the group: when someone takes it, and when it ` +
+    `is handed back (volume finished, detour taken, Story Mode turned off, or the ` +
+    `${STORY_IDLE_MINUTES}-minute idle sweep).\n` +
     `  ▸ Go quiet for ${STORY_IDLE_MINUTES} minutes and the slot frees itself for ` +
     `the next person. *You are never removed from the group*, and your chapter ` +
     `is saved exactly where you left it — *${p}story start* picks it straight back up.\n` +
@@ -590,6 +670,7 @@ export default {
     { cmd: 'clear', desc: 'owner/mod: force-free the story slot in this group' },
     { cmd: 'enter <volume>', desc: 'enter a story volume (plays the intro once)' },
     { cmd: 'start', desc: 'begin or resume the current chapter' },
+    { cmd: 'slot', desc: 'who holds the story slot here, and how long until it frees' },
     { cmd: '(no args)', desc: 'volume list, how to play, and how the one-player slot works' },
   ],
 
@@ -615,14 +696,26 @@ export default {
       const stored = res.settings.storyEnabled === true
       // Turning it off frees whoever currently holds the slot — otherwise
       // it'd sit claimed until the 15-minute timeout sweep got to it, even
-      // though nothing they do can advance the story while it's off.
-      if (!stored) await releaseStorySlot(ctx.sender)
-      return ctx.reply(
-        `📖 Story Mode is now *${stored ? 'ON' : 'OFF'}* in this group.\n` +
+      // though nothing they do can advance the story while it's off. It used to
+      // drop them silently, so the holder's next `.story start` was the first
+      // anyone heard about it; now the release is announced to them by name.
+      let droppedJid = null
+      if (!stored) droppedJid = (await releaseStorySlot(ctx.sender))?.userJid ?? null
+      const droppedLine = droppedJid
+        ? `\n@${bareTag(droppedJid)} had the story slot — it's been released, and their chapter is saved where they left it.`
+        : ''
+      const sent =
+        `📖 Story Mode is now *${stored ? 'ON' : 'OFF'}* in this group.${droppedLine}\n` +
         (stored
           ? `Run *${config.prefix}story-mode* to see available volumes.`
-          : `_${config.prefix}story-mode, enter, and start won't work here until it's back on._`),
-      )
+          : `_${config.prefix}story-mode, enter, and start won't work here until it's back on._`)
+      // One send, mention list included, so the dropped holder is actually tagged
+      // rather than seeing a literal @number they have to squint at.
+      await ctx.sock.sendMessage(ctx.sender, {
+        text: sent,
+        mentions: droppedJid ? [droppedJid] : [],
+      }, { quoted: ctx.msg }).catch(() => ctx.reply(sent))
+      return
     }
 
     // ── CLEAR (owner or bot mod only) ───────────────────────────────────
@@ -642,9 +735,8 @@ export default {
       if (!held) return ctx.reply(`📖 No story slot is currently held in this group.`)
 
       await releaseStorySlot(ctx.sender)
-      const bareTag = held.userJid.replace(/@.*$/, '')
       await ctx.sock.sendMessage(ctx.sender, {
-        text: `📖 Story slot cleared. @${bareTag} was holding it. Anyone can run *${config.prefix}story start* now.`,
+        text: `📖 Story slot cleared. @${bareTag(held.userJid)} was holding it. Anyone can run *${config.prefix}story start* now.`,
         mentions: [held.userJid],
       }, { quoted: ctx.msg }).catch(() => ctx.reply(`📖 Story slot cleared.`))
       return
@@ -662,6 +754,35 @@ export default {
       return ctx.reply(`📖 Story Mode is group only. Run it in a group to play.`)
     }
 
+    // ── SLOT (read-only) ────────────────────────────────────────────────
+    // "Who's got it, and how long until it frees up?" The slot is group-wide
+    // state that every other player is waiting on, and until this existed the
+    // only way to find out was to try to take it and get refused.
+    if (action === 'slot' || action === 'who' || action === 'status') {
+      const slot = await getStorySlot(ctx.sender)
+      if (!slot) {
+        return ctx.reply(
+          `📖 *Story slot: free.*\n` +
+          `Nobody is playing in this group right now.\n` +
+          `▸ *${config.prefix}story enter <volume>* — take it`,
+        )
+      }
+      const minsLeft = Math.max(0, Math.ceil((STORY_IDLE_MINUTES * 60_000 - (Date.now() - slot.lastActivityAt)) / 60_000))
+      // Sent with an explicit mention list so @tag renders as a real mention,
+      // the same way the sweep in main.js and `.story clear` do it.
+      await ctx.sock.sendMessage(ctx.sender, {
+        text:
+          `📖 *Story slot: held*\n` +
+          `@${bareTag(slot.userJid)} is playing right now.\n` +
+          `▸ Frees itself in *${minsLeft}* minute${minsLeft === 1 ? '' : 's'} if they go quiet\n` +
+          `▸ An owner or mod can free it now with *${config.prefix}story clear*`,
+        mentions: [slot.userJid],
+      }, { quoted: ctx.msg }).catch(() => ctx.reply(
+        `📖 *Story slot: held* by @${bareTag(slot.userJid)} — about ${minsLeft} minute(s) until it frees itself.`,
+      ))
+      return
+    }
+
     // Off by default in every group — an owner or mod has to flip it on
     // with `.story on` before `enter`/`start` do anything here. This is the
     // only gate on playing: past it, any registered player in the group can
@@ -672,6 +793,46 @@ export default {
         `🚫 Story Mode is off in this group.\n` +
         `_An owner or mod can turn it on with *${config.prefix}story on*._`,
       )
+    }
+
+    // ── Pre-flight: don't claim the slot for a turn that can't be played ─────
+    // `.story start` claims the group's only slot and THEN asks whether the
+    // player may actually play — so a reader sitting on a detour lock or a daily
+    // chapter cooldown took the slot, got refused, and handed it straight back.
+    // Now that both of those moves are announced to the group, that sequence
+    // posts "X claimed the slot" followed by "the slot is free" for a command
+    // that did nothing at all. Checking first means the player just gets their
+    // answer and the group sees nothing.
+    if (action === 'start') {
+      const pre = getPlayer(ctx.db, ctx.from)
+      const entered = Object.entries(pre.storyProgress?.volumes ?? {})
+      if (entered.length) {
+        const [preVolumeId] = entered.find(([, pp]) => !pp.completed) ?? entered[0]
+        const preVolume = getVolume(preVolumeId)
+        const detour = checkDetourLock(pre, preVolumeId)
+        if (detour.locked) {
+          const mins = Math.ceil((detour.retryAt - Date.now()) / 60000)
+          const hrs = Math.floor(mins / 60)
+          return ctx.reply(`💤 Not yet. Try again in *${hrs}h ${mins % 60}m*.`)
+        }
+        const preGate = canStartChapter(pre, preVolumeId)
+        if (!preGate.allowed) {
+          if (preGate.reason === 'cooldown') {
+            const mins = Math.ceil((preGate.retryAt - Date.now()) / 60000)
+            const hrs = Math.floor(mins / 60)
+            return ctx.reply(
+              `⏳ *Next chapter isn't ready yet.*\n` +
+              `You've used today's chapter${isPremiumActive(pre) ? 's' : ''} (${isPremiumActive(pre) ? '3/day with premium' : '1/day'}).\n` +
+              `Try again in *${hrs}h ${mins % 60}m*.`,
+            )
+          }
+          return ctx.reply(
+            preVolume
+              ? `✅ You've already completed *${preVolume.volumeTitle}*. Nothing left to play here.`
+              : `This volume is finished for you.`,
+          )
+        }
+      }
     }
 
     // Turning Story Mode on IS the permission. It is off by default in every
@@ -691,6 +852,7 @@ export default {
       // with the "let them finish" reply if someone else does. Checked
       // before the enter/start-specific logic below so neither command can
       // run for a second player while the slot is held.
+      const wasHeld = (await getStorySlot(ctx.sender))?.userJid === ctx.from
       const claim = await claimStorySlot(ctx.sender, ctx.from)
       if (!claim.ok) {
         const holderTag = claim.holderJid.replace(/@.*$/, '')
@@ -699,12 +861,17 @@ export default {
             `📖 *The story slot is taken.*\n` +
             `@${holderTag} is playing right now — one player at a time per group.\n\n` +
             `_It frees up on its own after ${STORY_IDLE_MINUTES} minutes of inactivity, ` +
-            `or an admin can run *${config.prefix}story clear*._`,
+            `or an admin can run *${config.prefix}story clear*. ` +
+            `*${config.prefix}story slot* shows who's holding it._`,
           mentions: [claim.holderJid],
         }, { quoted: ctx.msg }).catch(() => {})
         return
       }
+      // The claim itself is visible to the group, so the baton passing is never
+      // a silent state change (see announceSlotClaimed above).
+      await announceSlotClaimed(ctx, { wasHeld })
     }
+
 
     if (action === 'enter') {
       const nameQuery = ctx.args.slice(1).join(' ')
