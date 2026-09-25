@@ -761,5 +761,77 @@
     "megaStoneId": "salamencite",
     "effect": null,
     "description": "A mysterious stone that lets a held Salamence Mega Evolve in battle."
+  },
+  {
+    "id": "poke_ball",
+    "name": "Poké Ball",
+    "category": "ball",
+    "rarity": "common",
+    "currency": "solars",
+    "buyPrice": 200,
+    "sellPrice": 50,
+    "effect": null,
+    "description": "A device for catching wild Pokémon. Works best when the target is weakened.",
+    "usableInBattle": false
+  },
+  {
+    "id": "poke_great_ball",
+    "name": "Great Ball",
+    "category": "ball",
+    "rarity": "uncommon",
+    "currency": "solars",
+    "buyPrice": 500,
+    "sellPrice": 125,
+    "effect": null,
+    "description": "A good, high-performance Ball with a higher catch rate than a Poké Ball.",
+    "usableInBattle": false
+  },
+  {
+    "id": "poke_ultra_ball",
+    "name": "Ultra Ball",
+    "category": "ball",
+    "rarity": "rare",
+    "currency": "solars",
+    "buyPrice": 1000,
+    "sellPrice": 250,
+    "effect": null,
+    "description": "An ultra-high-performance Ball with a much higher catch rate.",
+    "usableInBattle": false
+  },
+  {
+    "id": "poke_master_ball",
+    "name": "Master Ball",
+    "category": "ball",
+    "rarity": "legendary",
+    "currency": "gems",
+    "buyPrice": 150,
+    "sellPrice": 0,
+    "effect": null,
+    "description": "The best Ball. It never fails to catch a wild Pokémon.",
+    "usableInBattle": false
+  },
+  {
+    "id": "poke_revive",
+    "name": "Revive",
+    "category": "revive",
+    "rarity": "uncommon",
+    "currency": "solars",
+    "buyPrice": 1500,
+    "sellPrice": 375,
+    "effect": null,
+    "description": "Revives a fainted Pokémon with half of its HP.",
+    "usableInBattle": false
+  },
+  {
+    "id": "poke_max_revive",
+    "name": "Max Revive",
+    "category": "revive",
+    "rarity": "rare",
+    "currency": "gems",
+    "buyPrice": 15,
+    "sellPrice": 0,
+    "effect": null,
+    "description": "Revives a fainted Pokémon with all of its HP.",
+    "usableInBattle": false
   }
 ]
