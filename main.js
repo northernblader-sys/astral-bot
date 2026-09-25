@@ -17,7 +17,6 @@ import { seedRuntimeData, IS_PERSISTENT } from './lib/runtime-paths.js'
 import './lib/fonts.js' // registers bundled fonts before any canvas draw — see lib/fonts.js
 import makeWASocket, {
   useMultiFileAuthState,
-  fetchLatestBaileysVersion,
   DisconnectReason,
   makeCacheableSignalKeyStore,
   Browsers,
@@ -33,6 +32,9 @@ import { fileURLToPath } from 'url'
 import { config, bots } from './config.js'
 import { wrapSendWithRateLimit } from './lib/send-rate-limiter.js'
 import { createInboundScheduler, inboundMessageKey } from './lib/inbound-scheduler.js'
+import { resolveBaileysVersion, buildSocketVersionOption } from './lib/baileys-version.js'
+import { planReconnect, countsTowardFlap } from './lib/reconnect-policy.js'
+import { startLoopLagMonitor, getLoopLagSnapshot } from './lib/loop-lag.js'
 import { setHealthProvider } from './lib/bot-health.js'
 import { loadPlugins } from './lib/plugin-manager.js'
 import { makeHandler } from './handler.js'
@@ -1059,6 +1061,25 @@ function runStallWatchdog(instances, db) {
       )
     }
 
+    // ── Diagnostic: is this the app starving the socket? ───────────────────
+    // Logged, never acted on. A high p99 alongside a stuck queue means the
+    // process cannot service the websocket, and a reconnect would only throw
+    // the backlog away — which is exactly the wrong medicine. Low p99 with a
+    // stuck queue means a handler is awaiting something that never settles.
+    const lag = getLoopLagSnapshot()
+    if (lag?.starved || lag?.starvedRecently) {
+      // starvedRecently, not just starved: the tick runs once a minute, and the
+      // quiet window AFTER a stall already replaced the current one. See
+      // lib/loop-lag.js — this is the difference between the log line being
+      // useful and it never firing.
+      globalErrorLog(
+        `🐌 [${inst.botName}] event loop ${lag.starved ? 'is blocked' : `was blocked ${Math.round((lag.lastStarvedAgoMs ?? 0) / 1000)}s ago`}: ` +
+        `p99 ${Math.round(lag.p99Ms)}ms, worst ${Math.round(lag.worstMs)}ms in ${lag.windows} windows (threshold ${lag.starveThresholdMs}ms). ` +
+        `Baileys' keepalive reads that as a dead link and self-kills the socket over it. ` +
+        `This is app load (db flushes, media, sync handlers) — not the network, and not a Baileys bug.`,
+      )
+    }
+
     // ── Inbound side — evidence #1: the scheduler itself is wedged ─────────
     // Messages were accepted (pending > 0) but are not draining, or a handler
     // was detached as stuck (lib/inbound-scheduler.js). This is the "bot
@@ -1073,7 +1094,8 @@ function runStallWatchdog(instances, db) {
         forceReconnect(
           inst, sock,
           `inbound stalled ${Math.round((now - inst.inboundStallSince) / 1000)}s ` +
-          `(pending=${sch.pending} stuck=${sch.stuck} active=${sch.active}/${sch.limits.concurrency} lanes=${sch.laneCount})`,
+          `(pending=${sch.pending} stuck=${sch.stuck} active=${sch.active}/${sch.limits.concurrency} lanes=${sch.laneCount}` +
+          `${lag ? ` loopP99=${Math.round(lag.p99Ms)}ms loopWorst=${Math.round(lag.worstMs)}ms` : ''})`,
         )
         continue
       }
@@ -1161,6 +1183,11 @@ function createBotInstance(botCfg) {
     currentSock: null,
     connectInFlight: false,
     reconnectTimer: null,
+    // How many transient closes in a row this instance has taken (reset on
+    // 'open'). lib/reconnect-policy.js uses it to escalate from a 3s retry to
+    // a cooldown + alert, which is what keeps "come back fast after a blink"
+    // from turning into "hammer WhatsApp for an hour during a real outage".
+    transientCloseStreak: 0,
     // Bounded inbound work queue for the currently active socket. Retired
     // sockets clear its pending messages during connection.close.
     inboundScheduler: null,
@@ -1211,6 +1238,20 @@ function createBotInstance(botCfg) {
     }, delayMs)
   }
 
+  /**
+   * The reconnect knobs this instance hands lib/reconnect-policy.js, built once
+   * so the forced path and the ordinary close path cannot drift apart (they
+   * used to be two hardcoded numbers, 5_000 and 60_000, with the reasoning for
+   * each written down only in the other file).
+   */
+  const reconnectPolicy = {
+    fastBaseMs: config.reconnectFastBaseMs,
+    fastMaxMs: config.reconnectFastMaxMs,
+    fastMaxAttempts: config.reconnectFastMaxAttempts,
+    slowMs: config.reconnectSlowMs,
+    forcedMs: config.reconnectForcedMs,
+  }
+
   const openConnection = async function connect(db) {
     await mkdir(inst.authFolder, { recursive: true })
 
@@ -1239,11 +1280,33 @@ function createBotInstance(botCfg) {
     }
 
     const { state, saveCreds } = await useMultiFileAuthState(inst.authFolder)
-    const { version, isLatest } = await fetchLatestBaileysVersion()
-    log('📶 Baileys version', version.join('.'), isLatest ? '(latest)' : '(outdated)')
+    // Which WhatsApp Web build to advertise. Bounded on purpose.
+    //
+    // This used to be `await fetchLatestBaileysVersion()`, i.e. an axios GET
+    // against raw.githubusercontent.com with NO timeout, sitting in front of
+    // makeWASocket() on every connect AND every reconnect. A route that
+    // blackholes packets (the usual aftermath of the same network blip that
+    // dropped the websocket) meant connect() never reached makeWASocket, no
+    // 'close' ever fired to trigger a retry, nothing was logged, and PM2 kept
+    // reporting the process as online. That is a permanent, self-inflicted
+    // version of "the bot is up but nobody gets an answer", for a 26-byte file
+    // whose contents are already shipped inside the package we depend on.
+    // lib/baileys-version.js resolves within config.baileysVersionFetchTimeoutMs
+    // and falls back to Baileys' own baked-in default, which is by definition
+    // the right value for the version actually installed.
+    const waVersion = await resolveBaileysVersion({
+      timeoutMs: config.baileysVersionFetchTimeoutMs,
+      log: msg => globalErrorLog(`ℹ️ [${inst.botName}] ${msg}`),
+    })
+    // Spread, never `{ version: undefined }` — DEFAULT_CONNECTION_CONFIG is
+    // merged with a spread, so an explicit undefined would overwrite the
+    // library default instead of falling back to it.
+    const versionOption = buildSocketVersionOption(waVersion)
+    log('📶 WhatsApp version', versionOption.version ? versionOption.version.join('.') : '(library default)',
+      `[source: ${waVersion.source}, ${waVersion.waitedMs}ms]`)
 
     const sock = makeWASocket({
-      version,
+      ...versionOption,
       auth: {
         creds: state.creds,
         // Wraps the raw signal keystore with an in-memory cache — without
@@ -1521,6 +1584,9 @@ function createBotInstance(botCfg) {
       if (connection === 'open') {
         inst.wasEverConnected = true
         inst.unpairedRetryCount = 0
+        // The link is demonstrably fine now, so the next blink earns the fast
+        // retry again instead of inheriting an hour-old grudge.
+        inst.transientCloseStreak = 0
         inst.openedAt = Date.now()
         // Fresh socket, fresh inbound clock. Without this the watchdog would
         // measure silence from before the reconnect and immediately kill the
@@ -1616,12 +1682,17 @@ function createBotInstance(botCfg) {
         log('⚠️ Connection closed. statusCode:', statusCode)
 
         if (inst.forcedReconnect) {
-          // Nothing sets this any more — the inbound-stall watchdog that used
-          // to was removed (see runStallWatchdog). Kept so a deliberate
-          // in-process reconnect (`inst.forcedReconnect = true; sock.end()`)
-          // still comes back fast if one is ever added again.
+          // Set by forceReconnect() below — runStallWatchdog calling it is the
+          // whole point of that flag (this comment used to claim nothing set it
+          // any more, which was already wrong when the watchdog was re-added;
+          // deleting this branch on the strength of it would make every forced
+          // reconnect wait the ordinary 60s instead of 5).
           inst.forcedReconnect = false
-          inst.scheduleReconnect(db, 5_000, 'watchdog forced reconnect')
+          inst.scheduleReconnect(
+            db,
+            planReconnect({ forced: true, policy: reconnectPolicy }).delayMs,
+            'watchdog forced reconnect',
+          )
           return
         }
 
@@ -1676,7 +1747,31 @@ function createBotInstance(botCfg) {
           return
         }
 
-        inst.scheduleReconnect(db, 60_000, `connection closed (${statusCode ?? 'unknown'})`)
+        // Everything without a rule above used to wait a flat 60s. That is the
+        // right wait for a logout and the wrong one for a hiccup — and the
+        // common hiccups here are self-inflicted: Baileys' keepalive calls
+        // end(Boom('Connection was lost', 408)) whenever the event loop is too
+        // busy to service a frame within keepAliveIntervalMs + 5s (see
+        // lib/loop-lag.js for why a busy db.write() can do exactly that). Each
+        // such close cost sixty silent seconds, and the scheduler.close() above
+        // threw away every command typed during them: "online, ignoring
+        // everyone, then fine again" for the rest of the busy minute.
+        const plan = planReconnect({
+          statusCode,
+          consecutiveFast: inst.transientCloseStreak,
+          policy: reconnectPolicy,
+        })
+        if (plan.alert) {
+          // Loud on purpose: 403/411/500 and an unrecoverable flap are all
+          // cases where retrying is not the answer and a human is.
+          globalErrorLog(`🚨 [${inst.botName}] ${plan.label}`)
+        }
+        if (countsTowardFlap(plan)) inst.transientCloseStreak++
+        else inst.transientCloseStreak = 0
+        // `?? 60_000` is unreachable today (the only null delay is 401, handled
+        // above) and kept so that adding a code to the policy cannot silently
+        // schedule a zero-delay reconnect loop.
+        inst.scheduleReconnect(db, plan.delayMs ?? 60_000, plan.label)
       }
     })
 
@@ -1706,6 +1801,10 @@ function createBotInstance(botCfg) {
 // ── Boot ───────────────────────────────────────────────────────────────────
 async function main() {
   globalLog(`🚀 Starting ${bots.length} bot instance(s), sharing one database…`)
+  // Started first, on purpose: "the bot went slow at 03:00" is only answerable
+  // afterwards if the loop delay was being sampled the whole time. Diagnostic
+  // only — see lib/loop-lag.js for what the number means.
+  startLoopLagMonitor({ windowMs: config.loopLagWindowMs, starveMs: config.loopLagStarveMs })
   const { passed, errors } = runValidation()
   if (!passed) {
     errors.forEach(e => globalLog('❌ Data validation failure:', e))
@@ -1753,6 +1852,7 @@ async function main() {
   // rather than a snapshot object so it can never go stale.
   setHealthProvider(() => ({
     uptimeSec: Math.floor(process.uptime()),
+    loopLag: getLoopLagSnapshot(),
     instances: instances.map(inst => {
       const sock = inst.activeSock
       const rl = sock?.__rateLimiter ?? null
@@ -1764,6 +1864,7 @@ async function main() {
         inboundCount: inst.inboundCount,
         lastForcedReconnectAt: inst.lastForcedReconnectAt,
         reconnectPending: Boolean(inst.reconnectTimer),
+        transientCloseStreak: inst.transientCloseStreak,
         inbound: inst.inboundScheduler ? {
           active: inst.inboundScheduler.active,
           pending: inst.inboundScheduler.pending,

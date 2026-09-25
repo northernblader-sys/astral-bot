@@ -312,6 +312,51 @@ export const config = {
   // hung command (untimed API call, stuck db flush) can no longer deaf the
   // whole bot. See lib/inbound-scheduler.js's header for the full story.
   inboundJobTimeoutMs: Math.max(10_000, parseInt(env('INBOUND_JOB_TIMEOUT_MS', '180000'), 10) || 180_000),
+
+  /**
+   * How long the connect path may wait for the "which WhatsApp Web build
+   * should I advertise?" probe before using the version baked into the
+   * installed Baileys. See lib/baileys-version.js — the point of the deadline
+   * is that this call sits in front of makeWASocket() on every reconnect, so
+   * an untimed version of it turns a blackholed github raw endpoint into a
+   * permanently deaf-but-online bot. Lower it if your VPS has no route to
+   * raw.githubusercontent.com at all (then the probe is pure latency on every
+   * reconnect); set it high only if you deliberately bump the WA version
+   * without upgrading Baileys.
+   */
+  baileysVersionFetchTimeoutMs: Math.max(500, parseInt(env('BAILEYS_VERSION_FETCH_TIMEOUT_MS', '5000'), 10) || 5_000),
+
+  /**
+   * Reconnect pacing for a closed socket — lib/reconnect-policy.js.
+   *
+   * Transient closes (408 Connection was lost, 428, 503) start at
+   * reconnectFastBaseMs and double to reconnectFastMaxMs, because the most
+   * common cause of 408 is Baileys' own keepalive noticing a busy event loop,
+   * and a flat 60s wait for that was itself the reported outage. After
+   * reconnectFastMaxAttempts in a row it gives up on the fast lane, waits
+   * reconnectSlowMs, and logs an alert so a real outage can't become an
+   * endless reconnect machine (which is how numbers get banned).
+   */
+  reconnectFastBaseMs: Math.max(250, parseInt(env('RECONNECT_FAST_BASE_MS', '3000'), 10) || 3_000),
+  reconnectFastMaxMs: Math.max(1_000, parseInt(env('RECONNECT_FAST_MAX_MS', '30000'), 10) || 30_000),
+  reconnectFastMaxAttempts: Math.max(1, parseInt(env('RECONNECT_FAST_MAX_ATTEMPTS', '4'), 10) || 4),
+  reconnectSlowMs: Math.max(5_000, parseInt(env('RECONNECT_SLOW_MS', '60000'), 10) || 60_000),
+  // What the stall watchdog waits after IT ends a socket. Deliberately not the
+  // 60s used for a real logout: the watchdog only reconnects on positive
+  // evidence of a wedge, and the sessions a forced reconnect is trying to
+  // renegotiate get stale if the wait is long.
+  reconnectForcedMs: Math.max(0, parseInt(env('RECONNECT_FORCED_MS', '5000'), 10) || 5_000),
+
+  /**
+   * Event-loop lag sampling (lib/loop-lag.js), surfaced by `.health`. This is
+   * the number that distinguishes "Baileys is broken" from "this process is
+   * too busy to service Baileys" — with the whole database being
+   * JSON.stringify'ed on every flush, the second one is a real and recurring
+   * possibility. Diagnostic only: nothing reconnects because of it, in line
+   * with the stall watchdog's "never act on silence alone" rule.
+   */
+  loopLagWindowMs: Math.max(250, parseInt(env('LOOP_LAG_WINDOW_MS', '5000'), 10) || 5_000),
+  loopLagStarveMs: Math.max(1, parseInt(env('LOOP_LAG_STARVE_MS', '500'), 10) || 500),
 }
 
 /**

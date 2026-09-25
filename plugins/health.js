@@ -65,6 +65,9 @@ export default {
         lines.push(`  watchdog reconnect: ${ago(inst.lastForcedReconnectAt)}`)
       }
       if (inst.reconnectPending) lines.push(`  reconnect pending ⏳`)
+      if (inst.transientCloseStreak) {
+        lines.push(`  ⚠️ ${inst.transientCloseStreak} transient close(s) in a row — the link is flapping or the loop is too busy to answer the keepalive`)
+      }
 
       const inbound = inst.inbound
       if (inbound) {
@@ -101,10 +104,25 @@ export default {
     lines.push(`  last task: ${q.lastTaskLabel ?? '—'} took ${q.lastTaskDurationMs ?? '—'}ms`)
     lines.push(`  slow tasks (>3s): ${q.slowTaskCount}`)
 
+    const lag = snap.loopLag
+    lines.push('')
+    lines.push(`🐌 *Event loop*`)
+    if (lag) {
+      lines.push(`  p99 delay: ${Math.round(lag.p99Ms)}ms (worst ${Math.round(lag.worstMs)}ms ever, in ${lag.windows} windows)`)
+      lines.push(lag.starved
+        ? `  🔴 BLOCKED NOW — the process cannot service the socket this fast; Baileys reads that as a dead link and self-kills it. Not a Baileys bug.`
+        : lag.starvedRecently
+          ? `  🟠 was blocked ${Math.round((lag.lastStarvedAgoMs ?? 0) / 1000)}s ago (threshold ${lag.starveThresholdMs}ms, ${lag.starvedWindows} starved window(s))`
+          : `  🟢 responsive (starves above ${lag.starveThresholdMs}ms)`)
+    } else {
+      lines.push(`  (not sampling — started by main.js only in the WhatsApp process)`)
+    }
+
     lines.push('')
     lines.push(`_High "send queue"/"oldest" = replies are rate-limited (bot is behind)._`)
     lines.push(`_Climbing "inbound waiting" = command work is backed up; different senders still run concurrently, and the queue is bounded._`)
-    lines.push(`_A stale "last inbound msg" while people are messaging points to delivery/decryption trouble rather than a command queue.`)
+    lines.push(`_A stale "last inbound msg" while people are messaging points to delivery/decryption trouble rather than a command queue._`)
+    lines.push(`_A red "Event loop" line means the bot is starved by its own work — reconnecting would only discard the queued commands._`)
 
     return ctx.reply(lines.join('\n'))
   },
