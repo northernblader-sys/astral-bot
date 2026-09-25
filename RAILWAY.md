@@ -176,3 +176,23 @@ inbound scheduler, the send queue, the DB write queue and — since the
 three things that were causing the reported slowness are documented at the top
 of `main.js` (inbound-stall watchdog), `lib/reconnect-policy.js` and
 `lib/baileys-version.js`.
+
+### `Failed to decrypt message with any known session...` in the logs
+
+Expected occasionally (a stale session with one sender's device), harmless in
+ones and twos — the message is dropped and that sender gets no reply. What
+matters is the pair of lines around it: since 2026-09-25 the log names the
+sender, the device and the real reason (`Bad MAC`, `MessageCounterError`, …)
+instead of just the generic wrapper, and `.health` shows both
+`last inbound msg` (delivery) and `last DECRYPTED msg` (readability). If
+delivery is fresh but decryption is stale, messages are arriving and Baileys
+cannot open them.
+
+A sustained storm — the watchdog reconnects once after 10 failures in 10
+minutes with nothing decrypting, which renegotiates the sessions. If the storm
+SURVIVES that reconnect, the log says so and it is almost always this: **the
+same number is logged in somewhere else** (a local `npm run start:whatsapp`
+left running, an old Railway deploy, a second app on the same
+`AUTH_FOLDER`). Two sockets on one session fight over the same Signal state and
+WhatsApp closes one with statusCode 440 — which `.health` also reports. Stop
+the other instance first; only re-pair the number if it is genuinely alone.

@@ -61,6 +61,25 @@ export default {
       lines.push(`*${inst.botName}* — ${inst.online ? '🟢 online' : '🔴 offline'}`)
       lines.push(`  connected: ${ago(inst.openedAt)}`)
       lines.push(`  last inbound msg: ${ago(inst.lastInboundAt)} (${inst.inboundCount} this session)`)
+      // Delivery ≠ readability: an undecryptable message still arrives as a
+      // CIPHERTEXT stub whose `.message` is empty, and those stubs used to
+      // keep "last inbound" looking healthy while every real command was
+      // being dropped. This is the pair that tells those apart.
+      lines.push(`  last DECRYPTED msg: ${ago(inst.lastDecryptOkAt)}`)
+      if (inst.stubCount) {
+        lines.push(`  ⚠️ ${inst.stubCount} undecryptable msg(s) this session (last ${ago(inst.lastStubAt)}) — those senders got no reply`)
+      }
+      const dec = inst.decrypt
+      if (dec && dec.total) {
+        lines.push(`  🔓 ${dec.total} decrypt failure(s) in the last ${Math.round(dec.windowMs / 1000)}s across ${dec.distinctSenders} sender(s)`)
+        if (dec.topSenders) lines.push(`     senders: ${dec.topSenders}`)
+        for (const s of dec.sample ?? []) {
+          lines.push(`     · ${s.sender}${s.device ? `:${s.device}` : ''} — ${s.reason} (${Math.round(s.agoMs / 1000)}s ago)`)
+        }
+      }
+      if (inst.sessionConflictAt && Date.now() - inst.sessionConflictAt < 30 * 60_000) {
+        lines.push(`  🚩 statusCode 440 (session conflict) ${ago(inst.sessionConflictAt)} — this number is logged in somewhere else; that alone causes Bad-MAC decryption failures`)
+      }
       if (inst.lastForcedReconnectAt) {
         lines.push(`  watchdog reconnect: ${ago(inst.lastForcedReconnectAt)}`)
       }
@@ -121,7 +140,8 @@ export default {
     lines.push('')
     lines.push(`_High "send queue"/"oldest" = replies are rate-limited (bot is behind)._`)
     lines.push(`_Climbing "inbound waiting" = command work is backed up; different senders still run concurrently, and the queue is bounded._`)
-    lines.push(`_A stale "last inbound msg" while people are messaging points to delivery/decryption trouble rather than a command queue._`)
+    lines.push(`_"last inbound msg" counts DELIVERY; "last DECRYPTED msg" is the one that matters — if the first is fresh and the second is stale, messages are arriving but Baileys cannot open them (those senders get no reply)._`)
+    lines.push(`_A 440 line means the number is connected twice; one socket being closed there is enough to break the Signal session and produce the Bad MAC failures._`)
     lines.push(`_A red "Event loop" line means the bot is starved by its own work — reconnecting would only discard the queued commands._`)
 
     return ctx.reply(lines.join('\n'))

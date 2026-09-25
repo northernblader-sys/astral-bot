@@ -31,6 +31,14 @@ import { join as pathJoin, dirname as pathDirname } from 'path'
 import { fileURLToPath } from 'url'
 import { config, bots } from './config.js'
 import { wrapSendWithRateLimit } from './lib/send-rate-limiter.js'
+import {
+  DECRYPT_FAIL_RE,
+  captureLibsignalLine,
+  createDecryptLedger,
+  createReasonStash,
+  extractDecryptContext,
+  formatDecryptLog,
+} from './lib/decrypt-forensics.js'
 import { createInboundScheduler, inboundMessageKey } from './lib/inbound-scheduler.js'
 import { resolveBaileysVersion, buildSocketVersionOption } from './lib/baileys-version.js'
 import { planReconnect, countsTowardFlap } from './lib/reconnect-policy.js'
@@ -102,8 +110,22 @@ const SPAM_PATTERNS = [
 // 'Session error' and 'rate-overlimit' are the ONLY signals that explain the
 // "bot ignores everyone but spawns keep coming" outage. Filtering them made
 // that outage undiagnosable — the errors were happening, they just never
-// reached the logs. They are rare (only on real faults), so they cost no
-// noise.
+// reached the logs.
+//
+// But note what the old claim missed (fixed 2026-09): the token list above is
+// matched anywhere in the chunk, and libsignal prints its reason line and its
+// stack as ONE console.error() call —
+//
+//   console.error("Session error:" + e, e.stack)
+//
+// — whose stack contains 'SessionCipher' / 'verifyMAC' / 'decryptWithSessions'.
+// So the generic "Failed to decrypt…" line got through while the line that
+// actually said WHY was dropped, every time. libsignal does not use Baileys'
+// logger, so makeBaileysLogger never saw it either. That is why hours of these
+// failures produced no usable diagnosis. installSignalConsoleBridge() below
+// now lifts the reason out of that chunk before the filter sees it and hands
+// it to the per-instance ledger; the cleaned-up line is logged by
+// recordSignalFailure() with a timestamp, the bot name and the sender.
 function isSpam(str) {
   if (typeof str !== 'string') return false
   return SPAM_PATTERNS.some(p => str.includes(p))
@@ -119,6 +141,62 @@ process.stderr.write = (chunk, ...args) => {
   return _stderrWrite(chunk, ...args)
 }
 
+// ── libsignal's console output → the per-instance ledger ───────────────────
+// libsignal (session_cipher.js, decryptWithSessions) prints the ONLY line that
+// names the real failure reason with a bare console.error(), which the stream
+// filter above and every logger in Baileys both miss. Wrap the console methods
+// to lift the reason out (captureLibsignalLine) before SPAM_PATTERNS can eat
+// it, and stash it for the very next Baileys logger error — which is the call
+// that knows which instance and which sender the failure belongs to. Order is
+// guaranteed: libsignal prints, then throws, then Baileys catches and logs.
+const signalReasons = createReasonStash({ ttlMs: 5_000, max: 32 })
+
+/**
+ * Flattens console/logger args into one string for pattern matching.
+ *
+ * Object args are JSON-included on purpose: the stream filter this replaces
+ * matched the FORMATTED output, so `console.log('Remote', { registrationId,
+ * … })` used to be recognised as credential noise and dropped. Matching only
+ * `a.message` would let every such object through — i.e. the bridge would
+ * quietly remove a filter that exists to keep session material out of the
+ * logs. Error fields are lifted out first because a bare Error serializes to
+ * `{}` and would hide the reason.
+ */
+function extractLogText(args) {
+  return args
+    .map(a => {
+      if (typeof a === 'string') return a
+      if (a instanceof Error) return `${a.message} ${a.stack ?? ''}`
+      if (a && typeof a === 'object') {
+        const bits = []
+        if (typeof a.message === 'string') bits.push(a.message)
+        if (typeof a.err?.message === 'string') bits.push(a.err.message)
+        if (typeof a.msg === 'string') bits.push(a.msg)
+        try { bits.push(JSON.stringify(a)) } catch { /* circular — the bits above still match */ }
+        return bits.join(' ')
+      }
+      return a == null ? '' : String(a)
+    })
+    .join(' ')
+    .trim()
+}
+
+function installSignalConsoleBridge() {
+  const originals = { error: console.error.bind(console), warn: console.warn.bind(console), log: console.log.bind(console) }
+  for (const level of ['error', 'warn', 'log']) {
+    console[level] = (...args) => {
+      const captured = captureLibsignalLine(...args)
+      if (captured) {
+        signalReasons.remember(extractLogText(args), captured.placeholder)
+        return // dropped: recordSignalFailure logs it properly, with context
+      }
+      if (isSpam(extractLogText(args))) return
+      originals[level](...args)
+    }
+  }
+}
+installSignalConsoleBridge()
+
 // ── Baileys logger: silent, except the one thing we must never miss ────────
 // A wedged Signal session fails to DECRYPT incoming messages ("Failed to
 // decrypt" / "Bad MAC"). Baileys drops those messages before
@@ -129,39 +207,69 @@ process.stderr.write = (chunk, ...args) => {
 // undiagnosable: the errors existed, they just went nowhere.
 //
 // So: everything stays silent, except warn/error messages that look like
-// Signal decryption/session failures. Those are stamped into the instance's
-// decryptFailures ledger (read by the watchdog) and echoed to the log a few
-// times per window — loud enough to find in pm2-err.log, quiet enough not to
-// flood while the session stays wedged.
-const DECRYPT_FAIL_RE = /fail(ed)? to decrypt|bad mac|session error|bad session|invalid session/i
-// Sliding window the watchdog counts decryption failures in.
+// Signal decryption/session failures. Those go through recordSignalFailure,
+// which logs WHO could not be decrypted, WHY (merged in from the libsignal
+// console line above), and how many times in the window it has happened —
+// then feeds the instance's ledger, which is what the watchdog and `.health`
+// read. Retry receipts mean one stuck message can log several times, so the
+// detailed line is deduped per sender and the aggregate alert only fires on
+// real threshold crossings (see lib/decrypt-forensics.js for why the old
+// `n % 25 === 0` re-fired the same "#50" line for hours).
+// Kept at 10 minutes on purpose (it briefly became 60s while adding the
+// forensics, which would have been a silent regression): the reported outage
+// ran at roughly 50 failures per 10 minutes, i.e. ~5/minute. Against a 60s
+// window that rate never reaches the limit, so the alert — and the forced
+// reconnect behind it — would simply stop firing on the exact incident they
+// were written for. The per-sender DETAIL is deduped separately (60s budget,
+// then one line per sender per 5 min), so a long window costs no extra noise.
 const DECRYPT_FAIL_WINDOW_MS = 10 * 60_000
-// This many failures in the window (with no successful inbound since) is a
-// wedged session — only a reconnect renegotiates it.
+// This many failures in the window (with no successfully-decrypted message
+// since) is a wedged session — only a reconnect renegotiates it.
 const DECRYPT_FAIL_LIMIT = 10
-// Inbound must have been dry at least this long for the decrypt-failure
-// trigger to act — a session that is still decrypting fine moments ago is
-// not the outage, even if it logged a few stale-session errors.
+// The successful-decrypt path must have been dry at least this long for the
+// decrypt-failure trigger to act — a session that is still decrypting fine
+// moments ago is not the outage, even if it logged a few stale-session errors.
 const DECRYPT_STALE_INBOUND_MS = 60_000
+// Never force a second reconnect for this long. If the failures survive the
+// first reconnect, reconnecting again does not fix it — it is something else
+// (usually the number being logged in twice), and a reconnect loop would only
+// drop the send queue while you try to find out what.
+const DECRYPT_RECONNECT_COOLDOWN_MS = 5 * 60_000
+
+/** New ledger for one instance — see createDecryptLedger in lib/. */
+function makeDecryptLedger() {
+  return createDecryptLedger({
+    windowMs: DECRYPT_FAIL_WINDOW_MS,
+    limit: DECRYPT_FAIL_LIMIT,
+    logFirst: 3,
+    logEveryN: 25,
+    perSenderDedupeMs: 5 * 60_000,
+    maxDistinctSenderLogs: 8,
+  })
+}
 
 function recordSignalFailure(inst, args) {
-  const text = args
-    .map(a => (typeof a === 'string' ? a : (a && (a.message || a.err?.message)) || ''))
-    .join(' ')
-    .trim()
+  const text = extractLogText(args)
   if (!text || !DECRYPT_FAIL_RE.test(text)) return
 
   const now = Date.now()
-  // Timestamps are appended in order, so the stale ones are always at the
-  // front — drop them to keep the ledger bounded (a wedged session can keep
-  // logging for hours).
-  while (inst.decryptFailures.length && inst.decryptFailures[0] < now - DECRYPT_FAIL_WINDOW_MS) inst.decryptFailures.shift()
-  inst.decryptFailures.push(now)
-  const inWindow = inst.decryptFailures
-  const n = inWindow.length
-  // First 3 in the window, then every 25th — see the note above.
-  if (n <= 3 || n % 25 === 0) {
-    globalErrorLog(`🚨 [${inst.botName}] Signal decryption/session failure #${n} in ${DECRYPT_FAIL_WINDOW_MS / 60_000} min: ${text.slice(0, 300)}`)
+  const pending = signalReasons.take(now)
+  const ctx = extractDecryptContext({ args, text, pendingText: pending?.text ?? '' })
+  const reasonText = `${text}\n${pending?.text ?? ''}`
+
+  const out = inst.decryptLedger.record({
+    text: reasonText,
+    jid: ctx.jid,
+    device: ctx.device,
+    now,
+    // 440 within the last 30 min = WhatsApp closed this same number's other
+    // socket. That makes the advice specific (find the second instance)
+    // instead of the generic "stale session".
+    sawSessionConflict: Boolean(inst.sessionConflictAt && now - inst.sessionConflictAt < 30 * 60_000),
+  })
+
+  for (const line of formatDecryptLog({ botName: inst.botName, outcome: out, context: ctx, windowMs: DECRYPT_FAIL_WINDOW_MS })) {
+    globalErrorLog(line)
   }
 }
 
@@ -1104,18 +1212,50 @@ function runStallWatchdog(instances, db) {
     }
 
     // ── Inbound side — evidence #2: the Signal session is wedged ───────────
-    // Repeated decryption failures (recorded by makeBaileysLogger) AND no
-    // message has decrypted successfully since. WhatsApp is delivering and
-    // Baileys is failing to open the messages, so messages.upsert never
-    // fires and evidence #1 above can never see it. Only a reconnect
-    // renegotiates the session.
-    const recentFailures = inst.decryptFailures.filter(t => now - t <= DECRYPT_FAIL_WINDOW_MS)
-    if (recentFailures.length >= DECRYPT_FAIL_LIMIT && now - inst.lastInboundAt >= DECRYPT_STALE_INBOUND_MS) {
-      forceReconnect(
-        inst, sock,
-        `${recentFailures.length} Signal decryption failures in ${DECRYPT_FAIL_WINDOW_MS / 60_000} min, ` +
-        `no inbound for ${Math.round((now - inst.lastInboundAt) / 1000)}s`,
-      )
+    // Repeated decryption failures (recorded by recordSignalFailure with the
+    // reason bridged out of libsignal) AND no message has DECRYPTED
+    // successfully since. WhatsApp is delivering and Baileys is failing to
+    // open the messages, so messages.upsert only ever carries CIPHERTEXT
+    // stubs and neither the scheduler (evidence #1 above) nor any handler can
+    // see the outage. Only a reconnect renegotiates the session.
+    //
+    // This used to compare against inst.lastInboundAt, which every upsert
+    // refreshed — including the undecryptable stubs themselves — so the
+    // second half of the condition could never be true in the exact situation
+    // it was written for. That is why the log could show hours of 🚨 with not
+    // one "🚑 forcing reconnect" line. It now measures plaintext:
+    // lastDecryptOkAt is only touched by a message with a real `.message`.
+    const decryptSnapshot = inst.decryptLedger.snapshot(now)
+    const recentFailures = decryptSnapshot.total
+    const plaintextDryMs = now - Math.max(inst.lastDecryptOkAt, inst.openedAt)
+    const socketSettled = now - inst.openedAt >= DECRYPT_STALE_INBOUND_MS
+    if (recentFailures >= DECRYPT_FAIL_LIMIT && plaintextDryMs >= DECRYPT_STALE_INBOUND_MS && socketSettled) {
+      const sinceLastForce = inst.lastForcedReconnectAt ? now - inst.lastForcedReconnectAt : Infinity
+      if (sinceLastForce < DECRYPT_RECONNECT_COOLDOWN_MS) {
+        // Reconnected already and the failures are still coming: a stale
+        // session would have been renegotiated by now, so this is something a
+        // reconnect cannot fix (almost always the same number logged in
+        // twice). Say it once per cooldown instead of looping the socket.
+        if (now - inst.decryptPersistLoggedAt > DECRYPT_RECONNECT_COOLDOWN_MS) {
+          inst.decryptPersistLoggedAt = now
+          globalErrorLog(
+            `🚨 [${inst.botName}] decryption still failing ${Math.round(sinceLastForce / 60_000)}min after a forced reconnect ` +
+            `(${recentFailures} failures in ${DECRYPT_FAIL_WINDOW_MS / 1000}s, ${decryptSnapshot.distinctSenders} sender(s), ` +
+            `plaintext dry ${Math.round(plaintextDryMs / 1000)}s${inst.sessionConflictAt ? ', statusCode 440 seen this session' : ''}). ` +
+            `A reconnect is not fixing this — check for a SECOND running instance / deployment sharing this auth folder ` +
+            `(that is the usual cause), then re-pair the number if it is genuinely alone.`,
+          )
+          if (decryptSnapshot.hint) globalErrorLog(`    ↳ ${decryptSnapshot.hint}`)
+        }
+      } else {
+        forceReconnect(
+          inst, sock,
+          `${recentFailures} Signal decryption failures in ${DECRYPT_FAIL_WINDOW_MS / 1000}s ` +
+          `(top senders: ${decryptSnapshot.topSenders || 'unknown'}), ` +
+          `no message decrypted for ${Math.round(plaintextDryMs / 1000)}s`,
+        )
+        continue
+      }
     }
   }
 }
@@ -1149,14 +1289,23 @@ function createBotInstance(botCfg) {
     unpairedRetryCount: 0,
 
     // ── Liveness bookkeeping (read by runStallWatchdog + plugins/health.js) ──
-    // When connection === 'open' last happened, and when we last saw ANY
-    // inbound message. lastInboundAt is now only an INPUT to the stall
-    // evidence (fresh inbound proves the inbound path works) — the watchdog
-    // no longer acts on silence alone, which is what made the old version
-    // get removed (see runStallWatchdog).
+    // When connection === 'open' last happened, when we last saw ANY inbound
+    // upsert at all, and — the number that actually matters — when a message
+    // last DECRYPTED successfully.
+    //
+    // The distinction is the whole 2026-09 bug: Baileys still emits
+    // undecryptable messages to messages.upsert as a CIPHERTEXT stub with no
+    // `.message`, so stamping lastInboundAt on every upsert made the
+    // decrypt-failure watchdog trigger unreachable — the very failures that
+    // wedge the session kept the "inbound is alive" clock fresh. The watch
+    // therefore runs on lastDecryptOkAt (plaintext arrived), while
+    // lastInboundAt/inboundCount stay as raw delivery counters for `.health`.
     openedAt: 0,
     lastInboundAt: 0,
     inboundCount: 0,
+    lastDecryptOkAt: 0,
+    stubCount: 0,
+    lastStubAt: 0,
     lastForcedReconnectAt: 0,
     forcedReconnect: false,
 
@@ -1166,10 +1315,18 @@ function createBotInstance(botCfg) {
     // watchdog only acts once this has persisted INBOUND_STALL_EVIDENCE_MS —
     // a busy minute drains in seconds and never sets it.
     inboundStallSince: 0,
-    // Timestamps of recent Signal decryption failures, recorded by
-    // makeBaileysLogger/recordSignalFailure. A burst of these with a dry
-    // inbound path is a wedged session — a reconnect is the only fix.
-    decryptFailures: [],
+    // Sliding-window ledger of Signal decryption failures + plaintext
+    // recoveries, filled by recordSignalFailure (Baileys logger) with reasons
+    // bridged in from libsignal's console output. A burst here with a dry
+    // plaintext path is a wedged session — a reconnect is the only fix.
+    decryptLedger: makeDecryptLedger(),
+    // When WhatsApp last closed this socket with statusCode 440 (session
+    // conflict = the same number connected twice somewhere). Used to sharpen
+    // the decryption advice: 440 + Bad MAC is the double-login signature.
+    sessionConflictAt: 0,
+    // When we last logged "failures survived a reconnect, this is not a stale
+    // session" so the message is printed once per cooldown, not every tick.
+    decryptPersistLoggedAt: 0,
 
     // ── Reconnect hygiene ───────────────────────────────────────────────────
     // connect() used to be callable from several places at once: every
@@ -1340,7 +1497,9 @@ function createBotInstance(botCfg) {
       connectTimeoutMs: 60_000,
       // Silent except Signal decryption/session failures — those are the
       // fingerprint of the inbound-stall outage and must reach the logs
-      // (and inst.decryptFailures for the watchdog). See makeBaileysLogger.
+      // (and inst.decryptLedger, which is what the watchdog and `.health`
+      // read). Reasons come from the libsignal console bridge installed at
+      // the top of this file. See makeBaileysLogger / recordSignalFailure.
       logger: makeBaileysLogger(inst),
     })
 
@@ -1445,6 +1604,36 @@ function createBotInstance(botCfg) {
       if (!messages.length) {
         inboundScheduler.enqueue(arg, `event:${Date.now()}`)
         return
+      }
+
+      // ── Delivery vs. decryptability ─────────────────────────────────────
+      // A message that reached messages.upsert is NOT proof that this socket
+      // can read messages: Baileys emits undecryptable ones as a CIPHERTEXT
+      // stub with no `.message` (see decode-wa-message.ts). Only a message
+      // that actually carries plaintext proves the inbound path works — that
+      // is `lastDecryptOkAt`, and it is the clock the decrypt watchdog reads.
+      // Stubs get counted separately for `.health` so "messages are arriving
+      // but not decrypting" is visible instead of looking like healthy
+      // inbound traffic.
+      const decrypted = messages.filter(m => m?.message)
+      const stubs = messages.filter(m => !m?.message)
+      if (decrypted.length) {
+        inst.lastDecryptOkAt = Date.now()
+        // A window that was full of failures just proved itself recoverable —
+        // either the session renegotiated on its own or the forced reconnect
+        // worked. Either way the ledger starts clean, so the next incident is
+        // reported with its own counts rather than inheriting yesterday's.
+        const recovered = inst.decryptLedger.noteSuccess()
+        if (recovered.cleared >= DECRYPT_FAIL_LIMIT) {
+          globalErrorLog(
+            `✅ [${inst.botName}] inbound decryption recovered after ${recovered.cleared} failure(s) — ` +
+            `messages are being read again.`,
+          )
+        }
+      }
+      if (stubs.length) {
+        inst.stubCount += stubs.length
+        inst.lastStubAt = Date.now()
       }
 
       // Schedule one message at a time instead of handing a whole batch to a
@@ -1592,13 +1781,19 @@ function createBotInstance(botCfg) {
         // measure silence from before the reconnect and immediately kill the
         // socket it just built.
         inst.lastInboundAt = Date.now()
+        // Same reasoning for the plaintext clock the decrypt watchdog uses —
+        // a socket that opened 10s ago has not had time to prove anything.
+        inst.lastDecryptOkAt = Date.now()
+        inst.stubCount = 0
         inst.forcedReconnect = false
         // Fresh scheduler, fresh sessions — reset the stall evidence so the
         // watchdog measures THIS socket, not the dead one it replaces (a
         // reconnect that was the cure for the old socket's wedge must not
         // immediately re-trigger on the old socket's evidence).
         inst.inboundStallSince = 0
-        inst.decryptFailures = []
+        // And fresh failure evidence, for the same reason: a reconnect that
+        // cured a wedge must not be re-triggered by the dead socket's counts.
+        inst.decryptLedger.reset()
         // Publish the socket only now that it can actually send. Everything
         // that reaches for a socket (the sweeps above, the website's OTP DM
         // in lib/api-server.js) goes through this field.
@@ -1710,7 +1905,14 @@ function createBotInstance(botCfg) {
           // Another process/session is using the same auth (e.g. this auth
           // folder opened twice) — this needs a short retry, not the full
           // 1-min wait used for logout, since it's usually transient.
-          log('⚠️ Session conflict (code 440) — reconnecting in 10s…')
+          //
+          // Stamped because it is the fingerprint of the double-login that
+          // explains a persistent Bad-MAC storm (recordSignalFailure attaches
+          // this to the decryption advice when it happened in the last 30
+          // min). A conflict that keeps coming back means the other instance
+          // never stopped — the reconnect here is treating a symptom.
+          inst.sessionConflictAt = Date.now()
+          log('⚠️ Session conflict (code 440) — reconnecting in 10s… (if this repeats, another instance is using this auth folder)')
           inst.scheduleReconnect(db, 10_000, 'session conflict (440)')
           return
         }
@@ -1862,6 +2064,12 @@ async function main() {
         openedAt: inst.openedAt,
         lastInboundAt: inst.lastInboundAt,
         inboundCount: inst.inboundCount,
+        // Plaintext arrival — the one that proves inbound actually works.
+        lastDecryptOkAt: inst.lastDecryptOkAt,
+        stubCount: inst.stubCount,
+        lastStubAt: inst.lastStubAt,
+        decrypt: inst.decryptLedger.snapshot(),
+        sessionConflictAt: inst.sessionConflictAt,
         lastForcedReconnectAt: inst.lastForcedReconnectAt,
         reconnectPending: Boolean(inst.reconnectTimer),
         transientCloseStreak: inst.transientCloseStreak,
