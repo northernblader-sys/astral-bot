@@ -2,16 +2,21 @@
  * event.js — `.event` : the current world event hub.
  *
  * Player-facing:
- *   .event                  — the latest world event, its clock, and your standing
+ *   .event                  — the featured world event, its clock, and your standing
+ *                             (live event first, otherwise the NEWEST event in
+ *                             lib/world-events.js — so new events show up here
+ *                             automatically as soon as they are registered)
  *
- * Owner-only (lib/group-helpers.js's isOwnerJid):
- *   .event start            — The End only: stamp the clock, flood the world, announce it
- *   .event end              — The End only: kill-switch, lift the aura for everyone
- *   .event skip             — The End only: test hook, open the rift right now
+ * Owner-only (lib/group-helpers.js's isOwnerJid). <event> defaults to the
+ * newest registered event; name one to target an older event (e.g. `the end`):
+ *   .event start [event] [days]   — open the event
+ *   .event end   [event]          — close it now
+ *   .event skip  [event] [days]   — test hook: move its clock forward
+ *   .event list                   — every registered event and its state
  *
- * Every lifecycle flip is a single write to db.data.endEvent inside
- * updateAllPlayers, so it rides the same serialized queue as every other
- * mutation (lib/player-repo.js) and can't race a concurrent command.
+ * Every lifecycle flip is a single write inside updateAllPlayers, so it rides
+ * the same serialized queue as every other mutation (lib/player-repo.js) and
+ * can't race a concurrent command.
  */
 import { config } from '../config.js'
 import { updateAllPlayers, getPlayer } from '../lib/player-repo.js'
@@ -41,38 +46,37 @@ import {
   END_START_BROADCAST, END_FORCE_END_BROADCAST,
   END_WEAKEN_PCT, SLEEP_MAX_LEVEL, LUNA_GRACE_MS, THE_END_LOCATION_ID,
 } from '../lib/end-event.js'
+import {
+  WORLD_EVENTS, WORLD_EVENT_MAP, featuredWorldEventKey, findWorldEvent, newestWorldEventKey,
+} from '../lib/world-events.js'
+import guardianPlugin from './guardian.js'
 
 // ── Overview routing ───────────────────────────────────────────────────────
+// Which event to show lives in lib/world-events.js (featuredWorldEventKey).
 
-function latestWorldEventKey(db, now = Date.now()) {
-  const candidates = []
-  const guardian = getGuardianEvent(db)
-  const end = getEndEvent(db)
+const RENDERERS = {
+  guardian: (ctx) => renderGuardianStatus(ctx),
+  end:      (ctx) => renderEndStatus(ctx),
+}
 
-  if (guardian.startedAt) {
-    candidates.push({
-      key: 'guardian',
-      active: isGuardianActive(db, now),
-      startedAt: guardian.startedAt,
-    })
+function renderFeatured(ctx) {
+  const key = featuredWorldEventKey(ctx.db)
+  const render = RENDERERS[key]
+  return render ? render(ctx) : `🌌 *No world event is running.*`
+}
+
+function renderList(ctx) {
+  const p = config.prefix
+  const featured = featuredWorldEventKey(ctx.db)
+  const now = Date.now()
+  const lines = ['🗓️ *WORLD EVENTS*', '']
+  for (const ev of [...WORLD_EVENTS].reverse()) {
+    const st = ev.state(ctx.db, now)
+    const status = st.active ? '🟢 live' : st.startedAt ? '🔚 ended' : '🔒 not started'
+    lines.push(`${ev.key === featured ? '⭐' : '•'} *${ev.name}* — ${status}  _(${ev.key})_`)
   }
-  if (end.startedAt) {
-    candidates.push({
-      key: 'end',
-      active: isEventActive(db),
-      startedAt: end.startedAt,
-    })
-  }
-
-  if (!candidates.length) return null
-
-  const active = candidates
-    .filter(c => c.active)
-    .sort((a, b) => (b.startedAt ?? 0) - (a.startedAt ?? 0))
-  if (active.length) return active[0].key
-
-  candidates.sort((a, b) => (b.startedAt ?? 0) - (a.startedAt ?? 0))
-  return candidates[0].key
+  lines.push('', `_⭐ is what *${p}event* shows. Owner: *${p}event start <name>*._`)
+  return lines.join('\n')
 }
 
 // ── Guardian of the Innocent ───────────────────────────────────────────────
@@ -105,6 +109,7 @@ function renderGuardianStatus(ctx) {
     lines.push(`🔚 _This run has ended (${formatTimeLeft(Math.max(0, now - endedAt))} ago). Companions stay with their players._`)
   } else {
     lines.push('🔒 _This event has not started yet._')
+    if (isOwnerJid(ctx.from)) lines.push(`👑 _Owner: *${p}event start* to open it (${GUARDIAN.durationDays} days by default)._`)
   }
 
   lines.push('')
@@ -289,37 +294,73 @@ async function handleSkip(ctx) {
 
 // ── Plugin export ─────────────────────────────────────────────────────────
 
+// ── Guardian owner controls (delegated to plugins/guardian.js) ─────────────
+
+function runGuardianOwner(ctx, sub, number) {
+  const args = number != null ? [sub, String(number)] : [sub]
+  return guardianPlugin.run({ ...ctx, args })
+}
+
+// ── Plugin export ─────────────────────────────────────────────────────────
+
+const OWNER_ACTIONS = {
+  start: 'start', begin: 'start', open: 'start',
+  end: 'end', stop: 'end', close: 'end',
+  skip: 'skip', ff: 'skip', fastforward: 'skip',
+}
+
 export default {
   name:           'event',
-  aliases:        ['endevent', 'theend', 'worldevent'],
+  aliases:        ['endevent', 'theend', 'worldevent', 'events'],
   category:       'event',
   requiresPlayer: false,
   description:    `${config.prefix}event — the latest world event and your standing in it`,
   subcommands: [
-    { cmd: 'event',       desc: 'Current world event, how long it lasts, and your status' },
-    { cmd: 'event start', desc: 'Owner — The End only: begin the rampage and announce it' },
-    { cmd: 'event end',   desc: 'Owner — The End only: lift the aura server-wide' },
-    { cmd: 'event skip',  desc: 'Owner — The End only: open the rift immediately (testing)' },
+    { cmd: 'event',                 desc: 'Current world event, how long it lasts, and your status' },
+    { cmd: 'event list',            desc: 'Every world event and whether it is live' },
+    { cmd: 'event start [event]',   desc: 'Owner — open the newest event (or the one named)' },
+    { cmd: 'event end [event]',     desc: 'Owner — close the newest event (or the one named)' },
+    { cmd: 'event skip [event] [n]', desc: 'Owner — move an event clock forward (testing)' },
   ],
 
   async run(ctx) {
-    const action = String(ctx.args?.[0] ?? 'status').toLowerCase()
+    const args = ctx.args ?? []
+    const action = String(args[0] ?? 'status').toLowerCase()
 
-    if (action === 'status' || action === 'info') {
-      const latest = latestWorldEventKey(ctx.db)
-      return ctx.reply(latest === 'guardian' ? renderGuardianStatus(ctx) : renderEndStatus(ctx))
-    }
+    if (action === 'status' || action === 'info') return ctx.reply(renderFeatured(ctx))
+    if (action === 'list' || action === 'all') return ctx.reply(renderList(ctx))
 
-    if (['start', 'begin', 'end', 'stop', 'skip', 'ff', 'fastforward'].includes(action)) {
+    const op = OWNER_ACTIONS[action]
+    if (op) {
       if (!isOwnerJid(ctx.from)) return ctx.reply('❌ Owner only.')
-      if (action === 'start' || action === 'begin') return handleStart(ctx)
-      if (action === 'end' || action === 'stop') return handleEnd(ctx)
-      return handleSkip(ctx)
+      const p = config.prefix
+      const rest = args.slice(1).map(String)
+      const numArg = rest.find(a => /^\d+$/.test(a))
+      const nameStr = rest.filter(a => !/^\d+$/.test(a)).join(' ').trim()
+      const key = nameStr ? findWorldEvent(nameStr) : newestWorldEventKey()
+      if (!key) {
+        return ctx.reply(
+          `❌ No event called *${nameStr}*.\n` +
+          `_Events: ${WORLD_EVENTS.map(ev => `*${ev.key}*`).join(', ')} — see *${p}event list*._`,
+        )
+      }
+      if (key === 'guardian') return runGuardianOwner(ctx, op, numArg != null ? Number(numArg) : null)
+      if (key === 'end') {
+        if (op === 'start') return handleStart(ctx)
+        if (op === 'end') return handleEnd(ctx)
+        return handleSkip(ctx)
+      }
+      return ctx.reply(`⚠️ *${WORLD_EVENT_MAP[key]?.name ?? key}* has no owner controls here yet.`)
     }
+
+    // `.event guardian` / `.event theend` — peek at a specific event.
+    // (Checked after owner actions: `.event end` means "close", not "show The End".)
+    const peek = findWorldEvent(args.join(' '))
+    if (peek && RENDERERS[peek]) return ctx.reply(RENDERERS[peek](ctx))
 
     return ctx.reply(
       `❌ Unknown option *${action}*.\n` +
-      `_Try_ *${config.prefix}event* _for the current world event._`,
+      `_Try_ *${config.prefix}event* _for the current world event, or_ *${config.prefix}event list*.`,
     )
   },
 }
