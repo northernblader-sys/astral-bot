@@ -21,10 +21,13 @@
  *
  * Usage:
  *   .pack                     — browse every season pack
- *   .pack info <name|id>      — full detail for one pack
+ *   .pack info <name|id>      — full detail for one pack (.packinfo <name|id> too)
  *   .pack buy <name|id>       — buy it with gems (grants gear + title, equips signature)
  *   .pack equip <name|id>     — switch to a pack you already own
  *   .pack unequip             — put the active signature and title away
+ *
+ * <name|id> is matched by id, name OR the title the pack wears, in any
+ * separator style — see findPack() for why the folding matters.
  */
 import { config } from '../config.js'
 import { roundGems, fmtGems } from '../lib/format.js'
@@ -47,15 +50,41 @@ const ITEM_BY_ID = new Map(allItems.map((i) => [i.id, i]))
 const itemName = (id) => ITEM_BY_ID.get(id)?.name ?? id
 const grantableItems = (pack) => (pack.items ?? []).filter((id) => SEASON_ITEM_IDS.has(id))
 
-function findPack(query) {
-  const q = String(query ?? '').toLowerCase().trim()
+/**
+ * Lookup keys, folded to bare lowercase alphanumerics.
+ *
+ * Players reach for a pack four different ways and every one of them is the
+ * same pack: its id ("dark_monarch"), its name ("Dark Monarch"), the title it
+ * puts beside your name ("🖤 The Dark Monarch") and any separator mix of those
+ * ("the_dark_monarch", "The-Dark-Monarch"). The old lookup only folded SPACES
+ * into underscores, so a query typed with underscores never matched the id and
+ * never matched the name either — ".pack info the_dark_monarch" answered "not a
+ * season pack" for a pack the player was staring at in the .pack list. Folding
+ * both sides to alphanumerics makes all four forms one key, and drops the
+ * emoji a title carries for free.
+ */
+const fold = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '')
+
+const PACK_KEYS = SEASON_PACKS.map((pack) => ({
+  pack,
+  keys: [fold(pack.id), fold(pack.name), fold(pack.title)],
+}))
+
+/** Resolve a pack by id, name or title, in any separator style, exactly then partially. */
+export function findPack(query) {
+  const q = fold(query)
   if (!q) return null
-  const kebab = q.replace(/\s+/g, '_')
-  return (
-    PACK_BY_ID[kebab] ??
-    SEASON_PACKS.find((p) => p.name.toLowerCase() === q) ??
-    SEASON_PACKS.find((p) => p.name.toLowerCase().includes(q))
-  )
+
+  const exact = PACK_KEYS.find((entry) => entry.keys.includes(q))
+  if (exact) return exact.pack
+
+  // Partial, but ids and names before titles: "dark" should find Dark Monarch,
+  // and a stray "the" should not sweep up every pack whose title starts with it.
+  const partial = PACK_KEYS.filter((entry) => entry.keys.some((k) => k.includes(q)))
+  if (!partial.length) return null
+  return partial.reduce((best, entry) => (
+    fold(entry.pack.name).length < fold(best.pack.name).length ? entry : best
+  )).pack
 }
 
 function isBusyInBattle(player) {
@@ -80,6 +109,12 @@ function overview(pr, player) {
     `Detail with *${pr}pack info <name>* · buy with *${pr}pack buy <name>*.\n` +
     `Switch a pack you own with *${pr}pack equip <name>*.`
   )
+}
+
+/** The browse view: the general Season Packs banner over the full list. Each
+ * pack's own art shows on `.pack info <id>` (handleInfo). */
+function overviewBrowse(ctx) {
+  return sendImage(ctx, 'pack-overview.jpg', overview(config.prefix, ctx.player))
 }
 
 async function handleInfo(ctx, query) {
@@ -268,13 +303,29 @@ async function handleUnequip(ctx) {
 
 export default {
   name: 'pack',
+  // `.packinfo <name>` is how players actually type the detail view, so it is a
+  // real command and not a typo: it lands on `.pack info <name>`.
+  aliases: ['packinfo', 'pack_info'],
   category: 'packs',
   requiresPlayer: true,
   description: `${config.prefix}pack — Season Packs: gem loadouts with a signature effect`,
+  subcommands: [
+    { cmd: 'info <name>',   desc: 'full detail on one pack (also .packinfo <name>)' },
+    { cmd: 'buy <name>',    desc: 'buy a pack with gems: gear, title, signature' },
+    { cmd: 'equip <name>',  desc: 'switch to a pack you already own' },
+    { cmd: 'unequip',       desc: 'put the active signature and title away' },
+  ],
 
   async run(ctx) {
     const { args } = ctx
     const pr = config.prefix
+    // Which alias fired: `.packinfo dark monarch` carries the query in args[0],
+    // where `.pack info dark monarch` carries it after the subcommand.
+    const asInfo = ctx.cmd === 'packinfo' || ctx.cmd === 'pack_info'
+    if (asInfo) {
+      return args.length ? handleInfo(ctx, args.join(' ')) : overviewBrowse(ctx)
+    }
+
     const sub = (args[0] ?? '').toLowerCase()
 
     if (sub === 'buy') return handleBuy(ctx, args.slice(1).join(' '))
@@ -282,8 +333,6 @@ export default {
     if (sub === 'equip' || sub === 'use' || sub === 'wear') return handleEquip(ctx, args.slice(1).join(' '))
     if (sub === 'unequip' || sub === 'remove' || sub === 'off') return handleUnequip(ctx)
 
-    // Browse view: the general Season Packs banner over the full list. Each
-    // pack's own art shows on `.pack info <id>` (handleInfo).
-    return sendImage(ctx, 'pack-overview.jpg', overview(pr, ctx.player))
+    return overviewBrowse(ctx)
   },
 }

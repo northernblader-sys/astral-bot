@@ -425,6 +425,11 @@ const BATTLE_ALLOWED_COMMANDS = new Set([
   'shop',
   'gm', 'gameshop',
   'profile',
+  // `.ability` is the read-only list of what you hold (slots, bag, one-of-one),
+  // the same shape as `.profile` and `.skillslot` beside it — checking which
+  // ability you have is exactly what you want to do mid-fight, before spending
+  // the turn on it with `.useability`.
+  'ability', 'abilities', 'myabilities',
   'inventory',
   'skillslot', 'skillslots', 'slots',
   'stats', 'stat', 'train',

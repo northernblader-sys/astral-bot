@@ -1,7 +1,7 @@
 /**
- * giveability.js — .giveability <ability name or id> [@mention | reply]
+ * giveability.js — .giveability <ability name or id> [@mention | reply | player name]
  * Standalone owner-only command (same family as .givegems/.giveitem). Grants an
- * ability to a target player (defaults to yourself if no @mention/reply given).
+ * ability to a target player (defaults to yourself if no target is given).
  *
  * Two families, resolved in this order:
  *   1. Generic abilities (data/abilities.json — e.g. Crown's Favor, the
@@ -15,31 +15,63 @@
  *      refused (these are one-of-one bot-wide); target already holds one →
  *      refused (a player holds at most one).
  *
+ * ARGUMENT SHAPE. handler.js hands a plugin args WITHOUT the command word, so
+ * for `.giveability heat_blaze Yochan` args is ['heat_blaze', 'Yochan']. This
+ * used to read args.slice(1) — a shape copied from plugins/admin.js's sub-flow,
+ * where args[0] really is the subcommand — which threw the ability away and
+ * answered `No ability matching "yochan"`. parseGiveArgs() below fixes that and
+ * also accepts the shifted shape, so both call styles work.
+ *
  * Example: .giveability crown's favor @player
  *          .giveability heat_blaze @player
+ *          .giveability jack_of_all_trades Yochan   (name instead of a tag)
+ *          .giveability Yochan heat_blaze           (either order)
  */
 import { config } from '../config.js'
-import { isOwnerJid } from '../lib/group-helpers.js'
+import { isOwnerJid, extractTarget } from '../lib/group-helpers.js'
 import { abilities, premiumAbilityMap } from '../lib/game-data.js'
-import { updatePlayer, getPlayer } from '../lib/player-repo.js'
+import { updatePlayer, getPlayer, findPlayerByName } from '../lib/player-repo.js'
 import { getExclusiveSpinWinner, claimExclusiveSpinForPlayer } from '../lib/season-engine.js'
 import { abilityRegistryKey } from '../lib/premium-abilities.js'
-import { resolveTargetId } from './admin.js'
+
+const PREMIUM_ABILITIES = Object.values(premiumAbilityMap)
+
+/** Case- and separator-insensitive key, so "Jack of All Trades" == jack_of_all_trades. */
+const fold = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '')
+
+/**
+ * The closest def in `list` for key `q`: exact first, then a unique partial,
+ * then a prefix match, then the shortest name that merely contains it. Null
+ * when nothing is even close, so the caller can list the catalogue instead.
+ */
+function bestMatch(list, q) {
+  if (!list.length) return null
+  const exact = list.find((a) => fold(a.id) === q || fold(a.name) === q)
+  if (exact) return exact
+
+  const partial = list.filter((a) => fold(a.id).includes(q) || fold(a.name).includes(q))
+  if (!partial.length) return null
+  if (partial.length === 1) return partial[0]
+
+  const prefixed = partial.filter((a) => fold(a.name).startsWith(q) || fold(a.id).startsWith(q))
+  const pool = prefixed.length ? prefixed : partial
+  return pool.reduce((best, a) => (fold(a.name).length < fold(best.name).length ? a : best))
+}
 
 /** Resolves an ability query to { kind: 'generic'|'premium', def }. */
 export function findAbilityDef(query) {
-  const q = (query ?? '').toLowerCase().trim()
+  const q = fold(query)
   if (!q) return null
-  const byId = premiumAbilityMap[q]
-  if (byId) return { kind: 'premium', def: byId }
-  // "Heat Blaze" / "heat blaze" / "heat_blaze" all work for one-of-ones.
-  const byName = Object.values(premiumAbilityMap).find(a =>
-    a.name.toLowerCase() === q || a.name.toLowerCase().replace(/\s+/g, '_') === q)
-  if (byName) return { kind: 'premium', def: byName }
-  const generic = abilities.find(a => a.id === q)
-    ?? abilities.find(a => a.name.toLowerCase() === q)
-    ?? abilities.find(a => a.name.toLowerCase().includes(q))
+
+  // The one-of-ones are checked first: their names are the distinctive ones
+  // ("Jack of All Trades"), and a generic partial like "jack" must not be
+  // swallowed by a loose contains-match on the generic list.
+  const premium = bestMatch(PREMIUM_ABILITIES, q)
+  if (premium) return { kind: 'premium', def: premium }
+
+  const generic = bestMatch(abilities, q)
   if (generic) return { kind: 'generic', def: generic }
+
   return null
 }
 
@@ -47,25 +79,88 @@ export function findAbilityDef(query) {
 export function listGrantableAbilities() {
   return [
     ...abilities.map(a => `  • *${a.name}* (${a.id})`),
-    ...Object.values(premiumAbilityMap).map(a => `  • *${a.name}* (${a.id}) — one-of-one premium`),
+    ...PREMIUM_ABILITIES.map(a => `  • *${a.name}* (${a.id}) — one-of-one premium`),
   ].join('\n')
+}
+
+/** The command words this plugin answers to, tolerated at the head of args. */
+const COMMAND_WORDS = new Set(['giveability', 'giveabilities', 'giveab'])
+
+/**
+ * parseGiveArgs(args) -> { found, query, targetName }
+ *
+ * Splits the line into "which ability" and "who gets it" without demanding an
+ * order or an @mention. The longest run of leading words that names an ability
+ * wins and whatever is left over is the target, so multi-word names survive:
+ *
+ *   ['jack_of_all_trades', 'Yochan']  -> Jack of All Trades, target "Yochan"
+ *   ['jack', 'of', 'all', 'trades', 'Yochan'] -> same, typed with spaces
+ *   ['Yochan', 'heat_blaze']          -> Heat Blaze, target "Yochan" (flipped)
+ *   ['crown\'s favor']                -> Crown's Favor, target null (= yourself)
+ *
+ * @mentions are stripped out first: they are targeting, never part of a name,
+ * and extractTarget() reads them off the message itself.
+ */
+export function parseGiveArgs(args) {
+  const words = (Array.isArray(args) ? args : [])
+    .map(a => String(a ?? '').trim())
+    .filter(Boolean)
+    .filter(a => !a.startsWith('@'))
+  // Tolerate a caller that leaves the command word in args[0] (admin.js's
+  // sub-flow shape) instead of mistaking it for the ability.
+  const parts = COMMAND_WORDS.has(fold(words[0])) ? words.slice(1) : words
+
+  if (!parts.length) return { found: null, query: '', targetName: null }
+
+  for (let n = parts.length; n >= 1; n--) {
+    const found = findAbilityDef(parts.slice(0, n).join(' '))
+    if (found) {
+      const rest = parts.slice(n).join(' ').trim()
+      return { found, query: parts.slice(0, n).join(' '), targetName: rest || null }
+    }
+  }
+  // Nothing matched from the left — try the target-first order, where the
+  // ability is whatever trails the name.
+  for (let start = 1; start < parts.length; start++) {
+    const found = findAbilityDef(parts.slice(start).join(' '))
+    if (found) {
+      return { found, query: parts.slice(start).join(' '), targetName: parts.slice(0, start).join(' ').trim() }
+    }
+  }
+  return { found: null, query: parts.join(' '), targetName: null }
 }
 
 export async function giveAbility(ctx) {
   const { args, reply, db } = ctx
   const p = config.prefix
-  // Anything that looks like a mention belongs to the targeting, not the name.
-  const query = args.slice(1).filter(a => a && !a.startsWith('@')).join(' ').trim()
+  const { found, query, targetName } = parseGiveArgs(args)
+
   if (!query) {
-    return reply(`❌ Usage: *${p}giveability <ability name or id> [@user]*\n_Example: *${p}giveability crown's favor @player*_`)
+    return reply(
+      `❌ Usage: *${p}giveability <ability name or id> [@user | player name]*\n` +
+      `_Example: *${p}giveability crown's favor @player* or *${p}giveability heat_blaze Yochan*_`,
+    )
   }
 
-  const found = findAbilityDef(query)
   if (!found) {
     return reply(`❌ No ability matching *"${query}"*.\n\n${listGrantableAbilities()}`)
   }
 
-  const targetId = resolveTargetId(ctx)
+  // Target: an @mention or a reply beats a typed name, which beats yourself.
+  let targetId = extractTarget(ctx) ?? null
+  if (!targetId && targetName) {
+    if (typeof db?.read === 'function') await db.read().catch(() => {})
+    const named = findPlayerByName(Object.values(db?.data?.users ?? {}), targetName)
+    if (!named) {
+      return reply(
+        `❌ No player found matching *"${targetName}"*.\n` +
+        `_Tag them with @ or reply to one of their messages instead._`,
+      )
+    }
+    targetId = named.id
+  }
+  targetId = targetId ?? ctx.from
+
   const target = getPlayer(db, targetId)
   if (!target) return reply(`❌ That player isn't registered yet.`)
 

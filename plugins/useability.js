@@ -10,6 +10,11 @@
  * battle-turn number an ability becomes usable again on.
  *
  * Usage: <prefix>useability <slot # or name>
+ *
+ * A one-of-one Premium ability (player.premiumAbility — Freeze Touch and the
+ * other four) is listed here too and, when named, routed to its own active
+ * command body: it is not an equippedAbilities entry, so it never resolved here
+ * before and a monthly buyer read "None equipped" for an ability they hold.
  */
 import { config } from '../config.js'
 import { updatePlayer } from '../lib/player-repo.js'
@@ -39,9 +44,40 @@ import {
   applyIncomingDamage,
 } from '../lib/character-abilities.js'
 import { sendCinematicBossTurn } from '../lib/boss-cinematic.js'
+import { getPlayerAbility } from '../lib/premium-abilities.js'
+import { runPremiumActive } from '../lib/premium-active-runner.js'
 
 function isBossFight(player) {
   return !!(player.battleState?.enemy?.isBoss && player.battleState?.bossState)
+}
+
+/** Case- and separator-insensitive key, so "freeze touch" == freeze_touch. */
+const fold = (s) => String(s ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '')
+
+/**
+ * The one-of-one Premium ability THIS player holds, when `query` names it (by
+ * id, name, active name or one of the active's aliases). Null for anyone
+ * else's ability, or for a slot ability — those resolve through
+ * findEquippedAbility() instead.
+ */
+export function findHeldPremiumAbility(player, query) {
+  const def = getPlayerAbility(player)
+  if (!def) return null
+  const q = fold(query)
+  if (!q) return null
+  const keys = [def.id, def.name, def.activeName, ...(def.activeAliases ?? [])].filter(Boolean).map(fold)
+  // Exact on any key, plus a fuzzy match only for keys long enough to be
+  // unambiguous: a 2-letter alias like 'fu' has to be typed exactly, or
+  // ".useability fury" would fire Freeze-Up at nothing.
+  const hit = keys.some(k => k === q || (k.length >= 4 && (k.includes(q) || q.includes(k))))
+  return hit ? def : null
+}
+
+/** How the listing points at a one-of-one's real command. */
+export function premiumLineFor(def, p) {
+  return def.activeCommand
+    ? `use *${p}${def.activeCommand}* in battle, once a fight`
+    : `passive, always on while your Premium is active`
 }
 
 function buildBossEffect(player, spec) {
@@ -65,11 +101,31 @@ export default {
       const equipped = (ctx.player.equippedAbilities ?? [])
         .map(id => getAbilityDef(id)).filter(Boolean)
       const list = equipped.map((a, i) => `  ${i + 1}. *${a.name}* _(${a.rarity}, ${a.type})_`).join('\n')
+      // The one-of-one Premium ability is NOT in equippedAbilities — it lives on
+      // player.premiumAbility with its own engine — so without this line a
+      // monthly buyer who was gifted Freeze Touch read "None equipped" and
+      // concluded the grant never happened.
+      const premium = getPlayerAbility(ctx.player)
+      const premiumLine = premium
+        ? `\n  👑 *${premium.name}* _(one-of-one premium)_\n     ${premiumLineFor(premium, p)}`
+        : ''
+      // "None equipped" reads as "the grant never landed" to a buyer holding a
+      // one-of-one, so the empty-slot wording names the slots specifically.
+      const slotLines = list || (premium ? `_No slot abilities equipped._` : `_None equipped._`)
       return ctx.reply(
-        `✨ *Your Equipped Abilities:*\n${list || `_None equipped._`}\n\n` +
-        `Usage: *${p}useability <slot # or name>*`,
+        `✨ *Your Equipped Abilities:*\n${slotLines}${premiumLine}\n\n` +
+        `Usage: *${p}useability <slot # or name>*\n` +
+        `_Everything you hold, slots included: *${p}ability*._`,
       )
     }
+
+    // A one-of-one Premium ability named on this command is routed to its own
+    // active (the same body .freezeup/.heatwave/.nighteyes/.daylight run) rather
+    // than being reported as "not found or not equipped". It is checked BEFORE
+    // the duel refusal below because, unlike slot abilities, these DO work in a
+    // duel — that is the whole point of the format-agnostic runner.
+    const heldPremium = findHeldPremiumAbility(ctx.player, args.join(' '))
+    if (heldPremium?.active) return runPremiumActive(ctx, heldPremium.id)
 
     // Equipped abilities resolve on the PvE turn engine: everything below reads
     // bs.enemy and works a monster fight. A duel's battleState is type 'pvp'
@@ -100,7 +156,10 @@ export default {
       const ability = findEquippedAbility(player, query)
 
       if (!ability) {
-        await ctx.reply(`❌ Ability *"${query}"* not found or not equipped.\nType *${p}useability* to see yours.`)
+        await ctx.reply(
+          `❌ Ability *"${query}"* not found or not equipped.\n` +
+          `Type *${p}useability* to see yours, or *${p}ability* for everything you hold.`,
+        )
         return player
       }
       if (ability.type !== 'active') {
