@@ -203,13 +203,13 @@ console.log('── .echidna AI chat (graceful path) ──')
   const out = ctx.replies.join('\n')
   // The contract here is: whatever happens - no key, blocked network, API
   // hiccup, or a successful answer - the owner gets ONE in-character reply
-  // and the plugin never throws. Network egress to Google varies by
+  // and the plugin never throws. Network egress to OpenRouter varies by
   // machine, so a graceful "the page comes back blank" also passes.
   check('owner gets exactly one in-character reply', out.length > 10 && !/Error|TypeError|undefined/.test(out))
-  if (config.geminiApiKey) {
+  if (config.openrouterApiKey) {
     console.log('     key configured; live reply preview:', out.slice(0, 140).replace(/\n/g, ' '))
   } else {
-    console.log('     no GEMINI_API_KEY in env - chat will say so until the key is set')
+    console.log('     no OPENROUTER_API_KEY configured - chat will say so until the key is set')
   }
 }
 

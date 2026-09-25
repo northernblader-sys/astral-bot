@@ -68,6 +68,7 @@
  * solo dungeon runs. Nothing in the existing solo combat files is modified.
  */
 import { config } from '../config.js'
+import { tickShunShunRikka } from '../lib/orihime.js'
 import { sendBattleTurnReply } from '../lib/battle-frame-render.mjs'
 import { updatePlayer, getPlayer } from '../lib/player-repo.js'
 import {
@@ -971,6 +972,10 @@ async function battleAttack(ctx) {
       pre += finalForm.message + '\n'
       void sendFinalFormVideo(ctx, finalForm.message, ctx.sender).catch(() => {})
     }
+
+    // Orihime — Shun Shun Rikka (turn-start heal + one rejection per battle).
+    const rikka = tickShunShunRikka(player, cs)
+    if (rikka) pre += rikka.message + '\n'
 
     // Tick the enemy's own DOTs (e.g. Urahara's Tear/Reshape bleed) so party
     // fights honour status effects the same way solo/PvP turns do.

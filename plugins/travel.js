@@ -21,6 +21,7 @@
  * stays correct. .travel town is what ends a visit.
  */
 import { config } from '../config.js'
+import { REGIONS, isGuardianActive, isRegionOpen } from '../lib/guardian-event.js'
 import { updatePlayer } from '../lib/player-repo.js'
 import { locationsMap } from '../lib/game-data.js'
 import { getGroupSettings } from '../lib/group-settings.js'
@@ -117,6 +118,14 @@ function renderMap(player, db, empires = []) {
       lines.push(`🏰 *${rec.name}*  ·  ${tierOf(rec).name}${shop}${visiting}`)
     }
     lines.push(`_Head to one with *${config.prefix}empire visit <name>*._`)
+  }
+
+  // Guardian of the Innocent: its locations live on the event, not in
+  // data/locations.json, so the world map only points at them.
+  if (db && isGuardianActive(db)) {
+    const open = REGIONS.filter(r => isRegionOpen(db, r)).length
+    lines.push(`\n🕊️ *GUARDIAN OF THE INNOCENT*  _(${open}/${REGIONS.length} locations open)_`)
+    lines.push(`_Beastkin are being sold on the frontier. See *${config.prefix}guardian map*._`)
   }
 
   lines.push(`\nType *${config.prefix}travel <location_id>* to head there.`)
