@@ -382,7 +382,7 @@ const BATTLE_ALLOWED_COMMANDS = new Set([
   // NB: the `.echidna` hub command is deliberately NOT here. Its subcommands
   // are `.echidna ritual` / `child` / `name`, none of which is a battle action,
   // and running the rite mid-fight would mutate house/child state while a
-  // battleState is live. `.echidna <message>` is Gemini chat, same as out of
+  // battleState is live. `.echidna <message>` is AI chat, same as out of
   // battle. She is fought WITH, not managed DURING.
   'greed', 'tithe', 'greedgrab', 'gospel', 'gospelofgreed', 'witchs-grasp', 'stealgreed',
   'wisdom', 'bookofwisdom', 'tome', 'tomeofwisdom', 'read',

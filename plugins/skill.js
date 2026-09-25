@@ -1,4 +1,6 @@
 import { config } from '../config.js'
+import { tickShunShunRikka } from '../lib/orihime.js'
+import { companionTurnStrike } from '../lib/guardian-event.js'
 import { sendBattleTurnReply } from '../lib/battle-frame-render.mjs'
 import { sendCinematicBossTurn } from '../lib/boss-cinematic.js'
 import { updatePlayer } from '../lib/player-repo.js'
@@ -260,6 +262,22 @@ export default {
       if (finalForm.ok) {
         msg += finalForm.message + '\n'
         void sendFinalFormVideo(ctx, finalForm.message).catch(() => {})
+      }
+
+      // ── Orihime — Shun Shun Rikka: turn-start heal, once-per-battle rejection
+      // of a poison/burn/bleed. Same equipped-character passive slot as Final Form.
+      const rikka = tickShunShunRikka(player, bs)
+      if (rikka) msg += rikka.message + '\n'
+
+      // ── Guardian of the Innocent — a Battle companion (Minna / Rune & Lica)
+      // strikes beside the player at the start of every PvE turn.
+      const compStrike = companionTurnStrike(player, e, bs)
+      if (compStrike) {
+        msg += compStrike.message + '\n'
+        if (e.hp <= 0) {
+          if (boss) cleanupBossFight(player)
+          return handleVictory(player, e, ctx)
+        }
       }
 
       // ── Miyashi's Frostbind aura — same turn-start slot as attack.js.

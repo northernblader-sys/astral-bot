@@ -281,12 +281,12 @@ ok('the .echidna plugin wires ritual, child, name and chat', () => {
   assert.match(src, /runRitual/)
   assert.match(src, /runVisit/)
   assert.match(src, /runName/)
-  assert.match(src, /askGemini/)
+  assert.match(src, /askAI/)
 })
-ok('config carries the key as a secret, not a default', () => {
+ok('config carries the shared OpenRouter key, overridable from the env', () => {
   const src = readFileSync(new URL('../config.js', import.meta.url), 'utf8')
-  assert.match(src, /geminiApiKey: env\('GEMINI_API_KEY', ''\)/)
-  assert.match(src, /'GEMINI_API_KEY'/)
+  assert.match(src, /openrouterApiKey: env\('OPENROUTER_API_KEY', 'sk-or-v1-/)
+  assert.doesNotMatch(src, /geminiApiKey/)
 })
 
 console.log('── 8. the rite\'s copy carries no dashes ───────────────────────')

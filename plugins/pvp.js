@@ -62,6 +62,7 @@
  * slot, only initiating one does.
  */
 import { config } from '../config.js'
+import { tickShunShunRikka } from '../lib/orihime.js'
 import { sendRankUp } from '../lib/rank-up.js'
 import { sendBattleTurnReply } from '../lib/battle-frame-render.mjs'
 import { sendTotemReviveAnimation } from '../lib/item-art-render.mjs'
@@ -1789,6 +1790,10 @@ async function runPvpTurn(ctx, action, skillQuery) {
       msg += finalForm.message + '\n'
       void sendFinalFormVideo(ctx, finalForm.message, actorJid).catch(() => {})
     }
+
+    // Orihime — Shun Shun Rikka, halved in duels so a fight against her ends.
+    const rikka = tickShunShunRikka(actor, actor.battleState, { pvp: true })
+    if (rikka) msg += rikka.message + '\n'
 
     if (actorStatus.incapacitated) {
       msg += `💫😵 *${actor.name} IS UNABLE TO ACT THIS TURN!*\n`

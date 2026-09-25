@@ -1,7 +1,7 @@
 /**
  * echidna.js - speak to Echidna, the Witch of Greed.
  *
- *   <prefix>echidna <anything>   talk to her - Gemini-powered, in character,
+ *   <prefix>echidna <anything>   talk to her - AI-powered (OpenRouter), in character,
  *                                fully aware of her owner's live state
  *                                (wallet, battles, and the child if one
  *                                exists - see lib/echidna-persona.js)
@@ -23,7 +23,7 @@
  * exclusive (the one who passed her 250 refusals). Anyone else who speaks to
  * her gets a static, in-character dismissal - never an API call.
  *
- * The Gemini key comes from GEMINI_API_KEY in .env (config.geminiApiKey);
+ * The AI key is config.openrouterApiKey (OPENROUTER_API_KEY overrides it);
  * the personality lives in data/echidna-personality.json.
  */
 import { config } from '../config.js'
@@ -31,7 +31,7 @@ import { updatePlayer, getPlayer } from '../lib/player-repo.js'
 import { ownsEchidna, ECHIDNA_CHARACTER_ID } from '../lib/character-abilities.js'
 import { characterMap } from '../lib/game-data.js'
 import { fmtGems } from '../lib/format.js'
-import { askGemini } from '../lib/gemini.js'
+import { askAI } from '../lib/openrouter.js'
 import {
   renderEchidnaSystemPrompt,
   chatHistory,
@@ -224,31 +224,29 @@ async function runChat(ctx, text) {
     const line = STRANGER_LINES[(ctx.from?.length ?? 0) % STRANGER_LINES.length]
     return ctx.reply(line)
   }
-  if (!config.geminiApiKey) {
+  if (!config.openrouterApiKey) {
     return ctx.reply(
       `🍵 _She frowns at the Gospel; the page comes back blank._\n` +
-      `_(Her voice needs a Gemini key - set *GEMINI_API_KEY* in the bot's environment (\`.env\`), then restart.)_`,
+      `_(Her voice needs an OpenRouter key - set *OPENROUTER_API_KEY* in the bot's environment (\`.env\`), then restart.)_`,
     )
   }
 
   const history = chatHistory(ctx.from)
   const userTurn = { role: 'user', content: text }
   try {
-    const { text: answer } = await askGemini({
-      apiKey: config.geminiApiKey,
-      model: config.geminiModel,
+    const { text: answer } = await askAI({
       system: renderEchidnaSystemPrompt(ctx.player),
       messages: [...history, userTurn],
       temperature: 0.95,
-      maxOutputTokens: 400,
+      maxTokens: 400,
     })
     rememberTurn(ctx.from, text, answer)
     return ctx.reply(answer)
   } catch (err) {
-    if (err?.status === 400 || err?.status === 401 || err?.status === 403) {
+    if (err?.status === 401 || err?.status === 402 || err?.status === 403) {
       return ctx.reply(
         `🍵 _She taps the Gospel, irritated._ _"The connection is refused - the key the bot carries does not open the door." _\n` +
-        `_(Check GEMINI_API_KEY - the API rejected it, status ${err.status}.)_`,
+        `_(Check OPENROUTER_API_KEY - the API rejected it, status ${err.status}.)_`,
       )
     }
     return ctx.reply(`🍵 _She frowns at the Gospel; the page comes back blank._ _"Ask me again in a moment - even the world's memory stutters sometimes." _`)

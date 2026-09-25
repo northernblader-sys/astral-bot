@@ -165,17 +165,17 @@ export const config = {
   // there is no shared key to fall back to, and the command already prints a
   // "set PIXELCUT_API_KEY in .env" message when it's missing.
   pixelcutApiKey: env('PIXELCUT_API_KEY', ''),
-  // Gemini API key - powers Echidna's voice (plugins/echidna.js talks to her
-  // via plugins -> lib/gemini.js). Same rule as MONGO_URI: a real key lives
-  // in .env (gitignored) or the deploy's environment variables, NEVER in
-  // this file - committing it would publish it to every clone of the repo.
-  // With no key set, .echidna chat says so in character and everything else
-  // about Echidna (spin, .greed, the child) works unchanged.
-  geminiApiKey: env('GEMINI_API_KEY', '') || env('GOOGLE_API_KEY', '').trim(),
-  // Which Gemini model speaks as her. lib/gemini.js falls back down a small
-  // ladder (gemini-2.5-flash -> 2.0-flash -> 1.5-flash) if a name 404s for
-  // the key's tier, so this rarely needs touching.
-  geminiModel: env('GEMINI_MODEL', 'gemini-2.5-flash'),
+  // OpenRouter API key - the ONE shared key every AI voice in the bot uses:
+  // Echidna (plugins/echidna.js) and the five Guardian of the Innocent
+  // companions (plugins/companion.js), all through lib/openrouter.js. It
+  // replaced the old Gemini client. Hardcoded by the owner's request (this
+  // repo is private); OPENROUTER_API_KEY in .env still overrides it, so the
+  // key can be rotated without a code change.
+  openrouterApiKey: env('OPENROUTER_API_KEY', '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').trim(),
+  // Which OpenRouter model speaks. lib/openrouter.js falls down a short
+  // ladder (gemini-2.5-flash -> gpt-4o-mini -> llama-3.3-70b) if this one is
+  // unavailable, so it rarely needs touching.
+  openrouterModel: env('OPENROUTER_MODEL', 'google/gemini-2.5-flash'),
   // WhatsApp group invite link for player support — shown via .support.
   supportGroupLink: env('SUPPORT_GROUP_LINK', 'https://chat.whatsapp.com/KwYfA8cxD6N9q2d4mQfliT'),
   // Community invite links, one per platform — shown via .whatsapp / .telegram

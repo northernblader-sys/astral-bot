@@ -1,4 +1,5 @@
 import { config } from '../config.js'
+import { REGION_MAP, GUARDIAN, ensureGuardianState } from '../lib/guardian-event.js'
 import { updatePlayer } from '../lib/player-repo.js'
 import { calcMonsterDamage, hpBar } from '../lib/combat-engine.js'
 import {
@@ -69,9 +70,28 @@ export default {
       if (Math.random() < chance) {
         // Successful flee — cleanupBossFight is a no-op for non-boss fights,
         // but ensures bossState is always explicitly cleared before nulling battleState.
+        const rescueBs = player.battleState?.type === 'rescue' ? player.battleState.guardian : null
         cleanupBossFight(player)
         player.inBattle    = false
         player.battleState = null
+        if (rescueBs) {
+          // Guardian of the Innocent: running costs the day's attempt and the
+          // captives stay in the cage. A captor also resets the retry gate.
+          const region = REGION_MAP[rescueBs.regionId]
+          const g = ensureGuardianState(player)
+          if (rescueBs.isCaptor && region) {
+            g.captorRetryAt[region.id] = (g.regionWins[region.id] ?? 0) + GUARDIAN.captorRetryWins
+          }
+          const cap = rescueBs.captives?.[0]
+          await ctx.reply(
+            `🏃 *${player.name}* breaks away from *${e.name}*.\n\n` +
+            (cap ? `🗣️ *${cap.name}:* _\"you are leaving\" the voice goes small \"it is all right we are used to it\"_\n\n` : '') +
+            `_The cage stays shut behind you._` +
+            (rescueBs.isCaptor && region ? `\n_${region.captor.name} will not show again until ${GUARDIAN.captorRetryWins} more rescues here._` : '') +
+            `\n_Type_ *${p}rescue* _when you are ready to go back._`,
+          )
+          return player
+        }
         await ctx.reply(
           `🏃 *${player.name}* escapes from *${e.name}*!\n\n` +
           `📍 _Still on Floor_ *${player.dungeonFloor}*.\n` +
