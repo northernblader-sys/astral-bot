@@ -27,6 +27,7 @@
  * the personality lives in data/echidna-personality.json.
  */
 import { config } from '../config.js'
+import { replyWithPortrait } from '../lib/portrait-reply.js'
 import { isOwnerJid } from '../lib/group-helpers.js'
 import { updatePlayer, getPlayer } from '../lib/player-repo.js'
 import { ownsEchidna, ECHIDNA_CHARACTER_ID } from '../lib/character-abilities.js'
@@ -45,6 +46,10 @@ import {
   describeChild,
   childName,
 } from '../lib/echidna-child.js'
+
+// Command replies use this portrait; the collectible character art is unchanged.
+const PORTRAIT = 'https://i.ibb.co/GhJCg2G/Echidna-Nerd.jpg'
+const reply = (ctx, text) => replyWithPortrait(ctx, PORTRAIT, text)
 
 const RULE = '━━━━━━━━━━━━━━━━━━━━'
 const sleep = (ms) => new Promise(r => setTimeout(r, ms))
@@ -91,11 +96,11 @@ function ritualClosing(name) {
 
 async function runRitual(ctx) {
   if (!ownsEchidna(ctx.player)) {
-    return ctx.reply(`🍵 _"The sanctuary rite is not for you. It belongs to the one I accepted." _`)
+    return reply(ctx, `🍵 _"The sanctuary rite is not for you. It belongs to the one I accepted." _`)
   }
   if (hasChild(ctx.player)) {
     const c = describeChild(ctx.player.echidnaChild)
-    return ctx.reply(
+    return reply(ctx,
       `🍵 *ONE child.*\n${RULE}\n` +
       `_Her eyes narrow over the teacup._\n` +
       `_"You already have one of mine: *${c.name}*, ${c.stage}. The rite happens once in a lifetime, and you have spent yours." _`,
@@ -103,7 +108,7 @@ async function runRitual(ctx) {
   }
 
   for (const beat of ritualBeats(ctx.player.name ?? 'holder')) {
-    await ctx.reply(beat)
+    await reply(ctx, beat)
     await sleep(1500)
   }
 
@@ -112,7 +117,7 @@ async function runRitual(ctx) {
     player.echidnaChild = { name: null, bornAt: Date.now(), visits: 0, lastVisitAt: 0 }
   })
   const bornName = childName(getPlayer(ctx.db, ctx.from)?.echidnaChild ?? null)
-  return ctx.reply(ritualClosing(bornName))
+  return reply(ctx, ritualClosing(bornName))
 }
 
 const VISIT_SCENES = {
@@ -136,7 +141,7 @@ const VISIT_SCENES = {
 
 async function runVisit(ctx) {
   if (!hasChild(ctx.player)) {
-    return ctx.reply(
+    return reply(ctx,
       `🍵 _"There is no child here. Yet." _\n${RULE}\n` +
       `_Perform the sanctuary rite with *${config.prefix}echidna ritual*. One child, ever._`,
     )
@@ -153,9 +158,9 @@ async function runVisit(ctx) {
 
   if (!visit?.ok) {
     if (visit?.reason === 'cooldown') {
-      return ctx.reply(`🍵 _${childName(ctx.player.echidnaChild)} just saw you. Let the child miss you - try again in *${visit.mins} min*._`)
+      return reply(ctx, `🍵 _${childName(ctx.player.echidnaChild)} just saw you. Let the child miss you - try again in *${visit.mins} min*._`)
     }
-    return ctx.reply(`🍵 _There is no child to visit._`)
+    return reply(ctx, `🍵 _There is no child to visit._`)
   }
 
   const c = describeChild(ctx.player.echidnaChild)
@@ -170,7 +175,7 @@ async function runVisit(ctx) {
   if (visit.stage !== 'grown') {
     lines.push(``, `📈 Growth: *${c.stage}* · ${Math.max(0, Math.round(c.hoursToNext))}h of attention to the next stage _(each visit counts as 6h)_.`)
   }
-  return ctx.reply(lines.join('\n'))
+  return reply(ctx, lines.join('\n'))
 }
 
 async function runName(ctx) {
@@ -180,12 +185,12 @@ async function runName(ctx) {
     res = nameChild(player, raw)
   })
   if (res?.reason === 'no_child') {
-    return ctx.reply(`🍵 _"Name what? Perform the rite first: *${config.prefix}echidna ritual*. One child, ever." _`)
+    return reply(ctx, `🍵 _"Name what? Perform the rite first: *${config.prefix}echidna ritual*. One child, ever." _`)
   }
   if (!res?.ok) {
-    return ctx.reply(`❌ That name won't do${res?.reason === 'too_long' ? ' - 24 characters at most' : ''}. Try: *${config.prefix}echidna name <name>*`)
+    return reply(ctx, `❌ That name won't do${res?.reason === 'too_long' ? ' - 24 characters at most' : ''}. Try: *${config.prefix}echidna name <name>*`)
   }
-  return ctx.reply(
+  return reply(ctx,
     `🍵 *Named.*\n${RULE}\n` +
     `_Echidna repeats it once, tasting it._ _"...${res.name}. Very well. It suits them. If you tell anyone I said that, I will double your debts." _\n` +
     `_Check on *${res.name}* anytime with *${config.prefix}echidna child*._`,
@@ -217,7 +222,7 @@ async function runStatus(ctx) {
     ``,
     `💬 Or simply talk to her: *${p}echidna <message>*`,
   ]
-  return ctx.reply(lines.join('\n'))
+  return reply(ctx, lines.join('\n'))
 }
 
 async function runChat(ctx, text) {
@@ -228,10 +233,10 @@ async function runChat(ctx, text) {
   // for conversation, not for claiming her rewards.
   if (!ownsEchidna(ctx.player) && !isOwnerJid(ctx.from)) {
     const line = STRANGER_LINES[(ctx.from?.length ?? 0) % STRANGER_LINES.length]
-    return ctx.reply(line)
+    return reply(ctx, line)
   }
   const quietReply = '🍵 _She sets a second cup beside hers._ "Stay for tea. I need a quiet moment before we continue."'
-  if (!hasAIKey()) return ctx.reply(quietReply)
+  if (!hasAIKey()) return reply(ctx, quietReply)
 
   const history = chatHistory(ctx.from)
   const userTurn = { role: 'user', content: text }
@@ -243,10 +248,10 @@ async function runChat(ctx, text) {
       maxTokens: 400,
     })
     rememberTurn(ctx.from, text, answer)
-    return ctx.reply(answer)
+    return reply(ctx, answer)
   } catch {
     // Technical diagnostics are logged by the shared client, never sent to players.
-    return ctx.reply(quietReply)
+    return reply(ctx, quietReply)
   }
 }
 
