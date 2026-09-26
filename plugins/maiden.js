@@ -36,7 +36,7 @@
  * not loosen them to chase a spicier voice.
  */
 import { config } from '../config.js'
-import { isOwnerJid } from '../lib/group-helpers.js'
+import { isPlatformOwner } from '../lib/platform/permissions.js'
 import { updatePlayer } from '../lib/player-repo.js'
 import { askAI, hasAIKey } from '../lib/ai.js'
 import { characterMap } from '../lib/game-data.js'
@@ -115,7 +115,7 @@ function moodOf(player, now = Date.now()) {
 
 /** The chat door: her holder, and the bot owner for live testing. */
 function canSpeak(ctx) {
-  return ownsSwordMaiden(ctx.player) || isOwnerJid(ctx.from)
+  return ownsSwordMaiden(ctx.player) || isPlatformOwner(ctx.from)
 }
 
 function dismissal(ctx) {
