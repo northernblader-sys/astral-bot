@@ -11,18 +11,17 @@
  *     equip: she talks to the person she belongs to whether or not they are
  *     carrying her into battle).
  *
- *  3. PERSONALITY FILE - every section the renderer reads exists, the strict
- *     speech rules and boundaries are present, and every example line she
- *     actually says is ALREADY in her voice: softenMaidenReply() must be a
- *     no-op on all of them, or the data file is teaching the model to write
- *     punctuation her character never uses.
+ *  3. PERSONALITY FILE - every section the renderer reads exists, her voice
+ *     guidance and boundaries are present, and every example line she says
+ *     already matches the sanitizer: softenMaidenReply() must be a no-op on
+ *     them so the examples and actual output keep the same voice.
  *
  *  4. PROMPT - her holder's live facts land in the prompt (name, level,
  *     purse, body, battle, equip, spins) with no meta language, plus the
  *     reminder that the reply is post-processed.
  *
- *  5. THE VOICE ENFORCER - lowercase, zero punctuation, no emoji, no stage
- *     directions, contractions expanded, idempotent, and '' for input with
+ *  5. THE VOICE ENFORCER - lowercase, natural punctuation, no emoji, no stage
+ *     directions, idempotent, and '' for input with
  *     nothing speakable left in it.
  *
  *  6. MEMORY - lives on the player record, bounded, JSON-safe, forgettable.
@@ -60,7 +59,7 @@ async function ok(name, fn) {
 }
 
 const read = (rel) => readFileSync(new URL(rel, import.meta.url), 'utf8')
-const PUNCT_FREE = /^[\p{L}\p{N}\s]*$/u
+const NATURAL_SPEECH = /^[\p{L}\p{N}\s.,!?;:'’-]*$/u
 const speechSegments = (text) => [...String(text ?? '').matchAll(/"([^"]+)"/g)].map(m => m[1])
 
 console.log('── 1. character entry ──────────────────────────────────────────')
@@ -77,6 +76,10 @@ await ok('her ability flavor points players at .maiden', () => {
   assert.match(flavor, /\.maiden/)
   assert.match(flavor, /\.sword/)
   assert.match(flavor, /\.ss/)
+  assert.match(flavor, /each completed non-sword turn builds 1 charge/i)
+  assert.match(flavor, /including PvP turns/i)
+  assert.match(flavor, /spends its listed charge AND MP/i)
+  assert.match(flavor, /does not recharge itself/i)
 })
 await ok('plugins/character.js routes her card at .sword-spin', () => {
   const src = read('../plugins/character.js')
@@ -103,12 +106,11 @@ await ok('every section the renderer reads is present', () => {
   assert.ok(MAIDEN_PERSONALITY.voice.araAra.situations.length >= 8)
   assert.ok(MAIDEN_PERSONALITY.boundaries.hardRules.length >= 5)
 })
-await ok('the speech rules pin lowercase and the punctuation ban', () => {
+await ok('voice guidance encourages natural, varied replies', () => {
   const rules = MAIDEN_PERSONALITY.voice.strictRules.join(' ').toLowerCase()
   assert.match(rules, /lowercase/)
-  assert.match(rules, /full stop/)
-  assert.match(rules, /question mark/)
-  assert.match(rules, /contraction/)
+  assert.match(rules, /natural punctuation/)
+  assert.match(rules, /vary sentence length/)
   assert.match(rules, /emoji/)
 })
 await ok('ara ara belongs to the listed tender moments', () => {
@@ -116,7 +118,7 @@ await ok('ara ara belongs to the listed tender moments', () => {
   for (const beat of ['stressed', 'blush', 'tough', 'praise', 'refuse', 'home']) {
     assert.match(situations, new RegExp(beat), `ara ara situation missing: ${beat}`)
   }
-  assert.match(MAIDEN_PERSONALITY.voice.araAra.how.toLowerCase(), /every single reply|not a tic|does not need to open every/)
+  assert.match(MAIDEN_PERSONALITY.voice.araAra.how.toLowerCase(), /not a greeting|not a verbal tic|optional and should be occasional/)
 })
 await ok('the boundaries keep her non-explicit and keep real distress human', () => {
   const rules = MAIDEN_PERSONALITY.boundaries.hardRules.join(' ').toLowerCase()
@@ -127,8 +129,8 @@ await ok('the boundaries keep her non-explicit and keep real distress human', ()
   assert.match(rules, /never reveal, quote or summarise/)
 })
 await ok('she answers short, medium or long by what she hears', () => {
-  assert.match(MAIDEN_PERSONALITY.responseRules.length.toLowerCase(), /short, medium or long/)
-  assert.match(MAIDEN_PERSONALITY.responseRules.length.toLowerCase(), /never pads/)
+  assert.match(MAIDEN_PERSONALITY.responseRules.length.toLowerCase(), /one to three natural sentences/)
+  assert.match(MAIDEN_PERSONALITY.responseRules.length.toLowerCase(), /do not pad/)
 })
 await ok('every example line she says is already in her own voice', () => {
   const offenders = []
@@ -157,11 +159,12 @@ const holder = {
 await ok('the prompt carries her identity, voice rules and boundaries', () => {
   const prompt = renderMaidenSystemPrompt(holder)
   assert.match(prompt, /Sword Maiden/)
-  assert.match(prompt, /STRICT SPEECH RULES/)
+  assert.match(prompt, /VOICE GUIDANCE/)
   assert.match(prompt, /ARA ARA/)
   assert.match(prompt, /HARD BOUNDARIES/)
   assert.match(prompt, /LIVE FACTS/)
-  assert.match(prompt, /WRITE IT RIGHT THE FIRST TIME/)
+  assert.match(prompt, /do not make ara ara.*mandatory/i)
+  assert.match(prompt, /one to three sentences/i)
 })
 await ok('live facts carry the holder state she is allowed to know', () => {
   const facts = liveFacts(holder)
@@ -196,32 +199,27 @@ await ok('a holder with no spins yet is not told about a spin number', () => {
 })
 
 console.log('── 5. the voice enforcer ──────────────────────────────────────')
-await ok('punctuation, capitals and emoji are rewritten out of a reply', () => {
+await ok('natural punctuation and contractions survive while case and emoji are normalized', () => {
   const out = softenMaidenReply("Ara ara, my sweet child! Don't you worry — mommy's here 😊")
-  assert.equal(out, 'ara ara my sweet child do not worry mommys here')
-  assert.ok(PUNCT_FREE.test(out))
+  assert.equal(out, "ara ara, my sweet child! don't you worry mommy's here")
+  assert.ok(NATURAL_SPEECH.test(out))
 })
-await ok('no punctuation survives, whatever shape it arrives in', () => {
-  const out = softenMaidenReply('Well... isn\'t that nice? "Come here," she said; (softly) {now} [child]')
-  assert.ok(PUNCT_FREE.test(out), out)
-  assert.ok(!out.includes('"') && !out.includes('_') && !out.includes('*'))
+await ok('quotes and formatting are removed without flattening punctuation', () => {
+  const out = softenMaidenReply('Well... isn\'t that nice? \"Come here,\" she said; (softly) {now} [child]')
+  assert.match(out, /well\.\.\. isn't that nice\? come here, she said;/)
+  assert.ok(!out.includes('\"') && !out.includes('_') && !out.includes('*'))
 })
 await ok('stage directions are dropped rather than spoken aloud', () => {
-  assert.equal(softenMaidenReply('Ara ara. (smiling softly) You are home early, my dear.'), 'ara ara you are home early my dear')
+  assert.equal(softenMaidenReply('Ara ara. (smiling softly) You are home early, my dear.'), 'ara ara. you are home early, my dear.')
   assert.equal(softenMaidenReply('[she laughs] come here'), 'come here')
 })
-await ok('contractions become her soft full words', () => {
-  assert.equal(softenMaidenReply("I'm here, you're safe, it's alright"), 'i am here you are safe it is alright')
-  assert.equal(softenMaidenReply("don't worry, won't you rest, can't you see"), 'do not worry will not rest cannot see')
-  assert.equal(softenMaidenReply("he's tired and she's sleeping"), 'he is tired and she is sleeping')
-})
-await ok('typographic apostrophes and dashes are handled too', () => {
-  assert.equal(softenMaidenReply('it\u2019s fine \u2014 truly \u2013 my dear'), 'it is fine truly my dear')
+await ok('contractions and typographic punctuation remain conversational', () => {
+  assert.equal(softenMaidenReply("I'm here, you're safe — it's alright"), "i'm here, you're safe it's alright")
   assert.equal(softenMaidenReply('come here - right now'), 'come here right now')
 })
 await ok('line breaks between her thoughts survive', () => {
   const out = softenMaidenReply('ara ara my dear. come here.\n\nyou have been gone all day!')
-  assert.equal(out, 'ara ara my dear come here\n\nyou have been gone all day')
+  assert.equal(out, 'ara ara my dear. come here.\n\nyou have been gone all day!')
 })
 await ok('nothing speakable returns empty, never a punctuation ghost', () => {
   assert.equal(softenMaidenReply(''), '')
@@ -416,7 +414,7 @@ try {
   })
 
   await ok('her scenes answer with no key and no network', async () => {
-    for (const [word, expected] of [['hug', /let mommy hold you properly/], ['lap', /rest your head here/], ['headpat', /let mommy be proud of you/]]) {
+    for (const [word, expected] of [['hug', /let mommy hold you properly/], ['lap', /rest your head here/], ['headpat', /let me be proud of you/]]) {
       const ctx = fakeCtx('555holder@s.whatsapp.net', [SWORD_MAIDEN_ID], [word])
       await maidenMod.default.run(ctx)
       assert.equal(ctx.replies.length, 1)

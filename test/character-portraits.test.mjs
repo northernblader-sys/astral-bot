@@ -105,8 +105,8 @@ for (const { plugin, character, image, commands, refused, quiet } of portraits) 
     await plugin.run(ctx)
     assertPortraits(ctx, image)
     assert.equal(apiCalls, 1)
-    assert.equal(ctx.images[0].caption, plugin === maiden ? 'hello dear' : 'Hello, Dear!')
-    if (plugin === maiden) assert.equal(ctx.player.maidenChat.at(-1).content, 'hello dear')
+    assert.equal(ctx.images[0].caption, plugin === maiden ? 'hello, dear!' : 'Hello, Dear!')
+    if (plugin === maiden) assert.equal(ctx.player.maidenChat.at(-1).content, 'hello, dear!')
   })
 
   test(`${plugin.name} provider failure still returns a portrait with the quiet reply`, async () => {

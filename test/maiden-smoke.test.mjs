@@ -8,8 +8,8 @@
  *      stack is never touched. A scene word does not leak either.
  *   2. HER VOICE - a holder's chat reaches GROQ first (url, credential and
  *      model checked), and whatever punctuation and emoji the model sends
- *      back is rewritten into her lowercase stream before it is sent and
- *      before it is stored.
+ *      back keeps its natural punctuation while emoji and stage directions
+ *      are removed before the reply is sent and stored.
  *   3. CONTINUITY - the exchange is written to the player's own record and fed
  *      back in on the next turn, so she remembers the thread across restarts.
  *   4. FAILOVER - a dead Groq (429) falls through to the OpenRouter credential
@@ -59,7 +59,7 @@ function check(name, cond) {
   if (!cond) failures++
 }
 
-const PUNCT_FREE = /^[\p{L}\p{N}\s]*$/u
+const NATURAL_SPEECH = /^[\p{L}\p{N}\s.,!?;:'’-]*$/u
 const realFetch = globalThis.fetch
 const savedKeys = [config.groqApiKey, config.openrouterApiKey]
 
@@ -120,20 +120,20 @@ try {
     const out = ctx.replies.join('\n')
 
     check('exactly one reply reached the holder', ctx.replies.length === 1)
-    check('the reply is her lowercase, punctuation free stream', PUNCT_FREE.test(out) && out === out.toLowerCase())
-    check('the emoji, the dash and the contraction are gone', !out.includes('😊') && !out.includes('—') && !out.includes("i'm"))
+    check('the reply stays lowercase with natural punctuation', NATURAL_SPEECH.test(out) && out === out.toLowerCase() && out.includes(','))
+    check('emoji and typographic dash are removed without flattening punctuation', !out.includes('😊') && !out.includes('—') && out.includes('!'))
     check('her warm words survived the rewrite', out.includes('ara ara') && out.includes('let mommy hold you'))
     check('the call went to Groq with the Groq credential and model', calls.length === 1 &&
       calls[0].url === 'https://api.groq.com/openai/v1/chat/completions' &&
       calls[0].auth === 'Bearer groq-test-key' &&
       calls[0].body.model === config.groqModel)
     check('the system prompt IS her personality file', /Sword Maiden/.test(calls[0].body.messages[0].content) &&
-      /STRICT SPEECH RULES/.test(calls[0].body.messages[0].content) &&
+      /VOICE GUIDANCE/.test(calls[0].body.messages[0].content) &&
       /ara ara/i.test(calls[0].body.messages[0].content))
     check('the holder state is in front of her', /Blader/.test(calls[0].body.messages[0].content) &&
       /12500 Solars/.test(calls[0].body.messages[0].content) &&
       /300 spins/.test(calls[0].body.messages[0].content))
-    check('the reply is chat sized and warm', calls[0].body.max_tokens === 400 && calls[0].body.temperature >= 0.9)
+    check('the reply is chat sized and warm', calls[0].body.max_tokens === 400 && calls[0].body.temperature >= 0.9 && /one to three sentences/i.test(calls[0].body.messages[0].content))
     check('their message arrived as one turn', calls[0].body.messages.at(-1).content === 'i am tired today')
 
     // ════════════════ 3. continuity ════════════════
@@ -172,7 +172,7 @@ try {
     check('Groq was tried first, and retried before giving up', groqCalls.length >= 1)
     check('the OpenRouter backup answered with its own credential',
       routerCalls.length === 1 && routerCalls[0].auth === 'Bearer router-test-key')
-    check('her voice was applied to the fallback answer too', out === 'router voice here my dear come and rest')
+    check('her voice was applied to the fallback answer too', out === 'router voice here my dear, come and rest!')
     check('the fallback exchange was remembered', (users[HOLDER].maidenChat ?? []).at(-1)?.content === out)
   }
 

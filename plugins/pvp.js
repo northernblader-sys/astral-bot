@@ -63,6 +63,7 @@ import { isBattleCinematicActive } from '../lib/battle-presentation.js'
  * slot, only initiating one does.
  */
 import { config } from '../config.js'
+import { chargeSwordTurn, SWORD_SKILLS } from '../lib/witch-heroes.js'
 import { tickShunShunRikka } from '../lib/orihime.js'
 import { sendRankUp } from '../lib/rank-up.js'
 import { sendBattleTurnReply } from '../lib/battle-frame-render.mjs'
@@ -1294,6 +1295,24 @@ async function showMoves(ctx) {
     )
   }
 
+  // Sword Maiden's Absolute Sword uses its normal MP costs in PvP. Other
+  // completed turns build charge; a .sword technique spends charge and MP,
+  // consumes the turn, and cannot recharge itself.
+  if (player.equippedCharacter === 'sword_maiden') {
+    const charge = player.battleState.witchHeroes?.charge ?? 0
+    lines.push(`⚔️ *Absolute Sword* — _${charge}/6 charge; +1 after each completed non-sword PvP turn. A .sword technique spends both charge and MP, uses your turn, and does not recharge itself._`)
+    for (const [key, skill] of Object.entries(SWORD_SKILLS)) {
+      const cost = Math.ceil(Math.max(1, player.maxMp ?? 1) * skill.mp)
+      const swordState = player.battleState.witchHeroes ?? {}
+      const alreadyUsed = (key === 'transcended' && swordState.transcended) ||
+        (key === 'return' && swordState.returnStroke) ||
+        (key === 'coordinate' && swordState.coordinateUsed)
+      const ready = !alreadyUsed && charge >= skill.charge && (player.mp ?? 0) >= cost
+      const note = alreadyUsed ? (key === 'coordinate' ? 'already used this duel' : 'already armed') : `${skill.charge} charge · ${cost} MP`
+      lines.push(`${ready ? '✅' : '⛔'} ⚔️ *${skill.name}* — _${note}_\n    \`.sword ${key}\``)
+    }
+  }
+
   // Gogeta's two actives, appended for the same reason: neither is in
   // moveOptions(), and both are things the player has to be able to count
   // mid-duel — a turn cooldown each, a full energy bar on the ultimate, and a
@@ -1562,6 +1581,7 @@ async function autoResolveCatFormTurns(db, ctx, aJid, bJid, { lead = '' } = {}) 
     const movedAt = Date.now()
     await updatePlayer(db, holderJid, (h) => {
       if (!h.battleState) return
+      chargeSwordTurn(h)
       h.battleState.myTurn = false
       h.battleState.turn = (h.battleState.turn ?? 1) + 1
       h.battleState.lastMoveAt = movedAt
@@ -1800,6 +1820,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
 
     if (actorStatus.incapacitated) {
       msg += `💫😵 *${actor.name} IS UNABLE TO ACT THIS TURN!*\n`
+      chargeSwordTurn(actor)
       actor.battleState.myTurn = false
       actor.battleState.turn = (actor.battleState.turn ?? 1) + 1
       incapacitated = true
@@ -3421,6 +3442,10 @@ async function runPvpTurn(ctx, action, skillQuery) {
     : prevSeen
 
   await updatePlayer(db, actorJid, (actor) => {
+    // Sword Maiden's resource bar advances once after this player's completed
+    // PvP turn, not merely because a sword command was submitted. The skill
+    // itself still requires both stored charge and its MP cost.
+    chargeSwordTurn(actor)
     actor.battleState.myTurn = false
     actor.battleState.turn = (actor.battleState.turn ?? 1) + 1
     actor.battleState.lastMoveAt = movedAt

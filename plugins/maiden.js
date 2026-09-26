@@ -23,17 +23,18 @@
  * through the chat door so her voice can be tested live without holding her,
  * the same courtesy plugins/echidna.js extends for the same reason.
  *
- * Her speech rule (lowercase, no punctuation, no contractions, no emoji) is
- * asked for in data/maiden-personality.json AND enforced on the way out by
- * softenMaidenReply(), so a model that slips still reads like her. Her card is
+ * Her recognizable voice is guided by data/maiden-personality.json, while
+ * softenMaidenReply() removes emoji, formatting and stage directions without
+ * flattening natural punctuation. Her card is
  * deliberately NOT in BATTLE_ALLOWED_COMMANDS: like Echidna's hub command,
  * conversation is not a battle action, and mid-fight is not the moment.
  *
- * A note on her temper, for whoever edits her next: she is the soft ara ara
- * mother. Her boundaries in the personality file keep her tasteful and
- * non-explicit, and keep a real person in real distress pointed at a real
- * person they trust. Those rules are load bearing rather than decorative. Do
- * not loosen them to chase a spicier voice.
+ * A note on her temper, for whoever edits her next: keep her warm, perceptive
+ * and gently affectionate, but let her sound like she is responding to this
+ * person in this moment. Ara ara is occasional flavor, not a required opener.
+ * Her boundaries keep her tasteful and non-explicit, and point a real person
+ * in real distress toward someone they trust. Those rules are load bearing;
+ * do not loosen them to chase a spicier voice.
  */
 import { config } from '../config.js'
 import { replyWithPortrait } from '../lib/portrait-reply.js'
@@ -65,7 +66,7 @@ const MAX_MESSAGE_CHARS = 600
  * Static dismissals for everyone she does not belong to. She is blind, calm,
  * and completely uninterested in strangers, so the refusal is short and never
  * contains a hint that a real conversation was on offer. Her quoted words
- * follow her own speech rule: lowercase, no punctuation at all.
+ * stay in her style: lowercase, direct, and gently composed.
  */
 const STRANGER_LINES = [
   `⚔️ _she tilts her blindfolded face toward your voice, listens for one second, and turns away again_ "you are not the one i am kept by child i have only two arms and both of them are already full"`,
@@ -94,11 +95,11 @@ const SCENES = {
   ].join('\n\n'),
   lap: [
     `🌸 _she sits, and pats her own thigh once, unhurried, as if the place had been kept warm for you since morning._`,
-    `"ara ara lie down my precious one and rest your head here while i stroke your hair tell mommy nothing at all if you do not want to"`,
+    `"lie down, my dear, and rest your head here while i stroke your hair. you do not have to say a word if you would rather be quiet"`,
   ].join('\n\n'),
   headpat: [
     `🤍 _her hand finds the top of your head without a single miss and settles there, warm and certain, the way it has a thousand times._`,
-    `"ara ara such a good child you have done enough for today my dear let mommy be proud of you out loud for a while"`,
+    `"you have done enough for today, my dear. let me be proud of you for a while"`,
   ].join('\n\n'),
 }
 
@@ -146,7 +147,7 @@ async function runStatus(ctx) {
       : `🔒 _Not yours. One player bot-wide ever wins her: *${p}sword-spin*, ${cost} gem a spin._`,
     ``,
     `🎭 Today's mood: ${moodOf(ctx.player)}`,
-    `⚔️ Battle: *${p}sword* draws her five techniques, charge and MP read on *${p}ss*.`,
+    `⚔️ *Absolute Sword:* gain 1 charge after a completed non-sword turn (max 6), including PvP. A *${p}sword* technique spends charge *and* MP, uses your turn, and does not recharge itself. *${p}ss* shows live costs.`,
     `💬 Speak with her: *${p}maiden <message>*${owns ? '' : ` _(hers alone)_`}`,
     `🧸 Ask for a soft moment: *${p}maiden hug* · *${p}maiden lap* · *${p}maiden headpat*`,
     spins > 0 ? `🎡 She came home on spin *${spins}*. _She remembers every single one of them._` : null,
