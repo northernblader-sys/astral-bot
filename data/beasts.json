@@ -1,0 +1,163 @@
+[
+  {
+    "id": "ember_hatchling",
+    "name": "Ember Hatchling",
+    "emoji": "🔥",
+    "rarity": "common",
+    "baseStats": { "atk": 4, "def": 2, "maxHp": 40 },
+    "startingCp": 50,
+    "levelReq": 1,
+    "description": "A palm-sized fire spirit that hatched from a dungeon cinder. Eager, clumsy, loyal."
+  },
+  {
+    "id": "silt_crawler",
+    "name": "Silt Crawler",
+    "emoji": "🦀",
+    "rarity": "common",
+    "baseStats": { "atk": 3, "def": 5, "maxHp": 55 },
+    "startingCp": 50,
+    "levelReq": 1,
+    "description": "A river-bottom scuttler with a shell like tempered iron. Slow to anger, slower to fall."
+  },
+  {
+    "id": "gale_sprite",
+    "name": "Gale Sprite",
+    "emoji": "🌪️",
+    "rarity": "uncommon",
+    "baseStats": { "atk": 6, "def": 3, "maxHp": 60 },
+    "startingCp": 120,
+    "levelReq": 5,
+    "description": "A sliver of living wind. Darts between hits faster than the eye can track."
+  },
+  {
+    "id": "mossback_golem",
+    "name": "Mossback Golem",
+    "emoji": "🗿",
+    "rarity": "uncommon",
+    "baseStats": { "atk": 5, "def": 8, "maxHp": 90 },
+    "startingCp": 120,
+    "levelReq": 5,
+    "description": "Stone bones wrapped in centuries of forest growth. Moves like a landslide."
+  },
+  {
+    "id": "voltfang_wolf",
+    "name": "Voltfang Wolf",
+    "emoji": "🐺",
+    "rarity": "rare",
+    "baseStats": { "atk": 10, "def": 6, "maxHp": 120 },
+    "startingCp": 300,
+    "levelReq": 12,
+    "description": "Its howl arcs with stormlight. Hunts in packs of one — itself is enough."
+  },
+  {
+    "id": "tidecaller_kraken",
+    "name": "Tidecaller Kraken (Spawn)",
+    "emoji": "🐙",
+    "rarity": "rare",
+    "baseStats": { "atk": 9, "def": 9, "maxHp": 140 },
+    "startingCp": 300,
+    "levelReq": 12,
+    "description": "A juvenile fragment of something vastly larger, still learning to pull tides."
+  },
+  {
+    "id": "cinderwyrm",
+    "name": "Cinderwyrm",
+    "emoji": "🐍",
+    "rarity": "epic",
+    "baseStats": { "atk": 16, "def": 12, "maxHp": 220 },
+    "startingCp": 700,
+    "levelReq": 25,
+    "description": "A lesser drake born of volcanic ash. Its scales glow brighter the angrier it gets."
+  },
+  {
+    "id": "graveveil_wraith",
+    "name": "Graveveil Wraith",
+    "emoji": "👻",
+    "rarity": "epic",
+    "baseStats": { "atk": 18, "def": 9, "maxHp": 190 },
+    "startingCp": 700,
+    "levelReq": 25,
+    "description": "A grudge given shape. Slips between the seams of a fight to strike where least expected."
+  },
+  {
+    "id": "sunherald_phoenix",
+    "name": "Sunherald Phoenix",
+    "emoji": "🦅",
+    "rarity": "legendary",
+    "baseStats": { "atk": 26, "def": 18, "maxHp": 340 },
+    "startingCp": 1600,
+    "levelReq": 40,
+    "description": "A herald-bird of the old dawn cults. Every fall from it is only ever a pause."
+  },
+  {
+    "id": "voidmaw_behemoth",
+    "name": "Voidmaw Behemoth",
+    "emoji": "🐘",
+    "rarity": "legendary",
+    "baseStats": { "atk": 24, "def": 22, "maxHp": 380 },
+    "startingCp": 1600,
+    "levelReq": 40,
+    "description": "A tear in the world given weight and hunger. Dungeons fall quiet where it walks."
+  },
+  {
+    "id": "eightfold_ashura",
+    "name": "Eightfold Ashura",
+    "emoji": "🌀",
+    "rarity": "mythical",
+    "baseStats": { "atk": 34, "def": 28, "maxHp": 520 },
+    "startingCp": 3200,
+    "levelReq": 55,
+    "description": "Bound centuries ago for adapting to any blow that touched it — it now adapts for you instead."
+  },
+  {
+    "id": "worldroot_dragon",
+    "name": "Worldroot Dragon",
+    "emoji": "🐲",
+    "rarity": "mythical",
+    "baseStats": { "atk": 32, "def": 32, "maxHp": 560 },
+    "startingCp": 3200,
+    "levelReq": 55,
+    "description": "Older than the dungeons it now guards. Its roots run under every floor in Astral."
+  },
+  {
+    "id": "tide_slimeling",
+    "name": "Tide Slimeling",
+    "emoji": "💧",
+    "rarity": "epic",
+    "seasonId": "season_01",
+    "image": "https://i.ibb.co/rG1KBd70/slimy-pre-evolved.jpg",
+    "baseStats": { "atk": 8, "def": 16, "maxHp": 260 },
+    "startingCp": 300,
+    "levelReq": 1,
+    "interveneChance": 0.55,
+    "evolvesInto": "tide_sovereign",
+    "evolvesAtLevel": 20,
+    "description": "A blue slime that has learned the shape of a cat. Throws itself in front of anything aimed at you."
+  },
+  {
+    "id": "tide_sovereign",
+    "name": "Tide Sovereign",
+    "emoji": "🌊",
+    "rarity": "legendary",
+    "seasonId": "season_01",
+    "image": "https://i.ibb.co/zDyx5qb/evoled.jpg",
+    "baseStats": { "atk": 20, "def": 30, "maxHp": 520 },
+    "startingCp": 300,
+    "levelReq": 1,
+    "interveneChance": 0.65,
+    "evolvedFrom": "tide_slimeling",
+    "description": "The slime, grown into its own silhouette. It no longer guards out of instinct — it chooses to."
+  },
+  {
+    "id": "the_sorter",
+    "name": "The Sorter",
+    "emoji": "🤖",
+    "rarity": "mythical",
+    "image": "https://i.ibb.co/23PV6Q5X/JAEGER-SIXTH.jpg",
+    "baseStats": { "atk": 18, "def": 26, "maxHp": 340 },
+    "startingCp": 1500,
+    "levelReq": 1,
+    "interveneChance": 0.5,
+    "description": "A war-logistics jaeger left running its final standing order: ready the operator for battle. It reads every store you own at once, tucks your valuables where death cannot reach them, and racks your kit where your hand will fall. Equip it, then use .sort before a fight."
+  }
+]

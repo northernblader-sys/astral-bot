@@ -1,0 +1,33 @@
+[
+  { "id": "blaze",        "name": "Blaze",        "trigger": "low-hp",         "effect": { "type": "boost-type-power", "moveType": "fire",     "multiplier": 1.5 } },
+  { "id": "torrent",      "name": "Torrent",      "trigger": "low-hp",         "effect": { "type": "boost-type-power", "moveType": "water",    "multiplier": 1.5 } },
+  { "id": "overgrow",     "name": "Overgrow",     "trigger": "low-hp",         "effect": { "type": "boost-type-power", "moveType": "grass",    "multiplier": 1.5 } },
+
+  { "id": "static",       "name": "Static",       "trigger": "on-hit-taken",   "effect": { "type": "chance-status", "status": "stun", "chance": 0.3 } },
+  { "id": "poison-point",  "name": "Poison Point", "trigger": "on-hit-taken",   "effect": { "type": "chance-status", "status": "poison", "chance": 0.3 } },
+  { "id": "flame-body",    "name": "Flame Body",   "trigger": "on-hit-taken",   "effect": { "type": "chance-status", "status": "burn", "chance": 0.3 } },
+  { "id": "rough-skin",    "name": "Rough Skin",   "trigger": "on-hit-taken",   "effect": { "type": "recoil-to-attacker", "fraction": 0.125 } },
+
+  { "id": "levitate",      "name": "Levitate",     "trigger": "passive",        "effect": { "type": "immune-type", "moveType": "ground" } },
+  { "id": "water-absorb",  "name": "Water Absorb", "trigger": "passive",        "effect": { "type": "absorb-type", "moveType": "water",    "healFraction": 0.25 } },
+  { "id": "volt-absorb",   "name": "Volt Absorb",  "trigger": "passive",        "effect": { "type": "absorb-type", "moveType": "electric", "healFraction": 0.25 } },
+  { "id": "flash-fire",    "name": "Flash Fire",   "trigger": "passive",        "effect": { "type": "absorb-type", "moveType": "fire",     "healFraction": 0 } },
+  { "id": "thick-fat",     "name": "Thick Fat",    "trigger": "passive",        "effect": { "type": "resist-type", "moveTypes": ["fire", "ice"], "multiplier": 0.5 } },
+
+  { "id": "sturdy",        "name": "Sturdy",       "trigger": "on-lethal-hit",  "effect": { "type": "survive-ko" } },
+
+  { "id": "guts",          "name": "Guts",         "trigger": "passive",        "effect": { "type": "boost-if-status", "multiplier": 1.5 } },
+  { "id": "magic-guard",   "name": "Magic Guard",  "trigger": "passive",        "effect": { "type": "no-indirect-damage" } },
+
+  { "id": "intimidate",    "name": "Intimidate",   "trigger": "on-battle-start", "effect": { "type": "weaken-opponent", "stat": "atk", "multiplier": 0.75 } },
+
+  { "id": "immunity",      "name": "Immunity",     "trigger": "passive",        "effect": { "type": "status-immune", "status": "poison" } },
+  { "id": "limber",        "name": "Limber",       "trigger": "passive",        "effect": { "type": "status-immune", "status": "stun" } },
+  { "id": "magma-armor",   "name": "Magma Armor",  "trigger": "passive",        "effect": { "type": "status-immune", "status": "freeze" } },
+  { "id": "water-veil",    "name": "Water Veil",   "trigger": "passive",        "effect": { "type": "status-immune", "status": "burn" } },
+
+  { "id": "swift-swim",    "name": "Swift Swim",   "trigger": "passive",        "effect": { "type": "boost-speed-in-weather", "weather": "rain",      "multiplier": 2 } },
+  { "id": "chlorophyll",   "name": "Chlorophyll",  "trigger": "passive",        "effect": { "type": "boost-speed-in-weather", "weather": "sun",       "multiplier": 2 } },
+  { "id": "sand-rush",     "name": "Sand Rush",    "trigger": "passive",        "effect": { "type": "boost-speed-in-weather", "weather": "sandstorm", "multiplier": 2 } },
+  { "id": "slush-rush",    "name": "Slush Rush",   "trigger": "passive",        "effect": { "type": "boost-speed-in-weather", "weather": "hail",      "multiplier": 2 } }
+]

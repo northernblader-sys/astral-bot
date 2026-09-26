@@ -1,0 +1,1251 @@
+[
+ {
+  "id": "leather_armor",
+  "name": "Leather Armor",
+  "type": "armor",
+  "slot": "chestplate",
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 1,
+   "int": 0,
+   "def": 4,
+   "lck": 0,
+   "maxHp": 15,
+   "maxMp": 0
+  },
+  "sellPrice": 15,
+  "buyPrice": 41,
+  "effect": null,
+  "description": "Tanned leather stitched into serviceable protection.",
+  "maxDurability": 60,
+  "image": "https://play.astral.qzz.io/assets/items/leather_armor.jpg"
+ },
+ {
+  "id": "linen_robe",
+  "name": "Linen Robe",
+  "type": "armor",
+  "slot": "chestplate",
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 3,
+   "def": 1,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 30
+  },
+  "sellPrice": 12,
+  "buyPrice": 33,
+  "effect": null,
+  "description": "Lightweight robe woven from enchanted linen.",
+  "maxDurability": 60,
+  "image": "https://play.astral.qzz.io/assets/items/linen_robe.jpg"
+ },
+ {
+  "id": "cloth_vest",
+  "name": "Cloth Vest",
+  "type": "armor",
+  "slot": "chestplate",
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 2,
+   "int": 0,
+   "def": 2,
+   "lck": 1,
+   "maxHp": 10,
+   "maxMp": 0
+  },
+  "sellPrice": 10,
+  "buyPrice": 28,
+  "effect": null,
+  "description": "A simple padded vest. Better than nothing.",
+  "maxDurability": 60,
+  "image": "https://play.astral.qzz.io/assets/items/cloth_vest.jpg"
+ },
+ {
+  "id": "chainmail",
+  "name": "Chainmail",
+  "type": "armor",
+  "slot": "chestplate",
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 7,
+   "lck": 0,
+   "maxHp": 20,
+   "maxMp": 0
+  },
+  "sellPrice": 22,
+  "buyPrice": 61,
+  "effect": null,
+  "description": "Interlocked rings of iron. Heavy but reliable.",
+  "maxDurability": 60,
+  "image": "https://play.astral.qzz.io/assets/items/chainmail.jpg"
+ },
+ {
+  "id": "ashigaru_armor",
+  "name": "Ashigaru Armor",
+  "type": "armor",
+  "slot": "chestplate",
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 1,
+   "agi": 2,
+   "int": 0,
+   "def": 4,
+   "lck": 0,
+   "maxHp": 20,
+   "maxMp": 0
+  },
+  "sellPrice": 18,
+  "buyPrice": 50,
+  "effect": null,
+  "description": "Lacquered foot-soldier armour, light yet protective.",
+  "maxDurability": 60,
+  "image": "https://play.astral.qzz.io/assets/items/ashigaru_armor.jpg"
+ },
+ {
+  "id": "iron_shield",
+  "name": "Iron Shield",
+  "type": "armor",
+  "slot": "offhand",
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 9,
+   "lck": 0,
+   "maxHp": 25,
+   "maxMp": 0
+  },
+  "sellPrice": 25,
+  "buyPrice": 69,
+  "effect": null,
+  "description": "A heavy iron-plated shield strapped to the offhand — held alongside a weapon, not worn over the chest.",
+  "maxDurability": 60,
+  "image": "https://play.astral.qzz.io/assets/items/iron_shield.jpg"
+ },
+ {
+  "id": "rough_shield",
+  "name": "Rough Shield",
+  "type": "armor",
+  "slot": "offhand",
+  "rarity": "common",
+  "levelReq": 5,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 5,
+   "lck": 0,
+   "maxHp": 10,
+   "maxMp": 0
+  },
+  "sellPrice": 18,
+  "buyPrice": 50,
+  "effect": null,
+  "description": "A crudely bolted wooden shield, better than bare hands but not by much.",
+  "maxDurability": 60,
+  "image": "https://play.astral.qzz.io/assets/items/rough_shield.jpg"
+ },
+ {
+  "id": "guardian_shield",
+  "name": "Guardian Shield",
+  "type": "armor",
+  "slot": "offhand",
+  "rarity": "rare",
+  "levelReq": 45,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 20,
+   "lck": 0,
+   "maxHp": 60,
+   "maxMp": 0
+  },
+  "sellPrice": 320,
+  "buyPrice": 880,
+  "effect": null,
+  "description": "An enchanted bulwark said to have shrugged off a dragon's breath. Radiates quiet warmth.",
+  "maxDurability": 160,
+  "image": "https://play.astral.qzz.io/assets/items/guardian_shield.jpg"
+ },
+ {
+  "id": "leather_vest",
+  "name": "Leather Vest",
+  "type": "armor",
+  "slot": "chestplate",
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 3,
+   "int": 0,
+   "def": 3,
+   "lck": 1,
+   "maxHp": 12,
+   "maxMp": 0
+  },
+  "sellPrice": 14,
+  "buyPrice": 39,
+  "effect": null,
+  "description": "Supple leather cut for unhindered movement.",
+  "maxDurability": 60,
+  "image": "https://play.astral.qzz.io/assets/items/leather_vest.jpg"
+ },
+ {
+  "id": "fur_cloak",
+  "name": "Fur Cloak",
+  "type": "armor",
+  "slot": "chestplate",
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 1,
+   "agi": 1,
+   "int": 0,
+   "def": 3,
+   "lck": 0,
+   "maxHp": 30,
+   "maxMp": 0
+  },
+  "sellPrice": 14,
+  "buyPrice": 39,
+  "effect": null,
+  "description": "Thick pelts sewn and bound around the torso. Crude but warm and protective.",
+  "maxDurability": 60,
+  "image": "https://play.astral.qzz.io/assets/items/fur_cloak.jpg"
+ },
+ {
+  "id": "shadow_cloak",
+  "name": "Shadow Cloak",
+  "type": "armor",
+  "slot": "chestplate",
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 3,
+   "int": 0,
+   "def": 2,
+   "lck": 3,
+   "maxHp": 8,
+   "maxMp": 10
+  },
+  "sellPrice": 16,
+  "buyPrice": 44,
+  "effect": null,
+  "description": "Dark wrappings bound tight over the chest, woven to swallow light.",
+  "maxDurability": 60,
+  "image": "https://play.astral.qzz.io/assets/items/shadow_cloak.jpg"
+ },
+ {
+  "id": "health_potion",
+  "name": "Health Potion",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 8,
+  "buyPrice": 20,
+  "effect": {
+   "type": "heal",
+   "stat": "hp",
+   "amount": 50
+  },
+  "description": "Restores 50 HP when consumed.",
+  "image": "https://play.astral.qzz.io/assets/items/health_potion.jpg"
+ },
+ {
+  "id": "mana_potion",
+  "name": "Mana Potion",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 8,
+  "buyPrice": 20,
+  "effect": {
+   "type": "heal",
+   "stat": "mp",
+   "amount": 50
+  },
+  "description": "Restores 50 MP when consumed.",
+  "image": "https://play.astral.qzz.io/assets/items/mana_potion.jpg"
+ },
+ {
+  "id": "hi_health_potion",
+  "name": "Hi-Health Potion",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "uncommon",
+  "levelReq": 15,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 30,
+  "buyPrice": 75,
+  "effect": {
+   "type": "heal",
+   "stat": "hp",
+   "amount": 150
+  },
+  "description": "Restores 150 HP when consumed.",
+  "image": "https://play.astral.qzz.io/assets/items/hi_health_potion.jpg"
+ },
+ {
+  "id": "hi_mana_potion",
+  "name": "Hi-Mana Potion",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "uncommon",
+  "levelReq": 15,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 30,
+  "buyPrice": 75,
+  "effect": {
+   "type": "heal",
+   "stat": "mp",
+   "amount": 150
+  },
+  "description": "Restores 150 MP when consumed.",
+  "image": "https://play.astral.qzz.io/assets/items/hi_mana_potion.jpg"
+ },
+ {
+  "id": "normal_boots",
+  "name": "Normal Boots",
+  "type": "armor",
+  "slot": "boots",
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 1,
+   "int": 0,
+   "def": 1,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 15,
+  "buyPrice": 41,
+  "effect": null,
+  "description": "Leather-soled boots with a thin iron toe cap.",
+  "maxDurability": 60,
+  "image": "https://play.astral.qzz.io/assets/items/normal_boots.jpg"
+ },
+ {
+  "id": "iron_helmet",
+  "name": "Iron Helmet",
+  "type": "armor",
+  "slot": "helmet",
+  "rarity": "uncommon",
+  "levelReq": 5,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 4,
+   "lck": 0,
+   "maxHp": 40,
+   "maxMp": 0
+  },
+  "sellPrice": 80,
+  "buyPrice": 220,
+  "effect": null,
+  "description": "A solid forged iron helmet with a reinforced brow guard.",
+  "maxDurability": 100,
+  "image": "https://play.astral.qzz.io/assets/items/iron_helmet.jpg"
+ },
+ {
+  "id": "iron_chestplate",
+  "name": "Iron Chestplate",
+  "type": "armor",
+  "slot": "chestplate",
+  "rarity": "uncommon",
+  "levelReq": 5,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 10,
+   "lck": 0,
+   "maxHp": 25,
+   "maxMp": 0
+  },
+  "sellPrice": 100,
+  "buyPrice": 275,
+  "effect": null,
+  "description": "Thick iron plates layered over a leather backing.",
+  "maxDurability": 100,
+  "image": "https://play.astral.qzz.io/assets/items/iron_chestplate.jpg"
+ },
+ {
+  "id": "iron_boots",
+  "name": "Iron Boots",
+  "type": "armor",
+  "slot": "boots",
+  "rarity": "uncommon",
+  "levelReq": 15,
+  "statBonuses": {
+   "str": 0,
+   "agi": 2,
+   "int": 0,
+   "def": 3,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 70,
+  "buyPrice": 193,
+  "effect": null,
+  "description": "Reinforced iron-plated boots. Heavy but protective.",
+  "maxDurability": 100,
+  "image": "https://play.astral.qzz.io/assets/items/iron_boots.jpg"
+ },
+ {
+  "id": "diamond_helmet",
+  "name": "Diamond Helmet",
+  "type": "armor",
+  "slot": "helmet",
+  "rarity": "rare",
+  "levelReq": 35,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 9,
+   "lck": 0,
+   "maxHp": 80,
+   "maxMp": 0
+  },
+  "sellPrice": 300,
+  "buyPrice": 825,
+  "effect": null,
+  "description": "A faceted diamond-laced helm. Near-impossible to crack.",
+  "maxDurability": 160,
+  "image": "https://play.astral.qzz.io/assets/items/diamond_helmet.jpg"
+ },
+ {
+  "id": "diamond_chestplate",
+  "name": "Diamond Chestplate",
+  "type": "armor",
+  "slot": "chestplate",
+  "rarity": "rare",
+  "levelReq": 35,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 22,
+   "lck": 0,
+   "maxHp": 50,
+   "maxMp": 0
+  },
+  "sellPrice": 380,
+  "buyPrice": 1045,
+  "effect": null,
+  "description": "Diamond-inlaid plate armour that disperses impact across its entire surface.",
+  "maxDurability": 160,
+  "image": "https://play.astral.qzz.io/assets/items/diamond_chestplate.jpg"
+ },
+ {
+  "id": "diamond_boots",
+  "name": "Diamond Boots",
+  "type": "armor",
+  "slot": "boots",
+  "rarity": "rare",
+  "levelReq": 35,
+  "statBonuses": {
+   "str": 0,
+   "agi": 5,
+   "int": 0,
+   "def": 7,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 260,
+  "buyPrice": 715,
+  "effect": null,
+  "description": "Lightweight boots lined with diamond dust for grip and protection.",
+  "maxDurability": 160,
+  "image": "https://play.astral.qzz.io/assets/items/diamond_boots.jpg"
+ },
+ {
+  "id": "titanium_helmet",
+  "name": "Titanium Helmet",
+  "type": "armor",
+  "slot": "helmet",
+  "rarity": "epic",
+  "levelReq": 60,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 16,
+   "lck": 0,
+   "maxHp": 130,
+   "maxMp": 0
+  },
+  "sellPrice": 750,
+  "buyPrice": 2063,
+  "effect": null,
+  "description": "A flawless titanium helm — the pinnacle of conventional smithing.",
+  "maxDurability": 260,
+  "image": "https://play.astral.qzz.io/assets/items/titanium_helmet.jpg"
+ },
+ {
+  "id": "titanium_chestplate",
+  "name": "Titanium Chestplate",
+  "type": "armor",
+  "slot": "chestplate",
+  "rarity": "epic",
+  "levelReq": 60,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 38,
+   "lck": 0,
+   "maxHp": 80,
+   "maxMp": 0
+  },
+  "sellPrice": 900,
+  "buyPrice": 2475,
+  "effect": null,
+  "description": "Titanium plate so dense it absorbs damage before you even feel it.",
+  "maxDurability": 260,
+  "image": "https://play.astral.qzz.io/assets/items/titanium_chestplate.jpg"
+ },
+ {
+  "id": "titanium_boots",
+  "name": "Titanium Boots",
+  "type": "armor",
+  "slot": "boots",
+  "rarity": "epic",
+  "levelReq": 60,
+  "statBonuses": {
+   "str": 0,
+   "agi": 9,
+   "int": 0,
+   "def": 13,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 650,
+  "buyPrice": 1788,
+  "effect": null,
+  "description": "Titanium-forged boots with articulated joints for speed without sacrifice.",
+  "maxDurability": 260,
+  "image": "https://play.astral.qzz.io/assets/items/titanium_boots.jpg"
+ },
+ {
+  "id": "divine_helmet",
+  "name": "Divine Helmet",
+  "type": "armor",
+  "slot": "helmet",
+  "rarity": "legendary",
+  "levelReq": 85,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 26,
+   "lck": 0,
+   "maxHp": 200,
+   "maxMp": 0
+  },
+  "sellPrice": 2000,
+  "buyPrice": 5500,
+  "effect": null,
+  "description": "A halo-edged helm said to turn aside fate itself.",
+  "maxDurability": 420,
+  "image": "https://play.astral.qzz.io/assets/items/divine_helmet.jpg"
+ },
+ {
+  "id": "divine_chestplate",
+  "name": "Divine Chestplate",
+  "type": "armor",
+  "slot": "chestplate",
+  "rarity": "legendary",
+  "levelReq": 85,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 60,
+   "lck": 0,
+   "maxHp": 120,
+   "maxMp": 0
+  },
+  "sellPrice": 2400,
+  "buyPrice": 6600,
+  "effect": null,
+  "description": "Armour forged from celestial ore at the edge of existence. Nothing passes through it.",
+  "maxDurability": 420,
+  "image": "https://play.astral.qzz.io/assets/items/divine_chestplate.jpg"
+ },
+ {
+  "id": "divine_boots",
+  "name": "Divine Boots",
+  "type": "armor",
+  "slot": "boots",
+  "rarity": "legendary",
+  "levelReq": 85,
+  "statBonuses": {
+   "str": 0,
+   "agi": 15,
+   "int": 0,
+   "def": 22,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 1800,
+  "buyPrice": 4950,
+  "effect": null,
+  "description": "Boots that leave no footprint. Speed and protection in perfect balance.",
+  "maxDurability": 420,
+  "image": "https://play.astral.qzz.io/assets/items/divine_boots.jpg"
+ },
+ {
+  "id": "mega_health_potion",
+  "name": "Mega Health Potion",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "rare",
+  "levelReq": 30,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 90,
+  "buyPrice": 240,
+  "effect": {
+   "type": "heal",
+   "stat": "hp",
+   "amount": 400
+  },
+  "description": "A dense crimson brew. Restores 400 HP when consumed.",
+  "image": "https://play.astral.qzz.io/assets/items/mega_health_potion.jpg"
+ },
+ {
+  "id": "mega_mana_potion",
+  "name": "Mega Mana Potion",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "rare",
+  "levelReq": 30,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 90,
+  "buyPrice": 240,
+  "effect": {
+   "type": "heal",
+   "stat": "mp",
+   "amount": 400
+  },
+  "description": "A dense azure brew. Restores 400 MP when consumed.",
+  "image": "https://play.astral.qzz.io/assets/items/mega_mana_potion.jpg"
+ },
+ {
+  "id": "elixir",
+  "name": "Elixir",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "epic",
+  "levelReq": 50,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 400,
+  "buyPrice": 1100,
+  "effect": [
+   {
+    "type": "heal",
+    "stat": "hp",
+    "amount": 999999
+   },
+   {
+    "type": "heal",
+    "stat": "mp",
+    "amount": 999999
+   }
+  ],
+  "description": "A shimmering draught said to be brewed from starlight. Fully restores HP and MP.",
+  "image": "https://play.astral.qzz.io/assets/items/elixir.jpg"
+ },
+ {
+  "id": "ether",
+  "name": "Ether",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "epic",
+  "levelReq": 40,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 250,
+  "buyPrice": 700,
+  "effect": {
+   "type": "heal",
+   "stat": "mp",
+   "amount": 999999
+  },
+  "description": "Distilled magical essence. Fully restores MP.",
+  "image": "https://play.astral.qzz.io/assets/items/ether.jpg"
+ },
+ {
+  "id": "phoenix_down",
+  "name": "Phoenix Down",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "epic",
+  "levelReq": 20,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 150,
+  "buyPrice": 400,
+  "effect": {
+   "type": "heal",
+   "stat": "hp",
+   "amount": 999999
+  },
+  "description": "A single warm feather. Instantly revives a fallen ally at full HP — or fully heals one still standing. Use it before you fall, not after.",
+  "image": "https://play.astral.qzz.io/assets/items/phoenix_down.jpg"
+ },
+ {
+  "id": "antidote",
+  "name": "Antidote",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 10,
+  "buyPrice": 25,
+  "effect": {
+   "type": "cure",
+   "targets": [
+    "poison"
+   ]
+  },
+  "description": "A bitter herbal remedy. Cures poison.",
+  "image": "https://play.astral.qzz.io/assets/items/antidote.jpg"
+ },
+ {
+  "id": "burn_salve",
+  "name": "Burn Salve",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 10,
+  "buyPrice": 25,
+  "effect": {
+   "type": "cure",
+   "targets": [
+    "burn"
+   ]
+  },
+  "description": "A cooling paste of aloe and mint. Cures burning.",
+  "image": "https://play.astral.qzz.io/assets/items/burn_salve.jpg"
+ },
+ {
+  "id": "warm_cloth",
+  "name": "Warm Cloth",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 10,
+  "buyPrice": 25,
+  "effect": {
+   "type": "cure",
+   "targets": [
+    "freeze"
+   ]
+  },
+  "description": "A thick woolen wrap, still radiating heat. Cures freeze.",
+  "image": "https://play.astral.qzz.io/assets/items/warm_cloth.jpg"
+ },
+ {
+  "id": "smelling_salts",
+  "name": "Smelling Salts",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 10,
+  "buyPrice": 25,
+  "effect": {
+   "type": "cure",
+   "targets": [
+    "stun"
+   ]
+  },
+  "description": "A sharp, acrid tonic. Snaps you out of a stun instantly.",
+  "image": "https://play.astral.qzz.io/assets/items/smelling_salts.jpg"
+ },
+ {
+  "id": "clear_tonic",
+  "name": "Clear Tonic",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "common",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 10,
+  "buyPrice": 25,
+  "effect": {
+   "type": "cure",
+   "targets": [
+    "blind"
+   ]
+  },
+  "description": "Rinses the eyes with enchanted spring water. Cures blindness.",
+  "image": "https://play.astral.qzz.io/assets/items/clear_tonic.jpg"
+ },
+ {
+  "id": "full_remedy",
+  "name": "Full Remedy",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "rare",
+  "levelReq": 25,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 60,
+  "buyPrice": 160,
+  "effect": {
+   "type": "cure",
+   "targets": "all"
+  },
+  "description": "A potent all-purpose remedy. Cures every negative status effect at once.",
+  "image": "https://play.astral.qzz.io/assets/items/full_remedy.jpg"
+ },
+ {
+  "id": "regen_herb",
+  "name": "Regen Herb",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "uncommon",
+  "levelReq": 10,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 25,
+  "buyPrice": 65,
+  "effect": {
+   "type": "regen",
+   "stat": "hp",
+   "amount": 25,
+   "duration": 4
+  },
+  "description": "A slow-release healing root. Restores 25 HP per turn for 4 turns.",
+  "image": "https://play.astral.qzz.io/assets/items/regen_herb.jpg"
+ },
+ {
+  "id": "warriors_draught",
+  "name": "Warrior's Draught",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "uncommon",
+  "levelReq": 15,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 35,
+  "buyPrice": 90,
+  "effect": {
+   "type": "strengthen",
+   "stat": "str",
+   "value": 8,
+   "duration": 3
+  },
+  "description": "A heady brew that surges through the arms. Boosts STR for 3 turns.",
+  "image": "https://play.astral.qzz.io/assets/items/warriors_draught.jpg"
+ },
+ {
+  "id": "swiftness_draught",
+  "name": "Swiftness Draught",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "uncommon",
+  "levelReq": 15,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 35,
+  "buyPrice": 90,
+  "effect": {
+   "type": "strengthen",
+   "stat": "agi",
+   "value": 8,
+   "duration": 3
+  },
+  "description": "A fizzing, sharp-smelling tonic. Boosts AGI for 3 turns.",
+  "image": "https://play.astral.qzz.io/assets/items/swiftness_draught.jpg"
+ },
+ {
+  "id": "sages_draught",
+  "name": "Sage's Draught",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "uncommon",
+  "levelReq": 15,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 35,
+  "buyPrice": 90,
+  "effect": {
+   "type": "strengthen",
+   "stat": "int",
+   "value": 8,
+   "duration": 3
+  },
+  "description": "A cold, glowing infusion. Boosts INT for 3 turns.",
+  "image": "https://play.astral.qzz.io/assets/items/sages_draught.jpg"
+ },
+ {
+  "id": "stone_skin_draught",
+  "name": "Stone Skin Draught",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "uncommon",
+  "levelReq": 15,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 35,
+  "buyPrice": 90,
+  "effect": {
+   "type": "strengthen",
+   "stat": "def",
+   "value": 8,
+   "duration": 3
+  },
+  "description": "A gritty, mineral-heavy draught. Boosts DEF for 3 turns.",
+  "image": "https://play.astral.qzz.io/assets/items/stone_skin_draught.jpg"
+ },
+ {
+  "id": "barrier_tonic",
+  "name": "Barrier Tonic",
+  "type": "consumable",
+  "slot": null,
+  "rarity": "rare",
+  "levelReq": 20,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 50,
+  "buyPrice": 130,
+  "effect": {
+   "type": "shield",
+   "amount": 120,
+   "duration": 3
+  },
+  "description": "Coats the body in a shimmering barrier. Absorbs up to 120 damage for 3 turns.",
+  "image": "https://play.astral.qzz.io/assets/items/barrier_tonic.jpg"
+ },
+ {
+  "id": "totem_of_undying",
+  "name": "Totem of Undying",
+  "type": "relic",
+  "rarity": "legendary",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 3000,
+  "buyPrice": 10000,
+  "effect": {
+   "type": "prevent_death",
+   "amount": 1
+  },
+  "description": "A carved totem humming with defiant life. Equip it in your offhand — when a killing blow would land, it shatters to save you instead, restoring a sliver of HP/MP and letting you keep all your gear. Consumed on use; re-equip a new one after it triggers.",
+  "slot": "offhand",
+  "image": "https://play.astral.qzz.io/assets/items/totem_of_undying.jpg"
+ },
+ {
+  "id": "gamblers_relic",
+  "name": "Gambler's Relic",
+  "type": "relic",
+  "rarity": "epic",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 25,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 1800,
+  "buyPrice": 6000,
+  "description": "A weighted die that never quite lands the way it should. Equip it in your offhand for a permanent +25 Luck — sharper crits, better dodges, and better odds everywhere Luck matters.",
+  "slot": "offhand",
+  "image": "https://play.astral.qzz.io/assets/items/gamblers_relic.jpg"
+ },
+ {
+  "id": "sentinels_bulwark",
+  "name": "Sentinel's Bulwark",
+  "type": "relic",
+  "rarity": "epic",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 30,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 1800,
+  "buyPrice": 6000,
+  "description": "A shard of a fallen guardian's shield, still humming with old wards. Equip it in your offhand for a permanent +30 Defense — mitigates more of every hit you take.",
+  "slot": "offhand",
+  "image": "https://play.astral.qzz.io/assets/items/sentinels_bulwark.jpg"
+ },
+ {
+  "id": "arcane_battery",
+  "name": "Arcane Battery",
+  "type": "relic",
+  "rarity": "epic",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 20,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 60
+  },
+  "sellPrice": 1800,
+  "buyPrice": 6000,
+  "description": "A crystal core that never fully discharges. Equip it in your offhand for a permanent +20 Intelligence and +60 Max MP — more mana to burn, harder-hitting skills.",
+  "slot": "offhand",
+  "image": "https://play.astral.qzz.io/assets/items/arcane_battery.jpg"
+ },
+ {
+  "id": "berserkers_chain",
+  "name": "Berserker's Chain",
+  "type": "relic",
+  "rarity": "epic",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 30,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 1800,
+  "buyPrice": 6000,
+  "description": "A broken shackle, worn as a badge instead of a burden. Equip it in your offhand for a permanent +30 Strength — pure, unfiltered attack power.",
+  "slot": "offhand",
+  "image": "https://play.astral.qzz.io/assets/items/berserkers_chain.jpg"
+ },
+ {
+  "id": "emberheart_core",
+  "name": "Emberheart Core",
+  "type": "relic",
+  "rarity": "legendary",
+  "levelReq": 1,
+  "statBonuses": {
+   "str": 0,
+   "agi": 0,
+   "int": 0,
+   "def": 0,
+   "lck": 0,
+   "maxHp": 0,
+   "maxMp": 0
+  },
+  "sellPrice": 3000,
+  "buyPrice": 10000,
+  "effect": {
+   "type": "revive_partial",
+   "amount": 1,
+   "hpPercent": 0.3
+  },
+  "description": "A dim coal that flares to life at the edge of death. Equip it in your offhand — once per battle, when your HP hits 0, it reignites and restores you to 30% HP instead of ending the fight. Weaker than a Totem of Undying (no MP restore, no gear protection), but resets automatically at the start of every battle instead of being consumed.",
+  "slot": "offhand",
+  "image": "https://play.astral.qzz.io/assets/items/emberheart_core.jpg"
+ }
+]

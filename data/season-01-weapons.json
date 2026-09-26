@@ -1,0 +1,50 @@
+[
+  {
+    "id": "willow_glasses",
+    "name": "Willow's Glasses",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 20,
+    "statBonuses": {
+      "str": 2,
+      "agi": 4,
+      "int": 3,
+      "def": 2,
+      "lck": 12,
+      "maxHp": 25,
+      "maxMp": 10
+    },
+    "sellPrice": 3200,
+    "buyPrice": 0,
+    "effect": null,
+    "description": "A practical pair of lenses that turns a battlefield into a map of weaknesses. Season 1 exclusive.",
+    "maxDurability": 180,
+    "image": "https://animeastral.qzz.io/assets/items/willow_glasses.png",
+    "seasonId": "season_01"
+  },
+  {
+    "id": "urahara_stick",
+    "name": "Urahara's Stick",
+    "type": "weapon",
+    "slot": "weapon",
+    "rarity": "epic",
+    "levelReq": 20,
+    "statBonuses": {
+      "str": 3,
+      "agi": 4,
+      "int": 12,
+      "def": 2,
+      "lck": 3,
+      "maxHp": 15,
+      "maxMp": 30
+    },
+    "sellPrice": 3200,
+    "buyPrice": 0,
+    "effect": null,
+    "description": "A deceptively ordinary stick with an extraordinary answer for every problem. Season 1 exclusive.",
+    "maxDurability": 180,
+    "image": "https://animeastral.qzz.io/assets/items/urahara_stick.png",
+    "seasonId": "season_01"
+  }
+]

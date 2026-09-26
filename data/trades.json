@@ -1,0 +1,384 @@
+[
+  {
+    "id": "trade_ore_for_ore",
+    "traderName": "Old Dusk the Peddler",
+    "tier": "common",
+    "minLevel": 1,
+    "give": [{ "itemId": "wood_plank", "qty": 3 }],
+    "want": [{ "itemId": "iron_ore", "qty": 2 }],
+    "flavor": "\"Traded a woodcutter for these planks — swap you for that ore, fair's fair.\""
+  },
+  {
+    "id": "trade_leather_bundle",
+    "traderName": "Old Dusk the Peddler",
+    "tier": "common",
+    "minLevel": 1,
+    "give": [{ "itemId": "leather_scrap", "qty": 2 }],
+    "want": [{ "itemId": "wood_plank", "qty": 2 }],
+    "flavor": "\"Got more hide scraps than I know what to do with. Planks, though — always need planks.\""
+  },
+  {
+    "id": "trade_starter_potion",
+    "traderName": "Mira the Herbwife",
+    "tier": "common",
+    "minLevel": 1,
+    "give": [{ "itemId": "health_potion", "qty": 1 }],
+    "want": [{ "itemId": "iron_ore", "qty": 2 }],
+    "flavor": "\"One good brew for a bit of ore. My kettle's always hungry.\""
+  },
+  {
+    "id": "trade_mana_for_leather",
+    "traderName": "Mira the Herbwife",
+    "tier": "common",
+    "minLevel": 1,
+    "give": [{ "itemId": "mana_potion", "qty": 1 }],
+    "want": [{ "itemId": "leather_scrap", "qty": 2 }],
+    "flavor": "\"This tonic took me all morning. Leather scraps patch my satchel, so — trade?\""
+  },
+  {
+    "id": "trade_rusty_dagger_deal",
+    "traderName": "Corran the Tinker",
+    "tier": "common",
+    "minLevel": 1,
+    "give": [{ "itemId": "rusty_dagger", "qty": 1 }],
+    "want": [{ "itemId": "wood_plank", "qty": 4 }],
+    "flavor": "\"Found this blade in a scrapyard. Barely used! Well — barely used *twice*.\""
+  },
+  {
+    "id": "trade_novice_wand",
+    "traderName": "Corran the Tinker",
+    "tier": "common",
+    "minLevel": 3,
+    "give": [{ "itemId": "novice_wand", "qty": 1 }],
+    "want": [{ "itemId": "leather_scrap", "qty": 3 }, { "itemId": "iron_ore", "qty": 1 }],
+    "flavor": "\"Picked this wand off a spooked apprentice. Still hums a little. Yours, for the right price.\""
+  },
+  {
+    "id": "trade_beast_hide_potions",
+    "traderName": "Hunter Yara",
+    "tier": "uncommon",
+    "minLevel": 5,
+    "give": [{ "itemId": "beast_hide", "qty": 1 }],
+    "want": [{ "itemId": "health_potion", "qty": 2 }],
+    "flavor": "\"Long hunt for this hide. My supplies are running low — potions'll do nicely.\""
+  },
+  {
+    "id": "trade_monster_fang_bundle",
+    "traderName": "Hunter Yara",
+    "tier": "uncommon",
+    "minLevel": 5,
+    "give": [{ "itemId": "monster_fang", "qty": 1 }],
+    "want": [{ "itemId": "mana_potion", "qty": 2 }],
+    "flavor": "\"Snapped this off something with too many teeth. You want it more than I do.\""
+  },
+  {
+    "id": "trade_silver_for_ore",
+    "traderName": "Hunter Yara",
+    "tier": "uncommon",
+    "minLevel": 8,
+    "give": [{ "itemId": "silver_ore", "qty": 1 }],
+    "want": [{ "itemId": "iron_ore", "qty": 6 }],
+    "flavor": "\"Silver's rarer where I hunt. Iron's easy to come by — good trade for both of us.\""
+  },
+  {
+    "id": "trade_hi_potion_ores",
+    "traderName": "Mira the Herbwife",
+    "tier": "uncommon",
+    "minLevel": 10,
+    "give": [{ "itemId": "hi_health_potion", "qty": 1 }],
+    "want": [{ "itemId": "silver_ore", "qty": 1 }],
+    "flavor": "\"This one's stronger stuff — took real silver dust to brew. Same in kind, please.\""
+  },
+  {
+    "id": "trade_hi_mana_ores",
+    "traderName": "Mira the Herbwife",
+    "tier": "uncommon",
+    "minLevel": 10,
+    "give": [{ "itemId": "hi_mana_potion", "qty": 1 }],
+    "want": [{ "itemId": "beast_hide", "qty": 2 }],
+    "flavor": "\"Beast hide binds the tonic so it doesn't spoil. Two should cover it.\""
+  },
+  {
+    "id": "trade_leather_armor_swap",
+    "traderName": "Corran the Tinker",
+    "tier": "uncommon",
+    "minLevel": 6,
+    "give": [{ "itemId": "leather_armor", "qty": 1 }],
+    "want": [{ "itemId": "leather_scrap", "qty": 4 }, { "itemId": "wood_plank", "qty": 2 }],
+    "flavor": "\"Stitched this myself. Not fancy, but it'll stop a claw or two.\""
+  },
+  {
+    "id": "trade_iron_shield_deal",
+    "traderName": "Corran the Tinker",
+    "tier": "uncommon",
+    "minLevel": 10,
+    "give": [{ "itemId": "iron_shield", "qty": 1 }],
+    "want": [{ "itemId": "iron_ore", "qty": 8 }],
+    "flavor": "\"Melted down a whole cartload of ore for this. Worth every ingot.\""
+  },
+  {
+    "id": "trade_katana_barter",
+    "traderName": "Wandering Blacksmith Toma",
+    "tier": "uncommon",
+    "minLevel": 12,
+    "give": [{ "itemId": "katana", "qty": 1 }],
+    "want": [{ "itemId": "silver_ore", "qty": 1 }, { "itemId": "iron_ore", "qty": 3 }],
+    "flavor": "\"Forged in the old style. Balance is everything with a blade like this.\""
+  },
+  {
+    "id": "trade_rapier_barter",
+    "traderName": "Wandering Blacksmith Toma",
+    "tier": "uncommon",
+    "minLevel": 12,
+    "give": [{ "itemId": "rapier", "qty": 1 }],
+    "want": [{ "itemId": "monster_fang", "qty": 2 }],
+    "flavor": "\"Fang-forged steel holds an edge longer. Trust me on this one.\""
+  },
+  {
+    "id": "trade_arcane_essence_fangs",
+    "traderName": "The Hollow Merchant",
+    "tier": "rare",
+    "minLevel": 15,
+    "give": [{ "itemId": "arcane_essence", "qty": 1 }],
+    "want": [{ "itemId": "monster_fang", "qty": 3 }],
+    "flavor": "A cloaked figure speaks without moving their lips. \"Essence for fangs. Don't ask where I got it.\""
+  },
+  {
+    "id": "trade_dragon_scale_barter",
+    "traderName": "The Hollow Merchant",
+    "tier": "rare",
+    "minLevel": 20,
+    "give": [{ "itemId": "dragon_scale", "qty": 1 }],
+    "want": [{ "itemId": "silver_ore", "qty": 3 }],
+    "flavor": "\"Peeled off something that didn't want to give it up. Silver, and we're square.\""
+  },
+  {
+    "id": "trade_mythril_ore_deal",
+    "traderName": "The Hollow Merchant",
+    "tier": "rare",
+    "minLevel": 20,
+    "give": [{ "itemId": "mythril_ore", "qty": 1 }],
+    "want": [{ "itemId": "beast_hide", "qty": 4 }],
+    "flavor": "\"Light as a feather, strong as sin. Hide's a fair price for something this rare.\""
+  },
+  {
+    "id": "trade_shadow_blade_barter",
+    "traderName": "Wandering Blacksmith Toma",
+    "tier": "rare",
+    "minLevel": 22,
+    "give": [{ "itemId": "shadow_blade", "qty": 1 }],
+    "want": [{ "itemId": "mythril_ore", "qty": 1 }, { "itemId": "silver_ore", "qty": 2 }],
+    "flavor": "\"Folded shadow into the steel. Careful — it's sharper than it looks.\""
+  },
+  {
+    "id": "trade_illusion_staff_barter",
+    "traderName": "The Hollow Merchant",
+    "tier": "rare",
+    "minLevel": 22,
+    "give": [{ "itemId": "illusion_staff", "qty": 1 }],
+    "want": [{ "itemId": "arcane_essence", "qty": 2 }],
+    "flavor": "\"Whispers to whoever holds it. Might just be the wind. Might not be.\""
+  },
+  {
+    "id": "trade_iron_helmet_barter",
+    "traderName": "Corran the Tinker",
+    "tier": "rare",
+    "minLevel": 18,
+    "give": [{ "itemId": "iron_helmet", "qty": 1 }],
+    "want": [{ "itemId": "silver_ore", "qty": 2 }, { "itemId": "iron_ore", "qty": 5 }],
+    "flavor": "\"Dented it testing the temper. Still sound — you won't notice the dent once it's on.\""
+  },
+  {
+    "id": "trade_iron_chestplate_barter",
+    "traderName": "Corran the Tinker",
+    "tier": "rare",
+    "minLevel": 18,
+    "give": [{ "itemId": "iron_chestplate", "qty": 1 }],
+    "want": [{ "itemId": "silver_ore", "qty": 3 }],
+    "flavor": "\"This one turned a spear point once. Good omen, if you believe in that sort of thing.\""
+  },
+  {
+    "id": "trade_iron_boots_barter",
+    "traderName": "Corran the Tinker",
+    "tier": "rare",
+    "minLevel": 16,
+    "give": [{ "itemId": "iron_boots", "qty": 1 }],
+    "want": [{ "itemId": "beast_hide", "qty": 3 }, { "itemId": "iron_ore", "qty": 2 }],
+    "flavor": "\"Soles reinforced with real beast hide. You'll outwalk anyone in these.\""
+  },
+  {
+    "id": "trade_ancient_rune_barter",
+    "traderName": "The Hollow Merchant",
+    "tier": "epic",
+    "minLevel": 30,
+    "give": [{ "itemId": "ancient_rune", "qty": 1 }],
+    "want": [{ "itemId": "dragon_scale", "qty": 2 }],
+    "flavor": "\"Pulled from a ruin older than this town. Still remembers what it was for.\""
+  },
+  {
+    "id": "trade_phoenix_feather_barter",
+    "traderName": "The Hollow Merchant",
+    "tier": "epic",
+    "minLevel": 32,
+    "give": [{ "itemId": "phoenix_feather", "qty": 1 }],
+    "want": [{ "itemId": "mythril_ore", "qty": 2 }, { "itemId": "arcane_essence", "qty": 1 }],
+    "flavor": "\"Warm to the touch, even now. Don't ask how I kept it from burning through my coat.\""
+  },
+  {
+    "id": "trade_void_crystal_barter",
+    "traderName": "The Hollow Merchant",
+    "tier": "epic",
+    "minLevel": 32,
+    "give": [{ "itemId": "void_crystal", "qty": 1 }],
+    "want": [{ "itemId": "arcane_essence", "qty": 3 }],
+    "flavor": "The merchant's shadow seems to move on its own. \"This one's loud, in a language you can't hear yet.\""
+  },
+  {
+    "id": "trade_diamond_ore_barter",
+    "traderName": "The Hollow Merchant",
+    "tier": "epic",
+    "minLevel": 30,
+    "give": [{ "itemId": "diamond_ore", "qty": 1 }],
+    "want": [{ "itemId": "dragon_scale", "qty": 1 }, { "itemId": "mythril_ore", "qty": 1 }],
+    "flavor": "\"Cuts glass, cuts steel, cuts arguments short. Worth the price.\""
+  },
+  {
+    "id": "trade_centurion_blade_barter",
+    "traderName": "Wandering Blacksmith Toma",
+    "tier": "epic",
+    "minLevel": 35,
+    "give": [{ "itemId": "centurion_blade", "qty": 1 }],
+    "want": [{ "itemId": "diamond_ore", "qty": 1 }],
+    "flavor": "\"Forged for a legion that doesn't exist anymore. Now it's yours to carry.\""
+  },
+  {
+    "id": "trade_void_staff_barter",
+    "traderName": "Wandering Blacksmith Toma",
+    "tier": "epic",
+    "minLevel": 35,
+    "give": [{ "itemId": "void_staff", "qty": 1 }],
+    "want": [{ "itemId": "void_crystal", "qty": 1 }],
+    "flavor": "\"Careful holding that one too tight. It holds back, sometimes.\""
+  },
+  {
+    "id": "trade_diamond_helmet_barter",
+    "traderName": "The Hollow Merchant",
+    "tier": "epic",
+    "minLevel": 34,
+    "give": [{ "itemId": "diamond_helmet", "qty": 1 }],
+    "want": [{ "itemId": "diamond_ore", "qty": 1 }, { "itemId": "dragon_scale", "qty": 1 }],
+    "flavor": "\"Wear it and you'll never worry about a helmet again. Probably.\""
+  },
+  {
+    "id": "trade_diamond_chestplate_barter",
+    "traderName": "The Hollow Merchant",
+    "tier": "epic",
+    "minLevel": 34,
+    "give": [{ "itemId": "diamond_chestplate", "qty": 1 }],
+    "want": [{ "itemId": "ancient_rune", "qty": 1 }],
+    "flavor": "\"Runework in the lining. Whoever made this wasn't just a smith.\""
+  },
+  {
+    "id": "trade_astral_shard_barter",
+    "traderName": "The Astral Wanderer",
+    "tier": "legendary",
+    "minLevel": 45,
+    "give": [{ "itemId": "astral_shard", "qty": 1 }],
+    "want": [{ "itemId": "void_crystal", "qty": 2 }],
+    "flavor": "A figure who seems to flicker between two places at once. \"This shard remembers falling. Give it a home.\""
+  },
+  {
+    "id": "trade_celestial_ore_barter",
+    "traderName": "The Astral Wanderer",
+    "tier": "legendary",
+    "minLevel": 48,
+    "give": [{ "itemId": "celestial_ore", "qty": 1 }],
+    "want": [{ "itemId": "phoenix_feather", "qty": 1 }, { "itemId": "void_crystal", "qty": 1 }],
+    "flavor": "\"It hums the same note the sky makes, right before dawn. Trade well for it.\""
+  },
+  {
+    "id": "trade_eternity_dust_barter",
+    "traderName": "The Astral Wanderer",
+    "tier": "legendary",
+    "minLevel": 50,
+    "give": [{ "itemId": "eternity_dust", "qty": 1 }],
+    "want": [{ "itemId": "ancient_rune", "qty": 2 }],
+    "flavor": "\"Dust from something immortal, finally allowed to end. Handle it gently.\""
+  },
+  {
+    "id": "trade_titanium_ore_barter",
+    "traderName": "The Astral Wanderer",
+    "tier": "legendary",
+    "minLevel": 50,
+    "give": [{ "itemId": "titanium_ore", "qty": 1 }],
+    "want": [{ "itemId": "diamond_ore", "qty": 2 }],
+    "flavor": "\"Deepest vein in Astral. Most who go looking for it don't come back to trade.\""
+  },
+  {
+    "id": "trade_astral_sword_barter",
+    "traderName": "The Astral Wanderer",
+    "tier": "legendary",
+    "minLevel": 55,
+    "give": [{ "itemId": "astral_sword", "qty": 1 }],
+    "want": [{ "itemId": "astral_shard", "qty": 2 }],
+    "flavor": "\"A blade that remembers the plane it was named for. Wield it with intent.\""
+  },
+  {
+    "id": "trade_astral_wand_barter",
+    "traderName": "The Astral Wanderer",
+    "tier": "legendary",
+    "minLevel": 55,
+    "give": [{ "itemId": "astral_wand", "qty": 1 }],
+    "want": [{ "itemId": "celestial_ore", "qty": 1 }, { "itemId": "arcane_essence", "qty": 2 }],
+    "flavor": "\"It won't cast for just anyone. Something in it decides that. Not me.\""
+  },
+  {
+    "id": "trade_titanium_helmet_barter",
+    "traderName": "The Astral Wanderer",
+    "tier": "legendary",
+    "minLevel": 52,
+    "give": [{ "itemId": "titanium_helmet", "qty": 1 }],
+    "want": [{ "itemId": "titanium_ore", "qty": 1 }],
+    "flavor": "\"Forged in a heat no ordinary furnace reaches. Rare, and it shows.\""
+  },
+  {
+    "id": "trade_lucky_ore_windfall",
+    "traderName": "Old Dusk the Peddler",
+    "tier": "lucky",
+    "minLevel": 1,
+    "give": [{ "itemId": "silver_ore", "qty": 1 }],
+    "want": [{ "itemId": "wood_plank", "qty": 3 }],
+    "flavor": "\"Ha! Made a bad trade upriver and now I'm overstocked. Your lucky day, friend.\"",
+    "rare": true
+  },
+  {
+    "id": "trade_lucky_mythril_deal",
+    "traderName": "Hunter Yara",
+    "tier": "lucky",
+    "minLevel": 8,
+    "give": [{ "itemId": "mythril_ore", "qty": 1 }],
+    "want": [{ "itemId": "monster_fang", "qty": 2 }],
+    "flavor": "\"Found more of this than I can carry back. Take it before I change my mind.\"",
+    "rare": true
+  },
+  {
+    "id": "trade_lucky_shadow_dagger",
+    "traderName": "Wandering Blacksmith Toma",
+    "tier": "lucky",
+    "minLevel": 12,
+    "give": [{ "itemId": "nightshade_dagger", "qty": 1 }],
+    "want": [{ "itemId": "iron_ore", "qty": 4 }],
+    "flavor": "\"Client never came back for this one. Their loss, your gain.\"",
+    "rare": true
+  },
+  {
+    "id": "trade_lucky_essence_deal",
+    "traderName": "The Hollow Merchant",
+    "tier": "lucky",
+    "minLevel": 20,
+    "give": [{ "itemId": "arcane_essence", "qty": 2 }],
+    "want": [{ "itemId": "beast_hide", "qty": 2 }],
+    "flavor": "The merchant almost sounds sincere. \"Consider this... a rare moment of generosity.\"",
+    "rare": true
+  }
+]

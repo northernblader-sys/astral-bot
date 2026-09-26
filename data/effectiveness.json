@@ -1,0 +1,32 @@
+{
+  "_comment": "Season System Spec §14 — The Effectiveness System. Scope: Season 1 content only (open question #38) — grades every monster `type` value that exists on the 41 anime bosses today, plus the Season 1 dungeon's own enemies, against the four move CATEGORIES a player can actually choose from in combat (per §14.1: attack, skill, character ability, weapon effect). Basis: monster TYPE as default (open question #34), no per-monster-id overrides yet — the table is small enough that per-monster exceptions can be layered in later under `overrides` without a shape change. Scale: numeric multiplier (open question #35) — 0.5x / 1x / 1.25x / 1.5x / 2x, chosen over Pokémon-style tiers because attack.js/ability-engine.js already multiply raw damage by a float (calcPlayerDamage's damageMultiplier param), so a numeric grade drops straight into that pipeline with zero translation. Application: advisory-only for Willow, does NOT touch combat-engine.js damage math (open question #36) — no player asked for a Willow readout to secretly change what their basic attack rolls, and changing live damage math for 8 monster types under 4 move categories is a much bigger, separate balance pass than 'ship Willow'.",
+
+  "moveCategories": {
+    "physical": { "label": "Physical", "description": "Basic attack and STR/AGI-based skills." },
+    "magic":    { "label": "Magic",    "description": "INT-based skills and magic-flavored character abilities." },
+    "holy":     { "label": "Holy",     "description": "Mei's Final Form and holy-flavored effects." },
+    "severing": { "label": "Severing", "description": "Urahara's Tear/Reshape and bleed/cut-flavored weapon effects." },
+    "fire":     { "label": "Fire",     "description": "Wither's Cinder Verdict and ember/burn-flavored effects." }
+  },
+
+  "matchups": {
+    "physical": { "physical": 1,    "divine": 0.75, "shadow": 1,    "void": 0.75, "demon": 1,    "holy": 1,    "magic": 0.75, "time": 1,    "stone": 0.75 },
+    "magic":    { "physical": 1.25, "divine": 0.75, "shadow": 1.25, "void": 1,    "demon": 1.25, "holy": 0.75, "magic": 0.5,  "time": 1,    "stone": 1.5 },
+    "holy":     { "physical": 1,    "divine": 0.5,  "shadow": 2,    "void": 1.5,  "demon": 2,    "holy": 0.5,  "magic": 1,    "time": 1,    "stone": 1.25 },
+    "severing": { "physical": 1.25, "divine": 1,    "shadow": 1.5,  "void": 0.75, "demon": 1.25, "holy": 0.75, "magic": 1,    "time": 0.75, "stone": 1 },
+    "fire":     { "physical": 1.25, "divine": 0.75, "shadow": 1.25, "void": 0.75, "demon": 0.5,  "holy": 1,    "magic": 1,    "time": 0.75, "stone": 1.5 }
+  },
+
+  "_matchup_notes": "weakTo/resistTo already authored per-boss in bosses/*.js (e.g. aizen_sosuke: weakTo ['holy'], resistTo ['physical','magic','shadow','holy','fire','ice']) push the grade one full step further in the listed direction on top of the base `type` grade below — see lib/effectiveness-engine.js gradeMove(). A boss's own weakTo/resistTo always wins over the base table entry for its type when they conflict.",
+
+  "overrides": [],
+
+  "season01Enemies": {
+    "_comment": "Type/weakTo/resistTo assigned to the Season 1 dungeon roster (data/monsters.json season_01_ruins entries) so gradeMove() has real per-monster data to read for every enemy in the new dungeon, not just the 41 anime bosses.",
+    "wraith_of_the_veil":   { "type": "shadow", "weakTo": ["holy"],  "resistTo": ["physical"] },
+    "ashborn_revenant":     { "type": "demon",  "weakTo": ["holy"],  "resistTo": ["magic"] },
+    "hollow_choir":         { "type": "shadow", "weakTo": ["holy", "severing"], "resistTo": [] },
+    "veil_sentinel":        { "type": "divine", "weakTo": ["severing"], "resistTo": ["physical", "magic"] },
+    "the_last_prayer":      { "type": "divine", "weakTo": ["shadow"], "resistTo": ["holy", "physical"] }
+  }
+}

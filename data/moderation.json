@@ -1,0 +1,30 @@
+{
+  "mutes": {},
+  "afk": {
+    "tg:7014323578": {
+      "reason": "I miss Jane",
+      "since": 1786373712905
+    }
+  },
+  "polls": {
+    "120363409592473567@g.us": {
+      "question": "Who is Harold Flinch",
+      "options": [
+        "Me",
+        "U"
+      ],
+      "votes": {
+        "186363647377506@lid": 0
+      },
+      "by": "13469705326679@lid",
+      "at": 1786441283574,
+      "closed": false
+    }
+  },
+  "storySlots": {
+    "120363426943776845@g.us": {
+      "userJid": "142000863072294@lid",
+      "lastActivityAt": 1788360027986
+    }
+  }
+}

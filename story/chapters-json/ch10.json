@@ -1,0 +1,438 @@
+{
+  "num": 10,
+  "id": "half-a-volume",
+  "title": "Half a Volume",
+  "requires": "laughed-at",
+  "beats": [
+    { "type": "line", "text": "Oliver wakes you before sunrise by tapping the window with a feather." },
+    { "type": "line", "text": "You get it open three inches. \"If that's a bird, it's become very rude.\"" },
+    { "type": "line", "text": "\"Dress warmly.\"" },
+    { "type": "line", "text": "\"I'm in a nightdress.\"" },
+    { "type": "line", "text": "\"Then dress over it.\"" },
+    { "type": "line", "text": "He's packed bread, two apples, a tin cup, and the blue cloth out of his coat lining. The glider's nowhere in sight. The bruise on his face has gone yellow, which is the colour bruises turn when they've decided to leave." },
+    {
+      "type": "choice",
+      "key": "c10-window",
+      "text": "It is not yet five in the morning.",
+      "options": [
+        {
+          "id": "where",
+          "label": "\"Where are we going?\"",
+          "beats": [
+            { "type": "line", "text": "\"Somewhere the sky's bigger.\"" },
+            { "type": "line", "text": "\"The sky's the same size everywhere.\"" },
+            { "type": "line", "text": "\"That's why we have to test it.\"" }
+          ]
+        },
+        {
+          "id": "why",
+          "label": "\"Why today?\"",
+          "beats": [
+            { "type": "line", "text": "He looks down the alley, where there's nothing to look at yet." },
+            { "type": "line", "text": "\"Because there's no work I can do with this arm,\" he says, \"and if I sit in that room another day I'll do something stupid with the knife or the letter.\"" },
+            { "type": "line", "text": "\"So this is the sensible option.\"" },
+            { "type": "line", "text": "\"This is the sensible option,\" he agrees, holding a feather." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The landlady will object to the chair leaving the building. You tell him to wait." },
+    { "type": "line", "text": "You fetch your coat, retie the bandage, and use the crutch to stand long enough to reach the latch. It takes eleven minutes. Nobody sees it, which is the point." },
+    { "type": "line", "text": "Downstairs, Oliver has bribed the landlady with an apple." },
+    {
+      "type": "choice",
+      "key": "c10-apple",
+      "text": "It was your apple. It came out of your basket. He had two and both of them were yours.",
+      "options": [
+        {
+          "id": "mine",
+          "label": "\"That was my apple.\"",
+          "beats": [
+            { "type": "line", "text": "\"It achieved its purpose.\"" },
+            { "type": "line", "text": "\"Its purpose was breakfast.\"" },
+            { "type": "line", "text": "\"Its purpose was a locked door,\" he says, \"and it is now an open one.\"" }
+          ]
+        },
+        {
+          "id": "note",
+          "label": "Note it down. Out loud. In front of him.",
+          "beats": [
+            { "type": "line", "text": "\"One apple,\" you say. \"Owed.\"" },
+            { "type": "line", "text": "\"You're keeping accounts on me.\"" },
+            { "type": "line", "text": "\"Somebody in this arrangement should.\"" },
+            { "type": "line", "text": "\"Add it to the ledger,\" he says. \"I'll settle the whole thing at once, when I'm rich and insufferable.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He takes you west, through streets you've never seen." },
+    { "type": "line", "text": "The chair handles rough pavement badly. He slows every time the wheels hit a seam, and he never once touches the back of it unless you ask." },
+    { "type": "line", "text": "Morning smoke lies low over the city. Laundry hangs between the buildings. A butcher gets his shutters up. Somewhere a church bell counts out a time nobody else agrees with." },
+    {
+      "type": "choice",
+      "key": "c10-longway",
+      "text": "You've been going north for a quarter of an hour to travel west.",
+      "options": [
+        {
+          "id": "longway",
+          "label": "\"You chose the long way.\"",
+          "beats": [
+            { "type": "line", "text": "\"The short way has stairs.\"" },
+            { "type": "line", "text": "\"You remembered.\"" },
+            { "type": "line", "text": "\"I remember most obstacles.\"" },
+            { "type": "line", "text": "\"Only obstacles?\"" },
+            { "type": "line", "text": "\"Also useful objects.\" He points out a dumped wheelbarrow, a broken sign, and a length of rope tied to a post, in the order he'd take them." }
+          ]
+        },
+        {
+          "id": "map",
+          "label": "\"How many routes have you got in your head?\"",
+          "beats": [
+            { "type": "line", "text": "\"Out of the alley? Nine.\"" },
+            { "type": "line", "text": "\"Nine.\"" },
+            { "type": "line", "text": "\"Four are no good after rain. Two have a step at the bakery end that's shorter than it looks. One's only usable on Sundays.\"" },
+            { "type": "line", "text": "You look at the back of his head for a while." },
+            { "type": "line", "text": "He's fourteen and he's memorised nine routes out of one alley, and he did it without ever mentioning it, and none of them are for him." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "At the edge of the city the road goes pale and hard. Grass comes up between the paving stones. The air smells of salt, though the sea is miles from here." },
+    { "type": "line", "text": "You stop at a rise where the land falls away toward a wide plain." },
+    { "type": "line", "text": "Oliver takes the blue cloth out of his coat and spreads it under your chair." },
+    { "type": "line", "text": "It isn't a blanket." },
+    { "type": "line", "text": "It's a map." },
+    { "type": "line", "text": "Charcoal and chalk. Roads looping round hills. Rivers marked in thread stitched straight into the fabric. Some places have names. Most don't." },
+    {
+      "type": "choice",
+      "key": "c10-map",
+      "text": "It's the most valuable object either of you owns and he's been sleeping in it.",
+      "options": [
+        {
+          "id": "made",
+          "label": "\"You made this?\"",
+          "beats": [
+            { "type": "line", "text": "\"I copied it.\"" },
+            { "type": "line", "text": "\"From where?\"" },
+            { "type": "line", "text": "\"A railway clerk's office.\"" },
+            { "type": "line", "text": "\"Oliver.\"" },
+            { "type": "line", "text": "\"The clerk left the door open.\"" },
+            { "type": "line", "text": "\"Doors are not invitations.\"" },
+            { "type": "line", "text": "\"They're the nearest thing I get,\" he says." }
+          ]
+        },
+        {
+          "id": "thread",
+          "label": "Put your finger on the stitched river.",
+          "beats": [
+            { "type": "line", "text": "The thread's blue and it's been sewn in tiny, careful, terrible stitches." },
+            { "type": "line", "text": "\"Charcoal comes off,\" he says. \"Rivers don't move. So the rivers had to be thread.\"" },
+            { "type": "line", "text": "\"Who taught you to sew?\"" },
+            { "type": "line", "text": "\"Nobody.\"" },
+            { "type": "line", "text": "\"It shows,\" you say, and he laughs, and you keep your finger on the river because your hand has started shaking and you'd rather he didn't see it." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The city's a dark knot in the corner. West of it, the plain runs out into empty cloth." },
+    { "type": "line", "text": "\"You've never been here,\" you say." },
+    { "type": "line", "text": "\"No.\"" },
+    { "type": "line", "text": "\"Then how do you know the land falls?\"" },
+    { "type": "line", "text": "\"The birds do.\"" },
+    { "type": "line", "text": "He points at the horizon. Gulls are working the air above the plain, bright against the morning." },
+    { "type": "line", "text": "\"They use the rising air,\" he says. \"See how they turn without losing height?\"" },
+    { "type": "line", "text": "You watch. They're circling over something neither of you can see." },
+    {
+      "type": "choice",
+      "key": "c10-birds",
+      "text": "He's watching them the way other boys watch a fight.",
+      "options": [
+        {
+          "id": "proving",
+          "label": "\"They're not proving anything.\"",
+          "beats": [
+            { "type": "line", "text": "\"They're showing me where to look.\"" },
+            { "type": "line", "text": "\"That's not the same as proof.\"" },
+            { "type": "line", "text": "\"No,\" he says. \"Proof's what you get afterwards, from a hill, with an audience. Looking's free.\"" }
+          ]
+        },
+        {
+          "id": "count",
+          "label": "\"How many turns before one of them drops?\"",
+          "beats": [
+            { "type": "line", "text": "He looks round at you." },
+            { "type": "line", "text": "\"Nine, on the left one,\" you say. \"I've been counting since we stopped. It hasn't lost an inch.\"" },
+            { "type": "line", "text": "He doesn't say anything." },
+            { "type": "line", "text": "\"What?\"" },
+            { "type": "line", "text": "\"Nothing,\" he says. \"Only that I've explained it to four people and you're the first who started counting.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He takes the apples out of the basket and cuts one with a pocketknife. The blade's dull. Every slice comes out crooked." },
+    { "type": "line", "text": "You eat out of his palm, because the grass is too soft for the wheels and there's nowhere to put a plate." },
+    { "type": "line", "text": "He holds the pieces without comment. His fingers smell of metal and bread." },
+    { "type": "line", "text": "\"What'll you do, when you fly?\" you ask." },
+    { "type": "line", "text": "\"Look.\"" },
+    { "type": "line", "text": "\"At what?\"" },
+    { "type": "line", "text": "\"Everything.\"" },
+    { "type": "line", "text": "\"That's too much.\"" },
+    { "type": "line", "text": "\"Then I'll choose.\"" },
+    { "type": "line", "text": "The horizon's a clean line today. Above it the clouds have built into a long white shelf." },
+    { "type": "line", "text": "\"Do you think there's anything above them?\" he asks." },
+    {
+      "type": "choice",
+      "key": "c10-above",
+      "text": "He asks it seriously, which is the only way he asks anything.",
+      "options": [
+        {
+          "id": "rain",
+          "label": "\"Rain.\"",
+          "beats": [
+            { "type": "line", "text": "\"Above the rain.\"" },
+            { "type": "line", "text": "\"More sky.\"" },
+            { "type": "line", "text": "\"That isn't an answer.\"" },
+            { "type": "line", "text": "\"You dislike my practical answers.\"" },
+            { "type": "line", "text": "\"They keep me from being comfortable.\"" },
+            { "type": "line", "text": "\"Good,\" you say, and take the last slice." }
+          ]
+        },
+        {
+          "id": "cold",
+          "label": "\"Cold. Real cold. The kind that doesn't care.\"",
+          "beats": [
+            { "type": "line", "text": "\"How do you know?\"" },
+            { "type": "line", "text": "\"Mountains,\" you say. \"They're only tall. There's snow on them in June. Go high enough and the air stops being on your side.\"" },
+            { "type": "line", "text": "He's quiet for a moment." },
+            { "type": "line", "text": "\"Then I'll need something over my eyes,\" he says, \"and something over my hands.\"" },
+            { "type": "line", "text": "\"Yes.\"" },
+            { "type": "line", "text": "\"Noted,\" he says, and you find out later he wrote it down that night, in the book, under a heading, and that he'd already made one of the two." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The sun warms the back of your neck." },
+    { "type": "line", "text": "For once, nobody's asking either of you to move." },
+    { "type": "line", "text": "A shepherd finds you near midday, with a crooked staff and a dog that's lost an ear." },
+    { "type": "line", "text": "\"Road's a mile back,\" he says." },
+    { "type": "line", "text": "\"We know,\" Oliver says." },
+    { "type": "line", "text": "\"Lost?\"" },
+    { "type": "line", "text": "\"No.\"" },
+    { "type": "line", "text": "The shepherd studies the cloth under your chair. \"Making one?\"" },
+    { "type": "line", "text": "\"Trying.\"" },
+    { "type": "line", "text": "The dog sniffs at the brass hinge Oliver's brought along for luck. Oliver lets it." },
+    { "type": "line", "text": "\"That hill ahead floods in winter,\" the shepherd says. \"River cuts through the lower field. There's a stone bridge under the reeds.\"" },
+    { "type": "line", "text": "He points with the staff. Oliver puts a mark on the map." },
+    {
+      "type": "choice",
+      "key": "c10-shepherd",
+      "text": "A man has just given away something for nothing, out of doors, in daylight. You've not seen it happen in a year.",
+      "options": [
+        {
+          "id": "charge",
+          "label": "\"Do you charge for information?\"",
+          "beats": [
+            { "type": "line", "text": "The shepherd looks genuinely surprised. \"No.\"" },
+            { "type": "line", "text": "\"You should. Everybody else charges for everything else.\"" },
+            { "type": "line", "text": "\"Then pay me with the apple.\"" },
+            { "type": "line", "text": "Oliver hands over the apple. The dog eats it in one bite." },
+            { "type": "line", "text": "\"That was mine,\" you say." },
+            { "type": "line", "text": "\"The day's full of sacrifices.\"" }
+          ]
+        },
+        {
+          "id": "more",
+          "label": "\"What else floods?\"",
+          "beats": [
+            { "type": "line", "text": "The shepherd leans on the staff and tells you, for eleven minutes, everything the land does when nobody's watching it." },
+            { "type": "line", "text": "Where the wind turns at the elbow of the hill. Which field holds the last of the frost. Where the air comes up off the quarry face warm enough to lift a hawk without a wingbeat." },
+            { "type": "line", "text": "Oliver writes all of it down. He doesn't interrupt once." },
+            { "type": "line", "text": "At the end the shepherd says, \"Nobody's asked me that,\" and sounds unsteady about it, and takes the apple as though it settles the debt the other way." },
+            { "type": "line", "text": "The dog eats it in one bite." },
+            { "type": "line", "text": "\"That was mine,\" you say." },
+            { "type": "line", "text": "\"The day's full of sacrifices.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The shepherd goes. Oliver lies on his back in the grass beside your chair." },
+    { "type": "line", "text": "\"You'll stain your coat.\"" },
+    { "type": "line", "text": "\"It's survived worse.\"" },
+    { "type": "line", "text": "He shuts his eyes." },
+    { "type": "line", "text": "\"Are you asleep?\"" },
+    { "type": "line", "text": "\"No.\"" },
+    { "type": "line", "text": "\"You look asleep.\"" },
+    { "type": "line", "text": "\"I'm practising.\"" },
+    { "type": "line", "text": "The wind comes across the plain and bends the grass in one long shining wave. The clouds build themselves and take themselves apart above the far hills." },
+    { "type": "line", "text": "\"What do you see?\" he asks." },
+    {
+      "type": "choice",
+      "key": "c10-clouds",
+      "text": "You could tell him about rising air and the shape of the shelf and the nine turns.",
+      "options": [
+        {
+          "id": "boot",
+          "label": "\"A cloud shaped like a boot.\"",
+          "beats": [
+            { "type": "line", "text": "\"That's what everyone sees.\"" },
+            { "type": "line", "text": "\"Then a second cloud shaped like a badly cooked fish.\"" },
+            { "type": "line", "text": "\"Better.\"" },
+            { "type": "line", "text": "\"A third cloud shaped like a boy who ought to be repairing his machine.\"" },
+            { "type": "line", "text": "He opens one eye. \"That cloud's rude.\"" },
+            { "type": "line", "text": "\"It has conviction.\"" }
+          ]
+        },
+        {
+          "id": "honest",
+          "label": "\"A day I'm going to want back.\"",
+          "beats": [
+            { "type": "line", "text": "He opens his eyes." },
+            { "type": "line", "text": "\"Don't do that,\" he says." },
+            { "type": "line", "text": "\"Do what?\"" },
+            { "type": "line", "text": "\"Put it in the past while we're in it.\"" },
+            { "type": "line", "text": "\"I'm not.\"" },
+            { "type": "line", "text": "\"You are. You do it with everything good. You start remembering it early so it can't be taken off you.\"" },
+            { "type": "line", "text": "You don't have an answer for that, because he's right, and because he's fourteen, and because he learned it somewhere worse than you did." },
+            { "type": "line", "text": "\"A cloud shaped like a boot,\" you say instead." },
+            { "type": "line", "text": "\"That's what everyone sees,\" he says, and shuts his eyes again, satisfied." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "You name clouds until neither of you can remember the names." },
+    { "type": "line", "text": "On the way home a wheel catches in a rut. The chair stops hard enough to throw your hands off the rims." },
+    { "type": "line", "text": "Oliver turns." },
+    {
+      "type": "choice",
+      "key": "c10-rut",
+      "text": "He's stopped exactly where he is, with his hands out and empty, waiting.",
+      "options": [
+        {
+          "id": "dont",
+          "label": "\"Don't touch me.\"",
+          "beats": [
+            { "type": "line", "text": "He stays put. \"Do you want the chair moved?\"" },
+            { "type": "line", "text": "\"Yes.\"" },
+            { "type": "line", "text": "He lifts the front wheels over the rut and steps back. You push. The chair rolls free." },
+            { "type": "line", "text": "\"Thank you.\"" },
+            { "type": "line", "text": "\"You're welcome.\"" },
+            { "type": "line", "text": "Nine words. Six months ago that would have taken twenty minutes and cost you both something." }
+          ]
+        },
+        {
+          "id": "front",
+          "label": "\"Front wheels. Nothing else.\"",
+          "beats": [
+            { "type": "line", "text": "\"Front wheels,\" he repeats, and does exactly that, and puts his hands behind his back afterwards like a man proving he isn't holding a card." },
+            { "type": "line", "text": "You push. The chair rolls free." },
+            { "type": "line", "text": "\"Thank you.\"" },
+            { "type": "line", "text": "\"You're welcome,\" he says. \"That was very nearly pleasant.\"" },
+            { "type": "line", "text": "\"Don't ruin it.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The road slopes gently back toward the city. He walks beside you instead of ahead. The map's tied round his waist and one corner flaps against his hip." },
+    { "type": "line", "text": "\"Today was good,\" he says." },
+    {
+      "type": "choice",
+      "key": "c10-good",
+      "text": "It was. You'd rather chew glass than say so plainly.",
+      "options": [
+        {
+          "id": "dog",
+          "label": "\"The dog stole my apple.\"",
+          "beats": [
+            { "type": "line", "text": "\"That part was good.\"" },
+            { "type": "line", "text": "\"The grass was damp.\"" },
+            { "type": "line", "text": "\"Also good.\"" },
+            { "type": "line", "text": "\"Your map's inaccurate.\"" },
+            { "type": "line", "text": "\"It's unfinished.\"" }
+          ]
+        },
+        {
+          "id": "yes",
+          "label": "\"Yes. It was.\"",
+          "beats": [
+            { "type": "line", "text": "He doesn't answer straight away." },
+            { "type": "line", "text": "\"Say that again,\" he says." },
+            { "type": "line", "text": "\"No.\"" },
+            { "type": "line", "text": "\"You've never agreed with me about anything.\"" },
+            { "type": "line", "text": "\"I've agreed with you about the sky,\" you say, \"which is larger than most subjects.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He looks at the line you drew on the cloth beside the plain. It's crooked, but it marks the place where the land opened." },
+    { "type": "line", "text": "\"You added that,\" he says." },
+    { "type": "line", "text": "\"I was there.\"" },
+    { "type": "line", "text": "At the edge of the city the factory smoke has got the sunset. He stops under a row of elms and takes the brass plate out of his pocket." },
+    { "type": "line", "text": "He holds it up against what light's left." },
+    { "type": "line", "text": "The hinges open. A narrow band of leather runs through them. It's the beginning of something that would go round a head." },
+    {
+      "type": "choice",
+      "key": "c10-promise",
+      "text": "It is not the shape of a thing that fits his face. It has never once been that shape.",
+      "options": [
+        {
+          "id": "promise",
+          "label": "\"Still a promise?\"",
+          "beats": [
+            { "type": "line", "text": "\"Still.\"" },
+            { "type": "line", "text": "\"You're taking a long time.\"" },
+            { "type": "line", "text": "\"Good work does.\"" },
+            { "type": "line", "text": "\"So does bad work.\"" },
+            { "type": "line", "text": "\"I'm trying to avoid that,\" he says, and puts it away before you can ask anything else." }
+          ]
+        },
+        {
+          "id": "measure",
+          "label": "\"You measured my head with string in May.\"",
+          "beats": [
+            { "type": "line", "text": "His hand closes round the plate." },
+            { "type": "line", "text": "\"I measure a lot of things.\"" },
+            { "type": "line", "text": "\"You measured my head.\"" },
+            { "type": "line", "text": "\"Monica.\"" },
+            { "type": "line", "text": "\"You went up a hill with a rag on your face.\"" },
+            { "type": "line", "text": "\"It isn't finished,\" he says, \"and if you make me say what it is before it's finished, you'll have taken the only thing I've got to give anybody,\" and he puts it in his pocket and walks on, and you let him, and you don't ask again for four years." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "At your building he carries the map upstairs while you take the rear passage. He goes slowly. Every time the chair catches, he waits." },
+    { "type": "line", "text": "In your room he pins the blue cloth up beside the window." },
+    { "type": "line", "text": "The city takes up one corner of it." },
+    { "type": "line", "text": "The blank plain is everything else." },
+    {
+      "type": "choice",
+      "key": "c10-close",
+      "text": "You sit under it until the light's gone.",
+      "options": [
+        {
+          "id": "silent",
+          "label": "Say nothing about the empty half.",
+          "beats": [
+            { "type": "line", "text": "He doesn't mention it either." },
+            { "type": "line", "text": "Two people in a room with a map, neither of them saying that half the world hasn't got a name yet." }
+          ]
+        },
+        {
+          "id": "names",
+          "label": "\"Who fills the rest of it in?\"",
+          "beats": [
+            { "type": "line", "text": "\"I do,\" he says. \"Slowly. Badly.\"" },
+            { "type": "line", "text": "\"You can't sew.\"" },
+            { "type": "line", "text": "\"I can't sew,\" he agrees." },
+            { "type": "line", "text": "\"Then you want somebody who can.\"" },
+            { "type": "line", "text": "\"Where would I find a person like that?\"" },
+            { "type": "line", "text": "\"I've no idea,\" you say." },
+            { "type": "line", "text": "She's eleven months away. She's got a bad chest, a stolen surveyor's rule, and eight hundred place names in her head, and neither of you has heard of her yet." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Remember this day." },
+    { "type": "line", "text": "Not because anything happens in it." },
+    { "type": "line", "text": "Because nothing does." }
+  ]
+}

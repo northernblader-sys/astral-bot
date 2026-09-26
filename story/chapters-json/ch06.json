@@ -1,0 +1,449 @@
+{
+  "num": 6,
+  "id": "the-toll-man",
+  "title": "The Toll Man",
+  "requires": "names-we-dont-ask-for",
+  "beats": [
+    { "type": "line", "text": "The man in the brown coat waits at the end of the alley every morning for a week." },
+    { "type": "line", "text": "He isn't a constable. Constables wear blue." },
+    { "type": "line", "text": "This one carries a leather ledger and a brass-tipped cane, and he lets the tip hover above the stones instead of setting it down." },
+    { "type": "line", "text": "Oliver calls him the Toll Man." },
+    {
+      "type": "choice",
+      "key": "c06-toll",
+      "text": "The name arrives already worn in. He's had it for a while.",
+      "options": [
+        {
+          "id": "what",
+          "label": "\"What toll?\"",
+          "beats": [
+            { "type": "line", "text": "\"Whatever he thinks I owe.\"" },
+            { "type": "line", "text": "\"For walking?\"" },
+            { "type": "line", "text": "\"For being noticed.\"" }
+          ]
+        },
+        {
+          "id": "howlong",
+          "label": "\"How long has he been doing this to you?\"",
+          "beats": [
+            { "type": "line", "text": "Oliver counts it on the spar with his thumb, which means he's counting in months." },
+            { "type": "line", "text": "\"Since the ninth frame.\"" },
+            { "type": "line", "text": "\"That's a year.\"" },
+            { "type": "line", "text": "\"He's patient,\" Oliver says. \"That's what makes him expensive.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The man watches Oliver carry willow into the washhouse, come out with empty pockets, and come back with wire. At noon he writes in the ledger." },
+    { "type": "line", "text": "You roll nearer the window. The left wheel gives a faint click. Oliver hears it from the alley." },
+    { "type": "line", "text": "\"Don't come outside,\" he says." },
+    {
+      "type": "choice",
+      "key": "c06-window",
+      "text": "He hasn't looked up.",
+      "options": [
+        {
+          "id": "pedant",
+          "label": "\"That isn't outside.\"",
+          "beats": [
+            { "type": "line", "text": "He smiles without looking up." },
+            { "type": "line", "text": "\"You know what I mean.\"" },
+            { "type": "line", "text": "\"I do,\" you say, and stay exactly where you are, which is at the window, in full view of the end of the alley." }
+          ]
+        },
+        {
+          "id": "why",
+          "label": "\"Why not?\"",
+          "beats": [
+            { "type": "line", "text": "\"Because he writes down what he sees.\"" },
+            { "type": "line", "text": "\"Then let him write me down.\"" },
+            { "type": "line", "text": "\"Monica.\"" },
+            { "type": "line", "text": "\"If I'm in the ledger, I'm in the story,\" you say. \"People are careful with stories that have a girl in them.\"" },
+            { "type": "line", "text": "He doesn't like it. He also doesn't tell you you're wrong." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "On the eighth morning the Toll Man comes into the washhouse." },
+    { "type": "line", "text": "He ducks under the lintel, though the doorway is tall enough. His coat smells of wet wool and tobacco." },
+    { "type": "line", "text": "\"Oliver Wright,\" he says." },
+    { "type": "line", "text": "Oliver keeps working on the cradle. \"That's what they call me.\"" },
+    { "type": "line", "text": "\"You've been taking material from the machine yard.\"" },
+    { "type": "line", "text": "\"The machine yard has material.\"" },
+    { "type": "line", "text": "\"You've been seen.\"" },
+    { "type": "line", "text": "\"That's unlucky.\"" },
+    { "type": "line", "text": "The man's gaze goes across the ribs, the spars, the canvas. Then it finds you." },
+    { "type": "line", "text": "\"And you are?\"" },
+    {
+      "type": "choice",
+      "key": "c06-whoareyou",
+      "text": "He's asked it the way you'd ask about a chair that's been left in a corridor.",
+      "options": [
+        {
+          "id": "first",
+          "label": "\"The person who was here first.\"",
+          "beats": [
+            { "type": "line", "text": "His mouth tightens. \"I'm asking for your name.\"" },
+            { "type": "line", "text": "\"You heard me.\"" },
+            { "type": "line", "text": "Oliver puts down the pliers. The washhouse goes very quiet. Even the gulls have stopped arguing on the roof." }
+          ]
+        },
+        {
+          "id": "tenant",
+          "label": "\"A tenant of this building. Which is more than you are.\"",
+          "beats": [
+            { "type": "line", "text": "\"Are you.\"" },
+            { "type": "line", "text": "\"First floor, front. My aunt pays on the second Tuesday.\"" },
+            { "type": "line", "text": "You watch him decide whether that's true, and whether it matters, and it's the first time all week he's had to decide anything." },
+            { "type": "line", "text": "Oliver puts down the pliers. The room goes quiet enough to hear the canvas move." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The Toll Man opens the ledger. \"The yard has reported missing brass, linen, copper and tools.\"" },
+    { "type": "line", "text": "\"Then the yard should count more carefully,\" Oliver says." },
+    { "type": "line", "text": "\"You think jokes will help.\"" },
+    { "type": "line", "text": "\"No. I think they're free.\"" },
+    { "type": "line", "text": "The man taps the ledger with one finger. \"There's a fee for unauthorised use of this district's materials.\"" },
+    {
+      "type": "choice",
+      "key": "c06-fee",
+      "text": "A fee.",
+      "options": [
+        {
+          "id": "notyard",
+          "label": "\"You're not the yard.\"",
+          "beats": [
+            { "type": "line", "text": "\"I collect on behalf of people who prefer not to come into alleys.\"" },
+            { "type": "line", "text": "\"How convenient for them.\"" },
+            { "type": "line", "text": "\"It's convenient for everyone,\" he says. \"That's the design.\"" }
+          ]
+        },
+        {
+          "id": "howmuch",
+          "label": "\"How much?\"",
+          "beats": [
+            { "type": "line", "text": "He names a figure. It's four times what's in the pocket under your cushion." },
+            { "type": "line", "text": "\"And if it isn't paid?\"" },
+            { "type": "line", "text": "\"Then the materials come back to the district.\"" },
+            { "type": "line", "text": "He says materials while looking at the wing, and every man in the room understands him." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He looks at the chair. Then at the bandage under the blanket." },
+    { "type": "line", "text": "\"You've a sharp tongue for someone who can't stand.\"" },
+    {
+      "type": "choice",
+      "key": "c06-insult",
+      "text": "Oliver has gone perfectly still.",
+      "options": [
+        {
+          "id": "cold",
+          "label": "\"I've had a great deal of practice sitting down.\"",
+          "beats": [
+            { "type": "line", "text": "It comes out flat and bored, which is the only way to say it, and it takes something off him." },
+            { "type": "line", "text": "Then Oliver moves. Not at the man — between him and the workbench." },
+            { "type": "line", "text": "\"Don't talk to her like that.\"" },
+            { "type": "line", "text": "The Toll Man smiles. \"There it is.\"" },
+            { "type": "line", "text": "\"There what is?\"" },
+            { "type": "line", "text": "\"The reason I found you so quickly.\"" }
+          ]
+        },
+        {
+          "id": "silent",
+          "label": "Say nothing at all.",
+          "beats": [
+            { "type": "line", "text": "You let it sit in the room. It's not the worst thing said to you this month and he can tell." },
+            { "type": "line", "text": "Oliver can't. Oliver moves — not at the man, but between him and the bench." },
+            { "type": "line", "text": "\"Don't talk to her like that.\"" },
+            { "type": "line", "text": "\"There it is,\" the Toll Man says, and writes something down, and you understand that Oliver has just cost himself more than the brass did." }
+          ]
+        },
+        {
+          "id": "bite",
+          "label": "\"And you've a soft one for a man who does errands.\"",
+          "beats": [
+            { "type": "line", "text": "The cane comes up an inch off the floor." },
+            { "type": "line", "text": "Oliver is between you before it comes down, and he isn't tall enough for it, and he does it anyway." },
+            { "type": "line", "text": "\"Don't talk to her at all,\" he says." },
+            { "type": "line", "text": "\"There it is,\" the Toll Man says, delighted. \"That's what I came for. Not the brass.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He reaches for the canvas. Oliver catches his wrist." },
+    { "type": "line", "text": "The cane strikes the floor. Not hard. Once." },
+    { "type": "line", "text": "Outside, a constable turns the corner." },
+    { "type": "line", "text": "Oliver lets go." },
+    { "type": "line", "text": "The constable comes through the door with a hand on his club. The Toll Man steps aside, leaving Oliver standing on his own in the middle of the floor." },
+    { "type": "line", "text": "\"This boy has stolen from the machine yard,\" he says." },
+    { "type": "line", "text": "The constable looks at you. \"Did you see him?\"" },
+    {
+      "type": "choice",
+      "key": "c06-witness",
+      "text": "Behind Oliver the frame stands with every rib and joint showing. If the constable searches the room, the work is finished. If he takes Oliver, the work is finished.",
+      "options": [
+        {
+          "id": "nothing",
+          "label": "\"I saw him take nothing.\"",
+          "beats": [
+            { "type": "line", "text": "It's a lie with a clean edge on it. You've got better at these." },
+            { "type": "line", "text": "\"You weren't present,\" the Toll Man says." },
+            { "type": "line", "text": "\"I'm present now.\"" }
+          ]
+        },
+        {
+          "id": "working",
+          "label": "\"I saw him working. Every day. From that window.\"",
+          "beats": [
+            { "type": "line", "text": "The constable glances up at your window, and at the alley, and at the distance between them, and you watch him find it plausible." },
+            { "type": "line", "text": "\"You weren't in the yard,\" the Toll Man says." },
+            { "type": "line", "text": "\"Neither was he. That's the point I'm making.\"" }
+          ]
+        },
+        {
+          "id": "whichday",
+          "label": "\"Which day does the report say?\"",
+          "beats": [
+            { "type": "line", "text": "The Toll Man doesn't answer immediately, and the constable notices that he doesn't." },
+            { "type": "line", "text": "\"Several days,\" he says." },
+            { "type": "line", "text": "\"Then name one.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The Toll Man closes the ledger over one finger." },
+    { "type": "line", "text": "\"You expect a constable to believe a crippled girl over a written report?\"" },
+    {
+      "type": "plea",
+      "text": "Your hands tighten on the armrests.\n\nThe constable's eyes keep going back to the machine. That's the thing to use. Not the boy. Not the leg. The machine, and the fact that a man came for it before the law did.\n\n\"I expect him to read the report,\" you say.\n\nThe constable turns his head.\n\n\"If it names a tool, ask which tool. If it names a witness, ask where the witness was standing. If it names a boy—\"\n\nYou let that one wait.\n\n\"—ask why the collector arrived before the law.\"\n\nThe constable looks at the ledger.",
+      "stakes": {
+        "scripted": false,
+        "chance": 0.65,
+        "onSuccess": "The Toll Man closes his ledger without a word and steps back through the door. For tonight, the frame stays in the washhouse.",
+        "onFail": "The Toll Man's hand closes on the nearest strut. \"Then the report stands,\" he says, and the constable takes the frame apart, piece by piece, while Oliver watches from the doorway and says nothing at all."
+      }
+    },
+    { "type": "line", "text": "The constable asks to see the report. The man turns two pages, slowly." },
+    { "type": "line", "text": "\"The yard's owner doesn't require a formal complaint for recovered property.\"" },
+    {
+      "type": "choice",
+      "key": "c06-recovered",
+      "text": "Recovered.",
+      "options": [
+        {
+          "id": "fromwhere",
+          "label": "\"Recovered from where?\"",
+          "beats": [
+            { "type": "line", "text": "\"From the boy.\"" },
+            { "type": "line", "text": "\"Then search him.\"" },
+            { "type": "line", "text": "Oliver looks at you. You don't look back, because if you look back he'll see that you're guessing." },
+            { "type": "line", "text": "The constable searches his coat. A pencil stub. A button. Bread. A square of blue cloth." },
+            { "type": "line", "text": "No brass. No tools." },
+            { "type": "line", "text": "You breathe out through your nose so that nobody hears it." }
+          ]
+        },
+        {
+          "id": "showit",
+          "label": "\"Then it's not a complaint. It's a shopping list.\"",
+          "beats": [
+            { "type": "line", "text": "The constable makes a sound that isn't quite a cough." },
+            { "type": "line", "text": "The Toll Man's face doesn't move at all, which is how you know you've hit something." },
+            { "type": "line", "text": "\"Search the boy,\" the constable says, \"since we're here.\"" },
+            { "type": "line", "text": "A pencil stub. A button. Bread. A square of blue cloth. No brass. No tools." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"The property's hidden,\" the Toll Man says. His voice hasn't changed once." },
+    { "type": "line", "text": "\"In my room?\"" },
+    { "type": "line", "text": "\"It may be.\"" },
+    { "type": "line", "text": "\"Then search it.\"" },
+    { "type": "line", "text": "He points at the frame instead. \"That structure is evidence.\"" },
+    { "type": "line", "text": "The constable reaches for the leading spar." },
+    { "type": "line", "text": "\"Don't,\" Oliver says." },
+    { "type": "line", "text": "The word comes out rough. The hand stops. For one breath all three men look at him as though he's got bigger." },
+    {
+      "type": "choice",
+      "key": "c06-evidence",
+      "text": "You have about two seconds before the moment turns into something that gets a boy hit.",
+      "options": [
+        {
+          "id": "damage",
+          "label": "\"If it breaks, you'll have damaged evidence before proving it's anyone's.\"",
+          "beats": [
+            { "type": "line", "text": "The constable withdraws his hand. Slowly, and as if it were his own idea." },
+            { "type": "line", "text": "Nobody in this alley has ever once been let off by an argument. You file that away." }
+          ]
+        },
+        {
+          "id": "invite",
+          "label": "\"Take it apart, then. Count the pieces against your list.\"",
+          "beats": [
+            { "type": "line", "text": "Oliver's head comes round so fast you feel it." },
+            { "type": "line", "text": "\"Every rib is willow off a fence,\" you say. \"Every thread is off a coat lining. There's four brass fittings and he'll say all four are the yard's, and you'll have to write down which four, and then somebody at the yard will have to swear to it in front of a magistrate.\"" },
+            { "type": "line", "text": "The constable does the arithmetic and decides against his own afternoon." },
+            { "type": "line", "text": "His hand comes off the spar." },
+            { "type": "line", "text": "Afterward Oliver says, \"You gambled my wing.\" You say, \"I gambled his paperwork.\" You are both right." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The Toll Man steps toward you. \"You're making a mistake.\"" },
+    { "type": "line", "text": "\"I make several a day. You'll have to be specific.\"" },
+    { "type": "line", "text": "\"You're attaching yourself to a thief.\"" },
+    { "type": "line", "text": "\"I'm attached to a chair.\"" },
+    { "type": "line", "text": "His eyes narrow. \"The boy has no property. That frame can be taken under district ordinance.\"" },
+    {
+      "type": "choice",
+      "key": "c06-ordinance",
+      "text": "There is no ordinance. You'd bet the chair on it.",
+      "options": [
+        {
+          "id": "showme",
+          "label": "\"Show me the ordinance.\"",
+          "beats": [
+            { "type": "line", "text": "\"You know what I mean.\"" },
+            { "type": "line", "text": "\"I know what you want.\"" },
+            { "type": "line", "text": "The constable looks between you. \"Is there an ordinance?\"" },
+            { "type": "line", "text": "The Toll Man doesn't answer." }
+          ]
+        },
+        {
+          "id": "number",
+          "label": "\"Which number?\"",
+          "beats": [
+            { "type": "line", "text": "\"I beg your pardon?\"" },
+            { "type": "line", "text": "\"Ordinances have numbers. My father read them out at supper for nine years. Which number is it?\"" },
+            { "type": "line", "text": "The silence goes on one beat too long for a man with a ledger." },
+            { "type": "line", "text": "\"Is there an ordinance?\" the constable asks him, and this time it isn't a question." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Oliver's hand has closed on the edge of the cradle. He's ready to pick the frame up and run, and there is nowhere in the world to run with a glider twice your size, and he'd still try." },
+    { "type": "line", "text": "You speak to the constable." },
+    { "type": "line", "text": "\"If you're here as law, take him on a proven charge. If you're here to carry furniture for a man with a ledger, say so plainly.\"" },
+    { "type": "line", "text": "The Toll Man turns his cane toward the door. \"This isn't finished.\"" },
+    { "type": "line", "text": "\"It never is, with men who keep ledgers.\"" },
+    { "type": "line", "text": "He goes." },
+    { "type": "line", "text": "The constable stays, looking at the scraps, the frame, and Oliver's split lip." },
+    { "type": "line", "text": "\"You shouldn't build that,\" he says." },
+    { "type": "line", "text": "\"Why?\" Oliver asks." },
+    { "type": "line", "text": "\"Because it won't work.\"" },
+    { "type": "line", "text": "\"Have you tried?\"" },
+    {
+      "type": "choice",
+      "key": "c06-constable",
+      "text": "The constable almost smiles. He's about to say something ordinary and leave.",
+      "options": [
+        {
+          "id": "press",
+          "label": "\"Does keeping out of the yard apply to him as well?\"",
+          "beats": [
+            { "type": "line", "text": "\"Just keep out of the machine yard,\" he'd started to say, and you asked before he finished it." },
+            { "type": "line", "text": "The almost-smile goes." },
+            { "type": "line", "text": "He leaves without answering, and that answer is the one you keep." }
+          ]
+        },
+        {
+          "id": "name",
+          "label": "\"What's his name? The man with the ledger.\"",
+          "beats": [
+            { "type": "line", "text": "The constable looks at the doorway the Toll Man went through." },
+            { "type": "line", "text": "\"He's got several,\" he says." },
+            { "type": "line", "text": "\"Which one's on the ledger?\"" },
+            { "type": "line", "text": "\"Miss,\" he says, almost kindly, \"the ledger isn't the part that gets written down.\"" },
+            { "type": "line", "text": "Then: \"Keep out of the machine yard,\" to Oliver, and he goes." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Oliver waits until the boots have faded off the end of the alley. Then he lifts the canvas." },
+    { "type": "line", "text": "A strip along the trailing edge has been cut. The knife mark is clean and about nine inches long." },
+    { "type": "line", "text": "\"He did that when he came in,\" Oliver says." },
+    {
+      "type": "choice",
+      "key": "c06-cut",
+      "text": "He's holding the two edges together with his thumbs, as if the cloth might reconsider.",
+      "options": [
+        {
+          "id": "mend",
+          "label": "\"Can you mend it?\"",
+          "beats": [
+            { "type": "line", "text": "\"Yes.\"" },
+            { "type": "line", "text": "\"Then mend it.\"" },
+            { "type": "line", "text": "He sits down on the floor and threads a needle. His hands shake once and then settle." },
+            { "type": "line", "text": "\"You shouldn't have done that,\" he says." },
+            { "type": "line", "text": "\"I know.\"" },
+            { "type": "line", "text": "\"He'll come back.\"" },
+            { "type": "line", "text": "\"I know.\"" }
+          ]
+        },
+        {
+          "id": "rage",
+          "label": "\"He did it while looking me in the face.\"",
+          "beats": [
+            { "type": "line", "text": "\"Yes,\" Oliver says." },
+            { "type": "line", "text": "\"Why?\"" },
+            { "type": "line", "text": "\"So we'd know he could.\"" },
+            { "type": "line", "text": "He gets the needle out and sits down on the floor with the canvas in his lap." },
+            { "type": "line", "text": "\"Don't be angry at the cloth,\" he says. \"Cloth mends. Be angry at the seventh of the month, when he'll come back.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "By nightfall the cut is sewn shut with thread pulled out of the lining of his coat." },
+    { "type": "line", "text": "\"You'll freeze,\" you say." },
+    { "type": "line", "text": "\"I've a blanket.\"" },
+    { "type": "line", "text": "\"The blanket belongs to the washhouse.\"" },
+    { "type": "line", "text": "\"It hasn't complained.\"" },
+    { "type": "line", "text": "There's a pocket sewn under your cushion. There are three coins in it. They're meant for medicine." },
+    {
+      "type": "choice",
+      "key": "c06-coins",
+      "text": "He hasn't asked. He'd never ask.",
+      "options": [
+        {
+          "id": "bench",
+          "label": "Put all three on the bench.",
+          "beats": [
+            { "type": "line", "text": "Oliver stares at them. \"No.\"" },
+            { "type": "line", "text": "\"I didn't ask you to take them.\"" },
+            { "type": "line", "text": "\"You need them.\"" },
+            { "type": "line", "text": "\"I need the frame to stay in one piece.\"" },
+            { "type": "line", "text": "\"That's not the same thing.\"" },
+            { "type": "line", "text": "\"It is tonight.\"" },
+            { "type": "line", "text": "He pushes them back. You push them over. Neither of you speaks until the last of the light has gone off the window." },
+            { "type": "line", "text": "At the end of it he takes one." },
+            { "type": "line", "text": "\"A loan,\" he says." },
+            { "type": "line", "text": "\"A bribe.\"" },
+            { "type": "line", "text": "\"For whom?\"" },
+            { "type": "line", "text": "\"The future.\"" }
+          ]
+        },
+        {
+          "id": "keep",
+          "label": "Leave them where they are.",
+          "beats": [
+            { "type": "line", "text": "You keep your hand on the cushion and say nothing, and that is the sensible thing, and it sits in your chest like a swallowed stone." },
+            { "type": "line", "text": "In the morning there's a coin on your sill." },
+            { "type": "line", "text": "Not one of yours. A different one, older, worn nearly smooth." },
+            { "type": "line", "text": "You'll never find out what he sold. You'll ask twice. Both times he'll say the city is full of generous objects." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "text": "Outside, the brown coat is gone from the end of the alley.",
+      "textByOptionRef": "c06-coins",
+      "textByOption": {
+        "bench": "He closes his fingers round it and puts it in the pocket over his chest, with the notebook, where nothing goes that he means to spend.",
+        "keep": "You put the worn coin in the pocket under your cushion, alongside the three you kept. It's the heaviest of the four."
+      }
+    },
+    { "type": "line", "text": "The empty place it leaves feels temporary." }
+  ]
+}

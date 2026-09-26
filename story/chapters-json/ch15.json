@@ -1,0 +1,468 @@
+{
+  "num": 15,
+  "id": "the-quiet-after",
+  "title": "The Quiet After",
+  "requires": "what-it-costs",
+  "beats": [
+    { "type": "line", "text": "Ada's cap lies on the floor of the washhouse for three days." },
+    { "type": "line", "text": "Oliver brings it back from the river wrapped in paper. He doesn't put it on the bench. He sets it beside the stove, with the brim pointing at the wall." },
+    { "type": "line", "text": "The frame's gone. The canvases are gone. The tools are gone." },
+    { "type": "line", "text": "The authorities left behind a torn thread, two bent nails, and the smell of dust." },
+    { "type": "line", "text": "You go back to your room, because the washhouse hasn't got a clear place for a chair in it now." },
+    { "type": "line", "text": "Oliver sits below your window every morning." },
+    { "type": "line", "text": "He doesn't look up." },
+    { "type": "line", "text": "For three days you let him." },
+    { "type": "line", "text": "On the fourth day you open the window." },
+    {
+      "type": "choice",
+      "key": "c15-seat",
+      "text": "He is sitting on wet brick in the shade with a dead girl's cap on his knee.",
+      "options": [
+        {
+          "id": "seat",
+          "label": "\"You've chosen a poor seat.\"",
+          "beats": [
+            { "type": "line", "text": "\"It's a wall.\"" },
+            { "type": "line", "text": "\"It's damp.\"" },
+            { "type": "line", "text": "\"So am I.\"" },
+            { "type": "line", "text": "He turns the cap over in his hands." },
+            { "type": "line", "text": "\"Don't ruin it,\" you say." },
+            { "type": "line", "text": "\"It's already ruined.\"" },
+            { "type": "line", "text": "\"That isn't what I meant.\"" },
+            { "type": "line", "text": "\"I know.\"" }
+          ]
+        },
+        {
+          "id": "nothing",
+          "label": "Say nothing. Sit at the open window as long as he sits at the wall.",
+          "beats": [
+            { "type": "line", "text": "It takes forty minutes." },
+            { "type": "line", "text": "You're good at forty minutes. You have spent years of your life being the person in the room who cannot leave it." },
+            { "type": "line", "text": "Eventually he says, without looking up, \"You're still there.\"" },
+            { "type": "line", "text": "\"I am.\"" },
+            { "type": "line", "text": "\"Why?\"" },
+            { "type": "line", "text": "\"Because you're still there.\"" },
+            { "type": "line", "text": "He puts the cap on his knee and doesn't answer, and doesn't go." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Mrs. Vale brings soup. She leaves it on the table without speaking." },
+    { "type": "line", "text": "The spoon's new." },
+    { "type": "line", "text": "You take it to the window. Oliver won't have the bowl until you set it down beside him." },
+    { "type": "line", "text": "\"It isn't poisoned,\" you say." },
+    { "type": "line", "text": "\"That's what poison would want you to think.\"" },
+    {
+      "type": "choice",
+      "key": "c15-soup",
+      "text": "That's the first thing he's said in four days with any shape to it.",
+      "options": [
+        {
+          "id": "adawould",
+          "label": "\"Ada would have liked that.\"",
+          "beats": [
+            { "type": "line", "text": "He closes his eyes." },
+            { "type": "line", "text": "You regret the sentence the moment it's out of your mouth." },
+            { "type": "line", "text": "Not because it's untrue. Because he hasn't anywhere to put it." },
+            { "type": "line", "text": "The soup goes cold between you." }
+          ]
+        },
+        {
+          "id": "eat",
+          "label": "\"Then eat it and prove me right.\"",
+          "beats": [
+            { "type": "line", "text": "He eats four spoonfuls, mechanically, like a man clearing a path." },
+            { "type": "line", "text": "Then he stops, and sets the bowl on the brick, and says, \"She'd have said this soup had no ambition.\"" },
+            { "type": "line", "text": "\"She would.\"" },
+            { "type": "line", "text": "\"I'm going to keep doing that,\" he says. \"Saying what she'd have said. Out loud. In front of people.\"" },
+            { "type": "line", "text": "\"Good.\"" },
+            { "type": "line", "text": "\"It isn't good. It's a symptom.\"" },
+            { "type": "line", "text": "The soup goes cold between you." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"She hated thin soup,\" you say." },
+    { "type": "line", "text": "\"She said potatoes were temporary.\"" },
+    { "type": "line", "text": "\"Everything she said was a joke.\"" },
+    { "type": "line", "text": "\"Not everything.\"" },
+    { "type": "line", "text": "He looks at the cap. \"She knew the route.\"" },
+    { "type": "line", "text": "\"She knew many routes.\"" },
+    { "type": "line", "text": "\"She knew the bridge.\"" },
+    { "type": "line", "text": "\"Then we know it too.\"" },
+    { "type": "line", "text": "\"No.\"" },
+    { "type": "line", "text": "The word's quiet. He doesn't argue it. He just puts it down between you like a stone." },
+    { "type": "line", "text": "On the sixth day he carries the cap to the washhouse and hangs it from a nail." },
+    { "type": "line", "text": "The coat with the missing lining hangs beside it. He doesn't go in any farther than that." },
+    { "type": "line", "text": "The room's changed without the frame in it. The walls seem farther apart. There's dust marking out the shape where the workbench stood." },
+    { "type": "line", "text": "You park at the threshold." },
+    {
+      "type": "choice",
+      "key": "c15-clean",
+      "text": "There is grit on the floor, thread in the corners, and a boy in the doorway who has not moved in a quarter of an hour.",
+      "options": [
+        {
+          "id": "clean",
+          "label": "\"You could clean.\"",
+          "beats": [
+            { "type": "line", "text": "\"Why?\"" },
+            { "type": "line", "text": "\"Because dirt doesn't honour the dead.\"" },
+            { "type": "line", "text": "He looks at the floor and doesn't pick anything up." }
+          ]
+        },
+        {
+          "id": "measure",
+          "label": "\"Fetch the string. I want the room measured.\"",
+          "beats": [
+            { "type": "line", "text": "\"There's nothing in it to measure.\"" },
+            { "type": "line", "text": "\"There's the room. Somebody should know how wide it is.\"" },
+            { "type": "line", "text": "\"Why?\"" },
+            { "type": "line", "text": "\"Because she'd have known,\" you say, \"and now nobody does, and that's a thing that's gone out of the world, and I won't have it.\"" },
+            { "type": "line", "text": "He stands very still for a moment." },
+            { "type": "line", "text": "Then he fetches the string and measures the washhouse, and it takes him twenty minutes, and it is eleven feet by nineteen, and for the length of it he is a person with a task." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The broken halves of the red pencil aren't in this room." },
+    { "type": "line", "text": "One's with the authorities. The other was in Ada's hand." },
+    { "type": "line", "text": "\"I should have stayed,\" he says." },
+    { "type": "line", "text": "\"She told you to leave.\"" },
+    { "type": "line", "text": "\"She was wrong.\"" },
+    { "type": "line", "text": "\"She was under a beam.\"" },
+    { "type": "line", "text": "\"She knew what she was doing.\"" },
+    { "type": "line", "text": "\"That doesn't make her wrong.\"" },
+    { "type": "line", "text": "He turns on you." },
+    { "type": "line", "text": "\"You didn't see her.\"" },
+    {
+      "type": "choice",
+      "key": "c15-blame",
+      "text": "This is the first time in five years of knowing him that Oliver Wright has used a voice on you.",
+      "options": [
+        {
+          "id": "enough",
+          "label": "\"I saw enough.\"",
+          "beats": [
+            { "type": "line", "text": "\"You didn't see her when the doctor came.\"" },
+            { "type": "line", "text": "\"No.\"" },
+            { "type": "line", "text": "\"You didn't hear what she said.\"" },
+            { "type": "line", "text": "\"I heard you.\"" },
+            { "type": "line", "text": "His mouth tightens. \"Then stop telling me what she wanted.\"" }
+          ]
+        },
+        {
+          "id": "fourfeet",
+          "label": "\"I was four feet away and my chair wouldn't fit.\"",
+          "beats": [
+            { "type": "line", "text": "It comes out flat. It doesn't sound like an argument. It sounds like a measurement, which is what it is." },
+            { "type": "line", "text": "\"Four feet,\" you say. \"I've counted it every night since. I know how long it took you to move her hand where I could reach it. I know I asked you to do that instead of doing it myself.\"" },
+            { "type": "line", "text": "He looks at the floor of the washhouse." },
+            { "type": "line", "text": "\"That isn't your fault,\" he says." },
+            { "type": "line", "text": "\"No,\" you say. \"And it isn't yours. And we're both going to say the true thing to each other and go on believing the other one anyway, for about a year, and there is nothing either of us can do about that.\"" },
+            { "type": "line", "text": "\"Then stop telling me what she wanted,\" he says, but the voice has gone out of it." }
+          ]
+        },
+        {
+          "id": "letit",
+          "label": "Let him have it. Let him shout at somebody who won't leave.",
+          "beats": [
+            { "type": "line", "text": "\"You didn't see her when the doctor came. You didn't hear what she said. You sat at the edge of the room and you talked to a woman in a coat and you—\"" },
+            { "type": "line", "text": "He stops." },
+            { "type": "line", "text": "You don't say anything at all." },
+            { "type": "line", "text": "\"I don't mean that,\" he says." },
+            { "type": "line", "text": "\"I know.\"" },
+            { "type": "line", "text": "\"Why didn't you answer?\"" },
+            { "type": "line", "text": "\"Because you needed somewhere to put it,\" you say, \"and I'm the only thing in this yard that can take it and still be here tomorrow.\"" },
+            { "type": "line", "text": "He sits down on the empty floor with his back to the doorframe." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "You don't answer that." },
+    { "type": "line", "text": "Your leg's begun to ache with the damp, and the chair's left wheel has picked up grit, and there's a limit to how long you can hold a threshold." },
+    { "type": "line", "text": "You steer away from the washhouse." },
+    { "type": "line", "text": "Behind you, Oliver says, \"Where are you going?\"" },
+    { "type": "line", "text": "\"Somewhere else.\"" },
+    { "type": "line", "text": "\"Why?\"" },
+    { "type": "line", "text": "\"Because this place is full of people who aren't in it.\"" },
+    { "type": "line", "text": "He follows you." },
+    {
+      "type": "choice",
+      "key": "c15-route",
+      "text": "The road to the river is longer than you remember. The rain has filled the ruts.",
+      "options": [
+        {
+          "id": "sidelane",
+          "label": "Take the side lane. Flatter pavement, ten minutes more.",
+          "beats": [
+            { "type": "line", "text": "Ten minutes more, and no ruts, and your leg forgives you by the halfway mark." },
+            { "type": "line", "text": "Oliver walks it without once asking why you'd gone the long way." },
+            { "type": "line", "text": "He learned that from watching somebody. You know exactly who." }
+          ]
+        },
+        {
+          "id": "ruts",
+          "label": "Straight down the rutted road. You want the fight.",
+          "beats": [
+            { "type": "line", "text": "The wheels drop into water twice. The second time, Oliver has to lift the front of the chair, and your leg goes white-hot, and you make no sound at all." },
+            { "type": "line", "text": "\"There's a flat lane,\" he says." },
+            { "type": "line", "text": "\"I know where the flat lane is.\"" },
+            { "type": "line", "text": "\"Then why—\"" },
+            { "type": "line", "text": "\"Because I wanted something to be difficult on purpose,\" you say, \"instead of by accident.\"" },
+            { "type": "line", "text": "He doesn't argue. He puts his hands on the back of the chair and pushes you the rest of the rutted way." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "At the water, Oliver stops beside the embankment. The river runs brown and fast beneath the bridge." },
+    { "type": "line", "text": "\"She'd have marked it,\" he says." },
+    {
+      "type": "line",
+      "text": "You look at the stonework. There are no map lines on it. No red pencil. No square for a place worth coming back to.",
+      "textByOptionRef": "c14-carry",
+      "textByOption": {
+        "cap": "You look at the stonework. There are no map lines on it. No red pencil. No square for a place worth coming back to.",
+        "map": "You have the blue cloth folded on your knees, brick dust still in the creases. Neither of you has been able to open it since the tunnel. It sits there being a thing she made, which is somehow harder to look at than a bare wall would have been."
+      }
+    },
+    { "type": "line", "text": "\"She did mark it,\" you say." },
+    { "type": "line", "text": "\"The bridge behind the observatory. Not this one.\"" },
+    { "type": "line", "text": "\"The bridge remains.\"" },
+    { "type": "line", "text": "\"That isn't the same.\"" },
+    { "type": "line", "text": "\"No.\"" },
+    { "type": "line", "text": "He grips the railing. Ada's cap is in his other hand." },
+    { "type": "line", "text": "\"I don't know how to make this useful,\" he says." },
+    {
+      "type": "choice",
+      "key": "c15-useful",
+      "text": "The river carries a dead branch under the bridge.",
+      "options": [
+        {
+          "id": "notyet",
+          "label": "\"You don't have to make it useful yet.\"",
+          "beats": [
+            { "type": "line", "text": "\"Everything's useful,\" he says. \"That's the whole of how I was raised. Everything's for something or it's thrown out.\"" },
+            { "type": "line", "text": "\"That's how the orphanage was run,\" you say. \"It isn't a law of the world.\"" },
+            { "type": "line", "text": "He watches the branch go." }
+          ]
+        },
+        {
+          "id": "never",
+          "label": "\"It isn't useful. It won't be. That's what it is.\"",
+          "beats": [
+            { "type": "line", "text": "He looks at you." },
+            { "type": "line", "text": "\"You want me to tell you it was for something,\" you say. \"It wasn't. She was fifteen and she was clever and a ceiling fell on her, and there's no ledger anywhere that this goes into.\"" },
+            { "type": "line", "text": "\"Then what am I meant to do with it?\"" },
+            { "type": "line", "text": "\"Carry it,\" you say. \"That's all. That's the whole instruction. I've carried a leg for nine years and I'll tell you honestly, nothing about it was ever useful, and I'm still here.\"" },
+            { "type": "line", "text": "He watches the branch go." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "That night, Oliver brings the brass box to your room." },
+    { "type": "line", "text": "He sets it on the floor. The lid's scratched from the tunnel. The bent nail that served as its lock is gone." },
+    { "type": "line", "text": "Inside are the brass plate, the leather band, and two small curved pieces you've not seen before." },
+    { "type": "line", "text": "\"What is it?\" you ask." },
+    { "type": "line", "text": "\"Nothing.\"" },
+    { "type": "line", "text": "\"You didn't carry nothing through a collapsing tunnel.\"" },
+    {
+      "type": "choice",
+      "key": "c15-box",
+      "text": "The two curved pieces catch the lamp. They are the size of a person's eyes.",
+      "options": [
+        {
+          "id": "ask",
+          "label": "\"What are the curved ones for?\"",
+          "beats": [
+            { "type": "line", "text": "He shuts the lid on your question." },
+            { "type": "line", "text": "\"It isn't finished,\" he says, \"and it isn't mine.\"" },
+            { "type": "line", "text": "It's the second time he's said that sentence to you, and you still don't ask whose it is, because on both occasions there's been something in his face that shuts the subject like a door." }
+          ]
+        },
+        {
+          "id": "dontask",
+          "label": "Don't ask. He'll tell you when it's finished.",
+          "beats": [
+            { "type": "line", "text": "You look at the two curved pieces and you say nothing, and he watches you not asking." },
+            { "type": "line", "text": "\"You're not going to ask,\" he says." },
+            { "type": "line", "text": "\"No.\"" },
+            { "type": "line", "text": "\"Why?\"" },
+            { "type": "line", "text": "\"Because it isn't finished,\" you say, \"and I've got some idea of what it's like to be looked at before you're finished.\"" },
+            { "type": "line", "text": "He shuts the lid very gently." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"She wanted to see the bridge,\" he says." },
+    { "type": "line", "text": "\"Then take her there.\"" },
+    { "type": "line", "text": "\"She's dead.\"" },
+    { "type": "line", "text": "\"Her cap isn't.\"" },
+    { "type": "line", "text": "He flinches." },
+    { "type": "line", "text": "You regret that as well. You don't take it back. This room can't survive only on the words that cause no pain." },
+    { "type": "line", "text": "Oliver closes the box." },
+    { "type": "line", "text": "\"I'm finished,\" he says." },
+    { "type": "line", "text": "\"With the frame?\"" },
+    { "type": "line", "text": "\"With all of it.\"" },
+    {
+      "type": "choice",
+      "key": "c15-finished",
+      "text": "He has said this on each of the last four days. Today he's said it while holding the box.",
+      "options": [
+        {
+          "id": "youdont",
+          "label": "\"You don't mean it.\"",
+          "beats": [
+            { "type": "line", "text": "\"You've been saying that for four days,\" you say. \"This time you mean it, I suppose.\"" },
+            { "type": "line", "text": "\"This time I do.\"" },
+            { "type": "line", "text": "\"You don't.\"" },
+            { "type": "line", "text": "He looks at you. \"How would you know?\"" },
+            { "type": "line", "text": "\"Because you brought me the box.\"" },
+            { "type": "line", "text": "He hasn't got an answer to that. He puts his hand flat on the scratched lid and leaves it there." }
+          ]
+        },
+        {
+          "id": "allowed",
+          "label": "\"All right. Then be finished.\"",
+          "beats": [
+            { "type": "line", "text": "It stops him." },
+            { "type": "line", "text": "\"You're meant to argue,\" he says." },
+            { "type": "line", "text": "\"I'm not going to spend a year making a dead girl's argument at you. If you're finished, you're finished. You're twelve years old and you can be a boy who used to build things.\"" },
+            { "type": "line", "text": "\"Then why are you still here?\"" },
+            { "type": "line", "text": "\"Because I never came for the machine,\" you say." },
+            { "type": "line", "text": "He sits down on the floor with the box in his lap and doesn't say anything for a long time." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He sits on the floor with his back against your chair. His head rests on the wooden wheel." },
+    { "type": "line", "text": "\"She was the first person who understood the route,\" he says." },
+    { "type": "line", "text": "\"She was the first person who corrected your map.\"" },
+    { "type": "line", "text": "\"She made it better.\"" },
+    { "type": "line", "text": "\"So did you.\"" },
+    { "type": "line", "text": "\"I made a machine that killed her.\"" },
+    { "type": "line", "text": "\"The beam killed her.\"" },
+    { "type": "line", "text": "\"The machine brought us there.\"" },
+    { "type": "line", "text": "\"The authorities brought the beam.\"" },
+    { "type": "line", "text": "\"I asked her to come back.\"" },
+    { "type": "line", "text": "\"She came because she wanted to.\"" },
+    { "type": "line", "text": "\"I should have stopped her.\"" },
+    { "type": "line", "text": "You look down at the crown of his head. His hair's still got tunnel dust in it, six days on." },
+    {
+      "type": "choice",
+      "key": "c15-doors",
+      "text": "He is going through the causes one at a time, hunting for the one with his name on it.",
+      "options": [
+        {
+          "id": "burned",
+          "label": "\"You're choosing a single door for a house that's burned down.\"",
+          "beats": [
+            { "type": "line", "text": "He doesn't move." },
+            { "type": "line", "text": "\"That sounds like something Ada would say,\" he murmurs." },
+            { "type": "line", "text": "\"She'd say it better.\"" },
+            { "type": "line", "text": "\"Yes.\"" }
+          ]
+        },
+        {
+          "id": "mine",
+          "label": "\"If you want a cause with a name on it, use mine. I found you.\"",
+          "beats": [
+            { "type": "line", "text": "He goes very still against the wheel." },
+            { "type": "line", "text": "\"You were nine and watching birds through a fence,\" you say. \"You'd have grown up, and been apprenticed, and been fine. I'm the one who came back the second day.\"" },
+            { "type": "line", "text": "\"Don't,\" he says." },
+            { "type": "line", "text": "\"Then you see how it works,\" you say. \"You can run that back as far as you like. You'll get to my grandmother eventually. It doesn't stop, and it doesn't help, and it's a house that's burned down and you're stood in it choosing a door.\"" },
+            { "type": "line", "text": "\"That sounds like something Ada would say.\"" },
+            { "type": "line", "text": "\"She'd say it better.\"" },
+            { "type": "line", "text": "\"Yes.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The silence that follows isn't empty. It's got the river in it. The broken pencil. The cap by the stove." },
+    { "type": "line", "text": "You keep your hand on the armrest of the chair, half an inch from his shoulder, for a very long time." },
+    { "type": "line", "text": "You don't move it any closer. Neither of you is any good at that yet." },
+    { "type": "line", "text": "In the morning, Oliver takes the glider's measurements out of his memory." },
+    { "type": "line", "text": "He writes them on the washhouse wall in charcoal. The numbers come out uneven. Twice he rubs them away." },
+    { "type": "line", "text": "The third time, he leaves them." },
+    { "type": "line", "text": "\"I said I was finished,\" he tells you." },
+    { "type": "line", "text": "\"You did.\"" },
+    { "type": "line", "text": "\"I can still be finished and write things on walls.\"" },
+    { "type": "line", "text": "\"That's true.\"" },
+    { "type": "line", "text": "He draws the first spar. Then the second. He leaves a space where the cradle ought to go." },
+    { "type": "line", "text": "\"No more flights,\" he says." },
+    { "type": "line", "text": "\"I didn't ask.\"" },
+    { "type": "line", "text": "\"No more bridge.\"" },
+    { "type": "line", "text": "\"I didn't ask.\"" },
+    { "type": "line", "text": "\"No more authorities.\"" },
+    { "type": "line", "text": "\"That one may be difficult.\"" },
+    { "type": "line", "text": "His pencil stops." },
+    { "type": "line", "text": "\"Monica.\"" },
+    { "type": "line", "text": "\"What?\"" },
+    { "type": "line", "text": "\"Why do you keep answering?\"" },
+    {
+      "type": "choice",
+      "key": "c15-answering",
+      "text": "This is not the question he means. It is nine months early, and it is the same question, and you can hear the shape of the real one underneath it.",
+      "options": [
+        {
+          "id": "speaking",
+          "label": "\"Because you keep speaking.\"",
+          "beats": [
+            { "type": "line", "text": "You look at the charcoal lines on the wall." },
+            { "type": "line", "text": "He puts the pencil down." },
+            { "type": "line", "text": "The cap by the stove throws a small shadow across the floor." },
+            { "type": "line", "text": "He'll ask you the real question in nine months, in a worse room, and you won't have an answer ready then either." }
+          ]
+        },
+        {
+          "id": "practice",
+          "label": "\"Because one day you'll ask me a harder one and I want the practice.\"",
+          "beats": [
+            { "type": "line", "text": "\"What's the harder one?\"" },
+            { "type": "line", "text": "\"You'll get to it.\"" },
+            { "type": "line", "text": "\"I hate when you do that.\"" },
+            { "type": "line", "text": "\"I know. Ada hated it too. You're both wrong.\"" },
+            { "type": "line", "text": "He puts the pencil down, and something goes across his face that is not quite a smile but is at least in the same trade." },
+            { "type": "line", "text": "The cap by the stove throws a small shadow across the floor." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Before he goes, Oliver lifts Ada's cap off its nail." },
+    { "type": "line", "text": "He folds it once and puts it in the brass box. The broken half of the red pencil goes in beside it." },
+    { "type": "line", "text": "\"She'd say that's poor storage,\" you tell him." },
+    { "type": "line", "text": "\"She'd say it's a foolish place to keep a mapmaker.\"" },
+    { "type": "line", "text": "\"She was usually right.\"" },
+    { "type": "line", "text": "\"She was unbearable.\"" },
+    { "type": "line", "text": "\"Also true.\"" },
+    { "type": "line", "text": "He closes the lid." },
+    { "type": "line", "text": "Outside a factory whistle goes. The city starts its work. Carts move. Doors open. A man shouts about coal." },
+    { "type": "line", "text": "Oliver stands under the window with no cap, no map, and no glider." },
+    { "type": "line", "text": "\"I'll come tomorrow,\" he says." },
+    {
+      "type": "choice",
+      "key": "c15-close",
+      "text": "You rest your hand on the latch.",
+      "options": [
+        {
+          "id": "bringbox",
+          "label": "\"Bring the box.\"",
+          "beats": [
+            { "type": "line", "text": "He nods." },
+            { "type": "line", "text": "Then he leaves it on the chair beside your bed instead, which is not what you asked for and is a better answer than the one you asked for." }
+          ]
+        },
+        {
+          "id": "bringyourself",
+          "label": "\"Bring nothing. Just come.\"",
+          "beats": [
+            { "type": "line", "text": "He nods." },
+            { "type": "line", "text": "Then he sets the brass box on the chair beside your bed anyway, and doesn't explain it, and goes." },
+            { "type": "line", "text": "He's leaving you something to be responsible for overnight. He's twelve, and he's worked out that this is how you keep a person here till morning." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "You don't open it again that day." },
+    { "type": "line", "text": "You put one hand on the scratched lid before the lamp goes out, the way you might on a shoulder." }
+  ]
+}

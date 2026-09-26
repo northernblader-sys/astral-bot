@@ -1,0 +1,147 @@
+[
+  {
+    "id": "field_mouse",
+    "name": "Field Mouse",
+    "emoji": "🐭",
+    "rarity": "common",
+    "levelReq": 1,
+    "price": { "solars": 80, "gems": 0 },
+    "statBonuses": { "str": 0, "agi": 2, "int": 0, "def": 0, "lck": 1, "maxHp": 5, "maxMp": 0 },
+    "description": "A quick little scavenger. Not much use in a fight, but it's loyal."
+  },
+  {
+    "id": "stray_cat",
+    "name": "Stray Cat",
+    "emoji": "🐱",
+    "rarity": "common",
+    "levelReq": 1,
+    "price": { "solars": 100, "gems": 0 },
+    "statBonuses": { "str": 1, "agi": 2, "int": 0, "def": 1, "lck": 0, "maxHp": 5, "maxMp": 0 },
+    "description": "Found it sleeping on the guild board. It adopted you, not the other way around."
+  },
+  {
+    "id": "pup",
+    "name": "Scruffy Pup",
+    "emoji": "🐶",
+    "rarity": "common",
+    "levelReq": 3,
+    "price": { "solars": 150, "gems": 0 },
+    "statBonuses": { "str": 2, "agi": 1, "int": 0, "def": 2, "lck": 0, "maxHp": 10, "maxMp": 0 },
+    "description": "Barks at monsters twice its size. Somehow this helps."
+  },
+  {
+    "id": "hoot_owl",
+    "name": "Hoot Owl",
+    "emoji": "🦉",
+    "rarity": "uncommon",
+    "levelReq": 8,
+    "price": { "solars": 350, "gems": 0 },
+    "statBonuses": { "str": 0, "agi": 2, "int": 5, "def": 0, "lck": 2, "maxHp": 10, "maxMp": 20 },
+    "description": "Sees clearly in the dark corners of every dungeon. Sharpens the mind."
+  },
+  {
+    "id": "rock_armadillo",
+    "name": "Rock Armadillo",
+    "emoji": "🦔",
+    "rarity": "uncommon",
+    "levelReq": 8,
+    "price": { "solars": 380, "gems": 0 },
+    "statBonuses": { "str": 1, "agi": 0, "int": 0, "def": 8, "lck": 0, "maxHp": 30, "maxMp": 0 },
+    "description": "Curls into a boulder when threatened. Excellent at absorbing hits it isn't taking."
+  },
+  {
+    "id": "spark_fox",
+    "name": "Spark Fox",
+    "emoji": "🦊",
+    "rarity": "uncommon",
+    "levelReq": 12,
+    "price": { "solars": 450, "gems": 0 },
+    "statBonuses": { "str": 3, "agi": 5, "int": 2, "def": 0, "lck": 1, "maxHp": 15, "maxMp": 10 },
+    "description": "Its fur crackles with static. Sprints ahead and doubles back before you notice."
+  },
+  {
+    "id": "moon_hare",
+    "name": "Moon Hare",
+    "emoji": "🐇",
+    "rarity": "rare",
+    "levelReq": 20,
+    "price": { "solars": 900, "gems": 2 },
+    "statBonuses": { "str": 2, "agi": 8, "int": 3, "def": 2, "lck": 5, "maxHp": 25, "maxMp": 20 },
+    "description": "Said to only be caught under a full moon. Impossibly lucky to have around."
+  },
+  {
+    "id": "ember_salamander",
+    "name": "Ember Salamander",
+    "emoji": "🦎",
+    "rarity": "rare",
+    "levelReq": 20,
+    "price": { "solars": 950, "gems": 2 },
+    "statBonuses": { "str": 6, "agi": 3, "int": 6, "def": 3, "lck": 0, "maxHp": 20, "maxMp": 30 },
+    "description": "Warm to the touch, even in the coldest dungeon floors. Radiates quiet power."
+  },
+  {
+    "id": "storm_falcon",
+    "name": "Storm Falcon",
+    "emoji": "🦅",
+    "rarity": "epic",
+    "levelReq": 35,
+    "price": { "solars": 2200, "gems": 6 },
+    "statBonuses": { "str": 8, "agi": 14, "int": 4, "def": 4, "lck": 4, "maxHp": 40, "maxMp": 30 },
+    "description": "Rides the high winds above the Centurion's walls. Few things outrun it."
+  },
+  {
+    "id": "void_lynx",
+    "name": "Void Lynx",
+    "emoji": "🐆",
+    "rarity": "epic",
+    "levelReq": 35,
+    "price": { "solars": 2400, "gems": 6 },
+    "statBonuses": { "str": 12, "agi": 10, "int": 6, "def": 6, "lck": 2, "maxHp": 50, "maxMp": 20 },
+    "description": "Steps partway between worlds. Sometimes you only see its eyes."
+  },
+  {
+    "id": "phoenix_chick",
+    "name": "Phoenix Chick",
+    "emoji": "🐥",
+    "rarity": "legendary",
+    "levelReq": 55,
+    "price": { "solars": 6000, "gems": 15 },
+    "statBonuses": { "str": 10, "agi": 12, "int": 14, "def": 10, "lck": 8, "maxHp": 90, "maxMp": 70 },
+    "description": "Not yet grown into its fire, but its warmth already mends what battle breaks."
+  },
+  {
+    "id": "astral_wyrmling",
+    "name": "Astral Wyrmling",
+    "emoji": "🐉",
+    "rarity": "legendary",
+    "levelReq": 60,
+    "price": { "solars": 7500, "gems": 20 },
+    "statBonuses": { "str": 16, "agi": 10, "int": 16, "def": 12, "lck": 6, "maxHp": 100, "maxMp": 80 },
+    "description": "A dragon of the rift, small enough to ride on your shoulder — for now."
+  },
+  {
+    "id": "emberpaw",
+    "name": "Emberpaw",
+    "emoji": "🐈‍⬛",
+    "rarity": "legendary",
+    "levelReq": 1,
+    "price": { "solars": 0, "gems": 0 },
+    "seasonId": "season_01",
+    "image": "https://i.ibb.co/BHtDgntJ/pet.jpg",
+    "statBonuses": { "str": 0, "agi": 4, "int": 4, "def": 2, "lck": 10, "maxHp": 20, "maxMp": 20 },
+    "solarsPerCommand": 0.1,
+    "description": "A white cat that hauls a bundle of firewood everywhere it goes. Sells a stick here and there — the coins end up in your pocket."
+  },
+  {
+    "id": "rime_kit",
+    "name": "Rime Kit",
+    "emoji": "🥶",
+    "rarity": "legendary",
+    "levelReq": 1,
+    "price": { "solars": 0, "gems": 0 },
+    "seasonId": "season_01",
+    "image": "https://i.ibb.co/HTNd7TdB/pet.jpg",
+    "statBonuses": { "str": 4, "agi": 6, "int": 14, "def": 14, "lck": 4, "maxHp": 90, "maxMp": 60 },
+    "description": "Hatched from the same frost that answers to Miyashi. Doesn't fight — just makes the cold around you a little easier to stand in."
+  }
+]

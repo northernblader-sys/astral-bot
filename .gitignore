@@ -1,0 +1,35 @@
+# Secrets — never commit these
+.env
+.env.local
+
+# WhatsApp session credentials. Anyone with these can log in AS your bot.
+auth_info/
+auth_info_2/
+auth_info_*/
+paired_number*.txt
+
+# Player database — real user data, and it's rewritten whole on every save
+db.json
+db.json.bak
+# Per-platform rosters created by start:discord / start:telegram
+db-discord.json
+db-telegram.json
+db-*.json.bak
+# Copies pulled down from the MongoDB backup (scripts/db-mongo.mjs pull) —
+# same real player data as db.json, just with a timestamp in the name
+db-pull-*.json
+# Single-writer lockfiles (lib/platform/boot.js) — pid state, never shared
+*.json.lock
+
+node_modules/
+logs/
+*.log
+
+# Local archives
+*.zip
+
+# Render check output — scripts/render-item-check.mjs writes these for eyeballing
+season-item-check-*.png
+env
+backups/
+tmp/

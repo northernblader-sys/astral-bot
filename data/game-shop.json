@@ -1,0 +1,83 @@
+{
+  "bannerImage": "https://i.ibb.co/wFQz0KMh/gm-shop.jpg",
+  "abilityGemPrice": 50,
+  "statPacks": [
+    {
+      "id": "stat_pack_low",
+      "tier": "low",
+      "name": "Lesser Stat Pack Boost",
+      "gemPrice": 10,
+      "min": 1,
+      "max": 50,
+      "aliases": [
+        "low",
+        "lesser",
+        "minor",
+        "1",
+        "i"
+      ]
+    },
+    {
+      "id": "stat_pack_mid",
+      "tier": "mid",
+      "name": "Greater Stat Pack Boost",
+      "gemPrice": 35,
+      "min": 50,
+      "max": 100,
+      "aliases": [
+        "mid",
+        "middle",
+        "medium",
+        "greater",
+        "major",
+        "2",
+        "ii"
+      ]
+    },
+    {
+      "id": "stat_pack_high",
+      "tier": "high",
+      "name": "Supreme Stat Pack Boost",
+      "gemPrice": 63,
+      "min": 100,
+      "max": 150,
+      "aliases": [
+        "high",
+        "supreme",
+        "grand",
+        "3",
+        "iii"
+      ]
+    }
+  ],
+  "relics": [
+    {
+      "id": "totem_of_undying",
+      "gemPrice": 400
+    },
+    {
+      "id": "gamblers_relic",
+      "gemPrice": 240
+    },
+    {
+      "id": "sentinels_bulwark",
+      "gemPrice": 240
+    },
+    {
+      "id": "arcane_battery",
+      "gemPrice": 240
+    },
+    {
+      "id": "berserkers_chain",
+      "gemPrice": 240
+    },
+    {
+      "id": "emberheart_core",
+      "gemPrice": 400
+    },
+    {
+      "id": "phoenix_clasp",
+      "gemPrice": 20
+    }
+  ]
+}

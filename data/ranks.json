@@ -1,0 +1,12 @@
+[
+  { "min": 1,   "max": 10,  "title": "E-Rank Hunter",         "epithet": "Newbie",                "emoji": "🔰" },
+  { "min": 11,  "max": 20,  "title": "D-Rank Hunter",         "epithet": "Awakened",              "emoji": "⚪" },
+  { "min": 21,  "max": 30,  "title": "C-Rank Hunter",         "epithet": "Rising Talent",         "emoji": "🟢" },
+  { "min": 31,  "max": 40,  "title": "B-Rank Hunter",         "epithet": "Proven Combatant",      "emoji": "🔵" },
+  { "min": 41,  "max": 50,  "title": "A-Rank Hunter",         "epithet": "Elite Adventurer",      "emoji": "🟣" },
+  { "min": 51,  "max": 60,  "title": "S-Rank Hunter",         "epithet": "Peak Power",            "emoji": "🟠" },
+  { "min": 61,  "max": 70,  "title": "National Level Hunter", "epithet": "Pillar of a Nation",    "emoji": "🔴" },
+  { "min": 71,  "max": 80,  "title": "World Hunter",          "epithet": "Global Threat-Class",   "emoji": "🌍" },
+  { "min": 81,  "max": 90,  "title": "Monarch",               "epithet": "Ruler of Shadows",      "emoji": "👑" },
+  { "min": 91,  "max": 100, "title": "Shadow Sovereign",      "epithet": "Beyond Rank",           "emoji": "🌌" }
+]

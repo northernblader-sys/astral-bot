@@ -1,0 +1,17 @@
+[
+  {
+    "id": "premium_favor",
+    "name": "Crown's Favor",
+    "rarity": "epic",
+    "type": "passive",
+    "source": "premium",
+    "description": "The gratitude of a paid-up hunter. For as long as the fight lasts, every stat carries a small edge — the System remembers who paid.",
+    "effects": [
+      { "type": "strengthen", "stat": "str", "value": 3, "duration": 999 },
+      { "type": "strengthen", "stat": "agi", "value": 3, "duration": 999 },
+      { "type": "strengthen", "stat": "int", "value": 3, "duration": 999 },
+      { "type": "strengthen", "stat": "def", "value": 3, "duration": 999 },
+      { "type": "strengthen", "stat": "lck", "value": 3, "duration": 999 }
+    ]
+  }
+]

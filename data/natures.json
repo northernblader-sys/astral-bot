@@ -1,0 +1,31 @@
+[
+  { "id": "hardy",   "boost": "atk",   "lower": "atk" },
+  { "id": "lonely",  "boost": "atk",   "lower": "def" },
+  { "id": "adamant", "boost": "atk",   "lower": "spAtk" },
+  { "id": "naughty", "boost": "atk",   "lower": "spDef" },
+  { "id": "brave",   "boost": "atk",   "lower": "spd" },
+
+  { "id": "bold",    "boost": "def",   "lower": "atk" },
+  { "id": "docile",  "boost": "def",   "lower": "def" },
+  { "id": "impish",  "boost": "def",   "lower": "spAtk" },
+  { "id": "lax",     "boost": "def",   "lower": "spDef" },
+  { "id": "relaxed", "boost": "def",   "lower": "spd" },
+
+  { "id": "modest",  "boost": "spAtk", "lower": "atk" },
+  { "id": "mild",    "boost": "spAtk", "lower": "def" },
+  { "id": "bashful", "boost": "spAtk", "lower": "spAtk" },
+  { "id": "rash",    "boost": "spAtk", "lower": "spDef" },
+  { "id": "quiet",   "boost": "spAtk", "lower": "spd" },
+
+  { "id": "calm",    "boost": "spDef", "lower": "atk" },
+  { "id": "gentle",  "boost": "spDef", "lower": "def" },
+  { "id": "careful", "boost": "spDef", "lower": "spAtk" },
+  { "id": "quirky",  "boost": "spDef", "lower": "spDef" },
+  { "id": "sassy",   "boost": "spDef", "lower": "spd" },
+
+  { "id": "timid",   "boost": "spd",   "lower": "atk" },
+  { "id": "hasty",   "boost": "spd",   "lower": "def" },
+  { "id": "jolly",   "boost": "spd",   "lower": "spAtk" },
+  { "id": "naive",   "boost": "spd",   "lower": "spDef" },
+  { "id": "serious", "boost": "spd",   "lower": "spd" }
+]

@@ -1,0 +1,385 @@
+{
+  "num": 3,
+  "id": "scrap-and-silence",
+  "title": "Scrap and Silence",
+  "requires": "nobody-owns-the-sky",
+  "beats": [
+    { "type": "line", "text": "The first sign of trouble is a missing spoon." },
+    { "type": "line", "text": "You find it under the table, bent nearly in half." },
+    { "type": "line", "text": "Down the corridor the cook is shouting. \"Three days running. Three days, Mrs. Vale. He thinks because the boy's small, nobody sees him.\"" },
+    { "type": "line", "text": "Oliver is sitting on your floor, trying to fit a brass washer into a hinge. He brought the piece up through the window in his sleeve." },
+    {
+      "type": "choice",
+      "key": "c03-spoon",
+      "text": "He hasn't looked up once since the shouting started.",
+      "options": [
+        {
+          "id": "accuse",
+          "label": "\"What did you take?\"",
+          "beats": [
+            { "type": "line", "text": "\"Nothing.\"" },
+            { "type": "line", "text": "\"The spoon's confessing.\"" },
+            { "type": "line", "text": "\"The spoon was already bent.\"" },
+            { "type": "line", "text": "\"It wasn't.\"" }
+          ]
+        },
+        {
+          "id": "sideways",
+          "label": "\"Interesting morning in the kitchen.\"",
+          "beats": [
+            { "type": "line", "text": "\"Is it?\" He doesn't look up." },
+            { "type": "line", "text": "\"Someone's bending the cutlery.\"" },
+            { "type": "line", "text": "\"Terrible,\" he says. \"The state of the world.\"" },
+            { "type": "line", "text": "The washer clicks into the hinge. He turns it once and it holds." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"The washer was free,\" he says." },
+    { "type": "line", "text": "\"There's no free brass.\"" },
+    { "type": "line", "text": "\"There's free brass if nobody's looking after it.\"" },
+    { "type": "line", "text": "The shouting stops. Which is worse. Footsteps start along the corridor toward your door." },
+    {
+      "type": "choice",
+      "key": "c03-hide",
+      "text": "You have about eight seconds.",
+      "options": [
+        {
+          "id": "bed",
+          "label": "Point under the bed.",
+          "beats": [
+            { "type": "line", "text": "He shakes his head. \"Too obvious.\"" },
+            { "type": "line", "text": "\"You're covered in coal dust.\"" },
+            { "type": "line", "text": "\"That's camouflage.\"" },
+            { "type": "line", "text": "\"You're standing in a white room.\"" },
+            { "type": "line", "text": "He looks down at himself. \"Excellent camouflage for a ghost.\"" },
+            { "type": "line", "text": "Then he goes behind the curtain anyway, because he was always going to." }
+          ]
+        },
+        {
+          "id": "curtain",
+          "label": "Point at the curtain. Don't speak.",
+          "beats": [
+            { "type": "line", "text": "He's behind it before your hand's back on the wheel." },
+            { "type": "line", "text": "You've never had to explain a plan to him twice. You're not sure that's a comfort." }
+          ]
+        },
+        {
+          "id": "window",
+          "label": "\"Out. Now.\"",
+          "beats": [
+            { "type": "line", "text": "\"The drainpipe's wet.\"" },
+            { "type": "line", "text": "\"Then be careful.\"" },
+            { "type": "line", "text": "\"Then I'd be slow,\" he says, \"and visible, and halfway down a wall when she opens the window to shout at you.\"" },
+            { "type": "line", "text": "He's right, which is intolerable. He goes behind the curtain instead." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "You pull the cord tied to the tray and drag the chair back. The frame goes under your blanket. The hinge goes into your sleeve." },
+    { "type": "line", "text": "Mrs. Vale comes in with a basket against her hip. Square woman. A red mark across one cheek where the kitchen steam has been at her for thirty years." },
+    { "type": "line", "text": "\"Has the boy been here?\"" },
+    {
+      "type": "choice",
+      "key": "c03-rules",
+      "text": "Behind the curtain, Oliver makes the smallest possible sound. It might be a cough.",
+      "options": [
+        {
+          "id": "clever",
+          "label": "\"Which boy?\"",
+          "beats": [
+            { "type": "line", "text": "\"Don't play clever.\"" },
+            { "type": "line", "text": "\"I'm not playing. I'm asking for rules.\"" },
+            { "type": "line", "text": "\"The rule is he took from the kitchen.\"" },
+            { "type": "line", "text": "\"Then search the kitchen.\"" },
+            { "type": "line", "text": "\"I'm asking whether he's been in this room.\"" }
+          ]
+        },
+        {
+          "id": "blank",
+          "label": "\"No.\"",
+          "beats": [
+            { "type": "line", "text": "It comes out too smooth. You hear it land." },
+            { "type": "line", "text": "Mrs. Vale doesn't move. \"You answered quickly.\"" },
+            { "type": "line", "text": "\"You asked a short question.\"" },
+            { "type": "line", "text": "\"Mm,\" she says, and comes in another step, and now she's looking at the room instead of at you." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Her eyes go to the gap in the cutlery on your tray, where the spoon should be." },
+    {
+      "type": "plea",
+      "text": "Mrs. Vale comes farther in. The room isn't big enough for her, and your chair, and the frame under the blanket.\n\nHer gaze settles on your knees.\n\n\"What's under there?\"\n\nYou put both hands flat on the blanket.\n\n\"My leg.\"\n\nHer face changes. Not pity. Arithmetic.\n\n\"Don't be disgusting.\"\n\n\"You asked.\"\n\n\"The boy steals because people let him.\"\n\n\"Then people should lock their spoons.\"\n\nShe takes a step. Behind the curtain there is no sound at all now, which is how you know he's stopped breathing.\n\nYou make yourself look bored. \"If you found him, what would you do?\"\n\n\"Send for the constable.\"\n\n\"For a spoon?\"\n\n\"For a pattern.\"\n\nThere's a crust of bread under the cloth in her basket. The morning loaf. Still warm enough to smell from here.\n\n\"Mrs. Vale,\" you say. \"I took it.\"",
+      "stakes": {
+        "scripted": true,
+        "chance": null,
+        "onFail": null
+      }
+    },
+    { "type": "line", "text": "Her eyebrows go up." },
+    { "type": "line", "text": "\"The spoon. I used it to reach something under the coal scuttle. The washer was already mine. I dropped the spoon because the chair caught on the rug.\"" },
+    { "type": "line", "text": "It's a good lie. Every part of it works." },
+    { "type": "line", "text": "Every part of it also makes you smaller, and you knew that before you opened your mouth, and you did it anyway." },
+    { "type": "line", "text": "\"You expect me to believe that,\" she says." },
+    { "type": "line", "text": "\"No.\"" },
+    { "type": "line", "text": "\"Then why say it?\"" },
+    {
+      "type": "choice",
+      "key": "c03-why",
+      "text": "There are two true answers. Only one of them is safe.",
+      "options": [
+        {
+          "id": "paperwork",
+          "label": "\"Because a constable will ask why a kitchen spoon was in my room.\"",
+          "beats": [
+            { "type": "line", "text": "\"And?\"" },
+            { "type": "line", "text": "\"And that takes an hour. You've bread in your basket and you're already late.\"" },
+            { "type": "line", "text": "She looks down at the basket. That's the whole argument won, and it had nothing to do with justice." }
+          ]
+        },
+        {
+          "id": "smaller",
+          "label": "\"Because you'll believe it of me faster than you'd disbelieve it of him.\"",
+          "beats": [
+            { "type": "line", "text": "The room gets very quiet." },
+            { "type": "line", "text": "Mrs. Vale looks at you for a long moment, and something behind her face gives way a little, and you hate that you used it." },
+            { "type": "line", "text": "\"That's an unkind thing to say about yourself,\" she says." },
+            { "type": "line", "text": "\"It's an unkind house.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Oliver's boot nudges the curtain. You can't see it. You feel it in the floorboards." },
+    { "type": "line", "text": "Mrs. Vale sighs. \"The boy's not worth a beating.\"" },
+    { "type": "line", "text": "\"I didn't say he was.\"" },
+    { "type": "line", "text": "\"You said nothing.\"" },
+    { "type": "line", "text": "\"That's often the difficulty.\"" },
+    { "type": "line", "text": "She takes the spoon from under the table. \"Return it.\"" },
+    { "type": "line", "text": "\"It's bent.\"" },
+    { "type": "line", "text": "\"Then return it bent.\"" },
+    { "type": "line", "text": "The door shuts with a soft click. Oliver comes out from behind the curtain with his eyes too wide." },
+    { "type": "line", "text": "\"You took the blame.\"" },
+    {
+      "type": "choice",
+      "key": "c03-blame",
+      "text": "He's looking at you like you've done something enormous. You'd rather he didn't.",
+      "options": [
+        {
+          "id": "deflect",
+          "label": "\"I took a spoon.\"",
+          "beats": [
+            { "type": "line", "text": "\"You said it was yours.\"" },
+            { "type": "line", "text": "\"It was under my blanket.\"" },
+            { "type": "line", "text": "\"That isn't how ownership works.\"" },
+            { "type": "line", "text": "\"It's how rooms work.\"" },
+            { "type": "line", "text": "He lets it go. He also doesn't stop looking at you." }
+          ]
+        },
+        {
+          "id": "cost",
+          "label": "\"Don't do that again.\"",
+          "beats": [
+            { "type": "line", "text": "\"Do what?\"" },
+            { "type": "line", "text": "\"Put me somewhere I have to lie about my own leg to get you out of.\"" },
+            { "type": "line", "text": "He sits down on the floor. Not the sulking kind. The kind where the legs stop agreeing." },
+            { "type": "line", "text": "\"I didn't know she'd come up here,\" he says." },
+            { "type": "line", "text": "\"You never know. That's the pattern she meant.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He kneels and pulls the frame out from under the blanket. One of the ribs has split along the grain." },
+    { "type": "line", "text": "\"What happened?\"" },
+    { "type": "line", "text": "\"Nothing.\"" },
+    { "type": "line", "text": "\"The rib's split.\"" },
+    { "type": "line", "text": "\"It was a weak rib.\"" },
+    { "type": "line", "text": "\"You made it.\"" },
+    { "type": "line", "text": "\"That explains the weakness.\"" },
+    { "type": "line", "text": "There's a black smear on his wrist. The machine yard again — the one with iron spikes along the wall and a watchman who likes throwing stones." },
+    {
+      "type": "choice",
+      "key": "c03-yard",
+      "text": "You could pretend you didn't see the smear.",
+      "options": [
+        {
+          "id": "press",
+          "label": "\"You can't keep stealing from the foundry.\"",
+          "beats": [
+            { "type": "line", "text": "\"I don't keep stealing.\"" },
+            { "type": "line", "text": "\"You do it repeatedly.\"" },
+            { "type": "line", "text": "\"Is that what keeping means?\"" },
+            { "type": "line", "text": "\"Oliver.\"" },
+            { "type": "line", "text": "He sets the cracked rib next to the whole one. The two pieces are nearly identical. \"If I stop,\" he says, \"the work stops.\"" },
+            { "type": "line", "text": "\"Then let it stop for a day.\"" }
+          ]
+        },
+        {
+          "id": "letgo",
+          "label": "Say nothing about the wrist.",
+          "beats": [
+            { "type": "line", "text": "You look at the smear until he notices you looking, which is more effective than the sentence would have been." },
+            { "type": "line", "text": "He pulls his cuff down over it." },
+            { "type": "line", "text": "\"If I stop going,\" he says, to the rib and not to you, \"the work stops.\"" },
+            { "type": "line", "text": "\"Then let it stop for a day.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"You wouldn't say that about your chair.\"" },
+    { "type": "line", "text": "The room goes quiet." },
+    { "type": "line", "text": "Oliver looks up, startled by his own sentence. He reaches for the hinge, then takes his hand back." },
+    { "type": "line", "text": "\"I didn't mean—\"" },
+    {
+      "type": "choice",
+      "key": "c03-wound",
+      "text": "\"You meant it,\" is the true thing. There are others.",
+      "options": [
+        {
+          "id": "cold",
+          "label": "\"You meant it.\"",
+          "beats": [
+            { "type": "line", "text": "\"Yes,\" he says, after a while. He doesn't insult you by taking it back." },
+            { "type": "line", "text": "\"Good.\"" },
+            { "type": "line", "text": "\"Good?\"" },
+            { "type": "line", "text": "\"Everyone else in this house lies about it. You're at least accurate.\"" },
+            { "type": "line", "text": "It isn't forgiveness. It's the only currency you've got that doesn't cost him anything." }
+          ]
+        },
+        {
+          "id": "honest",
+          "label": "\"It isn't the same. Mine doesn't get finished.\"",
+          "beats": [
+            { "type": "line", "text": "You hadn't planned to say it. It's out before you can stop it, and it's the truest thing in the room." },
+            { "type": "line", "text": "Oliver goes very still." },
+            { "type": "line", "text": "\"No,\" he says. \"It doesn't.\"" },
+            { "type": "line", "text": "He doesn't tell you it will. He doesn't tell you doctors are clever now. He doesn't say anything at all for a while, and it is the kindest anyone has been to you in eleven months." }
+          ]
+        },
+        {
+          "id": "spare",
+          "label": "\"Fix your rib.\"",
+          "beats": [
+            { "type": "line", "text": "He takes the exit you've given him, gratefully and badly." },
+            { "type": "line", "text": "\"Right. Yes.\"" },
+            { "type": "line", "text": "He works. You watch. The thing he said sits in the corner of the room all afternoon like a third person nobody's introduced." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "You move the chair toward the window. The rear wheel catches on the rug." },
+    { "type": "line", "text": "You pull harder. Pain goes from your ankle to your hip, white, immediate, familiar." },
+    { "type": "line", "text": "Oliver stands up." },
+    {
+      "type": "choice",
+      "key": "c03-help",
+      "text": "He hasn't touched the chair. He's waiting to be told.",
+      "options": [
+        {
+          "id": "dont",
+          "label": "\"Don't touch it.\"",
+          "beats": [
+            { "type": "line", "text": "He stops where he is." },
+            { "type": "line", "text": "You get the wheel free yourself. The rug bunches under the tyre. For a second the chair tilts and the sill looks a long way off." },
+            { "type": "line", "text": "\"There,\" you say." },
+            { "type": "line", "text": "His hands stay at his sides. \"You could've asked.\"" },
+            { "type": "line", "text": "\"I could've.\"" }
+          ]
+        },
+        {
+          "id": "ask",
+          "label": "\"The rug. Just the rug.\"",
+          "beats": [
+            { "type": "line", "text": "He pulls the rug straight and steps back out of reach, all in about two seconds, so that it never becomes a moment." },
+            { "type": "line", "text": "The wheel rolls clean." },
+            { "type": "line", "text": "\"Thank you,\" you say, and it costs you something, and he has the sense not to notice." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Outside, the alley's empty. A scrap of newspaper goes along the gutter and stops against the drain." },
+    { "type": "line", "text": "\"I'm sorry,\" Oliver says." },
+    { "type": "line", "text": "\"That isn't useful.\"" },
+    { "type": "line", "text": "\"I know.\"" },
+    { "type": "line", "text": "\"Then make a new rib.\"" },
+    { "type": "line", "text": "He nods and goes, and the apology stays in the room after he's left it." },
+    { "type": "line", "text": "Near dusk he comes back with the spoon. He's flattened it against a stone." },
+    { "type": "line", "text": "\"Mrs. Vale asked for this.\"" },
+    { "type": "line", "text": "\"It's worse.\"" },
+    { "type": "line", "text": "\"It has character.\"" },
+    { "type": "line", "text": "You set it beside your bowl. He crouches and looks at the chair's rear wheel." },
+    { "type": "line", "text": "\"The axle's loose.\"" },
+    { "type": "line", "text": "\"I know.\"" },
+    { "type": "line", "text": "\"I can fix it.\"" },
+    {
+      "type": "choice",
+      "key": "c03-axle",
+      "text": "You should send him home. His face has a new mark on it that you haven't mentioned.",
+      "options": [
+        {
+          "id": "yes",
+          "label": "\"With stolen brass?\"",
+          "beats": [
+            { "type": "line", "text": "\"With a bolt from the road.\"" },
+            { "type": "line", "text": "\"Roads have bolts?\"" },
+            { "type": "line", "text": "\"The city's full of generous objects.\"" },
+            { "type": "line", "text": "You hold the chair steady while he tightens the nut with a little wrench. His fingers move carefully and never once brush the bandage." },
+            { "type": "line", "text": "\"There,\" he says." },
+            { "type": "line", "text": "You roll forward. The wheel turns without its old wobble." },
+            { "type": "line", "text": "\"That's better,\" you admit." },
+            { "type": "line", "text": "\"You're welcome.\"" },
+            { "type": "line", "text": "\"Don't become proud.\"" },
+            { "type": "line", "text": "\"Too late.\"" }
+          ]
+        },
+        {
+          "id": "no",
+          "label": "\"Go home, Oliver.\"",
+          "beats": [
+            { "type": "line", "text": "\"It'll take four minutes.\"" },
+            { "type": "line", "text": "\"You've been up since before the loaf. Go home.\"" },
+            { "type": "line", "text": "He looks at the wheel the way other people look at a wound they've been told not to touch." },
+            { "type": "line", "text": "\"Tomorrow, then,\" he says. \"It's getting worse. You can hear it from the alley.\"" },
+            { "type": "line", "text": "You hadn't known it was audible from the alley. You hadn't known he was listening for it." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He goes after dark. From the window you watch him cross the alley with the cracked rib under his coat." },
+    { "type": "line", "text": "At the wall he stops and looks up." },
+    { "type": "line", "text": "\"What?\" you call." },
+    { "type": "line", "text": "\"Nothing.\"" },
+    { "type": "line", "text": "\"You're standing there.\"" },
+    { "type": "line", "text": "\"I'm considering the best route.\"" },
+    { "type": "line", "text": "\"The route's straight.\"" },
+    { "type": "line", "text": "\"That's why it's suspicious.\"" },
+    {
+      "type": "choice",
+      "key": "c03-lastword",
+      "text": "He's about to go round the corner.",
+      "options": [
+        {
+          "id": "careful",
+          "label": "\"Oliver. Take the long way.\"",
+          "beats": [
+            { "type": "line", "text": "He raises a hand without turning round, which means he heard and won't." },
+            { "type": "line", "text": "The corner takes him." }
+          ]
+        },
+        {
+          "id": "nothing",
+          "label": "Let him go.",
+          "beats": [
+            { "type": "line", "text": "You watch until the dark takes the shape of his coat off him and leaves only the rib." },
+            { "type": "line", "text": "Then that goes too." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "You take the flattened spoon off the table. There's a tiny line across the handle where the stone struck it." },
+    { "type": "line", "text": "The lie hasn't made you noble. It's made the room different. Mrs. Vale will remember it. You'll remember that she knew." },
+    { "type": "line", "text": "Out on the foundry road a whistle goes. Another one answers, farther off." },
+    { "type": "line", "text": "You wait at the window with the lamp low, the way you do." },
+    { "type": "line", "text": "For the first time since the morning he showed you the frame, Oliver doesn't come back before morning." }
+  ]
+}

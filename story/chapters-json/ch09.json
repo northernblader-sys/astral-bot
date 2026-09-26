@@ -1,0 +1,444 @@
+{
+  "num": 9,
+  "id": "laughed-at",
+  "title": "Laughed At",
+  "requires": "the-first-fall",
+  "beats": [
+    { "type": "line", "text": "By morning the quarry has a story." },
+    { "type": "line", "text": "By noon it has six." },
+    { "type": "line", "text": "The glider flew. The glider never left the grass. Oliver fell because he was drunk. Oliver fell because he's cursed. There's a demon living in the frame." },
+    { "type": "line", "text": "And: the girl in the chair pulled the rope and put him in the ground." },
+    { "type": "line", "text": "That's the one that travels fastest. Of course it is. It's the only version with a villain who can't run away." },
+    { "type": "line", "text": "A newspaper boy is shouting it outside the bakery. \"Cripple girl crashes orphan boy! Read all about the new danger in the skies!\"" },
+    { "type": "line", "text": "Oliver throws a washer at him. It misses by a yard and a half." },
+    {
+      "type": "choice",
+      "key": "c09-newspaper",
+      "text": "He's got a bandage across his temple and one arm in a sling made out of the butcher's apron, and he is now looking round the yard for a second washer.",
+      "options": [
+        {
+          "id": "famous",
+          "label": "\"You've made us famous.\"",
+          "beats": [
+            { "type": "line", "text": "\"I was aiming for obscure.\"" },
+            { "type": "line", "text": "\"You were aiming for a newspaper boy and you missed him by a yard.\"" },
+            { "type": "line", "text": "\"I'm one-handed.\"" },
+            { "type": "line", "text": "\"You were one-handed yesterday and you got a spar off a hill.\"" }
+          ]
+        },
+        {
+          "id": "stopthrowing",
+          "label": "Take the second washer out of his hand.",
+          "beats": [
+            { "type": "line", "text": "He lets you have it, which tells you how much his arm hurts." },
+            { "type": "line", "text": "\"He's twelve,\" you say." },
+            { "type": "line", "text": "\"He's loud.\"" },
+            { "type": "line", "text": "\"He's twelve and loud and paid a farthing a shout, and none of the words are his.\"" },
+            { "type": "line", "text": "Oliver looks at the corner where the shouting's coming from. \"Whose are they, then.\"" },
+            { "type": "line", "text": "\"Somebody who can spell.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He goes back to the broken cradle and works at it one-handed." },
+    { "type": "line", "text": "\"People are saying I crashed you,\" you say." },
+    { "type": "line", "text": "\"People say a great many things.\"" },
+    { "type": "line", "text": "\"They say I ought to be arrested.\"" },
+    {
+      "type": "choice",
+      "key": "c09-charge",
+      "text": "\"For what?\" he says, without looking up.",
+      "options": [
+        {
+          "id": "judgment",
+          "label": "\"Poor judgment.\"",
+          "beats": [
+            { "type": "line", "text": "He considers the wreck laid out across the washhouse floor." },
+            { "type": "line", "text": "\"That charge may stand,\" he says." },
+            { "type": "line", "text": "\"Whose?\"" },
+            { "type": "line", "text": "\"Ours. Jointly. It'd be a long trial.\"" }
+          ]
+        },
+        {
+          "id": "conspiracy",
+          "label": "\"Conspiracy against the natural order.\"",
+          "beats": [
+            { "type": "line", "text": "\"Is that a law?\"" },
+            { "type": "line", "text": "\"It is if enough people say it in the same street.\"" },
+            { "type": "line", "text": "He tightens a knot with his teeth. \"Then I'd plead guilty,\" he says, \"and ask for the sentence in writing, so I could frame it.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The machine yard sends a messenger before three." },
+    { "type": "line", "text": "It isn't the Toll Man. It's a thin clerk with spectacles and a sealed letter, and he stands in the doorway as though the floor might be wet." },
+    { "type": "line", "text": "\"Oliver Wright,\" he says." },
+    { "type": "line", "text": "Oliver is sitting three feet behind you with his head down." },
+    {
+      "type": "choice",
+      "key": "c09-clerk",
+      "text": "He doesn't want to be spoken to today. You can hear it in how carefully he isn't breathing.",
+      "options": [
+        {
+          "id": "out",
+          "label": "\"He's out.\"",
+          "beats": [
+            { "type": "line", "text": "The clerk looks directly at Oliver." },
+            { "type": "line", "text": "\"He's out of the conversation,\" you say." },
+            { "type": "line", "text": "The clerk decides, visibly, that arguing with furniture is beneath him, and addresses the letter instead." }
+          ]
+        },
+        {
+          "id": "readit",
+          "label": "\"Read it to me. He's got a head injury and I've got a memory.\"",
+          "beats": [
+            { "type": "line", "text": "\"The letter is addressed to Mr. Wright.\"" },
+            { "type": "line", "text": "\"Mr. Wright is fourteen and can't hold a pen this week. I'm his correspondence.\"" },
+            { "type": "line", "text": "Behind you, Oliver makes a small sound that might be a laugh or might be his arm." },
+            { "type": "line", "text": "The clerk breaks the seal." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"The yard requires payment for materials recovered from the quarry.\"" },
+    { "type": "line", "text": "\"Recovered from the quarry.\"" },
+    { "type": "line", "text": "\"The machine broke on land belonging to Mr. Bell.\"" },
+    {
+      "type": "choice",
+      "key": "c09-sky",
+      "text": "Oliver whispers, \"Don't start.\"",
+      "options": [
+        {
+          "id": "bell",
+          "label": "\"Did Mr. Bell buy the sky?\"",
+          "beats": [
+            { "type": "line", "text": "The clerk blinks twice." },
+            { "type": "line", "text": "\"Because it broke in the air,\" you say, \"and landed on the grass, and Mr. Bell has owned neither for nine years.\"" },
+            { "type": "line", "text": "\"I have started,\" you add, to Oliver, who has his hand over his eyes." }
+          ]
+        },
+        {
+          "id": "itemise",
+          "label": "\"Itemise it. Every screw, in writing.\"",
+          "beats": [
+            { "type": "line", "text": "The clerk turns the letter over. There's nothing on the back." },
+            { "type": "line", "text": "\"The sum is stated as a total.\"" },
+            { "type": "line", "text": "\"Then it's not a bill. It's a number somebody liked.\"" },
+            { "type": "line", "text": "You've learned that from six weeks of the Toll Man. It's astonishing how much of the world runs on a number somebody liked." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The clerk reads on. \"Failure to settle will result in the seizure of property.\"" },
+    { "type": "line", "text": "You look at the wreck on the floor. Split ribs. A cradle missing a brace. Canvas torn end to end." },
+    { "type": "line", "text": "\"What property?\"" },
+    { "type": "line", "text": "The clerk's eyes go to Oliver's coat." },
+    { "type": "line", "text": "\"Anything of value.\"" },
+    { "type": "line", "text": "Oliver laughs, once." },
+    { "type": "line", "text": "It's the wrong sound. You've heard him laugh at bailiffs and hills and his own broken arm, and this isn't any of those." },
+    { "type": "line", "text": "The clerk leaves the letter on the bench and goes." },
+    { "type": "line", "text": "Oliver takes off the sling and reaches for the cradle." },
+    { "type": "line", "text": "\"You're not helping,\" you say." },
+    { "type": "line", "text": "\"I'm testing the brace.\"" },
+    { "type": "line", "text": "\"With the arm.\"" },
+    { "type": "line", "text": "\"It's a brace test.\"" },
+    { "type": "line", "text": "He lifts. Pain goes across his face like a shadow across a wall. He puts the wood down." },
+    { "type": "line", "text": "\"The brace is sound,\" he says." },
+    {
+      "type": "choice",
+      "key": "c09-brace",
+      "text": "\"Your arm isn't.\"",
+      "options": [
+        {
+          "id": "attached",
+          "label": "\"'My arm is attached' is not a medical opinion.\"",
+          "beats": [
+            { "type": "line", "text": "\"I hadn't said it yet.\"" },
+            { "type": "line", "text": "\"You were going to.\"" },
+            { "type": "line", "text": "\"I was.\" He sits down on the sack. \"It's attached.\"" },
+            { "type": "line", "text": "\"That's a low standard.\"" },
+            { "type": "line", "text": "\"It's the standard I was raised to.\"" },
+            { "type": "line", "text": "That lands in the room and stays there, and he goes on scraping wood as though he hasn't noticed what he said." }
+          ]
+        },
+        {
+          "id": "hands",
+          "label": "\"Give me the small pieces. I'll hold. You look.\"",
+          "beats": [
+            { "type": "line", "text": "He hesitates for exactly as long as it takes his pride to lose." },
+            { "type": "line", "text": "Then he puts a length of split spar across your knees, and a wedge in your left hand, and kneels to look along the grain from underneath, where the light is." },
+            { "type": "line", "text": "You hold wood for an hour and a half. Your arms ache. It's the best hour and a half of the week." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "A strip of the old canvas still carries the fish-shaped patch. The rest of the wing is down to ribs and broken thread." },
+    { "type": "line", "text": "\"The right spar was too light,\" he says." },
+    { "type": "line", "text": "\"The right spar was attached to a flying machine that fell down a hill.\"" },
+    { "type": "line", "text": "\"Both can be true.\"" },
+    { "type": "line", "text": "He reaches for the black notebook. The cover's muddy from the quarry and several pages have torn loose." },
+    { "type": "line", "text": "You pick them up off the floor before the damp can have them." },
+    { "type": "line", "text": "Then he stops. He's been arranging the broken pieces into a pile, and taking them off the pile, and putting them back in the same order, for a quarter of an hour." },
+    { "type": "line", "text": "\"What do I do now?\" he says." },
+    {
+      "type": "choice",
+      "key": "c09-rebuild",
+      "text": "He's asking you. Not the room, not the wing. You.",
+      "options": [
+        {
+          "id": "smallest-part",
+          "label": "\"Start with the smallest part. It'll give you somewhere to put your hands.\"",
+          "beats": [
+            { "type": "line", "text": "He looks at the pile for a long moment." },
+            { "type": "line", "text": "Then he picks up a single brass washer and turns it over." },
+            { "type": "line", "text": "\"This is the smallest part.\"" },
+            { "type": "line", "text": "\"Then that's where you start.\"" },
+            { "type": "line", "text": "He cleans it. It takes four minutes and it saves the entire afternoon, because at the end of it his hands have remembered they're for something." }
+          ]
+        },
+        {
+          "id": "stop",
+          "label": "\"Stop. Before the city takes anything else off you.\"",
+          "beats": [
+            { "type": "line", "text": "It's the only honest thing you've got and it costs you to say it." },
+            { "type": "line", "text": "He doesn't answer for a while." },
+            { "type": "line", "text": "\"If I stop,\" he says, \"they were right.\"" },
+            { "type": "line", "text": "\"They'd be wrong and you'd be alive.\"" },
+            { "type": "line", "text": "\"I'd be here.\" He gestures at the washhouse, the wreck, the letter on the bench. \"Here isn't alive. Here is waiting.\"" },
+            { "type": "line", "text": "You'll think about that sentence for the rest of your life, and you'll never once find the answer to it." }
+          ]
+        },
+        {
+          "id": "laugh-back",
+          "label": "\"Make them laugh again. Then make them sorry.\"",
+          "beats": [
+            { "type": "line", "text": "Something comes back into his face that had gone out of it at the quarry gate." },
+            { "type": "line", "text": "\"That's a plan with two halves,\" he says." },
+            { "type": "line", "text": "\"Most good ones are.\"" },
+            { "type": "line", "text": "\"Which half first?\"" },
+            { "type": "line", "text": "\"The laughing. It's cheaper.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The rest of the afternoon goes without work. He sits on the bench with the notebook open and the pencil balanced between two fingers and draws nothing at all." },
+    { "type": "line", "text": "At the end of the lane, the factory boys turn up." },
+    { "type": "line", "text": "The one with the cut palm isn't among them." },
+    { "type": "line", "text": "\"There he is,\" one calls. \"The sky king.\"" },
+    { "type": "line", "text": "Another flaps his arms." },
+    { "type": "line", "text": "Oliver keeps looking at the empty page." },
+    { "type": "line", "text": "You turn your chair toward the doorway." },
+    { "type": "line", "text": "\"Don't,\" he says." },
+    { "type": "line", "text": "\"I haven't done anything.\"" },
+    { "type": "line", "text": "\"You're about to.\"" },
+    { "type": "line", "text": "They come closer. One of them picks the fish patch up off the bench." },
+    { "type": "line", "text": "\"Is this your flag?\"" },
+    { "type": "line", "text": "\"Put it down,\" Oliver says." },
+    { "type": "line", "text": "The boy throws it at his chest." },
+    {
+      "type": "choice",
+      "key": "c09-boys",
+      "text": "There are five of them and one door, and behind you is a boy with one working arm who has just been asked whether he'd like to stop.",
+      "options": [
+        {
+          "id": "worth",
+          "label": "\"If you're stealing, take something worth stealing.\"",
+          "beats": [
+            { "type": "line", "text": "They look at you." },
+            { "type": "line", "text": "\"That cloth's worth less than the boots you walked here in.\"" },
+            { "type": "line", "text": "They laugh. It isn't kind laughter, but it's pointed at your mouth instead of at him, and that's the whole trick." }
+          ]
+        },
+        {
+          "id": "inventory",
+          "label": "Start listing everything in the room, out loud, with prices.",
+          "beats": [
+            { "type": "line", "text": "\"One tin of oil, threepence. One bench, nailed down. Four broken ribs of willow, no resale.\"" },
+            { "type": "line", "text": "\"What's she doing?\" one of them says." },
+            { "type": "line", "text": "\"One wheel, squeaking. One girl, cannot run. One boy, one arm.\" You look up. \"That's the lot. Which are you taking?\"" },
+            { "type": "line", "text": "Nobody wants to answer a question with an itemised list in it. They laugh, because laughing's the only exit left, and their attention has come off him entirely." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The tallest one steps toward you. \"You think you're clever.\"" },
+    {
+      "type": "choice",
+      "key": "c09-tallest",
+      "text": "He's close enough now that you can smell the dye works on his jacket.",
+      "options": [
+        {
+          "id": "loud",
+          "label": "\"No. I think you're loud.\"",
+          "beats": [
+            { "type": "line", "text": "\"You can't even get out of that chair.\"" },
+            { "type": "line", "text": "\"And yet you came inside to hear me.\"" },
+            { "type": "line", "text": "His mouth opens. Nothing comes out of it." }
+          ]
+        },
+        {
+          "id": "name",
+          "label": "\"What's your name?\"",
+          "beats": [
+            { "type": "line", "text": "It stops him the way it stops all of them." },
+            { "type": "line", "text": "\"Why.\"" },
+            { "type": "line", "text": "\"Because I'll be sitting in this doorway every day for the rest of my life,\" you say, \"and I never forget one.\"" },
+            { "type": "line", "text": "\"You can't even get out of that chair.\"" },
+            { "type": "line", "text": "\"I don't need to get out of it to remember you.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Oliver has stood up behind you. His bad arm hangs at his side." },
+    { "type": "line", "text": "He looks smaller without the frame round him. But the tall boy sees him upright and takes one step back anyway." },
+    { "type": "line", "text": "\"Come on,\" one of the others says." },
+    { "type": "line", "text": "They leave the fish patch on the floor." },
+    { "type": "line", "text": "Oliver shuts the door." },
+    { "type": "line", "text": "\"You didn't have to say that,\" he says." },
+    {
+      "type": "choice",
+      "key": "c09-after",
+      "text": "That phrase has become his favourite.",
+      "options": [
+        {
+          "id": "favourite",
+          "label": "\"That phrase has become your favourite.\"",
+          "beats": [
+            { "type": "line", "text": "\"They could have hurt you.\"" },
+            { "type": "line", "text": "\"They could have tried.\"" },
+            { "type": "line", "text": "\"You can't fight.\"" },
+            { "type": "line", "text": "\"I didn't fight.\"" },
+            { "type": "line", "text": "He picks the patch up and smooths it out across his knee." },
+            { "type": "line", "text": "\"You made them leave.\"" },
+            { "type": "line", "text": "\"They were bored.\"" },
+            { "type": "line", "text": "\"You made them bored.\"" },
+            { "type": "line", "text": "\"A gift,\" you say." }
+          ]
+        },
+        {
+          "id": "truth",
+          "label": "\"I did, though. You were about to be hit and you'd have let it happen.\"",
+          "beats": [
+            { "type": "line", "text": "He stops smoothing the patch." },
+            { "type": "line", "text": "\"It's cheaper than an argument,\" he says." },
+            { "type": "line", "text": "\"Is that what you've been doing? Your whole life? Sums?\"" },
+            { "type": "line", "text": "\"It's kept me alive.\"" },
+            { "type": "line", "text": "\"Here isn't alive,\" you say. \"You told me that this afternoon.\"" },
+            { "type": "line", "text": "He folds the fish patch into a square and puts it in his pocket, and for a while the only sound in the washhouse is the water in the wall." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "That night he takes the right spar out of the wreck. The wood's split clean along the grain." },
+    { "type": "line", "text": "\"It was too light.\"" },
+    { "type": "line", "text": "\"You said.\"" },
+    { "type": "line", "text": "\"It needed weight.\"" },
+    { "type": "line", "text": "\"You said it needed to be light.\"" },
+    { "type": "line", "text": "\"It needed to be light in a different direction.\"" },
+    { "type": "line", "text": "He scrapes the split clean, slowly, as though the wood might say something if he gives it long enough." },
+    {
+      "type": "choice",
+      "key": "c09-right",
+      "text": "The lantern's low. You've been holding a question for eleven hours.",
+      "options": [
+        {
+          "id": "ask",
+          "label": "\"What if they're right?\"",
+          "beats": [
+            { "type": "line", "text": "He doesn't look up. \"About what?\"" },
+            { "type": "line", "text": "\"The sky.\"" },
+            { "type": "line", "text": "\"The sky's above us.\"" },
+            { "type": "line", "text": "\"You know what I mean.\"" },
+            { "type": "line", "text": "He sets the knife down. \"No,\" he says. \"I know what they said.\"" },
+            { "type": "line", "text": "\"That's not the same.\"" },
+            { "type": "line", "text": "\"It is when people are laughing.\"" }
+          ]
+        },
+        {
+          "id": "hold",
+          "label": "Don't ask. He's holding a knife and a bad week.",
+          "beats": [
+            { "type": "line", "text": "You keep it behind your teeth, and he answers it anyway, because he's been carrying it too." },
+            { "type": "line", "text": "\"If they're right,\" he says, to the wood, \"then I've cost a girl who can't walk two miles of pushing and a bandage, and I'd rather be dead than right about that.\"" },
+            { "type": "line", "text": "\"Oliver.\"" },
+            { "type": "line", "text": "\"So they'd better be wrong,\" he says. \"That's all. It's simpler than it sounds.\"" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "text": "\"The first frame was never meant to fly far,\" he says.",
+      "textByOptionRef": "c09-rebuild",
+      "textByOption": {
+        "smallest-part": "He's got the cleaned washer in front of him on the bench, set apart from everything else, like the first word of a sentence.",
+        "stop": "He hasn't said yes and he hasn't said no. He's picked up the knife instead, which is the same as an answer.",
+        "laugh-back": "\"The laughing half,\" he says. \"I've thought of something. It involves the whole of Tuesday and a great many witnesses.\""
+      }
+    },
+    { "type": "line", "text": "\"How far was it meant to fly?\"" },
+    { "type": "line", "text": "\"Far enough to prove the next one should exist.\"" },
+    { "type": "line", "text": "In the morning the repaired bearing on your chair starts to squeal. He hears it from the bench." },
+    { "type": "line", "text": "He looks at the wheel. Then at you." },
+    {
+      "type": "choice",
+      "key": "c09-oil",
+      "text": "He is enjoying this far too much for a boy with a head wound.",
+      "options": [
+        {
+          "id": "dont",
+          "label": "\"Don't say it.\"",
+          "beats": [
+            { "type": "line", "text": "\"It needs oil.\"" },
+            { "type": "line", "text": "\"You said it.\"" },
+            { "type": "line", "text": "\"You gave me the opening.\"" }
+          ]
+        },
+        {
+          "id": "admit",
+          "label": "\"It needs oil.\"",
+          "beats": [
+            { "type": "line", "text": "He stops with his hand halfway to the shelf." },
+            { "type": "line", "text": "\"You've never once said that first.\"" },
+            { "type": "line", "text": "\"I'm told it's good for the soul.\"" },
+            { "type": "line", "text": "\"It's good for the bearing,\" he says. \"Souls are a separate tin.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He takes down a small tin with the label scraped off. You hold the chair steady while he puts one drop on the bearing." },
+    { "type": "line", "text": "The squeal goes." },
+    { "type": "line", "text": "\"There,\" he says." },
+    { "type": "line", "text": "\"The chair's famous now.\"" },
+    { "type": "line", "text": "\"It has a reputation.\"" },
+    { "type": "line", "text": "He goes back to the frame. The new spar is darker wood, heavier, bent by steam over the wash copper. He sets it down beside the broken one." },
+    {
+      "type": "choice",
+      "key": "c09-close",
+      "text": "Two spars on a bench. One that failed and one that hasn't yet.",
+      "options": [
+        {
+          "id": "first",
+          "label": "\"Is that the smallest part?\"",
+          "beats": [
+            { "type": "line", "text": "\"It's the first,\" he says." },
+            { "type": "line", "text": "Outside, somebody shouts the newspaper story again — the girl, the rope, the danger in the skies." },
+            { "type": "line", "text": "He doesn't throw a washer this time." }
+          ]
+        },
+        {
+          "id": "keepboth",
+          "label": "\"Keep the broken one. On the wall.\"",
+          "beats": [
+            { "type": "line", "text": "\"Why?\"" },
+            { "type": "line", "text": "\"So that when they tell you it never went up, you can point at the thing that proves it came down.\"" },
+            { "type": "line", "text": "He hangs the split spar on two nails above the bench." },
+            { "type": "line", "text": "It's still there four years later. It's the only thing in the washhouse nobody ever tries to sell." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He puts the pencil to the paper." },
+    { "type": "line", "text": "The next drawing takes up the whole page." }
+  ]
+}

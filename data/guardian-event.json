@@ -1,0 +1,558 @@
+{
+  "id": "guardian_of_the_innocent",
+  "name": "Guardian of the Innocent",
+  "banner": "https://i.ibb.co/GQTZMN8H/Tanma.jpg",
+  "durationDays": 7,
+  "dailyRescueCap": 25,
+  "companionWinsNeeded": 30,
+  "offerTtlMinutes": 30,
+  "captorRetryWins": 5,
+  "fameBasePerCaptive": 40,
+  "intro": "Beyond Astral Town's east wall the roads run to places the town does not talk about. Markets with pens instead of stalls. Ships that carry people in the hold. A keep on a hill where a bell rings every time something is sold. The beastkin taken to those places are still there, and every one of them has a voice. Go and hear them.",
+  "regions": [
+    {
+      "id": "mudgate",
+      "name": "Mudgate Market",
+      "emoji": "🏚️",
+      "opensOnDay": 1,
+      "description": "A churned-mud square outside the east wall where the carts come in before dawn. Split-rail pens, chalk prices on boards, and a crowd that pretends not to see what it is buying.",
+      "arrival": "The mud sucks at your boots. Somewhere past the carts a child is counting out loud to stay calm, and a man with chalk on his hands is writing a number next to her.",
+      "clearTurns": 3.5,
+      "survivalTurns": 9,
+      "def": 20,
+      "fameMult": 1.0,
+      "solars": [
+        300,
+        600
+      ],
+      "slavers": [
+        {
+          "name": "Mudgate Pen-Keeper",
+          "emoji": "🪢"
+        },
+        {
+          "name": "Chalkboard Auctioneer",
+          "emoji": "🧾"
+        },
+        {
+          "name": "Cart Driver with a Cudgel",
+          "emoji": "🪵"
+        },
+        {
+          "name": "Market Bruiser",
+          "emoji": "👊"
+        }
+      ],
+      "taunts": [
+        "Stock's already paid for. Walk on.",
+        "You buying or bleeding? Those are the only two things people do here.",
+        "Look at the chalk, friend. Everything here has a price. So do you."
+      ]
+    },
+    {
+      "id": "saltwick",
+      "name": "Saltwick Docks",
+      "emoji": "⚓",
+      "opensOnDay": 1,
+      "description": "Tar, rope and gulls. The cargo manifests list barrels and bolts of cloth. The holds are full of people who can hear the water through the planks and do not know which country they are being sailed to.",
+      "arrival": "A hatch cover thumps under your feet. From below it, very quietly, somebody knocks back.",
+      "clearTurns": 3.8,
+      "survivalTurns": 8.5,
+      "def": 35,
+      "fameMult": 1.15,
+      "solars": [
+        400,
+        750
+      ],
+      "slavers": [
+        {
+          "name": "Saltwick Deckhand",
+          "emoji": "🪝"
+        },
+        {
+          "name": "Bosun Rake",
+          "emoji": "⚓"
+        },
+        {
+          "name": "Hold Warden",
+          "emoji": "🗝️"
+        },
+        {
+          "name": "Harpoon Man",
+          "emoji": "🔱"
+        }
+      ],
+      "taunts": [
+        "Tide turns in an hour. You'll be in the water before it does.",
+        "Cargo doesn't get a say. Neither do you.",
+        "Every one of them's insured. You aren't."
+      ]
+    },
+    {
+      "id": "brackenmoor",
+      "name": "Brackenmoor",
+      "emoji": "🌾",
+      "opensOnDay": 2,
+      "description": "Wet heather to the horizon and a line of snares under every hedge. The trappers here do not buy beastkin. They catch them, the way you would catch rabbits, and they count them the same way.",
+      "arrival": "A snare line hums in the wind. Further out, a cage on a cart rattles, and someone inside it is reading names aloud from memory.",
+      "clearTurns": 4.2,
+      "survivalTurns": 8,
+      "def": 55,
+      "fameMult": 1.3,
+      "solars": [
+        550,
+        950
+      ],
+      "companionId": "lebore",
+      "slavers": [
+        {
+          "name": "Moor Trapper",
+          "emoji": "🪤"
+        },
+        {
+          "name": "Snare-Line Runner",
+          "emoji": "🏃"
+        },
+        {
+          "name": "Net Caster",
+          "emoji": "🕸️"
+        },
+        {
+          "name": "Hesketh's Dog Handler",
+          "emoji": "🐕"
+        }
+      ],
+      "taunts": [
+        "Caught forty this week. You make forty-one.",
+        "The moor's ours. Everything that runs on it is ours.",
+        "Step careful. Every hedge out here has teeth."
+      ],
+      "captor": {
+        "name": "Hesketh the Snare",
+        "emoji": "🪤",
+        "title": "Master Trapper of Brackenmoor",
+        "intro": "A thin man in a waxed coat steps out of the heather, winding wire around two fingers. He is holding a ledger that is not his handwriting. \"You've been emptying my cages. That's a lot of money walking off my moor. And you've come for my little clerk, haven't you. She keeps my books. She stays.\"",
+        "defeat": "Hesketh goes down in his own snare line and the ledger falls open in the mud. In the margins, in tiny careful script, somebody has written hundreds of names."
+      }
+    },
+    {
+      "id": "kettle",
+      "name": "Kettle Quarry",
+      "emoji": "⛏️",
+      "opensOnDay": 3,
+      "description": "A pit of grey stone so deep the sun only touches the bottom at noon. Chain gangs cut blocks from dawn to dark, and the runaways are tracked back by something with a very good nose.",
+      "arrival": "The sound of a hundred hammers stops all at once when you walk in. Every face in the pit turns to you, and not one of them dares to hope yet.",
+      "clearTurns": 4.6,
+      "survivalTurns": 7.5,
+      "def": 80,
+      "fameMult": 1.5,
+      "solars": [
+        700,
+        1150
+      ],
+      "companionId": "minna",
+      "slavers": [
+        {
+          "name": "Quarry Overseer",
+          "emoji": "⛏️"
+        },
+        {
+          "name": "Whip Foreman",
+          "emoji": "🪢"
+        },
+        {
+          "name": "Chain Gang Warden",
+          "emoji": "⛓️"
+        },
+        {
+          "name": "Rock Crusher Brute",
+          "emoji": "🪨"
+        }
+      ],
+      "taunts": [
+        "Stone doesn't care who cuts it. Neither do I.",
+        "Get back in line or get under a block.",
+        "Nobody leaves the Kettle. The hound always brings them back."
+      ],
+      "captor": {
+        "name": "Mother Grell",
+        "emoji": "🐺",
+        "title": "Overseer of Kettle Quarry",
+        "intro": "A broad woman in a stained leather apron comes down the ramp, a leash wrapped around her fist. There is nothing on the end of it right now. \"My hound's gone quiet since you started poking around. She thinks you're here for her. Silly thing. She'll be tracking you down by tomorrow night, same as all the others.\"",
+        "defeat": "Mother Grell falls against the quarry wall and the empty leash slides out of her hand. Up on the ridge, someone who has spent six years at the end of it watches it drop."
+      }
+    },
+    {
+      "id": "karsk",
+      "name": "The Pit at Karsk",
+      "emoji": "🏟️",
+      "opensOnDay": 4,
+      "description": "A sunken arena of packed sand and old stains, ringed by benches and bookmakers. The fights here are not for glory. They are for bets, and the fighters are property.",
+      "arrival": "The crowd is already roaring for tonight's card. Chalked on the board, at the very top, it just says THE TWINS, and the odds beside it change every minute.",
+      "clearTurns": 5.0,
+      "survivalTurns": 7,
+      "def": 110,
+      "fameMult": 1.7,
+      "solars": [
+        850,
+        1400
+      ],
+      "companionId": "rune_lica",
+      "slavers": [
+        {
+          "name": "Pit Handler",
+          "emoji": "🏟️"
+        },
+        {
+          "name": "Bookmaker's Muscle",
+          "emoji": "💰"
+        },
+        {
+          "name": "Bought Champion",
+          "emoji": "🗡️"
+        },
+        {
+          "name": "Gate Keeper of Karsk",
+          "emoji": "🚪"
+        }
+      ],
+      "taunts": [
+        "The crowd paid to see blood. Yours will do.",
+        "Odds on you just went to nothing.",
+        "You want them? Win them. That's how the Pit works."
+      ],
+      "captor": {
+        "name": "Old Brannoc",
+        "emoji": "🎲",
+        "title": "Pitmaster of Karsk",
+        "intro": "A grey old man climbs down into the sand with a chain wound around his arm, the links worn smooth. \"Six years those two have filled my benches. You know what the rule is? Whoever falls doesn't eat. Clever little things took turns falling. I've been meaning to put a stop to that.\"",
+        "defeat": "Brannoc hits the sand and the chain goes slack. From the fighters' gate, two figures who have never been more than an arm's length apart step out into the light together."
+      }
+    },
+    {
+      "id": "lanternhouse",
+      "name": "Lanternhouse Row",
+      "emoji": "🏮",
+      "opensOnDay": 5,
+      "description": "A quiet street of tall showrooms lit by a thousand paper lanterns. Behind the windows, beastkin are kept in glass cases to be browsed by nobles like jewellery. Nobody here raises their voice. It lowers the price.",
+      "arrival": "It is so quiet you can hear the lanterns hiss. Behind the nearest window, a small hand presses flat against the glass, then pulls away before anyone can see it.",
+      "clearTurns": 5.4,
+      "survivalTurns": 6.5,
+      "def": 140,
+      "fameMult": 2.0,
+      "solars": [
+        1000,
+        1650
+      ],
+      "companionId": "yenisei",
+      "slavers": [
+        {
+          "name": "Showroom Doorman",
+          "emoji": "🎩"
+        },
+        {
+          "name": "Glass Case Keeper",
+          "emoji": "🔑"
+        },
+        {
+          "name": "Lantern Watchman",
+          "emoji": "🏮"
+        },
+        {
+          "name": "Ottoline's Appraiser",
+          "emoji": "🧐"
+        }
+      ],
+      "taunts": [
+        "Lower your voice. You are frightening the merchandise.",
+        "We do not haggle, and we do not do refunds.",
+        "Everything behind the glass is spoken for. Especially the quiet ones."
+      ],
+      "captor": {
+        "name": "Madam Ottoline",
+        "emoji": "🪭",
+        "title": "Keeper of Lanternhouse Row",
+        "intro": "A woman in grey silk closes a fan with a soft click. \"You have been very loud on my street. You will not have the pale one. Seven buyers have tried her and seven have sent her back. She is worth more to me as a curiosity than she ever will be to you.\"",
+        "defeat": "Ottoline folds to the floor among broken lanterns. At the back of the showroom, one glass case is still closed, and the girl inside it has not moved at all, because she does not yet believe she is allowed to."
+      }
+    },
+    {
+      "id": "morrow",
+      "name": "Morrow Keep",
+      "emoji": "🏰",
+      "opensOnDay": 6,
+      "description": "A black stone keep on a hill above the sea, seat of Baron Oskar Vell, the Chainlord. Every chain in the east comes back here eventually. A bell in the hall rings each time something is sold, and at every feast a caged girl is made to sing.",
+      "arrival": "Far above you, inside the keep, someone is singing. It is the saddest song you have ever heard, and it does not stop even when the bell starts ringing.",
+      "clearTurns": 5.8,
+      "survivalTurns": 6,
+      "def": 180,
+      "fameMult": 2.5,
+      "solars": [
+        1200,
+        2000
+      ],
+      "companionId": "tenma",
+      "slavers": [
+        {
+          "name": "Keep Sentry",
+          "emoji": "🛡️"
+        },
+        {
+          "name": "Chainlord's Jailer",
+          "emoji": "⛓️"
+        },
+        {
+          "name": "Vell's Household Knight",
+          "emoji": "⚔️"
+        },
+        {
+          "name": "Bell-Ringer of the Keep",
+          "emoji": "🔔"
+        }
+      ],
+      "taunts": [
+        "The Baron owns every chain in the east. Soon he owns yours.",
+        "Hear the bell? That's another one sold. It'll ring for you next.",
+        "Nobody climbs this hill twice."
+      ],
+      "captor": {
+        "name": "Baron Oskar Vell, the Chainlord",
+        "emoji": "👑",
+        "title": "Lord of Morrow Keep",
+        "intro": "The great hall is set for a feast nobody is eating. At the head of the table a tall man in black velvet rises, and behind him, in a gilded birdcage, a girl stops singing for the first time in eleven years. \"Keep singing, little bird,\" the Baron says without turning around. \"This one will not take long.\"",
+        "defeat": "The Chainlord falls across his own feast and the bell above the hall cracks when it hits the floor. In the gilded cage, the girl draws a breath, and for once she does not have to sing."
+      }
+    }
+  ],
+  "captiveNames": [
+    "Ash",
+    "Bram",
+    "Cless",
+    "Dory",
+    "Emmet",
+    "Fen",
+    "Gilly",
+    "Hobb",
+    "Ivy",
+    "Jory",
+    "Kit",
+    "Lark",
+    "Moss",
+    "Nell",
+    "Oka",
+    "Quill",
+    "Rook",
+    "Sable",
+    "Tamsin",
+    "Umber",
+    "Vetch",
+    "Wren",
+    "Yarrow",
+    "Zuri",
+    "Bina",
+    "Cato",
+    "Dela",
+    "Ember",
+    "Fitch",
+    "Hazel",
+    "Juniper",
+    "Kiko",
+    "Lumi",
+    "Milo",
+    "Nico",
+    "Olive",
+    "Pim",
+    "Rosa",
+    "Sorrel",
+    "Tobi",
+    "Una",
+    "Vale",
+    "Birch",
+    "Coral",
+    "Dune",
+    "Fawn"
+  ],
+  "species": [
+    "fox",
+    "wolf",
+    "cat",
+    "rabbit",
+    "bear",
+    "hawk",
+    "deer",
+    "mouse",
+    "otter",
+    "lynx",
+    "boar",
+    "goat"
+  ],
+  "descriptors": [
+    "a young",
+    "an old",
+    "a little",
+    "a scarred",
+    "a tired",
+    "a trembling",
+    "a quiet",
+    "a stubborn"
+  ],
+  "captiveTypes": {
+    "battle": {
+      "label": "Battle",
+      "emoji": "⚔️",
+      "roles": [
+        "pit fighter",
+        "bodyguard",
+        "hunter",
+        "arena brawler"
+      ]
+    },
+    "utility": {
+      "label": "Utility",
+      "emoji": "🧰",
+      "roles": [
+        "scribe",
+        "mender",
+        "tracker",
+        "cook",
+        "smith",
+        "herbalist"
+      ]
+    },
+    "entertainer": {
+      "label": "Entertainer",
+      "emoji": "💃",
+      "roles": [
+        "singer",
+        "dancer",
+        "storyteller",
+        "fiddler",
+        "juggler"
+      ]
+    }
+  },
+  "lines": {
+    "intro": [
+      "{name} grips the bars. \"Please. Please don't leave us here.\"",
+      "\"You're not one of them,\" {name} whispers. \"Are you? Say you're not.\"",
+      "{name} the {species} has stopped crying. That is somehow worse.",
+      "\"They said nobody ever comes,\" {name} says. \"Nobody ever comes.\"",
+      "{name} pushes a smaller captive behind them and stares at the {slaver}.",
+      "\"Don't look at me,\" {name} says. \"Look at him. He's the one with the key.\"",
+      "\"I had a name before the chalk,\" {name} says quietly. \"It was {name}. Remember it for me?\"",
+      "{name} doesn't say anything. They just hold up their chained hands so you can see."
+    ],
+    "playerHit": [
+      "\"Yes!\" {name} shouts, then covers their mouth, terrified of being heard.",
+      "{name} flinches at the sound of the blow, then leans closer to the bars to watch.",
+      "\"Again,\" {name} breathes. \"Please, again.\"",
+      "{name} has started counting your hits under their breath, like a prayer.",
+      "\"Nobody's ever hit him back before,\" {name} says, astonished.",
+      "The {species} kit next to {name} is peeking between their fingers now."
+    ],
+    "playerHurt": [
+      "\"No, no, get up,\" {name} begs. \"Get up, please get up.\"",
+      "{name} yanks at the chain so hard it rattles. \"Leave them alone!\"",
+      "\"You're bleeding,\" {name} says, voice cracking. \"I'm sorry. I'm so sorry.\"",
+      "{name} squeezes their eyes shut and whispers your name like it could help.",
+      "\"Don't do it for us,\" {name} says. \"We're not worth dying for.\" They do not mean it."
+    ],
+    "playerLow": [
+      "\"Run,\" {name} says suddenly. \"Just run. We'll be fine.\" You both know that's a lie.",
+      "{name} has started singing, very badly, just so you'll know someone is still with you.",
+      "\"Please don't die,\" {name} says. \"Everyone who tries to help us dies.\""
+    ],
+    "enemyLow": [
+      "\"He's scared,\" {name} whispers. \"Look at him. He's actually scared.\"",
+      "{name} stands up in the pen for the first time since you arrived.",
+      "The captives have gone completely silent, hardly daring to breathe.",
+      "\"Finish it,\" {name} says, very quietly. \"Please. Finish it.\""
+    ],
+    "slaverHurt": [
+      "The {slaver} spits. \"You'll pay for every one of them.\"",
+      "The {slaver} staggers back. \"Somebody get the dogs!\"",
+      "\"Do you know what these things are worth?\" the {slaver} snarls."
+    ],
+    "freed": {
+      "battle": [
+        "{name} the {species} flexes free wrists and looks at you for a long moment. \"I owe you a fight. Any fight. Name it.\"",
+        "{name} picks up the {slaver}'s dropped weapon, weighs it, and hands it to you hilt first. \"Yours. You earned it.\""
+      ],
+      "utility": [
+        "{name} the {species} is already counting the other captives. \"All here. All of us. I checked twice.\"",
+        "{name} tears a strip of cloth and starts binding a smaller captive's wrists where the chains rubbed. \"I can mend. It's what I did before.\""
+      ],
+      "entertainer": [
+        "{name} the {species} laughs, a startled little sound, like they forgot they knew how.",
+        "{name} hums the first bar of a song their mother used to sing and cannot finish it for crying."
+      ]
+    },
+    "dragged": [
+      "They drag {name} back into the dark by the chain. {name} is still looking at you.",
+      "\"It's okay,\" {name} says as they're pulled away. \"You tried. Nobody ever tried before.\"",
+      "The {slaver} slams the pen shut. {name} presses a hand flat against the bars until you can't see it anymore."
+    ]
+  },
+  "renownRanks": [
+    {
+      "min": 0,
+      "label": "Bystander",
+      "emoji": "🌫️"
+    },
+    {
+      "min": 10,
+      "label": "Chainbreaker",
+      "emoji": "⛓️"
+    },
+    {
+      "min": 50,
+      "label": "Lantern",
+      "emoji": "🏮"
+    },
+    {
+      "min": 120,
+      "label": "Shieldbearer",
+      "emoji": "🛡️"
+    },
+    {
+      "min": 220,
+      "label": "Beacon",
+      "emoji": "🔥"
+    },
+    {
+      "min": 320,
+      "label": "Guardian of the Innocent",
+      "emoji": "🕊️"
+    }
+  ],
+  "milestones": [
+    {
+      "freed": 10,
+      "solars": 5000
+    },
+    {
+      "freed": 25,
+      "solars": 12000
+    },
+    {
+      "freed": 50,
+      "solars": 25000,
+      "gems": 2
+    },
+    {
+      "freed": 100,
+      "solars": 50000,
+      "gems": 5
+    },
+    {
+      "freed": 200,
+      "solars": 100000,
+      "gems": 10
+    },
+    {
+      "freed": 300,
+      "solars": 200000,
+      "gems": 25
+    }
+  ]
+}

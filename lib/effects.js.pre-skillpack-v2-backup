@@ -1,0 +1,531 @@
+/**
+ * effects.js — shared status-effect engine.
+ *
+ * Target-agnostic: every function takes a plain entity object (player or
+ * monster) and reads/mutates its `activeEffects` array. Nothing here assumes
+ * a combat loop exists — the engine is intentionally decoupled.
+ *
+ * activeEffects entry shape:
+ * {
+ *   type:      string,        // one of the 10 effect types below
+ *   remaining: number,        // ticks/turns remaining
+ *   value:     number,        // magnitude (heal amount, dmg/tick, shield pool, stat delta)
+ *   meta:      object | null, // effect-specific extra data
+ *   sourceId:  string | null, // itemId or skillId that applied it
+ * }
+ *
+ * Effect types:
+ *   heal       — instant; no activeEffects entry
+ *   regen      — sustained heal per tick
+ *   burn       — damage over time (fire / physical)
+ *   poison     — damage over time (distinct from burn for cleanse/resist)
+ *   freeze     — hard CC; entity cannot act while active
+ *   stun       — hard CC; single-turn skip
+ *   shield     — damage-absorption pool; drained by absorbDamage()
+ *   weaken     — stat debuff; read via getEffectiveStat(), never mutates entity.stats
+ *   strengthen — stat buff; inverse of weaken, read via getEffectiveStat()
+ *   blind      — accuracy CC; combat loop checks hasEffect(entity, 'blind')
+ *                and applies 70% hit-chance penalty. No per-tick mutation.
+ *   tear       — percentage-of-maxHp damage over time (Season 1, Urahara's
+ *                Tear/Reshape — spec §13.2). Deliberately NOT the same type
+ *                as 'poison': it is percentage-based (value is a 0-1 fraction
+ *                of maxHp, not a flat amount) and is exempt from cure's
+ *                default NEGATIVE_TYPES strip list below, so ordinary
+ *                cleanse/cure effects do not accidentally remove it — only
+ *                an explicit { type: 'cure', targets: ['tear'] } (e.g.
+ *                Severing Elixir) can. This activeEffects entry is the
+ *                normal-duration PvE form only; the PvP "permanent until
+ *                cured" form is a *separate* mechanism
+ *                (player.permanentSever, see lib/character-abilities.js)
+ *                because pvp.js's pvpConclude() wipes activeEffects on both
+ *                players at the end of every duel — a permanent debuff has
+ *                to live outside that array to survive a duel ending.
+ *
+ * NOTE on health_potion effect shape { type: 'heal', stat: 'hp', amount: 50 }:
+ *   Handled correctly by applyEffect(). No item schema change needed.
+ *
+ * NOTE on strengthen (battle_cry):
+ *   The skill runner computes Math.round(player.stats[stat] * multiplier) and
+ *   passes it as `value` to addStatusEffect — this file stores and reads the
+ *   pre-computed flat delta. Does not stack: a second application refreshes
+ *   duration and replaces value if the new value is larger; otherwise ignored.
+ */
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+
+const MAX_STAT = { hp: 'maxHp', mp: 'maxMp' }
+
+function clampToMax(entity, stat, value) {
+  const maxKey = MAX_STAT[stat]
+  const max    = maxKey ? (entity[maxKey] ?? value) : Infinity
+  return Math.min(value, max)
+}
+
+function floorAtZero(value) {
+  return Math.max(0, value)
+}
+
+// ── Instant effects ────────────────────────────────────────────────────────
+
+const INSTANT_HANDLERS = {
+  /**
+   * heal — instant stat restore.
+   * effectDef: { type: 'heal', stat: 'hp'|'mp', amount: number }
+   */
+  heal(entity, effectDef) {
+    const { stat, amount } = effectDef
+    if (stat === 'stamina') {
+      entity.stamina = entity.stamina ?? { current: 0, max: 30 }
+      const before = entity.stamina.current
+      entity.stamina.current = Math.min(before + amount, entity.stamina.max)
+      return `⚡ Stamina: ${before} → ${entity.stamina.current} / ${entity.stamina.max}`
+    }
+    const maxKey = MAX_STAT[stat]
+    const before = entity[stat] ?? 0
+    const max    = entity[maxKey] ?? before
+    const after  = Math.min(before + amount, max)
+    entity[stat] = after
+    const emoji  = stat === 'hp' ? '❤️' : '💙'
+    return `${emoji} ${stat.toUpperCase()}: ${before} → ${after} / ${max}`
+  },
+
+  /**
+   * cure — removes negative status effects.
+   * effectDef: { type: 'cure', targets: string[] | 'all' }
+   *   targets: array of effect types to strip (e.g. ['poison']), or the
+   *   string 'all' to strip every negative (non-buff) effect at once.
+   */
+  cure(entity, effectDef) {
+    entity.activeEffects = entity.activeEffects ?? []
+    // 'tear' intentionally excluded from the default NEGATIVE_TYPES strip
+    // list — see the 'tear' entry in the file-level doc comment above. A
+    // cure item must explicitly name targets: ['tear'] (or list it inside
+    // an explicit array) to remove it; targets: 'all' will NOT touch it.
+    const NEGATIVE_TYPES = ['burn', 'poison', 'freeze', 'stun', 'blind', 'weaken', 'frostlock']
+    const targets = effectDef.targets === 'all' ? NEGATIVE_TYPES : (effectDef.targets ?? [])
+
+    const before = entity.activeEffects.length
+    entity.activeEffects = entity.activeEffects.filter((e) => !targets.includes(e.type))
+    const removed = before - entity.activeEffects.length
+
+    if (removed === 0) return `✨ No matching ailments to cure.`
+    return `✨ Cured *${removed}* negative effect${removed !== 1 ? 's' : ''}!`
+  },
+}
+
+// ── Duration-based effect initializers ────────────────────────────────────
+
+const DURATION_INITIALIZERS = {
+  /**
+   * regen — sustained heal per tick.
+   * effectDef: { type: 'regen', stat: 'hp'|'mp', amount: number, duration: number }
+   */
+  regen(entity, effectDef) {
+    entity.activeEffects = entity.activeEffects ?? []
+    entity.activeEffects.push({
+      type:      'regen',
+      remaining: effectDef.duration,
+      value:     effectDef.amount,
+      meta:      { stat: effectDef.stat },
+      sourceId:  effectDef.sourceId ?? null,
+    })
+  },
+
+  /**
+   * burn — damage over time (fire/physical).
+   * effectDef: { type: 'burn', amount: number, duration: number }
+   */
+  burn(entity, effectDef) {
+    entity.activeEffects = entity.activeEffects ?? []
+    entity.activeEffects.push({
+      type:      'burn',
+      remaining: effectDef.duration,
+      value:     effectDef.amount,
+      meta:      null,
+      sourceId:  effectDef.sourceId ?? null,
+    })
+  },
+
+  /**
+   * poison — damage over time (tracked separately from burn).
+   * effectDef: { type: 'poison', amount: number, duration: number }
+   */
+  poison(entity, effectDef) {
+    entity.activeEffects = entity.activeEffects ?? []
+    entity.activeEffects.push({
+      type:      'poison',
+      remaining: effectDef.duration,
+      value:     effectDef.amount,
+      meta:      null,
+      sourceId:  effectDef.sourceId ?? null,
+    })
+  },
+
+  /**
+   * freeze — hard CC; entity cannot act.
+   * effectDef: { type: 'freeze', duration: number }
+   */
+  freeze(entity, effectDef) {
+    entity.activeEffects = entity.activeEffects ?? []
+    entity.activeEffects.push({
+      type:      'freeze',
+      remaining: effectDef.duration,
+      value:     0,
+      meta:      null,
+      sourceId:  effectDef.sourceId ?? null,
+    })
+  },
+
+  /**
+   * stun — hard CC; conventionally duration: 1.
+   * effectDef: { type: 'stun', duration: number }
+   */
+  stun(entity, effectDef) {
+    entity.activeEffects = entity.activeEffects ?? []
+    entity.activeEffects.push({
+      type:      'stun',
+      remaining: effectDef.duration,
+      value:     0,
+      meta:      null,
+      sourceId:  effectDef.sourceId ?? null,
+    })
+  },
+
+  /**
+   * frostlock — soft CC (Miyashi's Frostbind). Unlike freeze/stun, the
+   * entity does NOT skip its turn — it can still act, but attack.js/pvp.js
+   * must force that action down to a basic attack (no skills, no items, no
+   * character/named abilities) for as long as this is active. See
+   * hasEffect(entity, 'frostlock') at the action-resolution call site.
+   * effectDef: { type: 'frostlock', duration: number }
+   */
+  frostlock(entity, effectDef) {
+    entity.activeEffects = entity.activeEffects ?? []
+    entity.activeEffects.push({
+      type:      'frostlock',
+      remaining: effectDef.duration,
+      value:     0,
+      meta:      null,
+      sourceId:  effectDef.sourceId ?? null,
+    })
+  },
+
+  /**
+   * shield — damage-absorption pool.
+   * effectDef: { type: 'shield', amount: number, duration: number }
+   */
+  shield(entity, effectDef) {
+    entity.activeEffects = entity.activeEffects ?? []
+    entity.activeEffects.push({
+      type:      'shield',
+      remaining: effectDef.duration,
+      value:     effectDef.amount,
+      meta:      null,
+      sourceId:  effectDef.sourceId ?? null,
+    })
+  },
+
+  /**
+   * weaken — stat debuff. Read lazily via getEffectiveStat().
+   * effectDef: { type: 'weaken', stat: string, value: number, duration: number }
+   */
+  weaken(entity, effectDef) {
+    entity.activeEffects = entity.activeEffects ?? []
+    entity.activeEffects.push({
+      type:      'weaken',
+      remaining: effectDef.duration,
+      value:     effectDef.value,
+      meta:      { stat: effectDef.stat },
+      sourceId:  effectDef.sourceId ?? null,
+    })
+  },
+
+  /**
+   * strengthen — stat buff; inverse of weaken. Read lazily via getEffectiveStat().
+   * Does NOT mutate entity.stats — value is added lazily on read.
+   * Does NOT stack: a second application on the same stat replaces the entry
+   * if the new value is larger, otherwise refreshes duration only.
+   *
+   * The skill runner pre-computes the flat delta:
+   *   value = Math.round(entity.stats[stat] * multiplier)
+   * and passes it here as effectDef.value.
+   *
+   * effectDef: { type: 'strengthen', stat: string, value: number, duration: number }
+   */
+  strengthen(entity, effectDef) {
+    entity.activeEffects = entity.activeEffects ?? []
+
+    // Find existing strengthen on the same stat
+    const existing = entity.activeEffects.find(
+      (e) => e.type === 'strengthen' && e.meta?.stat === effectDef.stat,
+    )
+
+    if (existing) {
+      // Refresh duration; replace value only if the new buff is stronger
+      existing.remaining = Math.max(existing.remaining, effectDef.duration)
+      if (effectDef.value > existing.value) existing.value = effectDef.value
+    } else {
+      entity.activeEffects.push({
+        type:      'strengthen',
+        remaining: effectDef.duration,
+        value:     effectDef.value,
+        meta:      { stat: effectDef.stat },
+        sourceId:  effectDef.sourceId ?? null,
+      })
+    }
+  },
+
+  /**
+   * blind — accuracy CC.
+   * While active, hasEffect(entity, 'blind') returns true and the combat
+   * loop applies a 70% hit-chance penalty. No per-tick stat mutation.
+   * effectDef: { type: 'blind', duration: number }
+   */
+  blind(entity, effectDef) {
+    entity.activeEffects = entity.activeEffects ?? []
+    entity.activeEffects.push({
+      type:      'blind',
+      remaining: effectDef.duration,
+      value:     0,
+      meta:      null,
+      sourceId:  effectDef.sourceId ?? null,
+    })
+  },
+
+  /**
+   * tear — percentage-of-maxHp damage over time (Season 1, Urahara).
+   * effectDef: { type: 'tear', pctPerTick: number, duration: number }
+   *   pctPerTick is a 0-1 fraction of maxHp (e.g. 0.20 for the in-battle
+   *   20%/tick rate from spec §13.2). Stored as `value` for TICK_PROCESSORS
+   *   to read directly against entity.maxHp each tick, rather than
+   *   pre-computing a flat amount at apply time — keeps the tick accurate
+   *   even if maxHp changes mid-duration (e.g. a buff/debuff lands between
+   *   ticks).
+   */
+  tear(entity, effectDef) {
+    entity.activeEffects = entity.activeEffects ?? []
+    entity.activeEffects.push({
+      type:      'tear',
+      remaining: effectDef.duration,
+      value:     effectDef.pctPerTick,
+      meta:      null,
+      sourceId:  effectDef.sourceId ?? 'tear_reshape',
+    })
+  },
+}
+
+// ── Tick processors ────────────────────────────────────────────────────────
+
+const TICK_PROCESSORS = {
+  regen(entity, entry) {
+    const stat   = entry.meta?.stat ?? 'hp'
+    const before = entity[stat] ?? 0
+    const after  = clampToMax(entity, stat, before + entry.value)
+    entity[stat] = after
+    const emoji  = stat === 'hp' ? '💚' : '💙'
+    return `${emoji} Regen: ${stat.toUpperCase()} ${before} → ${after}`
+  },
+
+  burn(entity, entry) {
+    const before = entity.hp ?? 0
+    const after  = floorAtZero(before - entry.value)
+    entity.hp    = after
+    return `🔥 Burn: ${entry.value} damage (HP: ${before} → ${after})`
+  },
+
+  poison(entity, entry) {
+    const before = entity.hp ?? 0
+    const after  = floorAtZero(before - entry.value)
+    entity.hp    = after
+    return `🟢 Poison: ${entry.value} damage (HP: ${before} → ${after})`
+  },
+
+  tear(entity, entry) {
+    const before = entity.hp ?? 0
+    const maxHp  = entity.maxHp ?? before
+    const dmg    = Math.max(1, Math.round(maxHp * (entry.value ?? 0)))
+    const after  = floorAtZero(before - dmg)
+    entity.hp    = after
+    return `🩸 Tear: ${dmg} damage (${Math.round((entry.value ?? 0) * 100)}% of max HP) (HP: ${before} → ${after})`
+  },
+
+  freeze(_entity, _entry) {
+    return `❄️ Frozen: cannot act.`
+  },
+
+  stun(_entity, _entry) {
+    return `💫 Stunned: cannot act.`
+  },
+
+  // Shield: duration ticks down but value only drains via absorbDamage()
+  shield(_entity, _entry) {
+    return null
+  },
+
+  // Weaken: duration ticks down; stat penalty read lazily, no mutation
+  weaken(_entity, entry) {
+    const stat = entry.meta?.stat ?? '?'
+    return `⬇️ Weaken (${stat}): −${entry.value} for ${entry.remaining - 1} more turn(s).`
+  },
+
+  // Strengthen: duration ticks down; stat bonus read lazily, no mutation
+  strengthen(_entity, entry) {
+    const stat = entry.meta?.stat ?? '?'
+    return `⬆️ Strengthen (${stat}): +${entry.value} for ${entry.remaining - 1} more turn(s).`
+  },
+
+  // Blind: no per-tick mutation, just report presence
+  blind(_entity, _entry) {
+    return `🌑 Blinded: hit chance severely reduced.`
+  },
+}
+
+// ── Public API ─────────────────────────────────────────────────────────────
+
+/**
+ * applyEffect(entity, effectDef) → string
+ *
+ * Handles instant effects (currently: heal).
+ * Mutates entity in place, returns a human-readable result line.
+ * Throws for unknown or non-instant effect types.
+ */
+export function applyEffect(entity, effectDef) {
+  const handler = INSTANT_HANDLERS[effectDef.type]
+  if (!handler) {
+    throw new Error(
+      `applyEffect: "${effectDef.type}" is not an instant effect. ` +
+      `Use addStatusEffect() for duration-based effects.`,
+    )
+  }
+  return handler(entity, effectDef)
+}
+
+/**
+ * addStatusEffect(entity, effectDef) → void
+ *
+ * Pushes a duration-based effect entry onto entity.activeEffects.
+ * Throws for unknown effect types or instant-only types (e.g. heal).
+ */
+export function addStatusEffect(entity, effectDef) {
+  const initializer = DURATION_INITIALIZERS[effectDef.type]
+  if (!initializer) {
+    throw new Error(
+      `addStatusEffect: unknown or non-duration effect type "${effectDef.type}".`,
+    )
+  }
+  initializer(entity, effectDef)
+}
+
+/**
+ * tickEffects(entity) → string[]
+ *
+ * Call once per turn/tick. Processes all active effects:
+ *  - Applies per-tick mutations (regen heal, burn/poison damage, etc.)
+ *  - Decrements `remaining` on each entry
+ *  - Removes entries whose `remaining` reaches 0
+ * Returns an array of human-readable result lines.
+ */
+export function tickEffects(entity) {
+  entity.activeEffects = entity.activeEffects ?? []
+  const lines = []
+
+  for (const entry of entity.activeEffects) {
+    const processor = TICK_PROCESSORS[entry.type]
+    if (processor) {
+      const line = processor(entity, entry)
+      if (line) lines.push(line)
+    }
+    entry.remaining -= 1
+  }
+
+  // Remove expired effects
+  entity.activeEffects = entity.activeEffects.filter((e) => e.remaining > 0)
+
+  return lines
+}
+
+/**
+ * hasEffect(entity, type) → boolean
+ *
+ * Returns true if the entity currently has at least one active effect of the
+ * given type. Used by the combat loop to check CC states.
+ */
+export function hasEffect(entity, type) {
+  return (entity.activeEffects ?? []).some((e) => e.type === type && e.remaining > 0)
+}
+
+/**
+ * absorbDamage(entity, incomingDamage) → number
+ *
+ * Drains active shield pool(s) before damage reaches hp.
+ * Returns remaining damage after all shields are exhausted.
+ */
+export function absorbDamage(entity, incomingDamage) {
+  entity.activeEffects = entity.activeEffects ?? []
+  let remaining = incomingDamage
+
+  for (const entry of entity.activeEffects) {
+    if (entry.type !== 'shield' || remaining <= 0) continue
+    const absorbed = Math.min(entry.value, remaining)
+    entry.value   -= absorbed
+    remaining     -= absorbed
+  }
+
+  // Remove fully-depleted shields
+  entity.activeEffects = entity.activeEffects.filter(
+    (e) => e.type !== 'shield' || e.value > 0,
+  )
+
+  return remaining
+}
+
+/**
+ * getEffectiveStat(entity, statKey) → number
+ *
+ * Returns the entity's base stat after applying all active weaken and
+ * strengthen effects targeting that stat.
+ * Does NOT mutate entity.stats — both modifiers are lazy read-time only.
+ */
+export function getEffectiveStat(entity, statKey) {
+  const base = entity.stats?.[statKey] ?? entity[statKey] ?? 0
+
+  const effects = entity.activeEffects ?? []
+
+  const penalty = effects
+    .filter((e) => e.type === 'weaken' && e.meta?.stat === statKey && e.remaining > 0)
+    .reduce((sum, e) => sum + e.value, 0)
+
+  const bonus = effects
+    .filter((e) => e.type === 'strengthen' && e.meta?.stat === statKey && e.remaining > 0)
+    .reduce((sum, e) => sum + e.value, 0)
+
+  return Math.max(0, base + bonus - penalty)
+}
+
+/**
+ * processStatusTurn(entity) → { stunned: boolean, frozen: boolean, msg: string|null }
+ *
+ * Convenience wrapper used at the start of a player's turn (before they act):
+ *  - Runs tickEffects() (DoT damage, regen, duration countdown, expiry)
+ *  - Reports whether the entity is still stunned/frozen *after* the tick,
+ *    i.e. whether they're locked out of acting this turn
+ *  - `msg` is a single human-readable line summarizing the tick, suitable
+ *    for `reply()`-ing directly when stunned/frozen — or null if nothing
+ *    happened and the entity is free to act.
+ *
+ * Does not replace tickEffects() for contexts that need every individual
+ * log line (e.g. end-of-turn enemy summaries) — call tickEffects() directly
+ * there instead.
+ */
+export function processStatusTurn(entity) {
+  const lines   = tickEffects(entity)
+  const stunned = hasEffect(entity, 'stun')
+  const frozen  = hasEffect(entity, 'freeze')
+
+  let msg = null
+  if (lines.length) msg = lines.join('\n')
+  if (stunned && !msg) msg = `💫 Stunned — cannot act this turn.`
+  if (frozen  && !msg) msg = `❄️ Frozen — cannot act this turn.`
+
+  return { stunned, frozen, msg }
+}

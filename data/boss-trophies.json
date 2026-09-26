@@ -1,0 +1,2063 @@
+[
+  {
+    "id": "demon_slayer_fragment",
+    "name": "Demon Slayer Fragment",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Asta was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "asta"
+  },
+  {
+    "id": "anti_magic_shard",
+    "name": "Anti Magic Shard",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Asta was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "asta"
+  },
+  {
+    "id": "black_clover_grimoire_page",
+    "name": "Black Clover Grimoire Page",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Asta was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "asta"
+  },
+  {
+    "id": "liebe_devil_core",
+    "name": "Liebe Devil Core",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Asta was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "asta"
+  },
+  {
+    "id": "five_leaf_clover_dust",
+    "name": "Five Leaf Clover Dust",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Asta was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "asta"
+  },
+  {
+    "id": "star_platinum_fist_fragment",
+    "name": "Star Platinum Fist Fragment",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Jotaro Kujo was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "jotaro_kujo"
+  },
+  {
+    "id": "timestop_residue",
+    "name": "Timestop Residue",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Jotaro Kujo was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "jotaro_kujo"
+  },
+  {
+    "id": "star_finger_shard",
+    "name": "Star Finger Shard",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Jotaro Kujo was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "jotaro_kujo"
+  },
+  {
+    "id": "jotaro_hat_button",
+    "name": "Jotaro Hat Button",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Jotaro Kujo was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "jotaro_kujo"
+  },
+  {
+    "id": "ora_echo_stone",
+    "name": "Ora Echo Stone",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Jotaro Kujo was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "jotaro_kujo"
+  },
+  {
+    "id": "one_for_all_fragment",
+    "name": "One For All Fragment",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Izuku Midoriya (Deku) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "deku_mha"
+  },
+  {
+    "id": "blackwhip_tendril",
+    "name": "Blackwhip Tendril",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Izuku Midoriya (Deku) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "deku_mha"
+  },
+  {
+    "id": "fa_jin_kinetic_shard",
+    "name": "Fa Jin Kinetic Shard",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Izuku Midoriya (Deku) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "deku_mha"
+  },
+  {
+    "id": "plus_ultra_rune",
+    "name": "Plus Ultra Rune",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Izuku Midoriya (Deku) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "deku_mha"
+  },
+  {
+    "id": "symbol_of_peace_badge",
+    "name": "Symbol Of Peace Badge",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Izuku Midoriya (Deku) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "deku_mha"
+  },
+  {
+    "id": "saiyan_pride_shard",
+    "name": "Saiyan Pride Shard",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Vegeta was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "vegeta"
+  },
+  {
+    "id": "galick_gun_residue",
+    "name": "Galick Gun Residue",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Vegeta was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "vegeta"
+  },
+  {
+    "id": "ultra_ego_fragment",
+    "name": "Ultra Ego Fragment",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Vegeta was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "vegeta"
+  },
+  {
+    "id": "royal_saiyan_crest",
+    "name": "Royal Saiyan Crest",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Vegeta was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "vegeta"
+  },
+  {
+    "id": "hakai_touch_stone",
+    "name": "Hakai Touch Stone",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Vegeta was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "vegeta"
+  },
+  {
+    "id": "gura_gura_shard",
+    "name": "Gura Gura Shard",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Whitebeard was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "whitebeard"
+  },
+  {
+    "id": "whitebeard_bisento_fragment",
+    "name": "Whitebeard Bisento Fragment",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Whitebeard was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "whitebeard"
+  },
+  {
+    "id": "quake_crystal",
+    "name": "Quake Crystal",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Whitebeard was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "whitebeard"
+  },
+  {
+    "id": "world_strongest_mark",
+    "name": "World Strongest Mark",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Whitebeard was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "whitebeard"
+  },
+  {
+    "id": "newgate_crest",
+    "name": "Newgate Crest",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Whitebeard was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "whitebeard"
+  },
+  {
+    "id": "chidori_lightning_shard",
+    "name": "Chidori Lightning Shard",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Sasuke Uchiha was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sasuke_uchiha"
+  },
+  {
+    "id": "amaterasu_cinder",
+    "name": "Amaterasu Cinder",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Sasuke Uchiha was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sasuke_uchiha"
+  },
+  {
+    "id": "rinnegan_sliver",
+    "name": "Rinnegan Sliver",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Sasuke Uchiha was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sasuke_uchiha"
+  },
+  {
+    "id": "susanoo_crystal_fragment",
+    "name": "Susanoo Crystal Fragment",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Sasuke Uchiha was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sasuke_uchiha"
+  },
+  {
+    "id": "uchiha_hawk_feather",
+    "name": "Uchiha Hawk Feather",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Sasuke Uchiha was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sasuke_uchiha"
+  },
+  {
+    "id": "thousand_year_grimoire_shard",
+    "name": "Thousand Year Grimoire Shard",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Frieren was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "frieren"
+  },
+  {
+    "id": "zoltraak_crystal",
+    "name": "Zoltraak Crystal",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Frieren was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "frieren"
+  },
+  {
+    "id": "elf_flower_rune",
+    "name": "Elf Flower Rune",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Frieren was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "frieren"
+  },
+  {
+    "id": "spell_analysis_stone",
+    "name": "Spell Analysis Stone",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Frieren was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "frieren"
+  },
+  {
+    "id": "frieren_herb_vial",
+    "name": "Frieren Herb Vial",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Frieren was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "frieren"
+  },
+  {
+    "id": "wizard_king_grimoire_shard",
+    "name": "Wizard King Grimoire Shard",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Julius Novachrono was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "julius_novachrono"
+  },
+  {
+    "id": "chrono_stasis_crystal",
+    "name": "Chrono Stasis Crystal",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Julius Novachrono was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "julius_novachrono"
+  },
+  {
+    "id": "time_arrow_fragment",
+    "name": "Time Arrow Fragment",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Julius Novachrono was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "julius_novachrono"
+  },
+  {
+    "id": "stored_time_rune",
+    "name": "Stored Time Rune",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Julius Novachrono was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "julius_novachrono"
+  },
+  {
+    "id": "temporal_crown_piece",
+    "name": "Temporal Crown Piece",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 180,
+    "description": "A trophy fragment left behind after Julius Novachrono was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "julius_novachrono"
+  },
+  {
+    "id": "the_world_fragment",
+    "name": "The World Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Dio Brando was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "dio_brando"
+  },
+  {
+    "id": "dio_knives",
+    "name": "Dio Knives",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Dio Brando was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "dio_brando"
+  },
+  {
+    "id": "vampiric_eye_stone",
+    "name": "Vampiric Eye Stone",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Dio Brando was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "dio_brando"
+  },
+  {
+    "id": "brando_crest",
+    "name": "Brando Crest",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Dio Brando was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "dio_brando"
+  },
+  {
+    "id": "kamusari_echo",
+    "name": "Kamusari Echo",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Shanks was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "shanks"
+  },
+  {
+    "id": "red_hair_flag_fragment",
+    "name": "Red Hair Flag Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Shanks was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "shanks"
+  },
+  {
+    "id": "conquerors_haki_shard",
+    "name": "Conquerors Haki Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Shanks was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "shanks"
+  },
+  {
+    "id": "roger_crew_mark",
+    "name": "Roger Crew Mark",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Shanks was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "shanks"
+  },
+  {
+    "id": "sake_cup_rune",
+    "name": "Sake Cup Rune",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Shanks was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "shanks"
+  },
+  {
+    "id": "tensa_zangetsu_fragment",
+    "name": "Tensa Zangetsu Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Ichigo Kurosaki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "ichigo_kurosaki"
+  },
+  {
+    "id": "hollow_mask_shard",
+    "name": "Hollow Mask Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Ichigo Kurosaki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "ichigo_kurosaki"
+  },
+  {
+    "id": "getsuga_residue",
+    "name": "Getsuga Residue",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Ichigo Kurosaki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "ichigo_kurosaki"
+  },
+  {
+    "id": "quincy_cross_piece",
+    "name": "Quincy Cross Piece",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Ichigo Kurosaki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "ichigo_kurosaki"
+  },
+  {
+    "id": "hybrid_soul_crystal",
+    "name": "Hybrid Soul Crystal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Ichigo Kurosaki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "ichigo_kurosaki"
+  },
+  {
+    "id": "all_for_one_core",
+    "name": "All For One Core",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after All For One was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "all_for_one"
+  },
+  {
+    "id": "quirk_vessel_shard",
+    "name": "Quirk Vessel Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after All For One was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "all_for_one"
+  },
+  {
+    "id": "recoil_impact_stone",
+    "name": "Recoil Impact Stone",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after All For One was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "all_for_one"
+  },
+  {
+    "id": "warp_gate_fragment",
+    "name": "Warp Gate Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after All For One was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "all_for_one"
+  },
+  {
+    "id": "century_rune",
+    "name": "Century Rune",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after All For One was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "all_for_one"
+  },
+  {
+    "id": "rhitta_solar_shard",
+    "name": "Rhitta Solar Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Escanor was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "escanor"
+  },
+  {
+    "id": "sunshine_fragment",
+    "name": "Sunshine Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Escanor was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "escanor"
+  },
+  {
+    "id": "the_one_crystal",
+    "name": "The One Crystal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Escanor was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "escanor"
+  },
+  {
+    "id": "pride_sin_crest",
+    "name": "Pride Sin Crest",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Escanor was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "escanor"
+  },
+  {
+    "id": "cruel_sun_ember",
+    "name": "Cruel Sun Ember",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Escanor was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "escanor"
+  },
+  {
+    "id": "shadow_monarch_fragment",
+    "name": "Shadow Monarch Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Sung Jin-Woo was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sung_jinwoo"
+  },
+  {
+    "id": "rulers_authority_stone",
+    "name": "Rulers Authority Stone",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Sung Jin-Woo was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sung_jinwoo"
+  },
+  {
+    "id": "shadow_soldier_core",
+    "name": "Shadow Soldier Core",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Sung Jin-Woo was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sung_jinwoo"
+  },
+  {
+    "id": "system_log_rune",
+    "name": "System Log Rune",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Sung Jin-Woo was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sung_jinwoo"
+  },
+  {
+    "id": "arise_sigil",
+    "name": "Arise Sigil",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Sung Jin-Woo was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sung_jinwoo"
+  },
+  {
+    "id": "lostvayne_fragment",
+    "name": "Lostvayne Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Meliodas was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "meliodas"
+  },
+  {
+    "id": "hellblaze_ember",
+    "name": "Hellblaze Ember",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Meliodas was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "meliodas"
+  },
+  {
+    "id": "full_counter_rune",
+    "name": "Full Counter Rune",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Meliodas was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "meliodas"
+  },
+  {
+    "id": "dragon_sin_crest",
+    "name": "Dragon Sin Crest",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Meliodas was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "meliodas"
+  },
+  {
+    "id": "demon_king_splinter",
+    "name": "Demon King Splinter",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Meliodas was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "meliodas"
+  },
+  {
+    "id": "eternal_mangekyo_shard",
+    "name": "Eternal Mangekyo Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Madara Uchiha was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "madara_uchiha"
+  },
+  {
+    "id": "rinnegan_splinter",
+    "name": "Rinnegan Splinter",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Madara Uchiha was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "madara_uchiha"
+  },
+  {
+    "id": "susanoo_crystal",
+    "name": "Susanoo Crystal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Madara Uchiha was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "madara_uchiha"
+  },
+  {
+    "id": "uchiha_crest_fragment",
+    "name": "Uchiha Crest Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Madara Uchiha was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "madara_uchiha"
+  },
+  {
+    "id": "limbo_echo",
+    "name": "Limbo Echo",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Madara Uchiha was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "madara_uchiha"
+  },
+  {
+    "id": "azure_dragon_scale",
+    "name": "Azure Dragon Scale",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Kaido was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "kaido"
+  },
+  {
+    "id": "kanabo_fragment",
+    "name": "Kanabo Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Kaido was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "kaido"
+  },
+  {
+    "id": "blast_breath_crystal",
+    "name": "Blast Breath Crystal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Kaido was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "kaido"
+  },
+  {
+    "id": "beast_king_mark",
+    "name": "Beast King Mark",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Kaido was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "kaido"
+  },
+  {
+    "id": "wano_thunder_rune",
+    "name": "Wano Thunder Rune",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Kaido was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "kaido"
+  },
+  {
+    "id": "kyoka_suigetsu_shard",
+    "name": "Kyoka Suigetsu Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Aizen Sosuke was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "aizen_sosuke"
+  },
+  {
+    "id": "hogyoku_fragment",
+    "name": "Hogyoku Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Aizen Sosuke was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "aizen_sosuke"
+  },
+  {
+    "id": "kurohitsugi_residue",
+    "name": "Kurohitsugi Residue",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Aizen Sosuke was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "aizen_sosuke"
+  },
+  {
+    "id": "transcendence_crystal",
+    "name": "Transcendence Crystal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Aizen Sosuke was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "aizen_sosuke"
+  },
+  {
+    "id": "aizen_captain_badge",
+    "name": "Aizen Captain Badge",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Aizen Sosuke was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "aizen_sosuke"
+  },
+  {
+    "id": "baryon_ember_shard",
+    "name": "Baryon Ember Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Naruto Uzumaki (Baryon Mode) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "naruto_baryon"
+  },
+  {
+    "id": "kurama_chakra_crystal",
+    "name": "Kurama Chakra Crystal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Naruto Uzumaki (Baryon Mode) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "naruto_baryon"
+  },
+  {
+    "id": "nine_tails_remnant",
+    "name": "Nine Tails Remnant",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Naruto Uzumaki (Baryon Mode) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "naruto_baryon"
+  },
+  {
+    "id": "lifespan_stone",
+    "name": "Lifespan Stone",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Naruto Uzumaki (Baryon Mode) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "naruto_baryon"
+  },
+  {
+    "id": "burning_rasengan_core",
+    "name": "Burning Rasengan Core",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Naruto Uzumaki (Baryon Mode) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "naruto_baryon"
+  },
+  {
+    "id": "gear5_white_hair_strand",
+    "name": "Gear5 White Hair Strand",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Monkey D. Luffy (Gear 5) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "luffy_gear5"
+  },
+  {
+    "id": "nika_sun_shard",
+    "name": "Nika Sun Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Monkey D. Luffy (Gear 5) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "luffy_gear5"
+  },
+  {
+    "id": "rubber_reality_fragment",
+    "name": "Rubber Reality Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Monkey D. Luffy (Gear 5) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "luffy_gear5"
+  },
+  {
+    "id": "gomu_gomu_residue",
+    "name": "Gomu Gomu Residue",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Monkey D. Luffy (Gear 5) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "luffy_gear5"
+  },
+  {
+    "id": "joy_boy_rune",
+    "name": "Joy Boy Rune",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A trophy fragment left behind after Monkey D. Luffy (Gear 5) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "luffy_gear5"
+  },
+  {
+    "id": "ash_bone_fragment",
+    "name": "Ash Bone Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Kaguya Otsutsuki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "kaguya_otsutsuki"
+  },
+  {
+    "id": "god_tree_shard",
+    "name": "God Tree Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Kaguya Otsutsuki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "kaguya_otsutsuki"
+  },
+  {
+    "id": "rinne_sharingan_sliver",
+    "name": "Rinne Sharingan Sliver",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Kaguya Otsutsuki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "kaguya_otsutsuki"
+  },
+  {
+    "id": "primordial_chakra_crystal",
+    "name": "Primordial Chakra Crystal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Kaguya Otsutsuki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "kaguya_otsutsuki"
+  },
+  {
+    "id": "yomotsu_portal_dust",
+    "name": "Yomotsu Portal Dust",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Kaguya Otsutsuki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "kaguya_otsutsuki"
+  },
+  {
+    "id": "founding_titan_bone",
+    "name": "Founding Titan Bone",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Eren Yeager (Founding Titan) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "eren_founding"
+  },
+  {
+    "id": "path_memory_crystal",
+    "name": "Path Memory Crystal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Eren Yeager (Founding Titan) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "eren_founding"
+  },
+  {
+    "id": "rumbling_echo_stone",
+    "name": "Rumbling Echo Stone",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Eren Yeager (Founding Titan) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "eren_founding"
+  },
+  {
+    "id": "hardening_fragment",
+    "name": "Hardening Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Eren Yeager (Founding Titan) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "eren_founding"
+  },
+  {
+    "id": "yeager_mark",
+    "name": "Yeager Mark",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Eren Yeager (Founding Titan) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "eren_founding"
+  },
+  {
+    "id": "adaptation_wheel_shard",
+    "name": "Adaptation Wheel Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Mahoraga was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "mahoraga_jjk"
+  },
+  {
+    "id": "ten_shadows_fragment",
+    "name": "Ten Shadows Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Mahoraga was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "mahoraga_jjk"
+  },
+  {
+    "id": "shikigami_core",
+    "name": "Shikigami Core",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Mahoraga was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "mahoraga_jjk"
+  },
+  {
+    "id": "divine_general_feather",
+    "name": "Divine General Feather",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Mahoraga was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "mahoraga_jjk"
+  },
+  {
+    "id": "eight_handle_splinter",
+    "name": "Eight Handle Splinter",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Mahoraga was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "mahoraga_jjk"
+  },
+  {
+    "id": "sukunahikona_fragment",
+    "name": "Sukunahikona Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Isshiki Otsutsuki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "isshiki_otsutsuki"
+  },
+  {
+    "id": "daikokuten_cube",
+    "name": "Daikokuten Cube",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Isshiki Otsutsuki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "isshiki_otsutsuki"
+  },
+  {
+    "id": "otsutsuki_karma_shard",
+    "name": "Otsutsuki Karma Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Isshiki Otsutsuki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "isshiki_otsutsuki"
+  },
+  {
+    "id": "life_force_residue",
+    "name": "Life Force Residue",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Isshiki Otsutsuki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "isshiki_otsutsuki"
+  },
+  {
+    "id": "isshiki_black_rod",
+    "name": "Isshiki Black Rod",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Isshiki Otsutsuki was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "isshiki_otsutsuki"
+  },
+  {
+    "id": "truth_seeking_ball_shard",
+    "name": "Truth Seeking Ball Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Hagoromo Otsutsuki (Sage of Six Paths) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "hagoromo_otsutsuki"
+  },
+  {
+    "id": "six_paths_chakra_crystal",
+    "name": "Six Paths Chakra Crystal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Hagoromo Otsutsuki (Sage of Six Paths) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "hagoromo_otsutsuki"
+  },
+  {
+    "id": "yin_yang_fragment",
+    "name": "Yin Yang Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Hagoromo Otsutsuki (Sage of Six Paths) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "hagoromo_otsutsuki"
+  },
+  {
+    "id": "senjutsu_sage_dust",
+    "name": "Senjutsu Sage Dust",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Hagoromo Otsutsuki (Sage of Six Paths) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "hagoromo_otsutsuki"
+  },
+  {
+    "id": "ten_tails_remnant",
+    "name": "Ten Tails Remnant",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Hagoromo Otsutsuki (Sage of Six Paths) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "hagoromo_otsutsuki"
+  },
+  {
+    "id": "sukuna_finger_shard",
+    "name": "Sukuna Finger Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Ryomen Sukuna was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sukuna_ryomen"
+  },
+  {
+    "id": "cleave_residue",
+    "name": "Cleave Residue",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Ryomen Sukuna was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sukuna_ryomen"
+  },
+  {
+    "id": "malevolent_shrine_dust",
+    "name": "Malevolent Shrine Dust",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Ryomen Sukuna was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sukuna_ryomen"
+  },
+  {
+    "id": "four_eyes_sigil",
+    "name": "Four Eyes Sigil",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Ryomen Sukuna was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sukuna_ryomen"
+  },
+  {
+    "id": "king_of_curses_mark",
+    "name": "King Of Curses Mark",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Ryomen Sukuna was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "sukuna_ryomen"
+  },
+  {
+    "id": "jackal_casing",
+    "name": "Jackal Casing",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Alucard was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "alucard"
+  },
+  {
+    "id": "soul_vial",
+    "name": "Soul Vial",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Alucard was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "alucard"
+  },
+  {
+    "id": "crimson_restraint_seal",
+    "name": "Crimson Restraint Seal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Alucard was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "alucard"
+  },
+  {
+    "id": "level_zero_fragment",
+    "name": "Level Zero Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Alucard was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "alucard"
+  },
+  {
+    "id": "bird_of_hermes_crest",
+    "name": "Bird Of Hermes Crest",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Alucard was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "alucard"
+  },
+  {
+    "id": "ultra_instinct_fragment",
+    "name": "Ultra Instinct Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Goku (Ultra Instinct) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "goku_ultra_instinct"
+  },
+  {
+    "id": "saiyan_god_ki_crystal",
+    "name": "Saiyan God Ki Crystal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Goku (Ultra Instinct) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "goku_ultra_instinct"
+  },
+  {
+    "id": "kamehameha_residue",
+    "name": "Kamehameha Residue",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Goku (Ultra Instinct) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "goku_ultra_instinct"
+  },
+  {
+    "id": "silver_aura_shard",
+    "name": "Silver Aura Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Goku (Ultra Instinct) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "goku_ultra_instinct"
+  },
+  {
+    "id": "battle_joy_rune",
+    "name": "Battle Joy Rune",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Goku (Ultra Instinct) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "goku_ultra_instinct"
+  },
+  {
+    "id": "chimera_ant_king_core",
+    "name": "Chimera Ant King Core",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Meruem was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "meruem"
+  },
+  {
+    "id": "aura_synthesis_residue",
+    "name": "Aura Synthesis Residue",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Meruem was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "meruem"
+  },
+  {
+    "id": "royal_nen_shard",
+    "name": "Royal Nen Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Meruem was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "meruem"
+  },
+  {
+    "id": "scorpion_tail_fragment",
+    "name": "Scorpion Tail Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Meruem was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "meruem"
+  },
+  {
+    "id": "king_rose_dust",
+    "name": "King Rose Dust",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Meruem was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "meruem"
+  },
+  {
+    "id": "six_eyes_fragment",
+    "name": "Six Eyes Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Gojo Satoru was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "gojo_satoru"
+  },
+  {
+    "id": "infinity_shard",
+    "name": "Infinity Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Gojo Satoru was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "gojo_satoru"
+  },
+  {
+    "id": "hollow_purple_residue",
+    "name": "Hollow Purple Residue",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Gojo Satoru was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "gojo_satoru"
+  },
+  {
+    "id": "blue_attraction_stone",
+    "name": "Blue Attraction Stone",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Gojo Satoru was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "gojo_satoru"
+  },
+  {
+    "id": "gojo_blindfold_cloth",
+    "name": "Gojo Blindfold Cloth",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Gojo Satoru was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "gojo_satoru"
+  },
+  {
+    "id": "almighty_eye_shard",
+    "name": "Almighty Eye Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Yhwach was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "yhwach"
+  },
+  {
+    "id": "soul_king_fragment",
+    "name": "Soul King Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Yhwach was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "yhwach"
+  },
+  {
+    "id": "schrift_rune",
+    "name": "Schrift Rune",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Yhwach was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "yhwach"
+  },
+  {
+    "id": "quincy_reishi_crystal",
+    "name": "Quincy Reishi Crystal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Yhwach was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "yhwach"
+  },
+  {
+    "id": "wandenreich_seal",
+    "name": "Wandenreich Seal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 620,
+    "description": "A trophy fragment left behind after Yhwach was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "yhwach"
+  },
+  {
+    "id": "predator_essence",
+    "name": "Predator Essence",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Rimuru Tempest was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "rimuru_tempest"
+  },
+  {
+    "id": "great_sage_fragment",
+    "name": "Great Sage Fragment",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Rimuru Tempest was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "rimuru_tempest"
+  },
+  {
+    "id": "storm_dragon_scale",
+    "name": "Storm Dragon Scale",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Rimuru Tempest was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "rimuru_tempest"
+  },
+  {
+    "id": "slime_core_crystal",
+    "name": "Slime Core Crystal",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Rimuru Tempest was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "rimuru_tempest"
+  },
+  {
+    "id": "tempest_nation_seal",
+    "name": "Tempest Nation Seal",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Rimuru Tempest was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "rimuru_tempest"
+  },
+  {
+    "id": "divine_protection_shard",
+    "name": "Divine Protection Shard",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Reinhard van Astrea was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "reinhard_van_astrea"
+  },
+  {
+    "id": "sword_saint_legacy_fragment",
+    "name": "Sword Saint Legacy Fragment",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Reinhard van Astrea was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "reinhard_van_astrea"
+  },
+  {
+    "id": "dragon_blessing_crystal",
+    "name": "Dragon Blessing Crystal",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Reinhard van Astrea was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "reinhard_van_astrea"
+  },
+  {
+    "id": "vollachia_thunder_rune",
+    "name": "Vollachia Thunder Rune",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Reinhard van Astrea was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "reinhard_van_astrea"
+  },
+  {
+    "id": "reid_bloodline_piece",
+    "name": "Reid Bloodline Piece",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Reinhard van Astrea was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "reinhard_van_astrea"
+  },
+  {
+    "id": "witch_factor_fragment",
+    "name": "Witch Factor Fragment",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Satella was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "satella"
+  },
+  {
+    "id": "envy_shadow_crystal",
+    "name": "Envy Shadow Crystal",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Satella was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "satella"
+  },
+  {
+    "id": "unseen_hand_shard",
+    "name": "Unseen Hand Shard",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Satella was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "satella"
+  },
+  {
+    "id": "half_elf_memory_rune",
+    "name": "Half Elf Memory Rune",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Satella was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "satella"
+  },
+  {
+    "id": "sealed_witch_mark",
+    "name": "Sealed Witch Mark",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Satella was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "satella"
+  },
+  {
+    "id": "requiem_arrow_shard",
+    "name": "Requiem Arrow Shard",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Giorno Giovanna (Gold Experience Requiem) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "giorno_ger"
+  },
+  {
+    "id": "gold_experience_petal",
+    "name": "Gold Experience Petal",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Giorno Giovanna (Gold Experience Requiem) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "giorno_ger"
+  },
+  {
+    "id": "zero_point_crystal",
+    "name": "Zero Point Crystal",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Giorno Giovanna (Gold Experience Requiem) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "giorno_ger"
+  },
+  {
+    "id": "ger_stand_dust",
+    "name": "Ger Stand Dust",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Giorno Giovanna (Gold Experience Requiem) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "giorno_ger"
+  },
+  {
+    "id": "giorno_brooch",
+    "name": "Giorno Brooch",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Giorno Giovanna (Gold Experience Requiem) was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "giorno_ger"
+  },
+  {
+    "id": "infinite_arrow_shard",
+    "name": "Infinite Arrow Shard",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Madoka Kaname was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "madoka_kaname"
+  },
+  {
+    "id": "law_of_cycle_crystal",
+    "name": "Law Of Cycle Crystal",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Madoka Kaname was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "madoka_kaname"
+  },
+  {
+    "id": "wish_fragment",
+    "name": "Wish Fragment",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Madoka Kaname was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "madoka_kaname"
+  },
+  {
+    "id": "timeline_dust",
+    "name": "Timeline Dust",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Madoka Kaname was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "madoka_kaname"
+  },
+  {
+    "id": "madoka_bow_piece",
+    "name": "Madoka Bow Piece",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Madoka Kaname was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "madoka_kaname"
+  },
+  {
+    "id": "demon_king_fang",
+    "name": "Demon King Fang",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Anos Voldigoad was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "anos_voldigoad"
+  },
+  {
+    "id": "venuzdonoa_splinter",
+    "name": "Venuzdonoa Splinter",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Anos Voldigoad was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "anos_voldigoad"
+  },
+  {
+    "id": "ig_alheisys_ember",
+    "name": "Ig Alheisys Ember",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Anos Voldigoad was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "anos_voldigoad"
+  },
+  {
+    "id": "tyranny_signet",
+    "name": "Tyranny Signet",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Anos Voldigoad was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "anos_voldigoad"
+  },
+  {
+    "id": "causality_fragment",
+    "name": "Causality Fragment",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A trophy fragment left behind after Anos Voldigoad was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "anos_voldigoad"
+  },
+  {
+    "id": "wired_fragment",
+    "name": "Wired Fragment",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Lain Iwakura was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "lain_iwakura"
+  },
+  {
+    "id": "protocol_seven_chip",
+    "name": "Protocol Seven Chip",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Lain Iwakura was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "lain_iwakura"
+  },
+  {
+    "id": "memory_crystal",
+    "name": "Memory Crystal",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Lain Iwakura was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "lain_iwakura"
+  },
+  {
+    "id": "god_signal_shard",
+    "name": "God Signal Shard",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Lain Iwakura was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "lain_iwakura"
+  },
+  {
+    "id": "lain_bear_suit_button",
+    "name": "Lain Bear Suit Button",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Lain Iwakura was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "lain_iwakura"
+  },
+  {
+    "id": "gate_shard",
+    "name": "Gate Shard",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Truth was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "truth"
+  },
+  {
+    "id": "equivalent_stone",
+    "name": "Equivalent Stone",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Truth was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "truth"
+  },
+  {
+    "id": "white_room_dust",
+    "name": "White Room Dust",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Truth was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "truth"
+  },
+  {
+    "id": "toll_ledger_page",
+    "name": "Toll Ledger Page",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Truth was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "truth"
+  },
+  {
+    "id": "truth_fragment",
+    "name": "Truth Fragment",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Truth was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "truth"
+  },
+  {
+    "id": "omni_crystal_shard",
+    "name": "Omni Crystal Shard",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 2200,
+    "description": "A trophy fragment left behind after Zeno, the Omni-King was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "zeno"
+  },
+  {
+    "id": "royal_decree_rune",
+    "name": "Royal Decree Rune",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 2200,
+    "description": "A trophy fragment left behind after Zeno, the Omni-King was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "zeno"
+  },
+  {
+    "id": "void_touched_gem",
+    "name": "Void Touched Gem",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 2200,
+    "description": "A trophy fragment left behind after Zeno, the Omni-King was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "zeno"
+  },
+  {
+    "id": "erased_sigil",
+    "name": "Erased Sigil",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 2200,
+    "description": "A trophy fragment left behind after Zeno, the Omni-King was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "zeno"
+  },
+  {
+    "id": "universal_crown_fragment",
+    "name": "Universal Crown Fragment",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 2200,
+    "description": "A trophy fragment left behind after Zeno, the Omni-King was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "zeno"
+  },
+  {
+    "id": "caped_baldy_glove",
+    "name": "Caped Baldy Glove",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Saitama was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "saitama"
+  },
+  {
+    "id": "one_punch_residue",
+    "name": "One Punch Residue",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Saitama was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "saitama"
+  },
+  {
+    "id": "hero_association_badge",
+    "name": "Hero Association Badge",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Saitama was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "saitama"
+  },
+  {
+    "id": "serious_punch_echo_stone",
+    "name": "Serious Punch Echo Stone",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Saitama was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "saitama"
+  },
+  {
+    "id": "boredom_crystal",
+    "name": "Boredom Crystal",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1400,
+    "description": "A trophy fragment left behind after Saitama was defeated. Used in high-tier crafting recipes.",
+    "sourceBoss": "saitama"
+  },
+  {
+    "id": "syclila_mirror_shard",
+    "name": "Syclila's Mirror Shard",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 220,
+    "description": "A sliver of the Empty Mirror, still cool with the reflection of whoever last struck it. Left behind when Syclila fell.",
+    "sourceBoss": "syclila"
+  },
+  {
+    "id": "silvered_glass_fragment",
+    "name": "Silvered Glass Fragment",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 220,
+    "description": "A fragment of silvered glass from Syclila's veil, showing a face that is never quite your own.",
+    "sourceBoss": "syclila"
+  },
+  {
+    "id": "reflection_dust",
+    "name": "Reflection Dust",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 220,
+    "description": "Fine dust that scatters light into a dozen false images. Gathered from Syclila's shattered mirror.",
+    "sourceBoss": "syclila"
+  },
+  {
+    "id": "mirrorkeeper_veil_scrap",
+    "name": "Mirrorkeeper's Veil Scrap",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 220,
+    "description": "A scrap of the veil Syclila wore over the Entry Tower's summit. It reflects torchlight long after the torch is gone.",
+    "sourceBoss": "syclila"
+  },
+  {
+    "id": "twinned_gaze_stone",
+    "name": "Twinned Gaze Stone",
+    "type": "material",
+    "rarity": "rare",
+    "sellPrice": 220,
+    "description": "A stone with two eyes that watch each other. Prised from Syclila's mirror after her defeat.",
+    "sourceBoss": "syclila"
+  },
+  {
+    "id": "kikaru_afterimage_wisp",
+    "name": "Kikaru's Afterimage Wisp",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A wisp of motion that never quite catches up to itself. All that remains where Kikaru once stood.",
+    "sourceBoss": "kikaru"
+  },
+  {
+    "id": "tempo_shard",
+    "name": "Tempo Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A shard that hums faster the longer you hold it, keeping a rhythm only Kikaru knew.",
+    "sourceBoss": "kikaru"
+  },
+  {
+    "id": "blurred_step_fragment",
+    "name": "Blurred Step Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A fragment of a footstep that landed in three places at once. Recovered after Kikaru was beaten.",
+    "sourceBoss": "kikaru"
+  },
+  {
+    "id": "momentum_crystal",
+    "name": "Momentum Crystal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A crystal that stores the speed of everyone who fought Kikaru and lost.",
+    "sourceBoss": "kikaru"
+  },
+  {
+    "id": "quickened_pulse_stone",
+    "name": "Quickened Pulse Stone",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 380,
+    "description": "A stone that beats a little faster than your heart, echoing Kikaru's endless tempo.",
+    "sourceBoss": "kikaru"
+  },
+  {
+    "id": "celestia_scale_fragment",
+    "name": "Celestia's Scale Fragment",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 600,
+    "description": "A fragment of the golden scales Celestia used to weigh every climber. It still tilts toward the heavier soul.",
+    "sourceBoss": "celestia"
+  },
+  {
+    "id": "verdict_shard",
+    "name": "Verdict Shard",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 600,
+    "description": "A shard humming with a sentence never fully spoken. Left behind when Celestia's scales came to rest.",
+    "sourceBoss": "celestia"
+  },
+  {
+    "id": "halo_dust",
+    "name": "Halo Dust",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 600,
+    "description": "Dust from the ring of light above Celestia's brow, gathered after her final measure.",
+    "sourceBoss": "celestia"
+  },
+  {
+    "id": "heavens_gavel_splinter",
+    "name": "Heaven's Gavel Splinter",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 600,
+    "description": "A splinter of the gavel that ended a thousand climbs. Taken from Celestia after her defeat.",
+    "sourceBoss": "celestia"
+  },
+  {
+    "id": "weighed_soul_crystal",
+    "name": "Weighed Soul Crystal",
+    "type": "material",
+    "rarity": "epic",
+    "sellPrice": 600,
+    "description": "A crystal that shows the exact weight of whoever holds it, as Celestia's scales once did.",
+    "sourceBoss": "celestia"
+  },
+  {
+    "id": "bam_reversed_current_shard",
+    "name": "Bam's Reversed Current Shard",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A shard where the tide runs backward, returning force to its owner. Left behind when Bam's still water finally broke.",
+    "sourceBoss": "bam"
+  },
+  {
+    "id": "tide_core",
+    "name": "Tide Core",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "The calm heart of a wave that never tired. Recovered from Bam after the Astral Tower fell silent.",
+    "sourceBoss": "bam"
+  },
+  {
+    "id": "ignition_ember",
+    "name": "Ignition Ember",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "An ember from the moment Bam's still water caught fire. It stays warm no matter how deep the water.",
+    "sourceBoss": "bam"
+  },
+  {
+    "id": "absorbed_force_crystal",
+    "name": "Absorbed Force Crystal",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A crystal heavy with every blow Bam ever swallowed and gave back. Prised loose after his defeat.",
+    "sourceBoss": "bam"
+  },
+  {
+    "id": "still_water_stone",
+    "name": "Still Water Stone",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 950,
+    "description": "A stone so calm it seems to still the air around it, echoing the quiet Bam kept before he struck.",
+    "sourceBoss": "bam"
+  },
+  {
+    "id": "esteria_first_form_relic",
+    "name": "Esteria's First Form Relic",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1500,
+    "description": "A relic of the empress's gentle mask, the shape she wore to greet those who reached the summit.",
+    "sourceBoss": "esteria"
+  },
+  {
+    "id": "esteria_second_form_core",
+    "name": "Esteria's Second Form Core",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1500,
+    "description": "The cold, immense heart of what stood up when the mask fell. The rarest trophy the towers hold.",
+    "sourceBoss": "esteria"
+  },
+  {
+    "id": "twin_shape_crystal",
+    "name": "Twin Shape Crystal",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1500,
+    "description": "A crystal that holds two forms at once, neither willing to yield to the other, as Esteria did.",
+    "sourceBoss": "esteria"
+  },
+  {
+    "id": "eternal_empress_sigil",
+    "name": "Eternal Empress Sigil",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1500,
+    "description": "The sigil of the last thing the towers were built to keep. Only those who killed Esteria twice have held it.",
+    "sourceBoss": "esteria"
+  },
+  {
+    "id": "formshift_residue",
+    "name": "Formshift Residue",
+    "type": "material",
+    "rarity": "legendary",
+    "sellPrice": 1500,
+    "description": "Residue from the instant one form became another. Left behind when Esteria was finally ended.",
+    "sourceBoss": "esteria"
+  }
+]

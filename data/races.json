@@ -1,0 +1,32 @@
+{
+  "human": {
+    "name": "Human",
+    "description": "Adaptable and ambitious. No racial bonuses or penalties — humans simply make the most of what they have.",
+    "statModifiers": { "str": 0, "agi": 0, "int": 0, "def": 0, "lck": 0 },
+    "passive": "Versatile: gain +5% bonus XP from all sources."
+  },
+  "elf": {
+    "name": "Elf",
+    "description": "Ancient and graceful. Elves are swift of foot and sharp of mind, but lack brute strength and physical endurance.",
+    "statModifiers": { "str": -1, "agi": 3, "int": 2, "def": -1, "lck": 1 },
+    "passive": "Keen Sight: immune to blind effects."
+  },
+  "dwarf": {
+    "name": "Dwarf",
+    "description": "Stout and stubborn. Dwarves are among the hardiest people in the realm, though they move with less grace than most.",
+    "statModifiers": { "str": 2, "agi": -2, "int": 0, "def": 3, "lck": -1 },
+    "passive": "Stone Skin: reduce all physical damage by 5%."
+  },
+  "orc": {
+    "name": "Orc",
+    "description": "Fierce and powerful. Orcs dominate in raw strength and resilience, but their temper costs them wit and fortune.",
+    "statModifiers": { "str": 4, "agi": -1, "int": -2, "def": 1, "lck": -2 },
+    "passive": "Bloodlust: gain +10% damage when HP is below 30%."
+  },
+  "halfling": {
+    "name": "Halfling",
+    "description": "Small, cheerful, and absurdly lucky. Halflings are not built for hard combat, but fortune seems to follow them everywhere.",
+    "statModifiers": { "str": -2, "agi": 2, "int": 1, "def": 0, "lck": 4 },
+    "passive": "Lucky Break: 10% chance to fully dodge a fatal blow and survive with 1 HP."
+  }
+}

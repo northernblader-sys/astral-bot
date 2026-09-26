@@ -1,0 +1,439 @@
+{
+  "num": 18,
+  "id": "the-net-closes",
+  "title": "The Net Closes",
+  "requires": "rebuilding",
+  "beats": [
+    { "type": "line", "text": "The authorities arrive before the wind does." },
+    { "type": "line", "text": "They block the road with two carts and a line of men in blue." },
+    { "type": "line", "text": "The woman in the dark coat stands between them, dry under an umbrella. The Toll Man waits by the first cart with his ledger under his arm." },
+    { "type": "line", "text": "Oliver's got the glider half-folded in the washhouse doorway." },
+    { "type": "line", "text": "\"We could use the river road,\" he says." },
+    { "type": "line", "text": "Ada's route runs behind the observatory. The bridge is past the line of carts." },
+    {
+      "type": "choice",
+      "key": "c18-routes",
+      "text": "Count them with him. There are four ways out of this yard and you have used all of them at some point in three years.",
+      "options": [
+        {
+          "id": "count",
+          "label": "Go through the routes.",
+          "beats": [
+            { "type": "line", "text": "\"The river road's watched,\" you say." },
+            { "type": "line", "text": "\"The roof?\"" },
+            { "type": "line", "text": "\"Too high for the frame to reach from inside.\"" },
+            { "type": "line", "text": "He looks at the narrow lane behind the bakery." },
+            { "type": "line", "text": "A constable steps into it." }
+          ]
+        },
+        {
+          "id": "front",
+          "label": "\"Then we go out of the front, slowly, in front of everybody.\"",
+          "beats": [
+            { "type": "line", "text": "\"They'll take it.\"" },
+            { "type": "line", "text": "\"Not in daylight with the shutters open.\"" },
+            { "type": "line", "text": "\"You can't know that.\"" },
+            { "type": "line", "text": "\"No,\" you say. \"But every other route's got a man standing in it, and I've been reading that woman's face for two years, and she does not like an audience.\"" },
+            { "type": "line", "text": "He looks at the lane behind the bakery anyway." },
+            { "type": "line", "text": "A constable steps into it." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "They have closed every route, Ada would say." },
+    { "type": "line", "text": "You hear her voice with such precision that you turn toward the cap." },
+    { "type": "line", "text": "Oliver puts his hand on your shoulder. \"Monica.\"" },
+    { "type": "line", "text": "\"Don't.\"" },
+    { "type": "line", "text": "\"What?\"" },
+    {
+      "type": "choice",
+      "key": "c18-name",
+      "text": "He said your name the way he has been saying hers for two months.",
+      "options": [
+        {
+          "id": "bringmeback",
+          "label": "\"Don't say my name as if it'll bring me back.\"",
+          "beats": [
+            { "type": "line", "text": "His hand comes off your shoulder." },
+            { "type": "line", "text": "\"That isn't—\"" },
+            { "type": "line", "text": "\"It is. You've been doing it for a fortnight. Ada, Ada, in the doorway, at the bench, to a nail on a wall.\"" },
+            { "type": "line", "text": "\"I know.\"" },
+            { "type": "line", "text": "\"I'm still here, Oliver. Use it on somebody who can answer.\"" },
+            { "type": "line", "text": "\"Monica,\" he says." },
+            { "type": "line", "text": "\"What.\"" },
+            { "type": "line", "text": "\"The lane's closed.\"" },
+            { "type": "line", "text": "\"Then we use the road,\" you say. \"Thank you.\"" }
+          ]
+        },
+        {
+          "id": "im-here",
+          "label": "\"I'm here. Say it as though I'm here.\"",
+          "beats": [
+            { "type": "line", "text": "He looks at you. He hasn't got a word ready." },
+            { "type": "line", "text": "\"Say it again,\" you say." },
+            { "type": "line", "text": "\"Monica.\"" },
+            { "type": "line", "text": "\"Better.\"" },
+            { "type": "line", "text": "\"The lane's closed.\"" },
+            { "type": "line", "text": "\"I know. I wanted the name first.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The woman in the dark coat calls through the doorway." },
+    { "type": "line", "text": "\"Oliver Wright. Surrender the structure and come forward.\"" },
+    { "type": "line", "text": "Oliver folds the wing another inch." },
+    { "type": "line", "text": "\"You have no permit,\" she says." },
+    { "type": "line", "text": "\"You said it was agricultural.\"" },
+    { "type": "line", "text": "\"You lied.\"" },
+    { "type": "line", "text": "\"You believed me for almost a minute.\"" },
+    { "type": "line", "text": "The Toll Man opens his ledger. \"The frame is subject to seizure.\"" },
+    { "type": "line", "text": "\"You've already seized the first one,\" you say." },
+    { "type": "line", "text": "\"This is a separate violation.\"" },
+    { "type": "line", "text": "\"Then it's a separate frame.\"" },
+    { "type": "line", "text": "The woman turns her attention on you. \"You aren't helping.\"" },
+    { "type": "line", "text": "\"That's never stopped me.\"" },
+    { "type": "line", "text": "\"If you obstruct, you'll be detained as well.\"" },
+    { "type": "line", "text": "Oliver's hand finds the back of your chair." },
+    { "type": "line", "text": "\"Don't threaten her,\" he says." },
+    { "type": "line", "text": "\"I am explaining consequences.\"" },
+    { "type": "line", "text": "\"You explain them like you enjoy them.\"" },
+    { "type": "line", "text": "The woman lifts one finger. A constable steps forward." },
+    {
+      "type": "choice",
+      "key": "c18-doorway",
+      "text": "The doorway is four feet wide. Your chair is three feet two.",
+      "options": [
+        {
+          "id": "block",
+          "label": "Put the chair in the doorway.",
+          "beats": [
+            { "type": "line", "text": "You move into the gap and set the brake." },
+            { "type": "line", "text": "\"There,\" you say. \"Now you've a practical obstruction.\"" },
+            { "type": "line", "text": "Two years of being an obstacle, and for once in your life you have chosen the doorway yourself." }
+          ]
+        },
+        {
+          "id": "sideways",
+          "label": "Turn side-on and take up the whole four feet.",
+          "beats": [
+            { "type": "line", "text": "You bring the chair round until it sits across the doorway with a wheel against each post." },
+            { "type": "line", "text": "\"That's obstruction,\" says the woman." },
+            { "type": "line", "text": "\"That's a girl in a doorway,\" you say. \"You'll want to be careful how the next part looks. There are eleven windows on this road.\"" },
+            { "type": "line", "text": "Two years of being an obstacle, and for once in your life you have chosen the doorway yourself, and chosen the angle." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The constable stops less than a yard off." },
+    { "type": "line", "text": "He's young, like the one from the washhouse, but he isn't the same man. His club hangs at his belt. His eyes keep dropping to your leg." },
+    { "type": "line", "text": "\"Move aside,\" he says." },
+    { "type": "line", "text": "\"I can't.\"" },
+    { "type": "line", "text": "\"You can.\"" },
+    { "type": "line", "text": "\"I can move backward. The glider's behind me.\"" },
+    { "type": "line", "text": "He looks past you. \"Then move the glider.\"" },
+    { "type": "line", "text": "\"It hasn't got wheels.\"" },
+    { "type": "line", "text": "Oliver says, \"It's got skids.\"" },
+    { "type": "line", "text": "\"I wasn't asking you.\"" },
+    { "type": "line", "text": "The woman steps forward. \"Monica. This is your final warning.\"" },
+    {
+      "type": "choice",
+      "key": "c18-warning",
+      "text": "It is the third one she has called final.",
+      "options": [
+        {
+          "id": "number",
+          "label": "\"You should number them.\"",
+          "beats": [
+            { "type": "line", "text": "\"You've given me three,\" you say." },
+            { "type": "line", "text": "\"This is the final one.\"" },
+            { "type": "line", "text": "\"You should number them.\"" },
+            { "type": "line", "text": "The Toll Man says, \"She is buying time.\"" },
+            { "type": "line", "text": "\"Yes,\" you say. \"That's what conversations are for.\"" }
+          ]
+        },
+        {
+          "id": "hername",
+          "label": "\"What's your name? You've never once given it.\"",
+          "beats": [
+            { "type": "line", "text": "It stops her for a full second." },
+            { "type": "line", "text": "\"That is not relevant.\"" },
+            { "type": "line", "text": "\"You've my name in a folder. You've his. You had Ada Pike's, spelled wrong. I've been talking to a coat for two years.\"" },
+            { "type": "line", "text": "\"Inspector Harrow,\" she says, and you can hear her regret it before the word's finished." },
+            { "type": "line", "text": "\"Thank you,\" you say. \"Now there are two people in this doorway.\"" },
+            { "type": "line", "text": "The Toll Man says, \"She is buying time.\"" },
+            { "type": "line", "text": "\"Yes,\" you say. \"That's what conversations are for.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The constable reaches for the arm of your chair." },
+    {
+      "type": "choice",
+      "key": "c18-witnesses",
+      "text": "His hand is six inches away. Above the road, forty windows.",
+      "options": [
+        {
+          "id": "shout",
+          "label": "Grip the rims and shout at the street.",
+          "beats": [
+            { "type": "line", "text": "\"Witnesses!\"" },
+            { "type": "line", "text": "Shutters go up along the road. Faces come to the glass." },
+            { "type": "line", "text": "The shopkeeper from the bridge steps out of his door. The newspaper boy stops with a bundle under his arm." },
+            { "type": "line", "text": "The constable takes his hand back." }
+          ]
+        },
+        {
+          "id": "quiet",
+          "label": "Say it quietly, to him, only to him.",
+          "beats": [
+            { "type": "line", "text": "\"You'll have to lift me out,\" you say. \"Both arms. In front of the whole road. And then you'll go home and eat your supper and be the man who lifted a girl out of a chair.\"" },
+            { "type": "line", "text": "His hand stops." },
+            { "type": "line", "text": "\"Take your time,\" you say. \"I've nowhere to be.\"" },
+            { "type": "line", "text": "Behind him, shutters are going up along the road. The faces come to the glass on their own. The shopkeeper from the bridge steps out of his door." },
+            { "type": "line", "text": "The constable takes his hand back, and does not look at his superior when he does it." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The woman comes close enough for you to see the rain gathered on the brim of her hat." },
+    { "type": "line", "text": "\"You think a crowd changes the law.\"" },
+    { "type": "line", "text": "\"A crowd changes what can be denied.\"" },
+    { "type": "line", "text": "\"Oliver is a danger to himself.\"" },
+    { "type": "line", "text": "\"Then take him to a doctor, not a cell.\"" },
+    { "type": "line", "text": "\"He has already caused injury.\"" },
+    { "type": "line", "text": "You look at Ada's cap. It's hanging off the spar behind him." },
+    { "type": "line", "text": "\"You did that,\" you say." },
+    { "type": "line", "text": "The woman's face tightens. \"Careful.\"" },
+    { "type": "line", "text": "\"You sent men into a tunnel after children.\"" },
+    { "type": "line", "text": "\"We responded to a disturbance.\"" },
+    { "type": "line", "text": "\"You arrived before anybody called for help.\"" },
+    { "type": "line", "text": "The Toll Man steps forward. \"Enough.\"" },
+    {
+      "type": "choice",
+      "key": "c18-ledger",
+      "text": "He has carried that ledger past you eleven times in two years and never once opened it where you could see.",
+      "options": [
+        {
+          "id": "read",
+          "label": "\"Read the page about Ada Pike.\"",
+          "beats": [
+            { "type": "line", "text": "He says nothing." },
+            { "type": "line", "text": "\"Read where it says you found her alive.\"" },
+            { "type": "line", "text": "The crowd's grown. The woman watches the faces at the windows." }
+          ]
+        },
+        {
+          "id": "borrowed",
+          "label": "\"You told me once that everything's borrowed. Was she?\"",
+          "beats": [
+            { "type": "line", "text": "The Toll Man doesn't answer." },
+            { "type": "line", "text": "\"You said the district lends and the district collects. You said it to me in the rain outside a scrap yard and I've thought about it every week since.\"" },
+            { "type": "line", "text": "\"Girl—\"" },
+            { "type": "line", "text": "\"She was fifteen. What was the term of the loan?\"" },
+            { "type": "line", "text": "He looks down at the ledger under his arm, and for the first time in two years he looks like a man holding an object rather than a position." },
+            { "type": "line", "text": "The crowd's grown. The woman watches the faces at the windows." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "plea",
+      "text": "You put both hands on the rims.\n\n\"Give us the road. The frame leaves the district tonight. Nobody's hurt. Nobody has to explain why your net caught a dead girl and still can't hold a boy.\"",
+      "stakes": {
+        "chance": 0.45,
+        "onSuccess": "The woman studies the crowd a long moment, then lowers her hand. \"Clear the road,\" she says, and the Toll Man does not argue with her.",
+        "onFail": "The woman's face does not move. \"Take the frame,\" she says, and the district's men close in on the launch site before the glider ever leaves the ground tonight."
+      }
+    },
+    { "type": "line", "text": "But the road hasn't cleared and the road hasn't closed, because there are forty windows open above it and neither of you is the only person in this street any more." },
+    { "type": "line", "text": "That's the only fact left in the road that matters." },
+    { "type": "line", "text": "The woman looks at the Toll Man." },
+    { "type": "line", "text": "He shakes his head." },
+    { "type": "line", "text": "She looks at Oliver. His hands are on the folded wing." },
+    { "type": "line", "text": "He's standing between the frame and the road with no weapon, no permit, and no reason on earth for anybody to believe he can do it." },
+    { "type": "line", "text": "\"You are asking me to authorise an escape,\" she says." },
+    { "type": "line", "text": "\"I'm asking you to stop pretending this is orderly.\"" },
+    { "type": "line", "text": "\"The district has rules.\"" },
+    { "type": "line", "text": "\"Rules didn't save Ada.\"" },
+    { "type": "line", "text": "The crowd shifts. Somebody whispers her name." },
+    { "type": "line", "text": "The woman hears it." },
+    { "type": "line", "text": "The newspaper boy says, \"Everybody knows about the tunnel.\"" },
+    { "type": "line", "text": "The Toll Man turns on him. \"Go home.\"" },
+    { "type": "line", "text": "\"I'm working.\"" },
+    { "type": "line", "text": "\"Then work elsewhere.\"" },
+    {
+      "type": "choice",
+      "key": "c18-boy",
+      "text": "The newspaper boy is about ten. He is standing in the rain with a bundle under his arm and no idea what he has just done.",
+      "options": [
+        {
+          "id": "let",
+          "label": "Let it sit. It's landed.",
+          "beats": [
+            { "type": "line", "text": "Nobody says anything for four seconds." },
+            { "type": "line", "text": "Four seconds is a very long time in a road with forty windows open." },
+            { "type": "line", "text": "The woman shuts her eyes for one of them." }
+          ]
+        },
+        {
+          "id": "usehim",
+          "label": "\"He's working. Ask him what the six papers said.\"",
+          "beats": [
+            { "type": "line", "text": "The boy straightens up. \"Cripple girl crashes orphan boy,\" he says. \"That was two years back. That one sold.\"" },
+            { "type": "line", "text": "\"And this one?\" you ask." },
+            { "type": "line", "text": "He looks at the carts, the umbrella, the line of blue, the chair in the doorway." },
+            { "type": "line", "text": "\"This one'd sell better,\" he says." },
+            { "type": "line", "text": "The Toll Man says, \"Go home,\" again, and it comes out weaker than the first time." },
+            { "type": "line", "text": "The woman shuts her eyes for a second." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "When she opens them she points at the lane past the bakery." },
+    { "type": "line", "text": "\"The road is clear as far as the observatory,\" she says. \"Beyond that you are trespassing on private ground.\"" },
+    { "type": "line", "text": "\"That isn't permission.\"" },
+    { "type": "line", "text": "\"It isn't protection either.\"" },
+    { "type": "line", "text": "Oliver starts to unfold the wing." },
+    { "type": "line", "text": "The constable looks at his superior." },
+    { "type": "line", "text": "She says, \"Let them pass.\"" },
+    { "type": "line", "text": "The glider goes up the lane. Oliver pushes from behind. You steer." },
+    { "type": "line", "text": "The skids scrape the walls and leave pale marks in the soot." },
+    { "type": "line", "text": "The authorities follow at a distance. The woman walks with them. The Toll Man stays by the carts." },
+    { "type": "line", "text": "At the end of the lane the observatory comes up over the roofs. The dome's cracked. Ivy's over the lower stones." },
+    { "type": "line", "text": "Behind it, the ground climbs to a bare ridge." },
+    { "type": "line", "text": "The road isn't marked on any sign." },
+    { "type": "line", "text": "Ada's road." },
+    { "type": "line", "text": "Oliver stops at the foot of the rise." },
+    { "type": "line", "text": "\"We made it,\" he says." },
+    { "type": "line", "text": "\"Not yet.\"" },
+    { "type": "line", "text": "The wind's turned. It comes hard out of the east, pushing cloud over the ridge." },
+    { "type": "line", "text": "Oliver tests the wing. The canvas hauls against the frame." },
+    {
+      "type": "choice",
+      "key": "c18-wind",
+      "text": "This is the wind you told him to wait for and it is not the wind you told him to wait for.",
+      "options": [
+        {
+          "id": "toostrong",
+          "label": "\"It's too strong.\"",
+          "beats": [
+            { "type": "line", "text": "\"It's enough.\"" },
+            { "type": "line", "text": "\"Those are different.\"" },
+            { "type": "line", "text": "\"I know.\"" }
+          ]
+        },
+        {
+          "id": "callit",
+          "label": "\"Then say the number. Out loud. To me.\"",
+          "beats": [
+            { "type": "line", "text": "He wets a finger and holds it up, which is not measurement, which is what people do when they haven't got measurement." },
+            { "type": "line", "text": "\"I can't,\" he says." },
+            { "type": "line", "text": "\"No.\"" },
+            { "type": "line", "text": "\"She could have. She'd have counted the reeds bending.\"" },
+            { "type": "line", "text": "You look down at the pale line of the bridge in the reeds." },
+            { "type": "line", "text": "\"Then count them badly,\" you say, \"and tell me the truth about the answer, and I'll not stop you either way.\"" },
+            { "type": "line", "text": "He counts them badly." },
+            { "type": "line", "text": "\"It's too strong,\" he says. \"It's also the only morning we're going to get.\"" },
+            { "type": "line", "text": "\"Those are different.\"" },
+            { "type": "line", "text": "\"I know.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The woman reaches the observatory gate. \"You have no right to launch from here.\"" },
+    { "type": "line", "text": "\"Neither did the birds.\"" },
+    { "type": "line", "text": "\"The birds are not subject to district law.\"" },
+    { "type": "line", "text": "\"They're lucky.\"" },
+    { "type": "line", "text": "At the ridge the ground drops away toward the western plain." },
+    { "type": "line", "text": "The bridge lies below, a pale line through the reeds. Far past it the hills go under cloud." },
+    { "type": "line", "text": "You brace the chair behind a stone wall. Oliver sets the glider on its skids." },
+    { "type": "line", "text": "The authorities spread out along the path. The woman raises her voice." },
+    { "type": "line", "text": "\"Oliver. If you get into that machine, I'll have you detained.\"" },
+    { "type": "line", "text": "\"After?\"" },
+    { "type": "line", "text": "\"Now.\"" },
+    { "type": "line", "text": "Two constables start up toward him." },
+    { "type": "line", "text": "You roll forward. The front wheel strikes a root and stops dead." },
+    { "type": "line", "text": "Pain goes through your leg as you lurch against the strap." },
+    { "type": "line", "text": "\"Monica,\" Oliver says." },
+    { "type": "line", "text": "\"Keep working.\"" },
+    { "type": "line", "text": "The woman reaches the top. \"Move away from him.\"" },
+    { "type": "line", "text": "You look at the open drop past the wing. \"I'm not near him.\"" },
+    { "type": "line", "text": "\"You are involved.\"" },
+    { "type": "line", "text": "\"Yes.\"" },
+    { "type": "line", "text": "The constables are ten paces off." },
+    { "type": "line", "text": "Oliver checks the shoulder brace. His fingers are shaking." },
+    {
+      "type": "choice",
+      "key": "c18-box",
+      "text": "Ten paces. There is one thing in your lap and about four seconds to use it.",
+      "options": [
+        {
+          "id": "promise",
+          "label": "Hold out the brass box. \"Finish the promise.\"",
+          "beats": [
+            { "type": "line", "text": "He sees the unfinished headpiece in your hand." },
+            { "type": "line", "text": "For the first time all day, he breathes." },
+            { "type": "line", "text": "It's the oldest trick you have. Give him a task. It has worked every single time since he was nine years old." }
+          ]
+        },
+        {
+          "id": "count",
+          "label": "\"Ten paces. Nine. Count them out for me.\"",
+          "beats": [
+            { "type": "line", "text": "\"What?\"" },
+            { "type": "line", "text": "\"Count. Out loud. Nine. Eight.\"" },
+            { "type": "line", "text": "\"Eight,\" he says, and his hands go steady on the brace, because they always do the moment there's a number in the air." },
+            { "type": "line", "text": "\"Seven,\" you say, and put the brass box into his hands. \"Finish the promise.\"" },
+            { "type": "line", "text": "He sees the unfinished headpiece." },
+            { "type": "line", "text": "For the first time all day, he breathes." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He fits the leather band round your head." },
+    { "type": "line", "text": "The brass pieces rest above your temples. They're unfinished, but the hinges hold." },
+    { "type": "line", "text": "A narrow plate crosses your brow. Small lenses sit either side, cloudy with scratches." },
+    { "type": "line", "text": "\"You can't see through those,\" Oliver says." },
+    { "type": "line", "text": "\"Then don't make me wear them.\"" },
+    { "type": "line", "text": "\"The glass isn't clear.\"" },
+    { "type": "line", "text": "\"Neither's the weather.\"" },
+    { "type": "line", "text": "He adjusts the band until it sits without pressing on your skin." },
+    { "type": "line", "text": "The authorities reach the ridge." },
+    { "type": "line", "text": "\"Oliver,\" the woman says." },
+    { "type": "line", "text": "He climbs into the cradle." },
+    { "type": "line", "text": "You take hold of the launch rope." },
+    { "type": "line", "text": "The wind drags the canvas toward the cloud. Ada's cap snaps against the spar." },
+    { "type": "line", "text": "Oliver looks at you." },
+    {
+      "type": "choice",
+      "key": "c18-rope",
+      "text": "\"If it tilts left…\"",
+      "options": [
+        {
+          "id": "letgo",
+          "label": "\"I let go.\"",
+          "beats": [
+            { "type": "line", "text": "\"If it tilts right…\"" },
+            { "type": "line", "text": "\"I let go.\"" },
+            { "type": "line", "text": "\"If it rises?\"" },
+            { "type": "line", "text": "You tighten the rope." },
+            { "type": "line", "text": "\"I hold on.\"" }
+          ]
+        },
+        {
+          "id": "lie",
+          "label": "\"I let go.\" — Say it. Mean the other thing.",
+          "beats": [
+            { "type": "line", "text": "\"If it tilts right…\"" },
+            { "type": "line", "text": "\"I let go.\"" },
+            { "type": "line", "text": "\"Say it properly.\"" },
+            { "type": "line", "text": "\"I let go,\" you say, and you have no intention whatever of letting go, and he knows it, and he gets into the cradle anyway, because there is nobody else on this ridge who would lie to him about that." },
+            { "type": "line", "text": "\"If it rises?\"" },
+            { "type": "line", "text": "You tighten the rope." },
+            { "type": "line", "text": "\"I hold on.\"" }
+          ]
+        }
+      ]
+    }
+  ]
+}

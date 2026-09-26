@@ -1,0 +1,407 @@
+{
+  "num": 12,
+  "id": "three-now",
+  "title": "Three Now",
+  "requires": "a-second-set-of-hands",
+  "beats": [
+    { "type": "line", "text": "Ada comes back with three pencils and a sack of potatoes." },
+    { "type": "line", "text": "\"The pencils are for work,\" she says. \"The potatoes are for bargaining.\"" },
+    { "type": "line", "text": "Oliver takes the sack. \"Who did you bargain with?\"" },
+    { "type": "line", "text": "\"A woman who wanted the sack gone.\"" },
+    { "type": "line", "text": "\"Why?\"" },
+    { "type": "line", "text": "\"It was full of potatoes.\"" },
+    {
+      "type": "choice",
+      "key": "c12-sack",
+      "text": "The sack weighs more than she does.",
+      "options": [
+        {
+          "id": "complex",
+          "label": "Just look at her.",
+          "beats": [
+            { "type": "line", "text": "\"Some bargains are complex,\" she says." },
+            { "type": "line", "text": "\"That one had two moving parts.\"" },
+            { "type": "line", "text": "\"Then it was elegant,\" Ada says." }
+          ]
+        },
+        {
+          "id": "carry",
+          "label": "\"How far did you carry that?\"",
+          "beats": [
+            { "type": "line", "text": "\"From Cutler Street.\"" },
+            { "type": "line", "text": "That's a mile and a quarter." },
+            { "type": "line", "text": "\"Sit down,\" you say." },
+            { "type": "line", "text": "\"I'm not tired.\"" },
+            { "type": "line", "text": "\"Sit down anyway. There's a bench and it's doing nothing.\"" },
+            { "type": "line", "text": "She sits on it, one minute, upright, like a person waiting for a train. It's the longest she stays still all day." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The washhouse changes shape once she's in it." },
+    { "type": "line", "text": "Oliver keeps his tools on the left bench. Ada moves them to the right, because she says left-handed people think better near a wall." },
+    { "type": "line", "text": "Oliver isn't left-handed. He moves them back. She moves them again." },
+    { "type": "line", "text": "You appoint yourself keeper of the pliers." },
+    { "type": "line", "text": "\"A wise decision,\" Ada says." },
+    { "type": "line", "text": "\"A necessary one.\"" },
+    { "type": "line", "text": "\"The difference is usually discovered later.\"" },
+    { "type": "line", "text": "By noon the three of you have eaten one potato raw and argued about whether steam counts as weather." },
+    { "type": "line", "text": "Oliver says no. Ada says a cloud is only steam with ambition." },
+    { "type": "line", "text": "The new frame grows faster with two pairs of hands. She cuts canvas while he shapes the spars. You keep the measurements on a slate." },
+    { "type": "line", "text": "\"The left side's one finger longer,\" you tell him." },
+    {
+      "type": "choice",
+      "key": "c12-finger",
+      "text": "\"Which finger?\" he says.",
+      "options": [
+        {
+          "id": "ordinary",
+          "label": "\"The ordinary one.\"",
+          "beats": [
+            { "type": "line", "text": "\"You've several.\"" },
+            { "type": "line", "text": "\"You've two hands.\"" },
+            { "type": "line", "text": "\"That isn't a unit,\" Ada says, from the floor, without looking up." },
+            { "type": "line", "text": "\"It's the unit we've got.\"" }
+          ]
+        },
+        {
+          "id": "rule",
+          "label": "\"Ada. The brass rule.\"",
+          "beats": [
+            { "type": "line", "text": "She has it out of the third sleeve before you've finished saying it." },
+            { "type": "line", "text": "The left side is three-sixteenths longer. Oliver stares at the number as though it's insulted his mother." },
+            { "type": "line", "text": "\"Fingers were better,\" he says." },
+            { "type": "line", "text": "\"Fingers were kinder,\" Ada says. \"That's a different quality.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "She leans over the slate. \"You want a mark for the width of Monica's wheel.\"" },
+    { "type": "line", "text": "\"Why?\"" },
+    { "type": "line", "text": "\"The wheel leaves tracks.\"" },
+    { "type": "line", "text": "\"The glider won't.\"" },
+    { "type": "line", "text": "\"Not yet.\"" },
+    { "type": "line", "text": "She adds two curved lines to the corner of the slate. They look like the wheels of your chair." },
+    { "type": "line", "text": "\"That isn't a measurement,\" Oliver says." },
+    { "type": "line", "text": "\"It's a reminder.\"" },
+    { "type": "line", "text": "\"Of what?\"" },
+    { "type": "line", "text": "\"That the machine has to get through the door.\"" },
+    {
+      "type": "choice",
+      "key": "c12-door",
+      "text": "He looks at the frame. \"It will.\"",
+      "options": [
+        {
+          "id": "last",
+          "label": "\"You said that about the last one.\"",
+          "beats": [
+            { "type": "line", "text": "\"The last one got through the door.\"" },
+            { "type": "line", "text": "\"It also got through the ground.\"" },
+            { "type": "line", "text": "You take the chalk off Ada before the argument turns into an engineering principle." }
+          ]
+        },
+        {
+          "id": "measure",
+          "label": "\"Measure the door.\"",
+          "beats": [
+            { "type": "line", "text": "\"I know the door,\" Oliver says." },
+            { "type": "line", "text": "\"Measure it.\"" },
+            { "type": "line", "text": "He measures it. It's an inch and a half narrower than he'd have sworn to in court." },
+            { "type": "line", "text": "Nobody says anything. Ada writes the real number on the slate in red, twice, and circles it." },
+            { "type": "line", "text": "\"Thank you,\" Oliver says stiffly, which from him is a parade with brass." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Ada's map becomes a fourth member of the household." },
+    { "type": "line", "text": "It hangs beside the glider. It spreads across your lap when you sit under the window. She adds roads in red, rivers in blue, and places a person can sleep without being moved along by a boot." },
+    { "type": "line", "text": "\"What's this mark?\" you ask. There's a star beside the old observatory." },
+    { "type": "line", "text": "\"Warm roof.\"" },
+    { "type": "line", "text": "\"Whose?\"" },
+    { "type": "line", "text": "\"A widow's.\"" },
+    { "type": "line", "text": "\"Will she let us stay?\"" },
+    { "type": "line", "text": "\"She lets anybody stay who can mend a kettle.\"" },
+    { "type": "line", "text": "Oliver raises a hand. \"I can mend a kettle.\"" },
+    { "type": "line", "text": "\"You can make a kettle leak in a new direction.\"" },
+    { "type": "line", "text": "\"That's still direction.\"" },
+    { "type": "line", "text": "She points at the blank ground past the western hills. \"There's a tower there.\"" },
+    { "type": "line", "text": "\"How do you know?\"" },
+    { "type": "line", "text": "\"I saw its shadow.\"" },
+    {
+      "type": "choice",
+      "key": "c12-tower",
+      "text": "It's a blank piece of cloth and she's talking about it like a street she grew up on.",
+      "options": [
+        {
+          "id": "shadow",
+          "label": "\"A shadow isn't a tower.\"",
+          "beats": [
+            { "type": "line", "text": "\"Then the tower isn't a tower,\" she says, \"and we'll sleep beside its shadow.\"" },
+            { "type": "line", "text": "You mark the place with a small circle." },
+            { "type": "line", "text": "Oliver watches you do it. \"You're adding to it.\"" },
+            { "type": "line", "text": "\"Somebody has to make the map accurate.\"" }
+          ]
+        },
+        {
+          "id": "we",
+          "label": "\"We?\"",
+          "beats": [
+            { "type": "line", "text": "Ada looks up from the cloth." },
+            { "type": "line", "text": "\"You said we'd sleep beside it.\"" },
+            { "type": "line", "text": "\"Did I.\"" },
+            { "type": "line", "text": "\"You did.\"" },
+            { "type": "line", "text": "She goes back to the pencil. \"It's a habit of speech,\" she says, in a voice that isn't hers, and you look at Oliver, and Oliver looks at the frame, and neither of you corrects her." },
+            { "type": "line", "text": "You mark the place with a small circle." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "At dusk she finds a loose wheel on the chair and tries to repair it with a spoon." },
+    { "type": "line", "text": "\"Not that spoon,\" you say." },
+    { "type": "line", "text": "She looks at the flattened metal beside your bowl. \"This one's got history.\"" },
+    { "type": "line", "text": "\"It's got a lie attached.\"" },
+    { "type": "line", "text": "Oliver stops in the middle of a knot." },
+    { "type": "line", "text": "Ada turns the spoon over. \"What lie?\"" },
+    {
+      "type": "choice",
+      "key": "c12-spoon",
+      "text": "A year ago you stood up in front of Mrs. Vale and said four words.",
+      "options": [
+        {
+          "id": "mine",
+          "label": "\"I said it was mine.\"",
+          "beats": [
+            { "type": "line", "text": "\"Was it?\"" },
+            { "type": "line", "text": "\"No.\"" },
+            { "type": "line", "text": "\"Then it's a small lie.\"" },
+            { "type": "line", "text": "\"Small lies get large when people carry them.\"" },
+            { "type": "line", "text": "\"Most things do,\" Ada says." }
+          ]
+        },
+        {
+          "id": "took",
+          "label": "\"I said I took it. It was him.\"",
+          "beats": [
+            { "type": "line", "text": "The washhouse goes very quiet." },
+            { "type": "line", "text": "\"She didn't,\" Oliver says." },
+            { "type": "line", "text": "\"I did.\"" },
+            { "type": "line", "text": "\"She said it to a woman who'd have had me before a magistrate,\" he says, to Ada, to the wall, to nobody, \"and the woman believed her because of the chair, and Monica has never once mentioned it since, until now.\"" },
+            { "type": "line", "text": "Ada looks at the spoon for a long moment." },
+            { "type": "line", "text": "\"Then it isn't a lie,\" she says. \"It's a bill somebody paid.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "She holds the spoon out to Oliver. \"Can you do the wheel without this?\"" },
+    { "type": "line", "text": "\"Yes.\"" },
+    { "type": "line", "text": "\"Then the spoon's decorative.\"" },
+    { "type": "line", "text": "She sets it on the bench, upright, against the wall, where a thing gets put when it's been promoted." },
+    { "type": "line", "text": "\"I once told a magistrate I was twelve,\" she says." },
+    { "type": "line", "text": "\"How old were you?\" Oliver asks." },
+    { "type": "line", "text": "\"Eleven.\"" },
+    { "type": "line", "text": "\"That's the opposite of a useful lie.\"" },
+    { "type": "line", "text": "\"He wanted to send me to a home. The home wanted children who could scrub floors.\"" },
+    { "type": "line", "text": "\"Twelve sounded less breakable.\"" },
+    {
+      "type": "choice",
+      "key": "c12-magistrate",
+      "text": "Nobody speaks for a while.",
+      "options": [
+        {
+          "id": "nothing",
+          "label": "Let it stand. Say nothing.",
+          "beats": [
+            { "type": "line", "text": "Then she picks up the potato sack." },
+            { "type": "line", "text": "\"There are six left,\" she says. \"Nobody's allowed to make a speech about them.\"" }
+          ]
+        },
+        {
+          "id": "worked",
+          "label": "\"Did it work?\"",
+          "beats": [
+            { "type": "line", "text": "\"He sent me anyway.\"" },
+            { "type": "line", "text": "\"And?\"" },
+            { "type": "line", "text": "\"And I was out through a coal hatch in nine days, and I'd learned to read a survey plan off the wall in the superintendent's office, which is the only useful thing that building ever did.\"" },
+            { "type": "line", "text": "She says it flatly, like a road distance." },
+            { "type": "line", "text": "Then she picks up the potato sack. \"There are six left. Nobody's allowed to make a speech about them.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The first time all three of you leave the washhouse together, the city notices." },
+    { "type": "line", "text": "Oliver carries the folded wing. Ada carries the map. You carry the slate and steer along the patched road behind the foundry." },
+    { "type": "line", "text": "People look at the three of you and pick a story. Three thieves. Three orphans. A boy with a broken machine, a girl with a broken leg, and another girl wearing a coat made out of other people's mistakes." },
+    { "type": "line", "text": "At the bridge, Ada stops." },
+    { "type": "line", "text": "\"We've come too far,\" she says." },
+    { "type": "line", "text": "\"We're still in the city,\" Oliver says." },
+    { "type": "line", "text": "\"That's what I mean.\"" },
+    { "type": "line", "text": "There's a sign nailed to the wall. NO LOITERING. NO UNLICENSED CARTS. NO STREET CHILDREN." },
+    {
+      "type": "choice",
+      "key": "c12-sign",
+      "text": "Three lines, and between them they've got the whole of you.",
+      "options": [
+        {
+          "id": "cart",
+          "label": "\"I'm not a cart.\"",
+          "beats": [
+            { "type": "line", "text": "\"They haven't invented a word for us yet,\" Ada says." },
+            { "type": "line", "text": "\"They'll get round to it.\"" },
+            { "type": "line", "text": "\"They will,\" she agrees. \"And then they'll nail it up.\"" }
+          ]
+        },
+        {
+          "id": "which",
+          "label": "\"Which line are you?\"",
+          "beats": [
+            { "type": "line", "text": "\"The third,\" Ada says, without a pause." },
+            { "type": "line", "text": "\"And him?\"" },
+            { "type": "line", "text": "\"Third and second. He loiters with equipment.\"" },
+            { "type": "line", "text": "\"And me?\"" },
+            { "type": "line", "text": "She looks at your chair for slightly too long." },
+            { "type": "line", "text": "\"They haven't invented a word for you yet,\" she says, \"which is the only thing that's ever protected you, and I shouldn't rely on it.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Oliver unfolds the wing. The wind gets into the cloth and lifts it like a sail." },
+    { "type": "line", "text": "The sign comes loose off one nail." },
+    { "type": "line", "text": "Ada watches it swing." },
+    { "type": "line", "text": "\"That counts as a map correction,\" she says." },
+    { "type": "line", "text": "A shopkeeper shouts from the bridge that you're blocking the road." },
+    { "type": "line", "text": "Oliver starts folding the wing. Ada's hand closes on the map." },
+    { "type": "line", "text": "And she takes one step sideways, without appearing to decide anything, so that she's standing between the shopkeeper and Oliver." },
+    { "type": "line", "text": "She'll do that eleven more times over the next two years, and you'll never once see her think about it first." },
+    {
+      "type": "choice",
+      "key": "c12-shopkeeper",
+      "text": "He's coming down off the bridge and he's got a broom handle in his hand and no broom on the end of it.",
+      "options": [
+        {
+          "id": "courtesy",
+          "label": "\"We'll move. Give us one minute and a little courtesy.\"",
+          "beats": [
+            { "type": "line", "text": "It takes the wind out of him more thoroughly than the wing did." },
+            { "type": "line", "text": "\"One minute,\" he says." },
+            { "type": "line", "text": "\"Thank you.\"" },
+            { "type": "line", "text": "He stands there for the whole minute, holding the handle, looking increasingly like a man at a funeral he wasn't invited to." },
+            { "type": "line", "text": "At fifty seconds he says, \"Is that a wing?\", and Oliver says \"Yes,\" and he says \"Right,\" and goes back up onto the bridge." }
+          ]
+        },
+        {
+          "id": "prove-it",
+          "label": "\"If the road's yours, prove it.\"",
+          "beats": [
+            { "type": "line", "text": "\"I've a shop on it.\"" },
+            { "type": "line", "text": "\"So has the baker. So has the man who sells birds. Neither of them owns a road.\"" },
+            { "type": "line", "text": "\"You're blocking it.\"" },
+            { "type": "line", "text": "\"We're four feet wide and there's eleven feet of it,\" you say. \"You've come down off a bridge to be angry at a third of a road.\"" },
+            { "type": "line", "text": "He goes back up the bridge and slams a door that isn't his either." }
+          ]
+        },
+        {
+          "id": "stories",
+          "label": "\"Charge us for the delay. We're collecting stories.\"",
+          "beats": [
+            { "type": "line", "text": "\"What?\"" },
+            { "type": "line", "text": "\"A penny a minute,\" you say. \"We'll write down what you say, and your name, and in ten years somebody will read it.\"" },
+            { "type": "line", "text": "Ada already has the pencil out. That's the detail that finishes him. Not the words — the pencil." },
+            { "type": "line", "text": "\"Move along,\" he says, and moves along himself." },
+            { "type": "line", "text": "\"Write it down anyway,\" Ada says. \"Unnamed man. Bridge. Frightened of paper.\"" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "text": "Ada watches him go. \"You make people go away.\"",
+      "textByOptionRef": "c12-shopkeeper",
+      "textByOption": {
+        "courtesy": "The shop door shuts on the bridge above you, quietly, which is the strangest part of the afternoon.",
+        "prove-it": "The shop door slams on the bridge above you.",
+        "stories": "The shop door shuts on the bridge above you, and the blind comes down behind it."
+      }
+    },
+    { "type": "line", "text": "\"Sometimes they make the mistake themselves.\"" },
+    { "type": "line", "text": "Oliver finishes folding the wing and the three of you carry on along the river." },
+    { "type": "line", "text": "At a quiet stretch under the bridge Ada takes her cap off. Her hair's been cut short with a knife, badly, by somebody working without a mirror." },
+    { "type": "line", "text": "She pulls the red pencil from behind her ear." },
+    { "type": "line", "text": "\"What's your mark?\" she asks." },
+    { "type": "line", "text": "\"My mark?\"" },
+    { "type": "line", "text": "\"Every mapmaker has one.\"" },
+    { "type": "line", "text": "She draws a small square on the slate. Inside it, one line pointing to the corner." },
+    { "type": "line", "text": "\"That means a place worth coming back to,\" she says." },
+    { "type": "line", "text": "Oliver looks at the washhouse keys on his belt." },
+    { "type": "line", "text": "\"Then draw one for the washhouse,\" he says." },
+    { "type": "line", "text": "She draws the square." },
+    {
+      "type": "choice",
+      "key": "c12-mark",
+      "text": "There's room on the slate for another.",
+      "options": [
+        {
+          "id": "wheel",
+          "label": "Add a wheel beside it.",
+          "beats": [
+            { "type": "line", "text": "\"That isn't a mapmaker's mark,\" she says." },
+            { "type": "line", "text": "\"It is now.\"" },
+            { "type": "line", "text": "She looks at it. Then she copies it, exactly, into the corner of the blue cloth, where the legend goes." }
+          ]
+        },
+        {
+          "id": "hers",
+          "label": "\"Draw one for wherever you sleep.\"",
+          "beats": [
+            { "type": "line", "text": "She doesn't move." },
+            { "type": "line", "text": "\"It's a loading step,\" she says." },
+            { "type": "line", "text": "\"It's a place you come back to.\"" },
+            { "type": "line", "text": "\"It's a place I go when there isn't another one.\"" },
+            { "type": "line", "text": "So you take the pencil out of her hand and draw a square on the slate yourself, badly, with a wheel next to it, and say: \"Then this one. This is the one you come back to.\"" },
+            { "type": "line", "text": "She looks at the slate for a long time and doesn't say anything at all, and later that evening you find she's copied both marks into the corner of the blue cloth, where the legend goes." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The rain starts before you get home. Ada wraps the map under her coat. Oliver carries the wing over his head. You pull the chair through water that comes up over the lowest spokes." },
+    { "type": "line", "text": "At the washhouse door he lowers the wing." },
+    { "type": "line", "text": "Ada looks at the three of you, dripping, covered in river mud." },
+    { "type": "line", "text": "\"We look respectable,\" she says." },
+    { "type": "line", "text": "\"You look like a failed parade,\" Oliver says." },
+    { "type": "line", "text": "\"A parade requires permission.\"" },
+    { "type": "line", "text": "Inside, you hang the map near the lantern. The blue cloth's begun to fray along the edges. Ada pins it carefully, corner by corner." },
+    { "type": "line", "text": "Three square marks sit together in it now. One for the washhouse. One for your chair. One for a road that isn't on any official map." },
+    { "type": "line", "text": "Oliver lights the stove. Ada cuts the potatoes." },
+    {
+      "type": "choice",
+      "key": "c12-close",
+      "text": "They're arguing about the angle of the new wing. You're holding the slate.",
+      "options": [
+        {
+          "id": "hold",
+          "label": "Hold the slate and let them argue.",
+          "beats": [
+            { "type": "line", "text": "The rain drums on the roof." },
+            { "type": "line", "text": "Nobody asks who belongs here." },
+            { "type": "line", "text": "They simply make room." }
+          ]
+        },
+        {
+          "id": "settle",
+          "label": "Settle it. You've had the numbers on your knees all day.",
+          "beats": [
+            { "type": "line", "text": "\"Eleven degrees,\" you say. \"Both of you were closer than you deserve.\"" },
+            { "type": "line", "text": "\"Eleven,\" Oliver repeats." },
+            { "type": "line", "text": "\"Eleven,\" Ada agrees, \"and she's had it written down since Tuesday, and let us argue for two hours.\"" },
+            { "type": "line", "text": "\"I was enjoying it,\" you say." },
+            { "type": "line", "text": "The rain drums on the roof." },
+            { "type": "line", "text": "Nobody asks who belongs here." },
+            { "type": "line", "text": "They simply make room." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "There are three of you for twenty-two more months." },
+    { "type": "line", "text": "You don't know that. Nobody in the room knows that." },
+    { "type": "line", "text": "The stove is warm and the potatoes are terrible and Ada is laughing at something Oliver has said about the wind." }
+  ]
+}

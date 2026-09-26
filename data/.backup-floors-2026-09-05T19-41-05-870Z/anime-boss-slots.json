@@ -1,0 +1,212 @@
+[
+  {
+    "locationId": "entry_tower",
+    "floor": 100,
+    "bossId": "asta"
+  },
+  {
+    "locationId": "gambits_dungeon",
+    "floor": 100,
+    "bossId": "jotaro_kujo"
+  },
+  {
+    "locationId": "gambits_dungeon",
+    "floor": 200,
+    "bossId": "deku_mha"
+  },
+  {
+    "locationId": "gambits_dungeon",
+    "floor": 300,
+    "bossId": "vegeta"
+  },
+  {
+    "locationId": "gambits_dungeon",
+    "floor": 400,
+    "bossId": "whitebeard"
+  },
+  {
+    "locationId": "gambits_dungeon",
+    "floor": 500,
+    "bossId": "sasuke_uchiha"
+  },
+  {
+    "locationId": "gambits_dungeon",
+    "floor": 600,
+    "bossId": "frieren"
+  },
+  {
+    "locationId": "gambits_dungeon",
+    "floor": 700,
+    "bossId": "julius_novachrono"
+  },
+  {
+    "locationId": "gambits_dungeon",
+    "floor": 800,
+    "bossId": "dio_brando"
+  },
+  {
+    "locationId": "gambits_dungeon",
+    "floor": 900,
+    "bossId": "ichigo_kurosaki"
+  },
+  {
+    "locationId": "gambits_dungeon",
+    "floor": 1000,
+    "bossId": "shanks"
+  },
+  {
+    "locationId": "centurions_dungeon",
+    "floor": 100,
+    "bossId": "all_for_one"
+  },
+  {
+    "locationId": "centurions_dungeon",
+    "floor": 200,
+    "bossId": "escanor"
+  },
+  {
+    "locationId": "centurions_dungeon",
+    "floor": 300,
+    "bossId": "sung_jinwoo"
+  },
+  {
+    "locationId": "centurions_dungeon",
+    "floor": 400,
+    "bossId": "meliodas"
+  },
+  {
+    "locationId": "centurions_dungeon",
+    "floor": 500,
+    "bossId": "kaido"
+  },
+  {
+    "locationId": "centurions_dungeon",
+    "floor": 600,
+    "bossId": "madara_uchiha"
+  },
+  {
+    "locationId": "centurions_dungeon",
+    "floor": 700,
+    "bossId": "aizen_sosuke"
+  },
+  {
+    "locationId": "centurions_dungeon",
+    "floor": 800,
+    "bossId": "naruto_baryon"
+  },
+  {
+    "locationId": "centurions_dungeon",
+    "floor": 900,
+    "bossId": "luffy_gear5"
+  },
+  {
+    "locationId": "centurions_dungeon",
+    "floor": 1000,
+    "bossId": "kaguya_otsutsuki"
+  },
+  {
+    "locationId": "astral_tower",
+    "floor": 100,
+    "bossId": "eren_founding"
+  },
+  {
+    "locationId": "astral_tower",
+    "floor": 200,
+    "bossId": "mahoraga_jjk"
+  },
+  {
+    "locationId": "astral_tower",
+    "floor": 300,
+    "bossId": "isshiki_otsutsuki"
+  },
+  {
+    "locationId": "astral_tower",
+    "floor": 400,
+    "bossId": "hagoromo_otsutsuki"
+  },
+  {
+    "locationId": "astral_tower",
+    "floor": 500,
+    "bossId": "sukuna_ryomen"
+  },
+  {
+    "locationId": "astral_tower",
+    "floor": 600,
+    "bossId": "alucard"
+  },
+  {
+    "locationId": "astral_tower",
+    "floor": 700,
+    "bossId": "goku_ultra_instinct"
+  },
+  {
+    "locationId": "astral_tower",
+    "floor": 800,
+    "bossId": "meruem"
+  },
+  {
+    "locationId": "astral_tower",
+    "floor": 900,
+    "bossId": "gojo_satoru"
+  },
+  {
+    "locationId": "astral_tower",
+    "floor": 1000,
+    "bossId": "yhwach"
+  },
+  {
+    "locationId": "eternal_dungeon",
+    "floor": 100,
+    "bossId": "rimuru_tempest"
+  },
+  {
+    "locationId": "eternal_dungeon",
+    "floor": 200,
+    "bossId": "reinhard_van_astrea"
+  },
+  {
+    "locationId": "eternal_dungeon",
+    "floor": 300,
+    "bossId": "giorno_ger"
+  },
+  {
+    "locationId": "eternal_dungeon",
+    "floor": 400,
+    "bossId": "satella"
+  },
+  {
+    "locationId": "eternal_dungeon",
+    "floor": 500,
+    "bossId": "anos_voldigoad"
+  },
+  {
+    "locationId": "eternal_dungeon",
+    "floor": 600,
+    "bossId": "madoka_kaname"
+  },
+  {
+    "locationId": "eternal_dungeon",
+    "floor": 700,
+    "bossId": "lain_iwakura"
+  },
+  {
+    "locationId": "eternal_dungeon",
+    "floor": 800,
+    "bossId": "truth"
+  },
+  {
+    "locationId": "eternal_dungeon",
+    "floor": 900,
+    "bossId": "saitama"
+  },
+  {
+    "locationId": "eternal_dungeon",
+    "floor": 1000,
+    "bossId": "zeno"
+  },
+  {
+    "locationId": "season_01_ruins",
+    "floor": 50,
+    "bossId": "the_last_prayer"
+  }
+]

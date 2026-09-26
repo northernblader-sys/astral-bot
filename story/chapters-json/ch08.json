@@ -1,0 +1,438 @@
+{
+  "num": 8,
+  "id": "the-first-fall",
+  "title": "The First Fall",
+  "requires": "what-the-chair-doesnt-stop",
+  "beats": [
+    { "type": "line", "text": "He picks the abandoned quarry for the first public attempt, because the quarry has a hill, a long clear slope, and no roof to catch the wing." },
+    { "type": "line", "text": "It also has a crowd by noon." },
+    { "type": "line", "text": "Somebody has told the factory boys. They stand along the ridge with their caps tilted back, ready to laugh before anything's happened." },
+    { "type": "line", "text": "Two women from the laundry watch from behind a fence. The Toll Man is nowhere in sight, which doesn't make the place safer." },
+    { "type": "line", "text": "You sit at the top of the slope with the chair braced against a sack of gravel. Oliver checks the knots." },
+    {
+      "type": "choice",
+      "key": "c08-stop",
+      "text": "He's checked the same three knots four times.",
+      "options": [
+        {
+          "id": "stop",
+          "label": "\"You can still stop.\"",
+          "beats": [
+            { "type": "line", "text": "\"I could.\"" },
+            { "type": "line", "text": "\"That wasn't permission.\"" },
+            { "type": "line", "text": "\"I know.\"" }
+          ]
+        },
+        {
+          "id": "knots",
+          "label": "\"You've done those knots four times.\"",
+          "beats": [
+            { "type": "line", "text": "His hands stop." },
+            { "type": "line", "text": "\"Have I.\"" },
+            { "type": "line", "text": "\"Four.\"" },
+            { "type": "line", "text": "He looks down the slope for a moment. \"They're good knots,\" he says." },
+            { "type": "line", "text": "\"I know they are.\"" },
+            { "type": "line", "text": "He does them a fifth time anyway, and you let him, because he's fourteen and about to leave the ground." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "He's wearing the leather belt across his chest, doubled, the way you told him." },
+    { "type": "line", "text": "Over his eyes there's a strip of grey cloth pushed up onto his forehead, ready to pull down if the wind gets bad." },
+    { "type": "line", "text": "A rag. He's going up in front of forty people with a rag on his face." },
+    { "type": "line", "text": "And the locked box is still on the bench in the washhouse, with brass in it, and leather, and two little hinges." },
+    {
+      "type": "choice",
+      "key": "c08-goggles",
+      "text": "You have worked out roughly what's in that box. You worked it out three days ago, at about two in the morning, and you haven't slept properly since.",
+      "options": [
+        {
+          "id": "ask",
+          "label": "\"Why aren't you wearing what's in the box?\"",
+          "beats": [
+            { "type": "line", "text": "He goes still with his hands in the rope." },
+            { "type": "line", "text": "\"It isn't finished.\"" },
+            { "type": "line", "text": "\"It's brass and leather and it goes over a face. Wear it.\"" },
+            { "type": "line", "text": "\"It isn't finished,\" he says again, \"and it isn't mine.\"" },
+            { "type": "line", "text": "Then he pulls the rag down over his eyes and up again to check it runs clean, and doesn't say one word more." },
+            { "type": "line", "text": "You sit with that. It's the worst thing anyone's ever done for you and he hasn't even done it yet." }
+          ]
+        },
+        {
+          "id": "silent",
+          "label": "Say nothing about the box.",
+          "beats": [
+            { "type": "line", "text": "You look at the rag on his forehead and you keep your mouth shut, because if you say it out loud he'll know you know, and then he can't give it to you properly." },
+            { "type": "line", "text": "\"What?\" he says." },
+            { "type": "line", "text": "\"The cloth's fraying.\"" },
+            { "type": "line", "text": "\"It'll hold.\"" },
+            { "type": "line", "text": "\"It had better,\" you say, and turn your face into the wind so he can't see it." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Below, a boy on the ridge shouts, \"Fly, orphan!\"" },
+    { "type": "line", "text": "Oliver bows to the crowd." },
+    { "type": "line", "text": "The glider has to be dragged to the top of the slope. It takes four boys and Oliver to move it." },
+    { "type": "line", "text": "None of the four boys will admit they helped. They put their hands on the frame when nobody's looking, then step back and let the hill take the credit." },
+    { "type": "line", "text": "You hold the launch rope." },
+    { "type": "line", "text": "Oliver kneels beside the chair. \"When I say pull, pull straight.\"" },
+    { "type": "line", "text": "\"I know how rope works.\"" },
+    { "type": "line", "text": "\"You know how to insult rope.\"" },
+    { "type": "line", "text": "\"It's an underrated skill.\"" },
+    { "type": "line", "text": "His hand rests on the wheel of your chair. He doesn't turn it. He's only steadying himself." },
+    {
+      "type": "choice",
+      "key": "c08-instructions",
+      "text": "\"If the wing tilts left,\" he says, \"let go.\"",
+      "options": [
+        {
+          "id": "pedant",
+          "label": "\"If it tilts right?\"",
+          "beats": [
+            { "type": "line", "text": "\"Let go.\"" },
+            { "type": "line", "text": "\"If it tilts upward?\"" },
+            { "type": "line", "text": "\"Don't let go.\"" },
+            { "type": "line", "text": "\"You've made the safest instruction very confusing.\"" },
+            { "type": "line", "text": "He looks down the slope. The grass is bending in a clean line all the way to the quarry floor." },
+            { "type": "line", "text": "\"The wind's good,\" he says." }
+          ]
+        },
+        {
+          "id": "hand",
+          "label": "Put your hand over his, on the wheel.",
+          "beats": [
+            { "type": "line", "text": "He doesn't move it." },
+            { "type": "line", "text": "Neither of you says anything for four or five seconds, which at fourteen is an extremely long time." },
+            { "type": "line", "text": "\"If it tilts,\" he says eventually, \"let go of the rope. Whichever way. Just let go.\"" },
+            { "type": "line", "text": "\"And if it climbs?\"" },
+            { "type": "line", "text": "\"Then hold on,\" he says, \"and don't shut your eyes, because I won't be able to see anything and somebody has to.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "You can feel the wind on your face. It smells of chalk and wet iron." },
+    { "type": "line", "text": "Oliver climbs into the cradle. The frame settles round him. The wing goes up on both sides, tall enough to hide the crowd." },
+    { "type": "line", "text": "For a second he's completely still." },
+    { "type": "line", "text": "Then the factory boys start up." },
+    { "type": "line", "text": "\"Mad boy. Mad boy. Mad boy.\"" },
+    {
+      "type": "choice",
+      "key": "c08-chant",
+      "text": "Forty voices, and he's sitting in a packing case with a rag on his head.",
+      "options": [
+        {
+          "id": "shout",
+          "label": "\"LOUDER!\"",
+          "beats": [
+            { "type": "line", "text": "It comes out of you at a volume you didn't know you had." },
+            { "type": "line", "text": "The ridge falters. Chanting only works on people who mind." },
+            { "type": "line", "text": "Inside the frame, Oliver starts laughing. You can't see his face. You can see the canvas shaking." }
+          ]
+        },
+        {
+          "id": "name",
+          "label": "\"Oliver Wright.\" Just his name, at the crowd.",
+          "beats": [
+            { "type": "line", "text": "You say it once, clearly, in the direction of the ridge." },
+            { "type": "line", "text": "Somebody near the fence repeats it, questioning, to the person beside them." },
+            { "type": "line", "text": "Forty people who came to watch a mad boy now know what he's called, and that's a different afternoon." },
+            { "type": "line", "text": "From inside the frame: \"Monica.\"" },
+            { "type": "line", "text": "\"Yes.\"" },
+            { "type": "line", "text": "\"Thank you.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "Oliver raises one hand." },
+    { "type": "line", "text": "You pull the rope." },
+    { "type": "line", "text": "The glider moves. It drags at first. The skids bite into the grass." },
+    { "type": "line", "text": "Then the wind takes the canvas and the whole frame surges." },
+    { "type": "line", "text": "Oliver shouts something you can't hear." },
+    { "type": "line", "text": "The left wing lifts. The right follows." },
+    { "type": "line", "text": "The skids leave the ground." },
+    { "type": "line", "text": "The crowd goes silent." },
+    { "type": "line", "text": "It climbs no higher than a man's waist. But it moves through the air, forward, off the earth, for six entire seconds." },
+    { "type": "line", "text": "The canvas snaps taut. The frame shudders. Oliver's head turns up toward the clouds." },
+    { "type": "line", "text": "Then the right spar folds." },
+    { "type": "line", "text": "The wing drops." },
+    { "type": "line", "text": "The glider hits the slope and comes apart into a rain of wood and brass and canvas." },
+    { "type": "line", "text": "Oliver is thrown out of the cradle. He rolls once, catches on the lip of a drainage trench, and goes out of sight below the grass." },
+    { "type": "line", "text": "You push the chair forward. The gravel sack tears loose behind you." },
+    { "type": "line", "text": "The slope is too steep. Your hands slip off the rims. You get the crutch off your lap and jam it into the ground and the chair veers hard toward the trench and stops." },
+    { "type": "line", "text": "He's twenty feet below you. One arm is under the spar. The broken wing shifts every time he tries to breathe." },
+    { "type": "line", "text": "You have no reach. You have no strength that would move a spar." },
+    { "type": "line", "text": "The crowd is coming down the hill, and the frame can slide before they get here." },
+    {
+      "type": "choice",
+      "key": "c08-crash",
+      "text": "The nearest boy is eight feet away. He's the one who shouted about orphans. He's just standing there.",
+      "options": [
+        {
+          "id": "laugh",
+          "label": "\"If you can laugh, you can pull!\"",
+          "beats": [
+            { "type": "line", "text": "You've got the launch rope hooked round the chair's axle and you're holding the end of it out at him." },
+            { "type": "line", "text": "\"Take the rope!\"" },
+            { "type": "line", "text": "The boy stares." },
+            { "type": "line", "text": "\"IF YOU CAN LAUGH, YOU CAN PULL!\"" },
+            { "type": "line", "text": "Three hands seize the line." }
+          ]
+        },
+        {
+          "id": "please",
+          "label": "\"Please. I can't get down there.\"",
+          "beats": [
+            { "type": "line", "text": "You have never said that sentence to anybody in your life." },
+            { "type": "line", "text": "It comes out cracked and it carries further than the shouting would have." },
+            { "type": "line", "text": "The boy's face changes. He's about eleven. He looks at the trench, and at your wheels sunk in the grass, and he understands the whole thing in one second flat." },
+            { "type": "line", "text": "\"Bill!\" he screams up the hill. \"BILL! Rope!\"" },
+            { "type": "line", "text": "Three hands seize the line." }
+          ]
+        },
+        {
+          "id": "order",
+          "label": "\"You. Rope. Now.\"",
+          "beats": [
+            { "type": "line", "text": "You use the voice your father used on porters." },
+            { "type": "line", "text": "It's astonishing what a voice will do. The boy has the rope in his hands before he's decided to obey." },
+            { "type": "line", "text": "\"Two more,\" you say. \"Behind him. Feet braced.\"" },
+            { "type": "line", "text": "Three hands seize the line." }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "battle",
+      "text": "Together you lean back. The rope goes tight over the axle and the chair's frame groans and the whole weight of the broken glider comes onto three factory boys and one girl who cannot stand up.\n\nThe spar drags an inch through the grass. Then two.\n\nOliver's arm is still under it.",
+      "encounter": {
+        "enemyName": "The Fall",
+        "enemyHp": 40,
+        "enemyAtk": 12,
+        "fixedStats": true,
+        "playerStatsIgnored": true,
+        "onWin": "You get him out before the crowd arrives. The frame is ruined. Oliver is not.",
+        "onLose": null
+      }
+    },
+    { "type": "line", "text": "He crawls clear. Blood is coming from his temple into one eyebrow." },
+    { "type": "line", "text": "He tries to stand and goes down onto one knee." },
+    { "type": "line", "text": "You get the chair alongside him, breathless from shouting." },
+    { "type": "line", "text": "\"Don't move,\" you say." },
+    { "type": "line", "text": "\"I'm not.\"" },
+    { "type": "line", "text": "\"You're attempting to.\"" },
+    { "type": "line", "text": "\"That's different.\"" },
+    { "type": "line", "text": "The four boys drag the broken spar off. One of them has opened his palm on a wire. He stares at the blood as though it's betrayed him." },
+    { "type": "line", "text": "Oliver looks at the crowd. They've found their voices again. Some laugh. Some whisper. One of the laundry women crosses herself." },
+    { "type": "line", "text": "\"How long?\" he asks." },
+    { "type": "line", "text": "\"What?\"" },
+    { "type": "line", "text": "\"How long was it up?\"" },
+    {
+      "type": "choice",
+      "key": "c08-seconds",
+      "text": "Six. You counted, because somebody had to, because he couldn't see.",
+      "options": [
+        {
+          "id": "six",
+          "label": "\"Six seconds.\"",
+          "beats": [
+            { "type": "line", "text": "His eyes shut." },
+            { "type": "line", "text": "\"Six isn't nothing,\" you say." },
+            { "type": "line", "text": "\"It's less than seven.\"" },
+            { "type": "line", "text": "\"You haven't earned seven yet.\"" },
+            { "type": "line", "text": "He opens one eye. \"That sounds like a challenge.\"" },
+            { "type": "line", "text": "\"It's a warning.\"" }
+          ]
+        },
+        {
+          "id": "long",
+          "label": "\"Long enough that nobody up there is laughing about the six seconds.\"",
+          "beats": [
+            { "type": "line", "text": "\"How many, though.\"" },
+            { "type": "line", "text": "\"Six.\"" },
+            { "type": "line", "text": "\"Six,\" he repeats, and lies back in the grass and looks at the sky with blood running into his eyebrow." },
+            { "type": "line", "text": "\"Monica,\" he says. \"It held. The whole way. Right up to the spar.\"" },
+            { "type": "line", "text": "\"I know. I was holding the rope.\"" },
+            { "type": "line", "text": "\"It held,\" he says again, to nobody, and you understand that he is happy, that this is what happy looks like on him, flat on his back on a hill with his arm bleeding." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The Toll Man comes to the ridge once the crowd's begun to leave. He's chosen a clean place to stand, away from the wreck." },
+    { "type": "line", "text": "\"You've made a spectacle,\" he says." },
+    { "type": "line", "text": "Oliver presses a hand to his temple. \"People enjoy those.\"" },
+    { "type": "line", "text": "\"The quarry owner will charge for the damage.\"" },
+    {
+      "type": "choice",
+      "key": "c08-tollman",
+      "text": "The quarry has been abandoned for nine years. Everybody standing here knows it.",
+      "options": [
+        {
+          "id": "hill",
+          "label": "\"The owner doesn't own the hill.\"",
+          "beats": [
+            { "type": "line", "text": "\"He owns the risk.\"" },
+            { "type": "line", "text": "You turn the chair so he has to address you from the front." },
+            { "type": "line", "text": "\"The frame was on the grass,\" you say." },
+            { "type": "line", "text": "\"And now it's in pieces.\"" },
+            { "type": "line", "text": "\"That's the usual result of building something.\"" }
+          ]
+        },
+        {
+          "id": "damage",
+          "label": "\"What damage? Name the object.\"",
+          "beats": [
+            { "type": "line", "text": "He doesn't name an object." },
+            { "type": "line", "text": "\"Grass,\" you offer. \"A trench that was already there. Forty pairs of boots that weren't ours.\"" },
+            { "type": "line", "text": "\"You've an answer for everything.\"" },
+            { "type": "line", "text": "\"I've a great deal of time to sit and think of them.\"" }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "\"You encourage him,\" the Toll Man says." },
+    { "type": "line", "text": "\"You frighten him.\"" },
+    { "type": "line", "text": "His gaze drops to your bandage and comes back up to your face." },
+    { "type": "line", "text": "\"You cannot protect him from what he is.\"" },
+    {
+      "type": "choice",
+      "key": "c08-protect",
+      "text": "Oliver has stopped moving behind you. He's listening.",
+      "options": [
+        {
+          "id": "neither",
+          "label": "\"Neither can you.\"",
+          "beats": [
+            { "type": "line", "text": "Oliver reaches for the broken spar. You catch his sleeve." },
+            { "type": "line", "text": "\"Don't,\" you say." },
+            { "type": "line", "text": "He lets go. The Toll Man watches the whole gesture, the reach and the catch and the letting go, and files it." },
+            { "type": "line", "text": "\"This will end badly,\" he says." },
+            { "type": "line", "text": "\"Then you'll have to wait and see.\"" }
+          ]
+        },
+        {
+          "id": "what",
+          "label": "\"And what is he?\"",
+          "beats": [
+            { "type": "line", "text": "The Toll Man considers it, which is worse than if he'd sneered." },
+            { "type": "line", "text": "\"A boy who was going to be dead in a ditch at twenty,\" he says, \"whom somebody has now taught to want things.\"" },
+            { "type": "line", "text": "Behind you, Oliver doesn't make a sound." },
+            { "type": "line", "text": "\"Get off the hill,\" you say." },
+            { "type": "line", "text": "He goes. He's got what he came for. It'll be four years before you understand that this was the afternoon he decided how it ends." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The journey back takes an hour. Oliver carries the smallest pieces. The largest are tied to the back of your chair, where they knock against the spokes." },
+    { "type": "line", "text": "At the quarry gate the boy with the cut palm comes over." },
+    { "type": "line", "text": "\"It went up,\" he says." },
+    { "type": "line", "text": "Oliver looks at him." },
+    { "type": "line", "text": "\"Before it broke,\" the boy adds." },
+    { "type": "line", "text": "\"I know.\"" },
+    { "type": "line", "text": "\"I saw.\"" },
+    { "type": "line", "text": "Oliver gives him the one brass hinge that survived the fall." },
+    {
+      "type": "choice",
+      "key": "c08-boy",
+      "text": "That hinge cost him a bruise and possibly a rib.",
+      "options": [
+        {
+          "id": "let",
+          "label": "Let him give it away.",
+          "beats": [
+            { "type": "line", "text": "The boy stares at it. \"What's this?\"" },
+            { "type": "line", "text": "\"A piece of the next one.\"" },
+            { "type": "line", "text": "\"You need it.\"" },
+            { "type": "line", "text": "\"I need better witnesses.\"" },
+            { "type": "line", "text": "The boy closes his hand round the hinge." }
+          ]
+        },
+        {
+          "id": "trade",
+          "label": "\"Name, first.\"",
+          "beats": [
+            { "type": "line", "text": "The boy blinks at you. \"Tom.\"" },
+            { "type": "line", "text": "\"Tom what?\"" },
+            { "type": "line", "text": "\"Tom Ferris.\"" },
+            { "type": "line", "text": "\"Then it's yours, Tom Ferris,\" you say, \"and when they say in the public house that a boy fell off a hill, you'll say what you saw before it broke.\"" },
+            { "type": "line", "text": "\"Yes, miss.\"" },
+            { "type": "line", "text": "He'll do it, too. Nine months from now, on a night that matters, in front of a woman with a folder." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "On the road his steps start to drag." },
+    { "type": "line", "text": "You offer him the chair. He refuses it, which you knew he would." },
+    {
+      "type": "choice",
+      "key": "c08-walk",
+      "text": "You can't carry him. You can't make him admit the limits of his own body.",
+      "options": [
+        {
+          "id": "slow",
+          "label": "Slow the chair down until he's walking beside you.",
+          "beats": [
+            { "type": "line", "text": "It takes a mile and a half and he never once notices you're doing it." },
+            { "type": "line", "text": "That's the whole of what you have. It turns out to be enough for a mile and a half." }
+          ]
+        },
+        {
+          "id": "talk",
+          "label": "Make him talk the whole way, so he doesn't stop.",
+          "beats": [
+            { "type": "line", "text": "You ask him about the spar. Why it folded. Which grain. What he'd change." },
+            { "type": "line", "text": "He talks for a mile and a half without a break, and by the end of it he's walking properly again, because a boy explaining a fault has no attention left over for his own ribs." },
+            { "type": "line", "text": "\"You did that deliberately,\" he says at the alley." },
+            { "type": "line", "text": "\"Did what?\"" },
+            { "type": "line", "text": "\"Asked me eleven questions.\"" },
+            { "type": "line", "text": "\"You answered them,\" you say." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "In the washhouse he lays the broken frame out across the floor." },
+    { "type": "line", "text": "The ribs are split. The cradle's missing a brace. The canvas is torn end to end." },
+    { "type": "line", "text": "He stands over it until the lantern burns low." },
+    { "type": "line", "text": "\"You can stop,\" you say." },
+    { "type": "line", "text": "\"No.\"" },
+    { "type": "line", "text": "\"That wasn't a command.\"" },
+    { "type": "line", "text": "\"It sounded like one.\"" },
+    { "type": "line", "text": "He kneels and picks up a folded piece of the wing. Blood from his temple drops onto the cloth." },
+    { "type": "line", "text": "\"You nearly died,\" you say." },
+    { "type": "line", "text": "\"Nearly is a distance.\"" },
+    { "type": "line", "text": "\"A small one.\"" },
+    { "type": "line", "text": "He starts untying knots. His hands have gone clumsy." },
+    {
+      "type": "choice",
+      "key": "c08-close",
+      "text": "The needle is on the bench. So is the cloth. So is the water.",
+      "options": [
+        {
+          "id": "needle",
+          "label": "Put the needle in his hand.",
+          "beats": [
+            { "type": "line", "text": "\"You can't sew with your eyes shut.\"" },
+            { "type": "line", "text": "\"I can try.\"" },
+            { "type": "line", "text": "\"Try after you've cleaned the blood.\"" },
+            { "type": "line", "text": "He looks at you. There's no joke ready." },
+            { "type": "line", "text": "You hold out the cloth. He takes it." }
+          ]
+        },
+        {
+          "id": "cloth",
+          "label": "Hold out the cloth and nothing else.",
+          "beats": [
+            { "type": "line", "text": "He looks at it for a long moment, the way he looked at the coins." },
+            { "type": "line", "text": "\"The wing—\"" },
+            { "type": "line", "text": "\"The wing will be there in the morning. It hasn't anywhere to be.\"" },
+            { "type": "line", "text": "\"Neither have I.\"" },
+            { "type": "line", "text": "\"You have,\" you say. \"You've here. Sit down.\"" },
+            { "type": "line", "text": "He sits down on the floor by the wheel of your chair and lets you have the side of his face, and neither of you says anything at all for a while." }
+          ]
+        }
+      ]
+    },
+    { "type": "line", "text": "The first thing that gets repaired tonight is not the wing." },
+    { "type": "line", "text": "It's the boy." }
+  ]
+}

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "wooden_pickaxe",
+    "name": "Wooden Pickaxe",
+    "type": "tool",
+    "slot": "tool",
+    "rarity": "common",
+    "levelReq": 1,
+    "maxDurability": 40,
+    "statBonuses": { "str": 0, "agi": 0, "int": 0, "def": 0, "lck": 0, "maxHp": 0, "maxMp": 0 },
+    "sellPrice": 6,
+    "buyPrice": 25,
+    "effect": null,
+    "description": "A crude pickaxe lashed together from wood and flint. Wears out fast."
+  },
+  {
+    "id": "iron_pickaxe",
+    "name": "Iron Pickaxe",
+    "type": "tool",
+    "slot": "tool",
+    "rarity": "uncommon",
+    "levelReq": 5,
+    "maxDurability": 90,
+    "statBonuses": { "str": 0, "agi": 0, "int": 0, "def": 0, "lck": 0, "maxHp": 0, "maxMp": 0 },
+    "sellPrice": 20,
+    "buyPrice": 90,
+    "effect": null,
+    "description": "A sturdy iron-headed pickaxe. The standard choice for serious miners."
+  },
+  {
+    "id": "mythril_pickaxe",
+    "name": "Mythril Pickaxe",
+    "type": "tool",
+    "slot": "tool",
+    "rarity": "rare",
+    "levelReq": 20,
+    "maxDurability": 160,
+    "statBonuses": { "str": 0, "agi": 0, "int": 0, "def": 0, "lck": 0, "maxHp": 0, "maxMp": 0 },
+    "sellPrice": 60,
+    "buyPrice": 320,
+    "effect": null,
+    "description": "Forged from mythril, feather-light yet unyielding. Rarely dulls."
+  },
+  {
+    "id": "diamond_pickaxe",
+    "name": "Diamond Pickaxe",
+    "type": "tool",
+    "slot": "tool",
+    "rarity": "epic",
+    "levelReq": 45,
+    "maxDurability": 280,
+    "statBonuses": { "str": 0, "agi": 0, "int": 0, "def": 0, "lck": 0, "maxHp": 0, "maxMp": 0 },
+    "sellPrice": 160,
+    "buyPrice": 950,
+    "effect": null,
+    "description": "Studded with diamond edges hard enough to bite through anything the deep dungeons offer."
+  },
+  {
+    "id": "celestial_pickaxe",
+    "name": "Celestial Pickaxe",
+    "type": "tool",
+    "slot": "tool",
+    "rarity": "legendary",
+    "levelReq": 75,
+    "maxDurability": 500,
+    "statBonuses": { "str": 0, "agi": 0, "int": 0, "def": 0, "lck": 0, "maxHp": 0, "maxMp": 0 },
+    "sellPrice": 400,
+    "buyPrice": 2600,
+    "effect": null,
+    "description": "A pickaxe of impossible make, its head never seems to dull no matter how deep you dig."
+  }
+]

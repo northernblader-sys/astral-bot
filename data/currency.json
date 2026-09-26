@@ -1,0 +1,44 @@
+{
+  "currencies": [
+    {
+      "id": "solars",
+      "name": "Solars",
+      "symbol": "☀️",
+      "startingAmount": 100,
+      "tradeable": true,
+      "description": "The common coin of the realm. Used for most trade and services."
+    },
+    {
+      "id": "gems",
+      "name": "Gems",
+      "symbol": "💎",
+      "startingAmount": 0,
+      "tradeable": false,
+      "description": "Rare premium currency. Obtained through special events and achievements. Cannot be traded."
+    },
+    {
+      "id": "monds",
+      "name": "Monds",
+      "symbol": "🪙",
+      "startingAmount": 0,
+      "tradeable": false,
+      "description": "The only currency a character can be bought with. Sold for Naira in packs, never earned in play, never traded. Gems spin for a character, Monds buy one outright."
+    },
+    {
+      "id": "bankGold",
+      "name": "Bank Gold",
+      "symbol": "🏦",
+      "startingAmount": 0,
+      "tradeable": false,
+      "description": "Solars deposited in the Royal Bank. Earns interest over time. Not directly spendable until withdrawn."
+    },
+    {
+      "id": "loan",
+      "name": "Loan",
+      "symbol": "📜",
+      "startingAmount": 0,
+      "tradeable": false,
+      "description": "Outstanding debt owed to the Royal Bank or a moneylender. Accrues interest if unpaid. A negative balance here is bad."
+    }
+  ]
+}

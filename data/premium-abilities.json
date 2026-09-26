@@ -1,0 +1,70 @@
+{
+  "_comment": "Premium-only abilities. One-of-one: exactly 5 exist, each held by a SINGLE player at a time via the shared exclusive claim registry (db.data.seasonRuntime.exclusiveSpinWinners, keyed by the ids below prefixed 'ability:'). GIFTED \u2014 not spun \u2014 to buyers of the MONTHLY premium plan: one picked at random from whatever is unclaimed, guaranteed outright, no luck roll (plugins/premium.js handleConfirm, gated on planKey==='monthly'). Premium is never a gamble for an ability: weekly and yearly buyers (and the rare monthly buyer who arrives while all 5 are held) leave with Crown's Favor (data/abilities.json) instead, so nobody who pays walks away with an empty slot. A player holds at most one (player.premiumAbility); a renewal keeps the one they hold. EVERYTHING granted leaves with the plan: on expiry (main.js sweep) or .premium-revoke, stripPremiumAbilities() in lib/premium-abilities.js clears the ability and RELEASES the registry claim, so it goes back on the shelf for the next buyer. Engine lives in lib/premium-abilities.js; passives fire from the combat hit-sites, actives are their own command plugins registered in handler.js BATTLE_ALLOWED_COMMANDS. Durations that scale by opponent strength use minTurns for a stronger foe and maxTurns for a weaker one. Effects reuse the wired freeze/burn types; sleep is added in lib/effects.js.",
+  "abilities": [
+    {
+      "id": "freeze_touch",
+      "name": "Freeze Touch",
+      "emoji": "❄️",
+      "flavor": "Your skin runs cold enough to still a beating heart. Whoever raises a hand against you feels it seize in their fingers first.",
+      "passiveDesc": "Anyone who lands a hit on you risks freezing solid for a turn, losing their momentum and their swing.",
+      "activeName": "Freeze-Up",
+      "activeCommand": "freezeup",
+      "activeAliases": ["freeze", "fu"],
+      "activeDesc": "Once per battle, seize the enemy solid. They skip their turns while the frost holds (3 to 5 turns by how strong they are).",
+      "passive": { "type": "chill_attacker", "freezeChance": 0.55, "freezeTurns": 1 },
+      "active": { "effect": "freeze", "minTurns": 3, "maxTurns": 5, "oncePerBattle": true }
+    },
+    {
+      "id": "heat_blaze",
+      "name": "Heat Blaze",
+      "emoji": "🔥",
+      "flavor": "You burn from the inside out. Every blow thrown at you comes back scorched, and the fire remembers the hand that struck.",
+      "passiveDesc": "Anyone who lands a hit on you is set alight, taking burn damage each turn for a while after.",
+      "activeName": "Heat Wave",
+      "activeCommand": "heatwave",
+      "activeAliases": ["heat", "hw"],
+      "activeDesc": "Once per battle, wash the enemy in fire. Heavy burn that eats at them for 3 to 5 turns by how strong they are.",
+      "passive": { "type": "burn_attacker", "dotPercent": 0.05, "burnTurns": 2 },
+      "active": { "effect": "burn", "dotPercent": 0.09, "minTurns": 3, "maxTurns": 5, "oncePerBattle": true }
+    },
+    {
+      "id": "night_eyes",
+      "name": "Night Eyes",
+      "emoji": "🌑",
+      "flavor": "Meet your gaze and the world goes heavy and dim. Few can keep their eyes open for long once you look back.",
+      "passiveDesc": "A hit against you sometimes drags the attacker under, dropping them to sleep for a moment.",
+      "activeName": "Night Eyes",
+      "activeCommand": "nighteyes",
+      "activeAliases": ["ne"],
+      "activeDesc": "Once per battle, put the enemy under. They fall asleep and skip their next 3 turns.",
+      "passive": { "type": "drowse_attacker", "drowseChance": 0.15, "sleepTurns": 1 },
+      "active": { "effect": "sleep", "turns": 3, "oncePerBattle": true }
+    },
+    {
+      "id": "daylight_ring",
+      "name": "Daylight Ring",
+      "emoji": "☀️",
+      "flavor": "A plain ring that still remembers the sun. Turn it once and the morning breaks on your terms, not the world's.",
+      "passiveDesc": "No passive. Its power is the sunrise you call on demand.",
+      "activeName": "Daylight",
+      "activeCommand": "daylight",
+      "activeAliases": ["day", "sunrise"],
+      "activeDesc": "Once per battle, the sun rises for you. For 5 turns you surge past the enemy in every stat; if they were already the weaker one, their attacks do nothing at all.",
+      "passive": null,
+      "active": { "effect": "daylight", "turns": 5, "statBoost": 50, "oncePerBattle": true }
+    },
+    {
+      "id": "jack_of_all_trades",
+      "name": "Jack of All Trades",
+      "emoji": "🃏",
+      "flavor": "A little frost, a little fire, a little sleep. You never mastered any one of them, so you simply kept them all.",
+      "passiveDesc": "Small passive chance on every hit against you to freeze, burn, or drowse your foe. Weak versions of everything, no active move.",
+      "activeName": null,
+      "activeCommand": null,
+      "activeAliases": [],
+      "activeDesc": null,
+      "passive": { "type": "jack", "freezeChance": 0.1, "burnChance": 0.1, "sleepChance": 0.08, "dotPercent": 0.03, "procTurns": 1 },
+      "active": null
+    }
+  ]
+}

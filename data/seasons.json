@@ -1,0 +1,139 @@
+[
+  {
+    "id": "season_01",
+    "name": "The Beginning of the End",
+    "number": 1,
+    "durationDays": 90,
+    "autoStart": true,
+    "status": "ready",
+    "description": "Help Mei re-seal the End after an accidental Ender Pearl activation releases the monster and its prison together.",
+    "characters": {
+      "major": "mei",
+      "peak": "urahara",
+      "minor": "willow"
+    },
+    "battlePass": {
+      "_pacingNote": "Tuned for a 90-day season. Pass progress is one Season XP pool (lib/season-engine.js battlePassCurve): every Season Level from a cleared dungeon floor is worth xpPerSeasonLevel, and every Season Point ever earned is worth 1. Tier n costs tierBaseCost + tierCostStep*(n-1), so clearing all 50 floors lands around tier 23 and the remaining tiers are paid for by playing the season out. Free and premium share this one curve — premium buys the second reward column, never faster levelling.",
+      "tierCount": 50,
+      "progressSource": "seasonXp",
+      "seasonLevelPerClearedFloor": 1,
+      "xpPerSeasonLevel": 100,
+      "tierBaseCost": 120,
+      "tierCostStep": 8,
+      "premiumCost": 5,
+      "premiumCurrency": "gems"
+    },
+    "shop": {
+      "_catalogNote": "`category` groups entries into shop PAGES (.season shop 2). Page order follows the first appearance of each category here. Labels live in SHOP_CATEGORY_LABEL in lib/season-engine.js.",
+      "catalog": [
+        { "id": "urahara", "rewardType": "character", "price": 3000, "purchaseLimit": 1, "category": "exclusive" },
+        { "id": "wither", "rewardType": "character", "price": 2500, "purchaseLimit": 1, "category": "exclusive" },
+        { "id": "willow_glasses", "rewardType": "weapon", "price": 950, "purchaseLimit": 1, "category": "exclusive" },
+        { "id": "urahara_stick", "rewardType": "weapon", "price": 950, "purchaseLimit": 1, "category": "exclusive" },
+        { "id": "mei_prayer_bead", "rewardType": "item", "price": 650, "purchaseLimit": 1, "category": "exclusive" },
+        { "id": "title:veilbreaker", "rewardType": "title", "name": "Veilbreaker", "price": 750, "purchaseLimit": 1, "category": "exclusive" },
+
+        { "id": "wado_ichimonji", "rewardType": "weapon", "price": 2800, "purchaseLimit": 1, "category": "arsenal" },
+        { "id": "tensa_zangetsu", "rewardType": "weapon", "price": 2800, "purchaseLimit": 1, "category": "arsenal" },
+        { "id": "nichirin_blade", "rewardType": "weapon", "price": 2600, "purchaseLimit": 1, "category": "arsenal" },
+        { "id": "kubikiribocho", "rewardType": "weapon", "price": 2600, "purchaseLimit": 1, "category": "arsenal" },
+        { "id": "six_eyes_blindfold", "rewardType": "item", "price": 2400, "purchaseLimit": 1, "category": "arsenal" },
+        { "id": "shunpo_greaves", "rewardType": "item", "price": 2200, "purchaseLimit": 1, "category": "arsenal" },
+
+        { "id": "totem_of_undying", "rewardType": "item", "price": 1100, "purchaseLimit": 1, "category": "relic" },
+        { "id": "emberheart_core", "rewardType": "item", "price": 1800, "purchaseLimit": 1, "category": "relic" },
+        { "id": "gamblers_relic", "rewardType": "item", "price": 1400, "purchaseLimit": 1, "category": "relic" },
+        { "id": "sentinels_bulwark", "rewardType": "item", "price": 1400, "purchaseLimit": 1, "category": "relic" },
+        { "id": "arcane_battery", "rewardType": "item", "price": 1400, "purchaseLimit": 1, "category": "relic" },
+        { "id": "berserkers_chain", "rewardType": "item", "price": 1400, "purchaseLimit": 1, "category": "relic" },
+
+        { "id": "emberpaw", "rewardType": "pet", "price": 2200, "purchaseLimit": 1, "category": "companion" },
+        { "id": "astral_wyrmling", "rewardType": "pet", "price": 1900, "purchaseLimit": 1, "category": "companion" },
+        { "id": "phoenix_chick", "rewardType": "pet", "price": 1500, "purchaseLimit": 1, "category": "companion" },
+        { "id": "tide_slimeling", "rewardType": "beast", "price": 1500, "purchaseLimit": 1, "category": "companion" },
+        { "id": "sunherald_phoenix", "rewardType": "beast", "price": 2600, "purchaseLimit": 1, "category": "companion" },
+        { "id": "voidmaw_behemoth", "rewardType": "beast", "price": 2800, "purchaseLimit": 1, "category": "companion" },
+
+        { "id": "poke_mewtwonite_x", "rewardType": "pokemonItem", "price": 2600, "purchaseLimit": 1, "category": "mega" },
+        { "id": "poke_mewtwonite_y", "rewardType": "pokemonItem", "price": 2600, "purchaseLimit": 1, "category": "mega" },
+        { "id": "poke_rayquazite", "rewardType": "pokemonItem", "price": 2800, "purchaseLimit": 1, "category": "mega" },
+        { "id": "poke_charizardite_x", "rewardType": "pokemonItem", "price": 2000, "purchaseLimit": 1, "category": "mega" },
+        { "id": "poke_garchompite", "rewardType": "pokemonItem", "price": 1900, "purchaseLimit": 1, "category": "mega" },
+        { "id": "poke_gengarite", "rewardType": "pokemonItem", "price": 1900, "purchaseLimit": 1, "category": "mega" },
+
+        { "id": "legend_mewtwo", "rewardType": "pokemon", "dexId": 150, "level": 55, "price": 4500, "purchaseLimit": 1, "category": "legend" },
+        { "id": "legend_rayquaza", "rewardType": "pokemon", "dexId": 384, "level": 55, "price": 4500, "purchaseLimit": 1, "category": "legend" },
+        { "id": "legend_kyogre", "rewardType": "pokemon", "dexId": 382, "level": 50, "price": 4000, "purchaseLimit": 1, "category": "legend" },
+        { "id": "legend_groudon", "rewardType": "pokemon", "dexId": 383, "level": 50, "price": 4000, "purchaseLimit": 1, "category": "legend" },
+        { "id": "legend_lugia", "rewardType": "pokemon", "dexId": 249, "level": 48, "price": 3600, "purchaseLimit": 1, "category": "legend" },
+        { "id": "legend_giratina", "rewardType": "pokemon", "dexId": 487, "level": 48, "price": 3600, "purchaseLimit": 1, "category": "legend" },
+
+        { "id": "elixir", "rewardType": "item", "price": 400, "purchaseLimit": 10, "category": "supply" },
+        { "id": "phoenix_down", "rewardType": "item", "price": 220, "purchaseLimit": 10, "category": "supply" },
+        { "id": "willow_sightline_lens", "rewardType": "item", "price": 300, "purchaseLimit": 5, "category": "supply" },
+        { "id": "astral_fountain_water", "rewardType": "item", "price": 35, "purchaseLimit": 20, "category": "supply" },
+        { "id": "astral_dust", "rewardType": "item", "price": 8, "purchaseLimit": 100, "category": "supply" }
+      ],
+      "rotation": "full",
+      "currency": "seasonPoints"
+    },
+    "gemSpin": {
+      "costPerSpin": 10,
+      "pool": ["mei"],
+      "pityAt": 100,
+      "rampStart": 80,
+      "ramp": "linear"
+    },
+    "dungeon": "season_01_ruins",
+    "dungeonBoostPercent": 10,
+    "floorCount": 100,
+    "partyBossFloor": 100,
+    "stoneFloors": [12, 26, 42, 58, 74, 88],
+    "lore": {
+      "reservedNpcId": "npc_bartab_patron",
+      "guide": "mei",
+      "willow": "Willow is Astral-born, reads enemy weaknesses, and was recruited to help fight the End.",
+      "urahara": "Urahara is a crossover character present in Astral without a plot connection."
+    },
+    "mysteryBoxes": {
+      "_comment": "Default weighted pulls for this first pass. Each box has six weighted slots; adjust here without changing the open command.",
+      "iron": [
+        { "rewardType": "item", "itemId": "astral_dust", "amount": 3, "weight": 35 },
+        { "rewardType": "solars", "amount": 150, "weight": 25 },
+        { "rewardType": "item", "itemId": "astral_fountain_water", "amount": 2, "weight": 18 },
+        { "rewardType": "item", "itemId": "cracked_ender_shard", "amount": 1, "weight": 12 },
+        { "rewardType": "item", "itemId": "singing_river_charm", "amount": 1, "weight": 7 },
+        { "rewardType": "item", "itemId": "totem_of_undying", "amount": 1, "weight": 3 }
+      ],
+      "diamond": [
+        { "rewardType": "item", "itemId": "astral_dust", "amount": 5, "weight": 10 },
+        { "rewardType": "solars", "amount": 300, "weight": 20 },
+        { "rewardType": "item", "itemId": "astral_fountain_water", "amount": 3, "weight": 15 },
+        { "rewardType": "item", "itemId": "willow_sightline_lens", "amount": 1, "weight": 20 },
+        { "rewardType": "weapon", "itemId": "willow_glasses", "amount": 1, "weight": 20 },
+        { "rewardType": "item", "itemId": "totem_of_undying", "amount": 1, "weight": 15 }
+      ],
+      "mythic": [
+        { "rewardType": "solars", "amount": 700, "weight": 18 },
+        { "rewardType": "solars", "amount": 1200, "weight": 15 },
+        { "rewardType": "item", "itemId": "mei_prayer_bead", "amount": 1, "weight": 17 },
+        { "rewardType": "weapon", "itemId": "willow_glasses", "amount": 1, "weight": 18 },
+        { "rewardType": "weapon", "itemId": "urahara_stick", "amount": 1, "weight": 17 },
+        { "rewardType": "item", "itemId": "totem_of_undying", "amount": 1, "weight": 15 }
+      ]
+    },
+    "bonuses": {
+      "killPoints": 5,
+      "killXpPercent": 10,
+      "killSolarsPercent": 10,
+      "bossKillPoints": 10,
+      "winPoints": 10,
+      "winXpPercent": 10,
+      "winSolarsPercent": 10
+    },
+    "endOfSeason": {
+      "keepUnlockedContent": true,
+      "seasonPointsToSolars": 10
+    }
+  }
+]
