@@ -58,6 +58,15 @@ text, never to a still image.
   pull mutation, exact costs/caps/guarantees, GIF-safe presentation.
 - `lib/witch-heroes-cinematic.js`: clash/Coordinate presentation and editable
   result sequence, injectable delays, failed-media and failed-edit fallback.
+- `plugins/maiden.js` + `lib/maiden-persona.js` + `data/maiden-personality.json`:
+  the holder's chat with her (`.maiden <message>`), Groq first with the
+  OpenRouter backup through `lib/ai.js`. Her voice is data, not code: the
+  personality file carries her rules and `softenMaidenReply()` enforces the
+  lowercase, punctuation-free stream on the way out, so the character reads
+  right even when a model slips. Her card stays OUT of both battle allowlists
+  on purpose: conversation is not a battle action. Ownership is her exclusive
+  claim (`ownedCharacters`), with the bot owner let through to test her voice
+  live. See `test/maiden.test.mjs` and `test/maiden-smoke.test.mjs`.
 - `lib/platform/whatsapp-edits.js` and `handler.js`: actual Baileys own-message
   edit capability exposed as `ctx.editReply`.
 - OpenRouter: keep request abort timeout active while reading response JSON,
@@ -96,7 +105,8 @@ text, never to a still image.
    promise that never settles relies on the platform transport's timeout.
 6. **Commands and discoverability**: register `.endworld`, `.sword`, `.ss`,
    all spin commands and aliases; add every combat token to BOTH
-   `handler.js` and `lib/platform/pipeline.js` battle allowlists. Add character
+   `handler.js` and `lib/platform/pipeline.js` battle allowlists. The holder's
+   `.maiden` chat command is the deliberate exception and stays out of both. Add character
    routes, hero-series display and entries to the production character data
    only after integration passes.
 7. **End-to-end tests**: real plugin routing and HP/result/reward assertions
