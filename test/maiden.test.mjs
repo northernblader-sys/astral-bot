@@ -45,7 +45,7 @@ const persona = await import('../lib/maiden-persona.js')
 const { characterMap } = await import('../lib/game-data.js')
 const maidenMod = await import('../plugins/maiden.js')
 const { config } = await import('../config.js')
-const { isOwnerJid } = await import('../lib/group-helpers.js')
+const { isPlatformOwner } = await import('../lib/platform/permissions.js')
 const {
   MAIDEN_PERSONALITY, SWORD_MAIDEN_ID, MAIDEN_MEMORY_TURNS,
   ownsSwordMaiden, maidenChatHistory, rememberMaidenTurn, forgetMaidenChat,
@@ -345,9 +345,13 @@ function fakeCtx(from, owned = [], args = ['hi']) {
 
 const savedGroqKey = config.groqApiKey
 const savedRouterKey = config.openrouterApiKey
+const savedDiscordOwners = config.discordOwnerIds
+const savedTelegramOwners = config.telegramOwnerIds
 try {
   config.groqApiKey = ''
   config.openrouterApiKey = ''
+  config.discordOwnerIds = ['123456789012345678']
+  config.telegramOwnerIds = ['987654321']
 
   await ok('a stranger is turned away with the static dismissal', async () => {
     const ctx = fakeCtx('999someoneelse@s.whatsapp.net')
@@ -371,10 +375,44 @@ try {
   })
 
   await ok('the bot owner is let through without holding her', async () => {
-    assert.equal(isOwnerJid('2347062301848@s.whatsapp.net'), true, 'config owner number changed')
+    assert.equal(isPlatformOwner('2347062301848@s.whatsapp.net'), true, 'config owner number changed')
     const ctx = fakeCtx('2347062301848:5@s.whatsapp.net')
     await maidenMod.default.run(ctx)
     assert.match(ctx.replies[0], /i lost the thread for a moment but i have you now/)
+  })
+
+  await ok('Discord and Telegram owners reach chat, scenes and forget without holding her', async () => {
+    for (const from of ['dc:123456789012345678', 'tg:987654321']) {
+      assert.equal(isPlatformOwner(from), true)
+      for (const [args, expected] of [
+        [['hi'], /i lost the thread for a moment but i have you now/],
+        [['hug'], /let mommy hold you properly/],
+        [['forget'], /begin again from here/],
+      ]) {
+        const ctx = fakeCtx(from, [], args)
+        rememberMaidenTurn(ctx.player, 'hello', 'hello my dear')
+        await maidenMod.default.run(ctx)
+        assert.equal(ctx.replies.length, 1)
+        assert.match(ctx.replies[0], expected)
+        if (args[0] === 'forget') assert.deepEqual(ctx.player.maidenChat, [])
+      }
+    }
+  })
+
+  await ok('Discord and Telegram strangers stay outside chat, scenes and forget', async () => {
+    for (const from of ['dc:111111111111111111', 'tg:111111111']) {
+      assert.equal(isPlatformOwner(from), false)
+      for (const args of [['hi'], ['hug'], ['forget']]) {
+        const ctx = fakeCtx(from, [], args)
+        rememberMaidenTurn(ctx.player, 'hello', 'hello my dear')
+        const before = JSON.stringify(ctx.player)
+        ctx.db.write = async () => { assert.fail('a stranger must never write') }
+        await maidenMod.default.run(ctx)
+        assert.equal(ctx.replies.length, 1)
+        assert.match(ctx.replies[0], /are not the one i am kept by|there is one of me|spoken for in every way/)
+        assert.equal(JSON.stringify(ctx.player), before)
+      }
+    }
   })
 
   await ok('her scenes answer with no key and no network', async () => {
@@ -444,6 +482,8 @@ try {
 } finally {
   config.groqApiKey = savedGroqKey
   config.openrouterApiKey = savedRouterKey
+  config.discordOwnerIds = savedDiscordOwners
+  config.telegramOwnerIds = savedTelegramOwners
 }
 
 console.log(`\n${passed} passed, ${failures.length} failed`)
