@@ -76,5 +76,5 @@ test('Echidna failure copy contains no provider, credential or status details', 
   const copy = source.match(/const quietReply = (.+)/)[1]
   assert.match(copy, /Stay for tea/)
   assert.doesNotMatch(copy, /OpenRouter|Groq|API|401|403|key|deployment/i)
-  assert.equal((source.match(/return ctx.reply\(quietReply\)/g) || []).length, 2)
+  assert.equal((source.match(/return reply\(ctx, quietReply\)/g) || []).length, 2)
 })

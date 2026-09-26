@@ -36,6 +36,7 @@
  * not loosen them to chase a spicier voice.
  */
 import { config } from '../config.js'
+import { replyWithPortrait } from '../lib/portrait-reply.js'
 import { isPlatformOwner } from '../lib/platform/permissions.js'
 import { updatePlayer } from '../lib/player-repo.js'
 import { askAI, hasAIKey } from '../lib/ai.js'
@@ -50,6 +51,10 @@ import {
   rememberMaidenTurn,
   forgetMaidenChat,
 } from '../lib/maiden-persona.js'
+
+// Command replies use this portrait; the collectible character art is unchanged.
+const PORTRAIT = 'https://i.ibb.co/3mKrwxQj/30821578697063150.jpg'
+const reply = (ctx, text) => replyWithPortrait(ctx, PORTRAIT, text)
 
 const RULE = '━━━━━━━━━━━━━━━━━━━━'
 
@@ -150,16 +155,16 @@ async function runStatus(ctx) {
     owns ? `💗 _Let the conversation rest: *${p}maiden forget*_` : null,
   ]
 
-  return ctx.reply(lines.filter(line => line !== null).join('\n'))
+  return reply(ctx, lines.filter(line => line !== null).join('\n'))
 }
 
 function runScene(ctx, scene) {
-  if (!canSpeak(ctx)) return ctx.reply(dismissal(ctx))
-  return ctx.reply(SCENES[scene])
+  if (!canSpeak(ctx)) return reply(ctx, dismissal(ctx))
+  return reply(ctx, SCENES[scene])
 }
 
 async function runForget(ctx) {
-  if (!canSpeak(ctx)) return ctx.reply(dismissal(ctx))
+  if (!canSpeak(ctx)) return reply(ctx, dismissal(ctx))
 
   let wiped = false
   try {
@@ -171,7 +176,7 @@ async function runForget(ctx) {
     // Her memory is the only thing lost here, and the reply still goes out.
   }
 
-  return ctx.reply(
+  return reply(ctx,
     `⚔️ _she does not ask why. she simply lets the thread go, the way she lets a bad dream go at the door._\n\n` +
     (wiped
       ? `"ara ara then we begin again from here my dear come and sit with me"`
@@ -183,11 +188,11 @@ async function runChat(ctx, text) {
   // The AI voice belongs to the holder of the exclusive; the bot owner is let
   // through so her voice can be tested live without holding her. Scenes and
   // forget share this same door through canSpeak().
-  if (!canSpeak(ctx)) return ctx.reply(dismissal(ctx))
+  if (!canSpeak(ctx)) return reply(ctx, dismissal(ctx))
 
   const message = String(text ?? '').trim().slice(0, MAX_MESSAGE_CHARS)
   if (!message) return runStatus(ctx)
-  if (!hasAIKey()) return ctx.reply(QUIET_LINE)
+  if (!hasAIKey()) return reply(ctx, QUIET_LINE)
 
   let answer = ''
   try {
@@ -202,7 +207,7 @@ async function runChat(ctx, text) {
     // Provider diagnostics are logged by the shared client, never spoken aloud.
     answer = ''
   }
-  if (!answer) return ctx.reply(QUIET_LINE)
+  if (!answer) return reply(ctx, QUIET_LINE)
 
   // The network call happens OUTSIDE updatePlayer so a slow reply never holds
   // the save lane: the exchange is written back only once it exists, exactly
@@ -215,7 +220,7 @@ async function runChat(ctx, text) {
     // A missing record costs her the memory of this turn, not the reply.
   }
 
-  return ctx.reply(answer)
+  return reply(ctx, answer)
 }
 
 export default {
