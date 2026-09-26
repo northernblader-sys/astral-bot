@@ -21,7 +21,7 @@ const CONFIG_SOURCES = new Map()
 
 /** Keys whose VALUE must never be printed to a log. Presence only. */
 const SECRET_KEYS = new Set([
-  'JWT_SECRET', 'DISCORD_TOKEN', 'TELEGRAM_TOKEN',
+  'JWT_SECRET', 'DISCORD_TOKEN', 'TELEGRAM_TOKEN', 'OPENROUTER_API_KEY', 'GROQ_API_KEY',
   'OMDB_API_KEY', 'IMGBB_API_KEY', 'GEMINI_API_KEY', 'GOOGLE_API_KEY',
   'BANK_ACCOUNT', 'BANK_ACCOUNT_NAME',
   // Holds the database username and password. Anyone with this string owns
@@ -165,13 +165,11 @@ export const config = {
   // there is no shared key to fall back to, and the command already prints a
   // "set PIXELCUT_API_KEY in .env" message when it's missing.
   pixelcutApiKey: env('PIXELCUT_API_KEY', ''),
-  // OpenRouter API key - the ONE shared key every AI voice in the bot uses:
-  // Echidna (plugins/echidna.js) and the five Guardian of the Innocent
-  // companions (plugins/companion.js), all through lib/openrouter.js. It
-  // replaced the old Gemini client. Hardcoded by the owner's request (this
-  // repo is private); OPENROUTER_API_KEY in .env still overrides it, so the
-  // key can be rotated without a code change.
-  openrouterApiKey: env('OPENROUTER_API_KEY', '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').trim(),
+  // Groq is primary for all AI voices; OpenRouter is an optional backup.
+  // Credentials belong only in deployment variables or the gitignored .env.
+  groqApiKey: env('GROQ_API_KEY', '').trim(),
+  groqModel: env('GROQ_MODEL', 'llama-3.3-70b-versatile').trim(),
+  openrouterApiKey: env('OPENROUTER_API_KEY', '').trim(),
   // Which OpenRouter model speaks. lib/openrouter.js falls down a short
   // ladder (gemini-2.5-flash -> gpt-4o-mini -> llama-3.3-70b) if this one is
   // unavailable, so it rarely needs touching.
