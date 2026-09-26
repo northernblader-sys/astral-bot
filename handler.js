@@ -222,6 +222,7 @@ export function isCollapseBlocked(cmd) {
 // Keyed off the plugin's own category so a new group command is covered here
 // without editing this list. LOCKOUT_EXEMPT_COMMANDS (ban appeals) always pass.
 const MUSIC_MODE_ALLOWED_COMMANDS = new Set([
+  'endworld', 'end-world', 'sword', 'absolute-sword', 'ss', 'swordstatus', 'sword-status',
   'music',        // the toggle itself — an admin must always be able to run `.music off`
   'song', 'mp3',  // the YouTube-audio downloader (plugins/music.js)
 ])
@@ -268,6 +269,7 @@ const END_SLEEP_ALLOWED_COMMANDS = new Set([
 // battle state. Buying from the shop is explicitly allowed mid-battle
 // (e.g. grabbing a potion) per design.
 const BATTLE_ALLOWED_COMMANDS = new Set([
+  'endworld', 'end-world', 'sword', 'absolute-sword', 'ss', 'swordstatus', 'sword-status',
   // core battle actions
   'attack', 'atk', 'a',
   'skill', 'sk', 's', 'sp',

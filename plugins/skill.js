@@ -59,6 +59,7 @@ import {
 } from '../lib/character-abilities.js'
 import { isStreaming, rampStreamViewers } from './stream.js'
 import { applyStruckReactions, applyPackLifestealOnDeal } from '../lib/premium-abilities.js'
+import { completeTurn } from '../lib/witch-heroes.js'
 import {
   applyBossSpecial,
   checkBossPhase,
@@ -823,6 +824,8 @@ export default {
           `${e.emoji ?? '👾'} *${e.name}*\n❤️ ${hpBar(e.hp, e.maxHp)}\n\n` +
           `*${p}attack* · *${p}skill <name>* · *${p}defend* · *${p}flee*`
       }
+
+      completeTurn([player, e], bs.turn ?? 1)
 
       bs.turn = (bs.turn ?? 1) + 1
       player.battleState = bs
