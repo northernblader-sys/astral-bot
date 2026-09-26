@@ -1,9 +1,10 @@
 /**
  * unlockspin.js — owner-only `.unlockspin <character>`.
  *
- * Opens a spin banner that `.lockspin` (plugins/lockspin.js) froze, so players
- * can pull the character again. Shares the lib/spin-locks.js store and resolves
- * the character the same way plugins/character.js does.
+ * Opens a character that `.lockspin` (plugins/lockspin.js) froze, so players can
+ * pull it on the banner or buy it with Monds again. There is one store and one
+ * switch behind both doors — lib/spin-locks.js — so an unlock can't open the
+ * spin while leaving the shop closed, or the other way round.
  */
 import { config } from '../config.js'
 import { isOwnerJid, NOT_ALLOWED } from '../lib/group-helpers.js'
@@ -23,7 +24,7 @@ export default {
   name:        'unlockspin',
   aliases:     [],
   category:    'account',
-  description: 'Owner only: open a frozen character spin so players can pull it (.unlockspin <name>)',
+  description: 'Owner only: open a frozen character so players can pull or buy it (.unlockspin <name>)',
 
   async run(ctx) {
     const pr = config.prefix
@@ -40,13 +41,13 @@ export default {
     }
 
     if (!isSpinLocked(character.id)) {
-      return ctx.reply(`🔓 *${character.name}'s* spin isn't locked.`)
+      return ctx.reply(`🔓 *${character.name}* isn't locked — the spin and the buy price are both open already.`)
     }
 
     unlockSpin(character.id)
     return ctx.reply(
-      `🔓 *${character.emoji ? character.emoji + ' ' : ''}${character.name}'s* spin is now open.\n\n` +
-      `_Players can pull ${character.name} again._`,
+      `🔓 *${character.emoji ? character.emoji + ' ' : ''}${character.name}* is now open.\n\n` +
+      `_Players can pull ${character.name} on the banner or buy it with Monds again._`,
     )
   },
 }

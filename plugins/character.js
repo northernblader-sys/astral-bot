@@ -13,6 +13,12 @@
  *     🪙5 Monds buy the character outright here. See lib/monds.js for why the
  *     currency split matters and mondPriceFor() for the per-character override.
  *
+ * BOTH of those routes answer to the owner freeze in lib/spin-locks.js
+ * (`.lockspin <name>` / `.unlockspin <name>`): a frozen character can be neither
+ * pulled nor bought, and the buy path refuses before any Mond is charged. The
+ * price route used to ignore the freeze, which made `.lockspin` a lock on one of
+ * two doors — see shopLockGate().
+ *
  * A one-of-one is still a one-of-one. Buying it with Monds moves the bot-wide
  * lock (claimExclusiveSpinForPlayer) to the buyer, so the purchase wins the race
  * rather than bypassing it, and every later buyer is refused at any price.
@@ -47,6 +53,7 @@ import { sendImage, sendGif } from '../lib/image.js'
 import { getExclusiveSpinWinner, claimExclusiveSpinForPlayer } from '../lib/season-engine.js'
 import { getPlayer } from '../lib/player-repo.js'
 import { MOND, fmtMonds, getMonds, roundMonds, isMondBuyable, mondPriceFor } from '../lib/monds.js'
+import { isSpinLocked, shopLockGate } from '../lib/spin-locks.js'
 
 function findCharacter(query) {
   const q = (query ?? '').toLowerCase().trim()
@@ -232,6 +239,19 @@ function renderOverview(player, pr, db) {
   const equippedId = player.equippedCharacter ?? null
 
   const lines = characters.map(c => {
+    const isOwned = owned.includes(c.id)
+    const isEquipped = equippedId === c.id
+    // Ownership is checked first, because a freeze is not a revocation: someone
+    // who already holds the character keeps using it while the door is shut.
+    if (isEquipped) return `  ⭐ *${c.emoji} ${c.name}* ${characterStars(c.stars)} · _equipped_`
+    if (isOwned)     return `  ✅ *${c.emoji} ${c.name}* ${characterStars(c.stars)} · _owned (${pr}character equip ${c.id})_`
+    // An owner freeze outranks every route line below it, season rows included.
+    // The point of the row is to tell a player how to obtain the character, and
+    // while it is frozen the honest answer is "you can't" — quoting 🪙5 or
+    // `.season spin` just sends them at a command that will refuse them.
+    if (isSpinLocked(c.id)) {
+      return `  🧊 *${c.emoji} ${c.name}* ${characterStars(c.stars)} · _frozen by the owner · not obtainable yet_`
+    }
     if (c.seasonId) {
       const route = c.characterTier === 'major'
         ? `${pr}season spin`
@@ -240,10 +260,6 @@ function renderOverview(player, pr, db) {
           : `${pr}season pass claim 50`
       return `  🌞 *${c.emoji} ${c.name}* ${characterStars(c.stars)} · _Season 1 ${c.characterTier}; ${route}_`
     }
-    const isOwned = owned.includes(c.id)
-    const isEquipped = equippedId === c.id
-    if (isEquipped) return `  ⭐ *${c.emoji} ${c.name}* ${characterStars(c.stars)} · _equipped_`
-    if (isOwned)     return `  ✅ *${c.emoji} ${c.name}* ${characterStars(c.stars)} · _owned (${pr}character equip ${c.id})_`
     // How many other players hold it, shown on the locked lines only. A granted
     // character used to look identical to one nobody had ever obtained, so there
     // was no way to tell "unobtainable" from "someone already has this".
@@ -297,16 +313,18 @@ function renderInfo(character, player, pr, db, viewerJid) {
     ? '⭐ _Equipped_'
     : owned
       ? `✅ _Owned. Equip with *${pr}character equip ${character.id}*_`
-      : winnerId
-        ? `🔒 _One-of-one, already claimed by *${winner?.name ?? 'another player'}*. Not for sale at any price._`
-        : seasonRoute
-          ? `🌞 _Not owned. Season 1 ${character.characterTier}: obtain via *${seasonRoute}*. Monds cannot buy season content._`
-          : mondPrice !== null
-            ? (character.exclusive ? `⚡ _One-of-one, bot-wide. The first buyer takes it for good._\n` : '') +
-              `${MOND} _Buy outright for ${MOND}*${mondPrice}*: *${pr}character buy ${character.id}*_\n` +
-              `🎡 _Or spin for it with gems: *${route}*_\n` +
-              `_Monds are the only currency a character can be bought with. Get them with *${pr}monds*._`
-            : `🔒 _Not owned, and there is no way in yet._`
+      : isSpinLocked(character.id)
+        ? `🧊 _Frozen by the owner. The spin banner and the ${MOND} price are both closed, so ${character.name} cannot be obtained right now — by anyone, at any price._\n⏳ _Nothing to spend in the meantime; it will go live soon._`
+        : winnerId
+          ? `🔒 _One-of-one, already claimed by *${winner?.name ?? 'another player'}*. Not for sale at any price._`
+          : seasonRoute
+            ? `🌞 _Not owned. Season 1 ${character.characterTier}: obtain via *${seasonRoute}*. Monds cannot buy season content._`
+            : mondPrice !== null
+              ? (character.exclusive ? `⚡ _One-of-one, bot-wide. The first buyer takes it for good._\n` : '') +
+                `${MOND} _Buy outright for ${MOND}*${mondPrice}*: *${pr}character buy ${character.id}*_\n` +
+                `🎡 _Or spin for it with gems: *${route}*_\n` +
+                `_Monds are the only currency a character can be bought with. Get them with *${pr}monds*._`
+              : `🔒 _Not owned, and there is no way in yet._`
 
   const STAT_LABEL = { str: 'STR', agi: 'AGI', int: 'INT', def: 'DEF', lck: 'LCK', maxHp: 'Max HP', maxMp: 'Max MP' }
   const bonusLine = Object.entries(character.statBonuses ?? {})
@@ -358,11 +376,23 @@ function renderInfo(character, player, pr, db, viewerJid) {
  * an unclaimed one, not a way around the lock: the bot-wide claim moves to the
  * buyer, and every later buyer is refused no matter how many Monds they hold.
  *
+ * The owner freeze is a different lock and it applies here too. `.lockspin
+ * <name>` closes the Mond shop along with the banner (shopLockGate below), which
+ * is the whole point of a freeze: the owner uses it to hold a character back for
+ * a staged reveal, and a purchase route that ignored it would spoil the reveal
+ * the moment the first player with 5 Monds typed `.character buy`. Checking it
+ * FIRST, ahead of the season routing and the one-of-one claim, also means a
+ * frozen character reads as frozen rather than as a routing problem or a price
+ * problem, and nothing is spent on the way to that answer.
+ *
  * Season characters are refused and routed, same as before. Monds deliberately
  * cannot skip a battle pass.
  */
 async function handleBuy(ctx, character) {
   const pr = config.prefix
+  // First line on purpose: a frozen character must be refused before the season
+  // routing, the price lookup and the one-of-one claim, so the refusal is free.
+  if (shopLockGate(ctx, character.id)) return
   if (character.seasonId) {
     const route = character.characterTier === 'major'
       ? `${pr}season spin`
@@ -473,6 +503,16 @@ async function handleEquip(ctx, character) {
   })
 
   if (outcome.reason === 'not_owned') {
+    // A frozen character gets the freeze, not a shop window: this reply used to
+    // hand out *both* routes it can no longer use, which reads as the bot
+    // lying. No charge is implied here, so it is the plain notice rather than
+    // shopLockGate()'s "nothing was charged" refusal.
+    if (isSpinLocked(character.id)) {
+      return ctx.reply(
+        `🧊 *${character.name} is frozen.* You don't own it, and there is no way to get it right now — ` +
+        `the spin banner and the ${MOND} price are both closed until the owner unlocks it.`,
+      )
+    }
     // Route-aware, and there are now two routes for most of the roster: the
     // Mond buy (guaranteed) and the character's own spin (gems, attempts).
     // Season characters have neither and fall through to the info card.
