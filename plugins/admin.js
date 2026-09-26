@@ -31,6 +31,7 @@ import { ensureStatPoints, statPointCap } from '../lib/stat-progression.js'
 import { applyLevelUps, applyEquipmentBonus } from '../lib/combat-engine.js'
 import { rebornStatBonus } from '../lib/reborn-engine.js'
 import { statPackBonus } from '../lib/stat-packs.js'
+import { fmtMonds, getMonds } from '../lib/monds.js'
 import { syncEmptyVesselFlag } from '../lib/character-abilities.js'
 import {
   endSeason, getActiveSeason, getSeasonById, getSeasonRuntime, startSeason,
@@ -69,6 +70,8 @@ export default {
     if (sub === 'giveitem'   || sub === 'gi')         return giveItem(ctx)
     if (sub === 'givecharacter' || sub === 'givechar' || sub === 'gc') return giveCharacter(ctx)
     if (sub === 'takecharacter' || sub === 'takechar' || sub === 'tc') return takeCharacter(ctx)
+    if (sub === 'clearcharacter' || sub === 'clearchar' || sub === 'cc') return clearCharacter(ctx)
+    if (sub === 'takemond' || sub === 'takemonds' || sub === 'tm') return takeMonds(ctx)
     if (sub === 'setlevel'   || sub === 'level')      return setLevel(ctx)
     if (sub === 'reconcile'  || sub === 'fixlevels')  return reconcileLevels(ctx)
     if (sub === 'heal'       || sub === 'restore')    return healPlayer(ctx)
@@ -84,6 +87,8 @@ export default {
       `▹ *${p}admin giveitem <itemId> [amount] [@user]*\n` +
       `▹ *${p}admin givecharacter <character> [@user]*\n` +
       `▹ *${p}admin takecharacter <character> [@user]*\n` +
+      `▹ *${p}admin clearcharacter <character>* — clear an exclusive claim and remove it from its holder\n` +
+      `▹ *${p}admin takemond <amount|all> [@user]* — collect Monds from a player\n` +
       `▹ *${p}admin setlevel <level> [@user]*\n` +
       `▹ *${p}admin reconcile [@user|all]*\n` +
       `▹ *${p}admin heal [@user]*\n` +
@@ -354,27 +359,149 @@ export async function takeCharacter(ctx) {
   await updatePlayer(db, targetId, (pl) => {
     pl.ownedCharacters = pl.ownedCharacters ?? []
     const at = pl.ownedCharacters.indexOf(character.id)
-    if (at === -1) return
-    owned = true
-    pl.ownedCharacters.splice(at, 1)
+    if (at !== -1) {
+      owned = true
+      pl.ownedCharacters.splice(at, 1)
 
-    if (pl.equippedCharacter === character.id) {
-      wasEquipped = true
-      if (character.statBonuses) applyEquipmentBonus(pl, character, -1)
-      pl.equippedCharacter = null
-      syncEmptyVesselFlag(pl)
+      if (pl.equippedCharacter === character.id) {
+        wasEquipped = true
+        if (character.statBonuses) applyEquipmentBonus(pl, character, -1)
+        pl.equippedCharacter = null
+        syncEmptyVesselFlag(pl)
+      }
     }
-    if (character.exclusive) releasedFrom = releaseExclusiveSpinLock(db, character.id)
+
+    // The roster's "claimed by" line is driven by the global winner registry,
+    // while actual ownership lives on the player's ownedCharacters array.
+    // If those got out of sync (for example, a partial/legacy grant), allow
+    // the owner to clear the stale claim by taking the character from the
+    // registered winner. Never clear a different player's lock just because
+    // this target happens to have a stray ownedCharacters entry.
+    if (character.exclusive && getExclusiveSpinWinner(db, character.id) === targetId) {
+      releasedFrom = releaseExclusiveSpinLock(db, character.id)
+    }
   })
 
-  if (!owned) {
+  if (!owned && !releasedFrom) {
     return reply(`ℹ️ *${target.name}* does not own *${character.name}*. Nothing changed.`)
+  }
+  if (!owned) {
+    return reply(
+      `🧹 Cleared the stale one-of-one claim for *${character.name}* from *${target.name}*; ` +
+      `they did not have an ownership entry. The character is available to grant again.`,
+    )
   }
   return reply(
     `🗑️ Removed *${character.emoji} ${character.name}* from *${target.name}*.\n` +
     (wasEquipped ? `_It was equipped, so its stat bonuses were stripped back off._\n` : '') +
     (releasedFrom ? `🔓 The one-of-one claim is free again and can be granted to someone else.\n` : '') +
     `_Grant it onward with *${p}admin givecharacter ${character.id}*._`,
+  )
+}
+
+
+/**
+ * clearCharacter(ctx) — `.clearcharacter <exclusive character>`.
+ * Owner-only global reset: removes every saved ownership entry for the
+ * one-of-one, strips equipment bonuses, and clears its bot-wide winner lock.
+ * Unlike takeCharacter(), this intentionally finds the current holder itself.
+ */
+export async function clearCharacter(ctx) {
+  const { args, reply, db } = ctx
+  const p = config.prefix
+  const query = args.slice(1).filter(a => a && !a.startsWith('@')).join(' ')
+  if (!query) return reply(`❌ Usage: *${p}clearcharacter <exclusive character>*`)
+
+  const character = findCharacterFor(query)
+  if (!character) {
+    return reply(`❌ No character matches *"${query}"*. See *${p}character* for the roster.`)
+  }
+  if (!character.exclusive) {
+    return reply(`❌ *${character.name}* is not a one-of-one exclusive; this command only clears exclusive claims.`)
+  }
+
+  const previousWinnerId = getExclusiveSpinWinner(db, character.id)
+  const previousWinner = previousWinnerId ? getPlayer(db, previousWinnerId) : null
+  const clearedOwners = new Set()
+  let claimCleared = false
+
+  await updateAllPlayers(db, (users) => {
+    let changed = false
+    for (const [id, pl] of Object.entries(users)) {
+      if (!pl) continue
+      pl.ownedCharacters ??= []
+      const hadCharacter = pl.ownedCharacters.includes(character.id)
+      if (!hadCharacter) continue
+
+      pl.ownedCharacters = pl.ownedCharacters.filter(id => id !== character.id)
+      clearedOwners.add(pl.name ?? id)
+      changed = true
+
+      if (pl.equippedCharacter === character.id) {
+        if (character.statBonuses) applyEquipmentBonus(pl, character, -1)
+        pl.equippedCharacter = null
+        syncEmptyVesselFlag(pl)
+      }
+    }
+
+    if (getExclusiveSpinWinner(db, character.id)) {
+      releaseExclusiveSpinLock(db, character.id)
+      claimCleared = true
+      changed = true
+    }
+    return changed
+  })
+
+  if (!claimCleared && clearedOwners.size === 0) {
+    return reply(`ℹ️ *${character.name}* has no active claim or owner entry to clear. Nothing changed.`)
+  }
+
+  const formerNames = [...clearedOwners]
+  if (previousWinner?.name && !formerNames.includes(previousWinner.name)) formerNames.push(previousWinner.name)
+  const former = formerNames.length ? ` Previous holder: *${formerNames.join(', ')}*.` : ''
+  return reply(
+    `🔓 Cleared *${character.emoji} ${character.name}* from the character registry.${former}\n` +
+    `Its one-of-one claim is open again for exactly one player to obtain it.`,
+  )
+}
+
+/** `.takemond <amount|all> [@user]` — owner-only forced Mond collection. */
+export async function takeMonds(ctx) {
+  const { args, reply, db } = ctx
+  const p = config.prefix
+  const rawAmount = String(args[1] ?? '').toLowerCase()
+  const takeAll = rawAmount === 'all'
+  const amount = Math.floor(Number(rawAmount))
+  if (!takeAll && (!Number.isFinite(amount) || amount <= 0)) {
+    return reply(`❌ Usage: *${p}takemond <amount|all> [@user]*`)
+  }
+
+  const targetId = resolveTargetId(ctx)
+  const target = getPlayer(db, targetId)
+  if (!target) return reply(`❌ That player isn't registered yet.`)
+
+  let held = 0
+  let taken = 0
+  let insufficient = false
+  await updatePlayer(db, targetId, (pl) => {
+    pl.wallet ??= {}
+    held = getMonds(pl)
+    taken = takeAll ? held : amount
+    if (taken > held) {
+      insufficient = true
+      return
+    }
+    pl.wallet.monds = held - taken
+  })
+
+  if (insufficient) {
+    return reply(`❌ *${target.name}* only has ${fmtMonds(held)} 🪙 Monds; nothing was collected.`)
+  }
+  if (!taken) return reply(`ℹ️ *${target.name}* has no Monds to collect.`)
+
+  return reply(
+    `🧾 Collected *${fmtMonds(taken)} 🪙 Monds* from *${target.name}*.\n` +
+    `Their remaining balance is *${fmtMonds(held - taken)} 🪙 Monds*.`,
   )
 }
 
