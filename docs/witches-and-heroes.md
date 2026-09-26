@@ -84,10 +84,16 @@ text, never to a still image.
    interception intentionally; resolve each Coordinate strike against real
    revival state; retain one final settlement. Wire delayed defend release,
    reaction ordering, charging and all five distinct effects into each mode.
-5. **Renderer and cinematic ownership**: use `cinematicBackground` in the
-   real battle renderer; pause generic cards/messages during the cinematic;
-   hold the battle command lock through delivery and release on failure.
-   Handle settlement outside the player write queue/network I/O critical path.
+5. **Renderer and cinematic ownership**: the actual renderer now consumes
+   `cinematicBackground` and a resolved `opts.cinematic` payload, replacing the
+   generic card/footer. Both participants have an in-process presentation lock;
+   generation tickets discard stale in-flight renders, and finally releases
+   the lock on rejected sends. Dispatcher and direct PvP entry points check it.
+   **Still required:** combat adapters must supply the resolved scene instead
+   of sending separate victory/status messages, preserve participant IDs after
+   settlement, and keep mutation/settlement atomic. The lock is not distributed
+   across independent VPS processes and is not a database transaction. A socket
+   promise that never settles relies on the platform transport's timeout.
 6. **Commands and discoverability**: register `.endworld`, `.sword`, `.ss`,
    all spin commands and aliases; add every combat token to BOTH
    `handler.js` and `lib/platform/pipeline.js` battle allowlists. Add character
@@ -109,3 +115,13 @@ npm test
 ```
 
 No live WhatsApp session or live OpenRouter API call is used in these tests.
+
+
+## Cinematic retest checkpoint (2026-09-26)
+
+See `docs/cinematic-retest.md` for evidence and remaining live-delivery limits.
+Full suite: **272 passed, 0 failed**, on three consecutive runs. Focused scene
+suite: **25 passed, 0 failed**, on five consecutive runs, including seeded
+failure schedules and actual PvP renderer / command-dispatch boundary tests.
+These do not make the characters playable: the adapters in the checklist above
+still need to invoke the new mechanics and pass the resolved cinematic payload.

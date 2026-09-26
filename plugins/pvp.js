@@ -1,3 +1,4 @@
+import { isBattleCinematicActive } from '../lib/battle-presentation.js'
 /**
  * pvp.js — player-vs-player duels.
  *
@@ -842,6 +843,7 @@ export default {
   ],
 
   async run(ctx) {
+    if (isBattleCinematicActive(ctx)) return
     const { player, args, db } = ctx
     const pr = config.prefix
     const sub = (args[0] ?? '').toLowerCase()
@@ -1580,6 +1582,7 @@ async function autoResolveCatFormTurns(db, ctx, aJid, bJid, { lead = '' } = {}) 
 }
 
 async function runPvpTurn(ctx, action, skillQuery) {
+  if (isBattleCinematicActive(ctx)) return
   const { db } = ctx
   const actorJid = ctx.from
 
@@ -3475,6 +3478,7 @@ async function runPvpTurn(ctx, action, skillQuery) {
  * gates on Wither being equipped and the once-per-battle charge.
  */
 export async function pvpCinderVerdict(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3491,6 +3495,7 @@ export async function pvpCinderVerdict(ctx) {
  * equipped and burns the once-per-battle charge plus his Baryon self-cost.
  */
 export async function pvpKurama(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3508,6 +3513,7 @@ export async function pvpKurama(ctx) {
  * already being open (see activateChimeraDomain() in lib/megumi.js).
  */
 export async function pvpDomain(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3534,6 +3540,7 @@ export function inPvpDuel(player) {
  * (see activateDragonUltimate() in lib/dragon-engine.js).
  */
 export async function pvpUltimate(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3555,6 +3562,7 @@ export async function pvpUltimate(ctx) {
  * ends the duel with no result recorded for either player.
  */
 export async function pvpWildCard(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3574,6 +3582,7 @@ export async function pvpWildCard(ctx) {
  * nothing to take until they reach for a skill or a signature ability.
  */
 export async function pvpThiefsEye(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3601,6 +3610,7 @@ export async function pvpThiefsEye(ctx) {
  * sides — so it lengthens duels rather than deciding them.
  */
 export async function pvpHollowExchange(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3620,6 +3630,7 @@ export async function pvpHollowExchange(ctx) {
  * is gated to basic attack / skill only).
  */
 export async function pvpHollowPurple(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3638,6 +3649,7 @@ export async function pvpHollowPurple(ctx) {
  * UNLIMITED_VOID_STUN_TURNS of their turns. It deals no damage.
  */
 export async function pvpUnlimitedVoid(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3657,6 +3669,7 @@ export async function pvpUnlimitedVoid(ctx) {
  * how wounded the opponent already is (kurohitsugiMultiplier).
  */
 export async function pvpKurohitsugi(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3674,6 +3687,7 @@ export async function pvpKurohitsugi(ctx) {
  * rest-of-battle stat surge. It deals no damage and the opponent takes no hit.
  */
 export async function pvpHogyoku(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3693,6 +3707,7 @@ export async function pvpHogyoku(ctx) {
  * PUPPET_TANGLE_TURNS — one turn, companion and all.
  */
 export async function pvpPuppetStrings(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3713,6 +3728,7 @@ export async function pvpPuppetStrings(ctx) {
  * the opponent distracted for GREED_TANGLE_TURNS.
  */
 export async function pvpGreedTithe(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3730,6 +3746,7 @@ export async function pvpGreedTithe(ctx) {
  * who negates it and counters (see the 'timestop' resolution branch above).
  */
 export async function pvpTimeStop(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3746,6 +3763,7 @@ export async function pvpTimeStop(ctx) {
  * the 2-turn cooldown (see activateSoulPunisher() in lib/gogeta.js).
  */
 export async function pvpSoulPunisher(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)
@@ -3761,6 +3779,7 @@ export async function pvpSoulPunisher(ctx) {
  * from inside the turn, on the turn it fires.
  */
 export async function pvpKamehameha(ctx) {
+  if (isBattleCinematicActive(ctx)) return
   const player = getPlayer(ctx.db, ctx.from)
   if (!inPvp(player)) {
     return ctx.reply(`❌ You're not in a duel.`)

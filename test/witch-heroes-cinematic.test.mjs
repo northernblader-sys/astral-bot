@@ -5,7 +5,7 @@ import { ART } from '../lib/witch-heroes.js'
 const instant = { sleep: async () => {} }
 function mock() {
   const calls = [], sent = { key: { id: 'one-result', fromMe: true, remoteJid: 'chat' } }
-  return { calls, sent, reply: async text => { calls.push(['reply', text]); return sent },
+  return { calls, sent, from: 'owner', db: {}, reply: async text => { calls.push(['reply', text]); return sent },
     replyImage: async (url, text) => calls.push(['image', url, text]),
     editReply: async (message, text) => calls.push(['edit', message, text]) }
 }
