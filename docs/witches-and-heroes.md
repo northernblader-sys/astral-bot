@@ -55,15 +55,16 @@ text, never to a still image.
   countdown/phase rules, sword actions and delayed reactions, idempotent turn
   IDs, JSON-safe state, staged art URLs.
 - `lib/witch-heroes-spins.js`: staged definitions, serialized-queue-compatible
-  pull mutation, exact costs/caps/guarantees, GIF-safe presentation.
+  pull mutation, exact costs/caps/guarantees, GIF-safe presentation. Sword Maiden gains one charge after each completed non-sword turn, capped at six; ordinary PvP turns count too. Every `.sword` technique requires and spends both its charge threshold and MP. Using one in a duel consumes the turn and passes play to the opponent, but does not refill the charge it just spent.
 - `lib/witch-heroes-cinematic.js`: clash/Coordinate presentation and editable
   result sequence, injectable delays, failed-media and failed-edit fallback.
 - `plugins/maiden.js` + `lib/maiden-persona.js` + `data/maiden-personality.json`:
   the holder's chat with her (`.maiden <message>`), Groq first with the
   OpenRouter backup through `lib/ai.js`. Her voice is data, not code: the
-  personality file carries her rules and `softenMaidenReply()` enforces the
-  lowercase, punctuation-free stream on the way out, so the character reads
-  right even when a model slips. Her card stays OUT of both battle allowlists
+  personality file guides her voice and `softenMaidenReply()` removes emoji,
+  formatting, and stage directions while preserving natural punctuation. Her
+  replies are intentionally varied in length and do not require a catchphrase.
+  Her card stays OUT of both battle allowlists
   on purpose: conversation is not a battle action. Ownership is her exclusive
   claim (`ownedCharacters`), with the bot owner let through to test her voice
   live. See `test/maiden.test.mjs` and `test/maiden-smoke.test.mjs`.

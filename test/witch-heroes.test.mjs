@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {
   BANNERS, ART, spinChance, state, reflectAttack, activateEndworld,
-  completeTurn, useSword, swordStatus, swordReaction, witchImmune,
+  completeTurn, useSword, swordStatus, swordReaction, witchImmune, chargeSwordTurn,
 } from '../lib/witch-heroes.js'
 
 function fighter(id, extra = {}) {
@@ -111,10 +111,27 @@ test('dead caster cannot execute Endworld', () => {
   assert.deepEqual(completeTurn([r, enemy], 7), [])
   assert.equal(enemy.hp, 900)
 })
+test('Sword Maiden charge grows once per completed turn and caps at six', () => {
+  const m = fighter('sword_maiden', { battleState: { type: 'pvp', myTurn: true } })
+  assert.equal(chargeSwordTurn(m), 1)
+  for (let i = 0; i < 8; i++) chargeSwordTurn(m)
+  assert.equal(state(m).charge, 6)
+  assert.equal(chargeSwordTurn(fighter('ronova')), 0)
+})
+test('a completed sword-technique turn does not refund the charge it spent', () => {
+  const m = fighter('sword_maiden'), enemy = fighter(null)
+  state(m).charge = 1
+  state(m).charge -= 1
+  completeTurn([m, enemy], 1, { chargeSword: false })
+  assert.equal(state(m).charge, 0)
+})
 test('status is read-only and replayed turns cannot farm charge', () => {
   const m = fighter('sword_maiden'), enemy = fighter(null)
   const before = JSON.stringify(m)
   assert.match(swordStatus(m), /Transcended Sword/)
+  assert.match(swordStatus(m), /charge builds by 1 after each completed turn/i)
+  assert.match(swordStatus(m), /does not recharge itself/i)
+  assert.match(swordStatus(m), /spends charge and MP/i)
   assert.equal(JSON.stringify(m), before)
   completeTurn([m, enemy], 1); completeTurn([m, enemy], 1)
   assert.equal(state(m).charge, 1)
