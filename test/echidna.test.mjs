@@ -33,6 +33,11 @@
  *  8. RITE COPY - the sanctuary rite's prose carries no dash punctuation at
  *     all: no em dash, no en dash, no spaced " - " substitute either.
  *
+ *  9. OWNER CHAT DOOR - runChat lets the bot owner through without holding
+ *     the exclusive (phone JID or LID, device suffixes included), while
+ *     strangers still get the static dismissal and the rite/child stay
+ *     holder-only. Proven with the key blanked: no network, no API call.
+ *
  * Run:  node test/echidna.test.mjs
  */
 import assert from 'node:assert/strict'
@@ -317,5 +322,68 @@ ok('the rite is still four beats and a closing, and still refuses a second child
   assert.match(src, /ONE child\./, 'the refusal still leads with ONE child (echidna-smoke asserts it)')
   assert.match(src, /A child has come into your house\./)
 })
+
+console.log('── 9. the owner chat door ──────────────────────────────────────')
+// The AI voice belongs to the holder; the bot owner is let through anyway so
+// the OpenRouter voice can be tested live. The rite and child stay
+// holder-only. The gate is proven WITHOUT a network call: with the key
+// blanked, someone past the gate gets the OPENROUTER_API_KEY hint, while a
+// stranger still gets the static dismissal (never an API call).
+const echidnaPlugin = (await import('../plugins/echidna.js')).default
+const { config: echidnaConfig } = await import('../config.js')
+const { isOwnerJid } = await import('../lib/group-helpers.js')
+
+function fakeCtx(from, owned = []) {
+  const replies = []
+  return {
+    from,
+    args: ['hi'],
+    player: { ownedCharacters: owned, name: 'Tester' },
+    reply: (text) => { replies.push(text) },
+    replies,
+  }
+}
+
+ok('isOwnerJid matches the configured owner by phone JID and by LID, with device suffixes', () => {
+  assert.equal(isOwnerJid('2347062301848@s.whatsapp.net'), true)
+  assert.equal(isOwnerJid('2347062301848:5@s.whatsapp.net'), true)
+  assert.equal(isOwnerJid('87209327755401@lid'), true)
+  assert.equal(isOwnerJid('87209327755401:12@lid'), true)
+  assert.equal(isOwnerJid('234111@s.whatsapp.net'), false)
+  assert.equal(isOwnerJid(null), false)
+})
+
+const savedKey = echidnaConfig.openrouterApiKey
+try {
+  echidnaConfig.openrouterApiKey = ''
+
+  ok('a stranger is still turned away with the static dismissal', async () => {
+    const ctx = fakeCtx('999someoneelse@s.whatsapp.net')
+    await echidnaPlugin.run(ctx)
+    assert.equal(ctx.replies.length, 1)
+    assert.match(ctx.replies[0], /tea is for someone else|not even worth appraising|Do the maths/)
+  })
+
+  ok('the bot owner is let through without holding the exclusive (key hint, not the stranger line)', async () => {
+    const ctx = fakeCtx('2347062301848@s.whatsapp.net')
+    await echidnaPlugin.run(ctx)
+    assert.equal(ctx.replies.length, 1)
+    assert.match(ctx.replies[0], /OPENROUTER_API_KEY/)
+  })
+
+  ok('the owner door also opens via the LID identity', async () => {
+    const ctx = fakeCtx('87209327755401:12@lid')
+    await echidnaPlugin.run(ctx)
+    assert.match(ctx.replies[0], /OPENROUTER_API_KEY/)
+  })
+
+  ok('a holder who is not the owner still walks in as always', async () => {
+    const ctx = fakeCtx('999someoneelse@s.whatsapp.net', ['echidna'])
+    await echidnaPlugin.run(ctx)
+    assert.match(ctx.replies[0], /OPENROUTER_API_KEY/)
+  })
+} finally {
+  echidnaConfig.openrouterApiKey = savedKey
+}
 
 console.log(`\nALL ${passed} ECHIDNA CHECKS PASSED`)

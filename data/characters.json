@@ -505,10 +505,10 @@
       "maxHp": 160,
       "maxMp": 140
     },
-    "description": "The Witch of Lust turns every threat into a promise.",
+    "description": "The Witch of Lust has never needed to win a fight, because her enemies keep losing their own. Desire bends toward her the way water bends downhill: kings have emptied thrones for a single evening at her table, and blades raised against her have a way of coming home to the hands that held them. She takes every attempt on her life as a compliment, and she answers each one in person.",
     "ability": {
       "name": "My Desire",
-      "flavor": "Passive: a landed direct attack may be reflected for equal damage, up to four times per battle. Ronova is immune."
+      "flavor": "Passive: no command, no cost. A direct attack that lands on her may be returned to its sender in full, up to four times per battle. To strike Scarlett is to confess, and she accepts every confession at equal damage. Ronova alone is immune; there is nothing left in the Witch of Life and Death that wants, and want is the only door Scarlett opens."
     }
   },
   {
@@ -531,15 +531,15 @@
       "maxHp": 220,
       "maxMp": 180
     },
-    "description": "She decides where life ends.",
+    "description": "The other witches wield power. Ronova decides where it ends, and her answer always arrives as a place and a time. She does not quarrel, gloat or hurry; she writes an ending and waits for the world to catch up to it. When she begins the count, the sky dims one turn at a time, and nothing that has ever been born has talked her down from three.",
     "ability": {
       "name": "The End of the World",
-      "flavor": "Use .endworld after five completed battle turns. Three charging turns end the enemy; Sword Maiden can cut a refuge through the first phase."
+      "flavor": "Use .endworld after five completed battle turns. Three charging turns follow, the world going dark with each one, and on the third the enemy simply ends, past every save and every revival. Only one blade has ever cut a refuge through the first phase."
     }
   },
   {
     "id": "sword_maiden",
-    "stars": 5,
+    "stars": 6,
     "name": "Sword Maiden",
     "series": "The Heroes",
     "emoji": "⚔️",
@@ -558,10 +558,10 @@
       "maxHp": 190,
       "maxMp": 160
     },
-    "description": "She finds the opening by listening to you breathe.",
+    "description": "Blind since before anyone thought to ask how, and entirely too cheerful about the sound of a blade leaving its sheath. She fronts The Heroes not as their shield but as their full stop: she hears the fight end in your breath, your weight, the small tell between your balance and your mistake. The witches write endings. She is the reason one of them had to be rewritten.",
     "ability": {
       "name": "Absolute Sword",
-      "flavor": "Use .sword <technique>; charge and MP status are shown with .ss. Her cuts cannot miss or resolve to zero."
+      "flavor": "Five techniques drawn with .sword; charge and MP read on .ss. Her cuts cannot miss, cannot be intercepted, and never land for nothing. Transcended Sword waits through a defensive turn and stays armed for one true cut, and The Coordinate falls as three strikes resolved as one. When the world ends, her edge is the refuge that says not yet."
     }
   }
 ]
