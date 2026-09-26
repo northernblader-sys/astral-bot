@@ -52,3 +52,36 @@ test('auth errors surface immediately', async () => {
 test('buildMessages drops empty turns', () => {
   assert.equal(buildMessages('', [{ role: 'user', content: '' }, null]).length, 0)
 })
+
+test('response body remains subject to the request timeout after headers arrive', async () => {
+  let calls = 0
+  const fetchImpl = async (_url, { signal }) => {
+    calls++
+    return { ok: true, status: 200, json: () => new Promise((_resolve, reject) => {
+      signal.addEventListener('abort', () => reject(new Error('aborted body')), { once: true })
+    }) }
+  }
+  await assert.rejects(() => askAI({ apiKey: 'test', model: 'test/model', fetchImpl,
+    timeoutMs: 5, sleepImpl: async () => {} }), e => e.status === 0 && e.apiMessage === 'timeout')
+  assert.ok(calls >= 2)
+})
+test('invalid success JSON retries and can recover rather than returning a blank answer', async () => {
+  let calls = 0
+  const fetchImpl = async () => ++calls === 1
+    ? { ok: true, status: 200, json: async () => { throw new SyntaxError('bad JSON') } }
+    : okReply('Recovered')
+  const result = await askAI({ apiKey: 'test', fetchImpl, sleepImpl: async () => {} })
+  assert.equal(result.text, 'Recovered')
+  assert.equal(calls, 2)
+})
+test('text content blocks are parsed without speaking object representations', async () => {
+  const fetchImpl = async () => ({ ok: true, status: 200, json: async () => ({
+    choices: [{ message: { content: [{ type: 'text', text: 'Tea?' }, { type: 'image_url', image_url: {} }] } }],
+  }) })
+  assert.equal((await askAI({ apiKey: 'test', fetchImpl })).text, 'Tea?')
+})
+test('insufficient credits is a terminal 402, not a model-fallback loop', async () => {
+  let calls = 0
+  await assert.rejects(() => askAI({ apiKey: 'test', fetchImpl: async () => { calls++; return errReply(402, 'Insufficient credits') } }), e => e.status === 402)
+  assert.equal(calls, 1)
+})

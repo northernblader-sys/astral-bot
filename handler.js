@@ -1,3 +1,4 @@
+import { editOwnWhatsAppText } from './lib/platform/whatsapp-edits.js'
 import { logger, config } from './config.js'
 import { gifSourceToVideo } from './lib/converter.js'
 import { normalizeMessageContent } from '@whiskeysockets/baileys'
@@ -942,6 +943,9 @@ export function makeHandler(sock, db, botName) {
               logger.error({ err: err.message, jid: sender, cmd }, 'ctx.reply failed to send')
               throw err
             }),
+        // Cinematic edits must target our own message in this chat only.
+        // Baileys returns a WAMessage from ctx.reply; preserve its full key.
+        editReply: (sent, text) => editOwnWhatsAppText(sock, sender, sent, text),
         replyImage: (image, caption = '') =>
           sock.sendMessage(
             sender,
