@@ -243,7 +243,12 @@ async function runChat(ctx, text) {
     rememberTurn(ctx.from, text, answer)
     return ctx.reply(answer)
   } catch (err) {
-    if (err?.status === 401 || err?.status === 402 || err?.status === 403) {
+    // No keys, prompts, chat history or raw provider response in logs.
+    console.warn('[echidna] OpenRouter failure', { status: Number(err?.status) || 0 })
+    if (err?.status === 402) {
+      return ctx.reply(`🍵 _“The Gospel is fine. Its provider wants paying.”_\n_(OpenRouter reports insufficient credits, status 402. The bot owner needs to check the provider balance.)_`)
+    }
+    if (err?.status === 401 || err?.status === 403) {
       return ctx.reply(
         `🍵 _She taps the Gospel, irritated._ _"The connection is refused - the key the bot carries does not open the door." _\n` +
         `_(Check OPENROUTER_API_KEY - the API rejected it, status ${err.status}.)_`,
