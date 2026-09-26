@@ -282,7 +282,15 @@
     "gemPrice": null,
     "spinOnly": true,
     "image": "https://i.ibb.co/G48h68Bs/satoru-gojo-icon.jpg",
-    "statBonuses": { "str": 30, "agi": 40, "int": 35, "def": 25, "lck": 20, "maxHp": 200, "maxMp": 120 },
+    "statBonuses": {
+      "str": 30,
+      "agi": 40,
+      "int": 35,
+      "def": 25,
+      "lck": 20,
+      "maxHp": 200,
+      "maxMp": 120
+    },
     "description": "The strongest there has ever been. Born with the Six Eyes and the Limitless, Gojo does not dodge and does not guard, because the space in front of him never lets you arrive. Standing against him is not a fight you are losing. It is a fight that was never yours to have.",
     "ability": {
       "name": "Limitless",
@@ -314,7 +322,9 @@
     "exclusive": true,
     "mondPrice": 5,
     "image": "https://i.ibb.co/6cD7218p/Tella.jpg",
-    "finalForm": { "image": "https://i.ibb.co/FL0bvjKL/witch-of-envy-final-form.jpg" },
+    "finalForm": {
+      "image": "https://i.ibb.co/FL0bvjKL/witch-of-envy-final-form.jpg"
+    },
     "description": "The first of all witches, and the one every witch since has only been an echo of. She does not hate you. At first she does not even see you. But linger too close to the one she has chosen, take too much of what should be theirs, and something older and quieter than rage opens its eyes behind her own. Everyone she has ever envied is gone. Not beaten. Gone.",
     "ability": {
       "name": "Wonders of You",
@@ -445,7 +455,15 @@
     "gemPrice": null,
     "exclusive": true,
     "image": "https://i.ibb.co/jvwH2Qfj/Aizen-Sosuke-The-One-Above-All.jpg",
-    "statBonuses": { "str": 32, "agi": 36, "int": 42, "def": 24, "lck": 22, "maxHp": 180, "maxMp": 150 },
+    "statBonuses": {
+      "str": 32,
+      "agi": 36,
+      "int": 42,
+      "def": 24,
+      "lck": 22,
+      "maxHp": 180,
+      "maxMp": 150
+    },
     "description": "The chair was always meant for someone, and he grew past every one of them. Aizen does not scheme against the world: he edits it, and the world agrees. What you see of him is only what he has already decided you will see, and the fight was over before the first swing: the moment you looked at him and believed you knew where he was standing.",
     "ability": {
       "name": "Kyōka Suigetsu",
@@ -466,5 +484,84 @@
       "flavor": "Passive, no command. Every turn her flowers restore 5% of your max HP, or 10% once you fall below 35%. Once per battle they reject the first poison, burn or bleed that lands on you as if it never happened, and after every won fight she mends another 15%. In duels all of it is halved."
     },
     "exclusive": true
+  },
+  {
+    "id": "scarlett",
+    "stars": 5,
+    "name": "Scarlett, the Witch of Lust",
+    "emoji": "🌹",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "spinOnly": true,
+    "exclusive": true,
+    "image": "https://i.ibb.co/tw7xbfZS/scarlett.jpg",
+    "spinImage": "https://i.ibb.co/tw7xbfZS/scarlett.jpg",
+    "statBonuses": {
+      "str": 28,
+      "agi": 30,
+      "int": 36,
+      "def": 18,
+      "lck": 24,
+      "maxHp": 160,
+      "maxMp": 140
+    },
+    "description": "The Witch of Lust turns every threat into a promise.",
+    "ability": {
+      "name": "My Desire",
+      "flavor": "Passive: a landed direct attack may be reflected for equal damage, up to four times per battle. Ronova is immune."
+    }
+  },
+  {
+    "id": "ronova",
+    "stars": 5,
+    "name": "Ronova, the Witch of Life and Death",
+    "emoji": "☠️",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "spinOnly": true,
+    "exclusive": true,
+    "image": "https://i.ibb.co/XZ5v7YMv/ronova-info.jpg",
+    "spinImage": "https://i.ibb.co/4RTwC4Mf/ronova-spin.jpg",
+    "statBonuses": {
+      "str": 34,
+      "agi": 22,
+      "int": 44,
+      "def": 26,
+      "lck": 22,
+      "maxHp": 220,
+      "maxMp": 180
+    },
+    "description": "She decides where life ends.",
+    "ability": {
+      "name": "The End of the World",
+      "flavor": "Use .endworld after five completed battle turns. Three charging turns end the enemy; Sword Maiden can cut a refuge through the first phase."
+    }
+  },
+  {
+    "id": "sword_maiden",
+    "stars": 5,
+    "name": "Sword Maiden",
+    "series": "The Heroes",
+    "emoji": "⚔️",
+    "rarity": "boundless",
+    "gemPrice": null,
+    "spinOnly": true,
+    "exclusive": true,
+    "image": "https://media3.giphy.com/media/avV3LYHmL8bvsQ21aI/giphy.gif",
+    "spinImage": "https://media3.giphy.com/media/avV3LYHmL8bvsQ21aI/giphy.gif",
+    "statBonuses": {
+      "str": 42,
+      "agi": 46,
+      "int": 18,
+      "def": 24,
+      "lck": 30,
+      "maxHp": 190,
+      "maxMp": 160
+    },
+    "description": "She finds the opening by listening to you breathe.",
+    "ability": {
+      "name": "Absolute Sword",
+      "flavor": "Use .sword <technique>; charge and MP status are shown with .ss. Her cuts cannot miss or resolve to zero."
+    }
   }
 ]

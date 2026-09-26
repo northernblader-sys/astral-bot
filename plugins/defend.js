@@ -28,6 +28,7 @@ import { applyAllNamedPassives, NP_EVENT } from '../lib/named-passives.js'
 import { beastIntervention, BEAST_EVENT } from '../lib/beast-engine.js'
 import { wearArmorOnHit, breakMessage } from '../lib/durability.js'
 import { applyStruckReactions } from '../lib/premium-abilities.js'
+import { completeTurn, swordReaction } from '../lib/witch-heroes.js'
 import {
   activateFinalForm,
   sendFinalFormVideo,
@@ -396,6 +397,12 @@ export default {
         }
       } else {
         // ── Regular enemy attack ──────────────────────────────────────────────
+        const maidenReaction = swordReaction(player, e, { defend: true })
+        if (maidenReaction) {
+          msg += `\n${maidenReaction.message}`
+          if (e.hp <= 0) return handleVictory(player, e, ctx)
+        }
+
         let enemyDmg = calcMonsterDamage(
           getEffectiveStat(e, 'atk'),
           getEffectiveStat(player, 'def'),
@@ -499,6 +506,8 @@ export default {
           `\n\n❤️ ${hpBar(player.hp, player.maxHp)}  💧 ${player.mp}/${player.maxMp} MP\n\n` +
           `*${p}attack* · *${p}skill <name>* · *${p}defend* · *${p}flee*`
       }
+
+      completeTurn([player, e], bs.turn ?? 1)
 
       bs.turn = (bs.turn ?? 1) + 1
       player.battleState = bs

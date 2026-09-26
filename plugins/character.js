@@ -143,6 +143,9 @@ const SPIN_ROUTES = {
   witch_of_envy: 'envy-spin',
   echidna: 'echidna-spin',
   orihime: 'orihime-spin',
+  scarlett: 'scarlett-spin',
+  ronova: 'ronova-spin',
+  sword_maiden: 'sword-spin',
 }
 
 function spinRouteFor(characterId, pr) {

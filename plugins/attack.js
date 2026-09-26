@@ -78,6 +78,7 @@ import {
 import { isStreaming, rampStreamViewers } from './stream.js'
 import { applyStruckReactions, applyPackLifestealOnDeal } from '../lib/premium-abilities.js'
 import { sendImage } from '../lib/image.js'
+import { reflectAttack, completeTurn, swordReaction } from '../lib/witch-heroes.js'
 
 /** True when the current fight is against an anime boss with active bossState. */
 function isBossFight(player) {
@@ -831,6 +832,18 @@ export default {
           dmgNamedLines += '\n' + beastDmgResult.lines.join('\n')
         }
 
+        const maidenReaction = swordReaction(player, e, { directAttack: true })
+        if (maidenReaction) {
+          msg += `\n${maidenReaction.message}`
+          if (e.hp <= 0) return handleVictory(player, e, ctx)
+        }
+
+        const witchReflection = reflectAttack(player, e, enemyDmg, { indirect: false })
+        if (witchReflection) {
+          msg += '\n' + witchReflection.message
+          enemyDmg = 0
+        }
+
         const absorbedEnemyDmg = absorbDamage(player, enemyDmg)
         const shieldBlockedEnemy = enemyDmg - absorbedEnemyDmg
         const appliedEnemy = applyIncomingDamage(player, absorbedEnemyDmg)
@@ -889,6 +902,10 @@ export default {
           `*${p}attack* · *${p}skill <name>* · *${p}defend* · *${p}flee*`
       }
 
+      const witchEvents = completeTurn([player, e], bs.turn ?? 1)
+      const witchTerminal = witchEvents.find(x => x.terminal)
+      if (witchEvents.length) msg += '\n\n' + witchEvents.map(x => x.text).join('\n\n')
+
       bs.turn = (bs.turn ?? 1) + 1
       player.battleState = bs
 
@@ -903,7 +920,7 @@ export default {
 
       await sendWillowAdvisory(ctx, player, e, boss)
       if (boss) await sendCinematicBossTurn(ctx, { player, e, body: msg })
-      else await sendBattleTurnReply(ctx, { bs, player, e, msg, hpBeforeTurn, eHpBeforeTurn, boss })
+      else await sendBattleTurnReply(ctx, { bs, player, e, msg, hpBeforeTurn, eHpBeforeTurn, boss, cinematic: witchTerminal ? { type: 'endworld-clash', finalText: msg, participants: [player, e] } : null })
       return player
     })
   },
