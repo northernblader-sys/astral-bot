@@ -1,13 +1,25 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { askAI, buildMessages } from '../lib/openrouter.js'
-import { config } from '../config.js'
+import { config, describeConfigSources } from '../config.js'
 
 const okReply = (text) => ({ ok: true, status: 200, json: async () => ({ choices: [{ message: { content: text } }] }) })
 const errReply = (status, message) => ({ ok: false, status, statusText: 'x', json: async () => ({ error: { code: status, message } }) })
 
-test('the shared key is configured and used by default', () => {
-  assert.ok(config.openrouterApiKey.startsWith('sk-or-v1-'))
+test('the configured shared key is used by default without exposing it', async () => {
+  const previous = config.openrouterApiKey
+  try {
+    config.openrouterApiKey = 'test-environment-key'
+    let authorization
+    await askAI({ messages: [{ role: 'user', content: 'hi' }], fetchImpl: async (_url, opts) => {
+      authorization = opts.headers.Authorization
+      return okReply('hello')
+    } })
+    assert.equal(authorization, 'Bearer test-environment-key')
+    assert.ok(describeConfigSources().secretKeys.includes('OPENROUTER_API_KEY'))
+  } finally {
+    config.openrouterApiKey = previous
+  }
 })
 
 test('no key throws a status 0 error', async () => {

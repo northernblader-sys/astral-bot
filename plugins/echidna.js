@@ -23,7 +23,7 @@
  * exclusive (the one who passed her 250 refusals). Anyone else who speaks to
  * her gets a static, in-character dismissal - never an API call.
  *
- * The AI key is config.openrouterApiKey (OPENROUTER_API_KEY overrides it);
+ * AI uses Groq first with an optional OpenRouter backup;
  * the personality lives in data/echidna-personality.json.
  */
 import { config } from '../config.js'
@@ -32,7 +32,7 @@ import { updatePlayer, getPlayer } from '../lib/player-repo.js'
 import { ownsEchidna, ECHIDNA_CHARACTER_ID } from '../lib/character-abilities.js'
 import { characterMap } from '../lib/game-data.js'
 import { fmtGems } from '../lib/format.js'
-import { askAI } from '../lib/openrouter.js'
+import { askAI, hasAIKey } from '../lib/ai.js'
 import {
   renderEchidnaSystemPrompt,
   chatHistory,
@@ -223,19 +223,15 @@ async function runStatus(ctx) {
 async function runChat(ctx, text) {
   // The AI voice belongs to the holder of the exclusive (the one who passed
   // her 250 refusals). The bot owner is let through regardless: someone has
-  // to be able to test her OpenRouter voice live without owning the
+  // to be able to test her AI voice live without owning the
   // one-of-one. The rite and the child stay holder-only - this open door is
   // for conversation, not for claiming her rewards.
   if (!ownsEchidna(ctx.player) && !isOwnerJid(ctx.from)) {
     const line = STRANGER_LINES[(ctx.from?.length ?? 0) % STRANGER_LINES.length]
     return ctx.reply(line)
   }
-  if (!config.openrouterApiKey) {
-    return ctx.reply(
-      `🍵 _She frowns at the Gospel; the page comes back blank._\n` +
-      `_(Her voice needs an OpenRouter key - set *OPENROUTER_API_KEY* in the bot's environment (\`.env\`), then restart.)_`,
-    )
-  }
+  const quietReply = '🍵 _She sets a second cup beside hers._ "Stay for tea. I need a quiet moment before we continue."'
+  if (!hasAIKey()) return ctx.reply(quietReply)
 
   const history = chatHistory(ctx.from)
   const userTurn = { role: 'user', content: text }
@@ -248,19 +244,9 @@ async function runChat(ctx, text) {
     })
     rememberTurn(ctx.from, text, answer)
     return ctx.reply(answer)
-  } catch (err) {
-    // No keys, prompts, chat history or raw provider response in logs.
-    console.warn('[echidna] OpenRouter failure', { status: Number(err?.status) || 0 })
-    if (err?.status === 402) {
-      return ctx.reply(`🍵 _“The Gospel is fine. Its provider wants paying.”_\n_(OpenRouter reports insufficient credits, status 402. The bot owner needs to check the provider balance.)_`)
-    }
-    if (err?.status === 401 || err?.status === 403) {
-      return ctx.reply(
-        `🍵 _She taps the Gospel, irritated._ _"The connection is refused - the key the bot carries does not open the door." _\n` +
-        `_(Check OPENROUTER_API_KEY - the API rejected it, status ${err.status}.)_`,
-      )
-    }
-    return ctx.reply(`🍵 _She frowns at the Gospel; the page comes back blank._ _"Ask me again in a moment - even the world's memory stutters sometimes." _`)
+  } catch {
+    // Technical diagnostics are logged by the shared client, never sent to players.
+    return ctx.reply(quietReply)
   }
 }
 

@@ -203,13 +203,13 @@ console.log('── .echidna AI chat (graceful path) ──')
   const out = ctx.replies.join('\n')
   // The contract here is: whatever happens - no key, blocked network, API
   // hiccup, or a successful answer - the owner gets ONE in-character reply
-  // and the plugin never throws. Network egress to OpenRouter varies by
+  // and the plugin never throws. Network egress to AI providers varies by
   // machine, so a graceful "the page comes back blank" also passes.
   check('owner gets exactly one in-character reply', out.length > 10 && !/Error|TypeError|undefined/.test(out))
-  if (config.openrouterApiKey) {
+  if (config.groqApiKey || config.openrouterApiKey) {
     console.log('     key configured; live reply preview:', out.slice(0, 140).replace(/\n/g, ' '))
   } else {
-    console.log('     no OPENROUTER_API_KEY configured - chat will say so until the key is set')
+    console.log('     no AI key configured - chat uses the in-character quiet-time reply')
   }
 }
 

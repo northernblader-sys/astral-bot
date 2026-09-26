@@ -196,3 +196,29 @@ left running, an old Railway deploy, a second app on the same
 `AUTH_FOLDER`). Two sockets on one session fight over the same Signal state and
 WhatsApp closes one with statusCode 440 — which `.health` also reports. Stop
 the other instance first; only re-pair the number if it is genuinely alone.
+
+## Echidna / companion chat: Groq primary, OpenRouter backup
+
+Set these in the Railway **bot service → Variables** (or a gitignored `.env`
+for local runs), then apply changes and restart/redeploy:
+
+- `GROQ_API_KEY`: your Groq key, without a `Bearer ` prefix.
+- `GROQ_MODEL`: optional, defaults to `llama-3.3-70b-versatile`.
+- `OPENROUTER_API_KEY`: optional backup key if Groq fails.
+- `OPENROUTER_MODEL`: optional, defaults to `google/gemini-2.5-flash`.
+
+Get keys at https://console.groq.com/keys and
+https://openrouter.ai/settings/keys. Never commit them. A local `.env` is not
+shipped through Git; production variables must be set separately.
+
+Echidna and companion chat both prefer Groq. If its model is unavailable,
+the client tries `llama-3.1-8b-instant`. Authentication/quota failures or
+exhausted transient retries can fall back to OpenRouter when configured.
+Players see only in-character quiet-time replies if neither provider works,
+not API names, status codes, billing instructions, or environment variables.
+Owner logs show provider and status only: 401 means replace the rejected key,
+402 means check credits, 403 means check permissions, 429 means rate limited.
+
+There are no bundled credentials. Revoke any keys previously committed or
+shared in chat and replace them in deployment variables. `GEMINI_API_KEY`
+is not used by this client. Test after restart with `.echidna hi`.

@@ -2,7 +2,7 @@
  * <prefix>companion — your Guardian of the Innocent companion.
  *
  *   .companion                   her card: perk, bond, story progress
- *   .companion talk <message>    talk to her (AI, OpenRouter via lib/openrouter.js)
+ *   .companion talk <message>    talk to her (AI, Groq first via lib/ai.js)
  *   .companion <message>         same as talk
  *   .companion story [n]         the chapters of her past she has told you
  *   .companion accept|reject     answer a freed companion's request
@@ -16,7 +16,7 @@
  */
 import { config } from '../config.js'
 import { updatePlayer } from '../lib/player-repo.js'
-import { askAI } from '../lib/openrouter.js'
+import { askAI, hasAIKey } from '../lib/ai.js'
 import {
   COMPANION_MAP, TYPE_BADGE, ensureGuardianState, playerCompanion, companionStoryChapters,
   renderCompanionSystemPrompt, sanitizeCompanionSpeech, companionChatHistory,
@@ -43,7 +43,7 @@ async function runTalk(ctx, text) {
   if (!c) return ctx.reply(NO_COMPANION(p))
   const msg = String(text ?? '').trim().slice(0, 500)
   if (!msg) return ctx.reply(`💬 Say something: *${p}companion talk <message>*`)
-  if (!config.openrouterApiKey) return ctx.reply(`💬 *${c.name}:* ${OFFLINE[c.id] ?? '...'}`)
+  if (!hasAIKey()) return ctx.reply(`💬 *${c.name}:* ${OFFLINE[c.id] ?? '...'}`)
 
   const history = companionChatHistory(ctx.player)
   let answer = ''
