@@ -27,6 +27,7 @@
  * the personality lives in data/echidna-personality.json.
  */
 import { config } from '../config.js'
+import { isOwnerJid } from '../lib/group-helpers.js'
 import { updatePlayer, getPlayer } from '../lib/player-repo.js'
 import { ownsEchidna, ECHIDNA_CHARACTER_ID } from '../lib/character-abilities.js'
 import { characterMap } from '../lib/game-data.js'
@@ -220,7 +221,12 @@ async function runStatus(ctx) {
 }
 
 async function runChat(ctx, text) {
-  if (!ownsEchidna(ctx.player)) {
+  // The AI voice belongs to the holder of the exclusive (the one who passed
+  // her 250 refusals). The bot owner is let through regardless: someone has
+  // to be able to test her OpenRouter voice live without owning the
+  // one-of-one. The rite and the child stay holder-only - this open door is
+  // for conversation, not for claiming her rewards.
+  if (!ownsEchidna(ctx.player) && !isOwnerJid(ctx.from)) {
     const line = STRANGER_LINES[(ctx.from?.length ?? 0) % STRANGER_LINES.length]
     return ctx.reply(line)
   }
